@@ -36,7 +36,7 @@ const Register: React.FC = () => {
       <h2>Register</h2>
       <form onSubmit={handleRegister}>
         <div>
-          <label>Email:</label>
+          <label>Email:</label>z
           <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
         </div>
         <div>

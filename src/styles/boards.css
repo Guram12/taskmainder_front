@@ -1,0 +1,37 @@
+.kanban-board {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.board {
+  border: 1px solid #ccc;
+  padding: 10px;
+  border-radius: 5px;
+}
+
+.lists {
+  display: flex;
+  gap: 20px;
+  overflow-x: auto;
+}
+
+.list {
+  background-color: #f4f4f4;
+  padding: 10px;
+  border-radius: 5px;
+  min-width: 200px;
+}
+
+.tasks {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.task {
+  background-color: #fff;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}

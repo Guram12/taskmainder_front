@@ -24,7 +24,7 @@ const navigate = useNavigate();
       localStorage.setItem('refresh_token', response.data.refresh);
       setMessage('Login successful!');
       setTimeout(() => {
-        navigate('/');
+        navigate('/boards');
       }, 1000);
     } catch (error) {
       setMessage('Login failed. Please try again.');
