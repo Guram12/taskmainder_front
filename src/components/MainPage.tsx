@@ -9,12 +9,13 @@ const MainPage: React.FC = () => {
   return (
     <div>
 
-      <img src={mylogo} alt="logo" />
+      <img src={mylogo} alt="logo" style={{width: "400px"}}/>
     </div>
   )
 }
 
 export default MainPage;
+
 
 
 
