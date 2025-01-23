@@ -12,18 +12,26 @@ const Register: React.FC = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [phoneNumber, setPhoneNumber] = useState('');
+  const [profileImage, setProfileImage] = useState<File | null>(null);
   const [message, setMessage] = useState('');
-
 
 
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
+    const formData = new FormData();
+    formData.append('email', email);
+    formData.append('username', username);
+    formData.append('password', password);
+    formData.append('phone_number', phoneNumber);
+    if (profileImage) {
+      formData.append('profile_picture', profileImage);
+    }
+
     try {
-      await axiosInstance.post('/api/register/', {
-        email,
-        username,
-        password,
-        phone_number: phoneNumber,
+      await axiosInstance.post('/acc/register/', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
       });
       setMessage('Registration successful!');
     } catch (error) {
@@ -31,12 +39,13 @@ const Register: React.FC = () => {
     }
   };
 
+
   return (
     <div>
       <h2>Register</h2>
       <form onSubmit={handleRegister}>
         <div>
-          <label>Email:</label>z
+          <label>Email:</label>
           <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
         </div>
         <div>
@@ -50,6 +59,10 @@ const Register: React.FC = () => {
         <div>
           <label>Phone Number:</label>
           <input type="text" value={phoneNumber} onChange={(e) => setPhoneNumber(e.target.value)} />
+        </div>
+        <div>
+          <label>Profile Image:</label>
+          <input type="file" onChange={(e) => setProfileImage(e.target.files ? e.target.files[0] : null)} />
         </div>
         <button type="submit">Register</button>
       </form>

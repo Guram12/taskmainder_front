@@ -10,6 +10,8 @@ const MainPage: React.FC = () => {
     <div>
 
       <img src={mylogo} alt="logo" style={{width: "400px"}}/>
+
+
     </div>
   )
 }
