@@ -5,7 +5,7 @@
 }
 
 .board {
-  border: 1px solid #ccc;
+  border: 1px solid #18da42;
   padding: 10px;
   border-radius: 5px;
 }
@@ -17,7 +17,7 @@
 }
 
 .list {
-  background-color: #f4f4f4;
+  background-color: #a3a3a3;
   padding: 10px;
   border-radius: 5px;
   min-width: 200px;
@@ -30,8 +30,8 @@
 }
 
 .task {
-  background-color: #fff;
+  background-color: #666666;
   padding: 10px;
-  border: 1px solid #ccc;
+  border: 1px solid #9e3c3c;
   border-radius: 5px;
 }

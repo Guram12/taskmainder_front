@@ -1,35 +1,53 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axiosInstance from '../utils/axiosinstance';
+import axios from 'axios';
+
+
+interface loginProps {
+  setIsAuthenticated: (value: boolean) => void;
+}
 
 
 
+const Login: React.FC<loginProps> = ({ setIsAuthenticated }) => {
 
-const Login: React.FC = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [message, setMessage] = useState('');
 
-const navigate = useNavigate();
+  const navigate = useNavigate();
 
 
+  // ===================================== login ====================================
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const response = await axiosInstance.post('/api/login/', {
+      const response = await axiosInstance.post(`/acc/login/`, {
         email,
         password,
       });
       localStorage.setItem('access_token', response.data.access);
       localStorage.setItem('refresh_token', response.data.refresh);
-      setMessage('Login successful!');
-      setTimeout(() => {
-        navigate('/boards');
-      }, 1000);
-    } catch (error) {
-      setMessage('Login failed. Please try again.');
+      localStorage.setItem("login_status", "true");
+      setIsAuthenticated(true);
+      navigate('/');
+    } catch (err) {
+      if (axios.isAxiosError(err)) {
+        if (err.response && err.response.status === 400) {
+          const errorMessage = err.response.data.email || 'Invalid email or password';
+          console.error(errorMessage);
+        } else {
+          console.error('An error occurred. Please try again later.');
+          setMessage('An error occurred. Please try again later.');
+        }
+      } else {
+        console.error('An unexpected error occurred. Please try again later.');
+        setMessage('An unexpected error occurred. Please try again later.');
+      }
     }
   };
+  // =================================================================================
 
 
   return (
