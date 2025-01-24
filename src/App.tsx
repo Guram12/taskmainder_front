@@ -8,14 +8,44 @@ import Boards from './components/Boards';
 import Header from './header/Header';
 import { useState } from 'react';
 import axiosInstance from './utils/axiosinstance';
+import { ThemeSpecs } from './header/Header';
+
+export interface ProfileData {
+  email: string;
+  phone_number: string;
+  profile_picture: string;
+  username: string;
+}
+
+
+
 
 const App: React.FC = () => {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
-  const [profileData, setProfileData] = useState<any>(null);
+  const [profileData, setProfileData] = useState<ProfileData>({
+    email: '',
+    phone_number: '',
+    profile_picture: '',
+    username: ''
+  });
+
+
+
+
 
   const accessToken: string | null = localStorage.getItem('access_token');
   const refreshToken: string | null = localStorage.getItem('refresh_token');
-
+  // ====================================  useEffect for theme change ===============================================
+  useEffect(() => {
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme) {
+      const themeSpecs: ThemeSpecs = JSON.parse(savedTheme);
+      for (const [key, value] of Object.entries(themeSpecs)) {
+        document.documentElement.style.setProperty(key, value);
+      }
+      document.body.style.backgroundColor = themeSpecs['--background-color'];
+    }
+  }, []);
   //======================================== fetch profile data ==================================================
   useEffect(() => {
     const fetchProfile = async () => {
@@ -39,7 +69,7 @@ const App: React.FC = () => {
 
   return (
     <Router>
-      <Header />
+      <Header profileData={profileData} />
       <Routes>
         <Route path="/login" element={<Login setIsAuthenticated={setIsAuthenticated} />} />
         <Route path="/register" element={<Register />} />
