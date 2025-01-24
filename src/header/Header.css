@@ -12,6 +12,10 @@
   transition: background-color 0.3s ease, border-color 0.3s ease;
 }
 
+.hide_container {
+  display: none;
+}
+
 .header_logo_container {
   display: flex;
   justify-content: center;

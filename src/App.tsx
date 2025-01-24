@@ -31,8 +31,6 @@ const App: React.FC = () => {
 
 
 
-
-
   const accessToken: string | null = localStorage.getItem('access_token');
   const refreshToken: string | null = localStorage.getItem('refresh_token');
   // ====================================  useEffect for theme change ===============================================
@@ -67,9 +65,57 @@ const App: React.FC = () => {
     fetchProfile();
   }, [isAuthenticated, accessToken, refreshToken]);
 
+  // =================================  validate tokens on website load ==================================
+  const validateTokens = async () => {
+    console.log("validateTokens called");
+    if (accessToken) {
+      try {
+        const response = await axiosInstance.post(`acc/token/verify/`, {
+          token: accessToken,
+        });
+        console.log("Access token is valid", response);
+        return response.status === 200;
+      } catch (error) {
+        console.error('Access token is invalid', error);
+      }
+    }
+    if (refreshToken) {
+      try {
+        const response = await axiosInstance.post(`/acc/token/refresh/`, {
+          refresh: refreshToken,
+        });
+        console.log("Refresh token is valid", response);
+        localStorage.setItem('access_token', response.data.access);
+        return true;
+      } catch (error) {
+        console.error('Refresh token is invalid', error);
+      }
+    }
+    return false;
+  };
+  // --------------------------------------------------------------------------------------------------------
+  useEffect(() => {
+    console.log("useEffect called");
+    const checkAuthentication = async () => {
+      const isValid = await validateTokens();
+      if (isValid) {
+        setIsAuthenticated(true);
+      } else {
+        setIsAuthenticated(false);
+      }
+    };
+
+    checkAuthentication();
+  }, []);
+  // ========================================================================================================
+
+
+
+
+
   return (
     <Router>
-      <Header profileData={profileData} />
+      <Header profileData={profileData} isAuthenticated={isAuthenticated}  />
       <Routes>
         <Route path="/login" element={<Login setIsAuthenticated={setIsAuthenticated} />} />
         <Route path="/register" element={<Register />} />

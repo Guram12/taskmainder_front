@@ -7,6 +7,7 @@ import LogoComponent from '../components/LogoComponent';
 
 interface HeaderProps {
   profileData: ProfileData;
+  isAuthenticated: boolean;
 }
 
 export interface ThemeSpecs {
@@ -16,7 +17,7 @@ export interface ThemeSpecs {
 }
 
 
-const Header: React.FC<HeaderProps> = ({ profileData }) => {
+const Header: React.FC<HeaderProps> = ({ profileData , isAuthenticated}) => {
 
 
 
@@ -33,7 +34,7 @@ const Header: React.FC<HeaderProps> = ({ profileData }) => {
 
 
   return (
-    <div className="main_Header_container">
+    <div className={`main_Header_container ${!isAuthenticated ? "hide_container"  : ''  } `}>
       <div className='header_logo_container' >
         <LogoComponent />
       </div>
