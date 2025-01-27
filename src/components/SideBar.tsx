@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import '../styles/Sidebar.css';
 import { Sidebar, Menu, MenuItem, SubMenu } from 'react-pro-sidebar';
 import { MdOutlineSpaceDashboard } from "react-icons/md";
@@ -6,7 +6,7 @@ import { FaChartPie, FaChartLine, FaBook, FaCalendarAlt } from "react-icons/fa";
 
 
 interface SidebarProps {
-  change_current_theme: boolean;
+  currentTheme: ThemeSpecs;
 }
 
 
@@ -16,27 +16,11 @@ interface ThemeSpecs {
   '--main-text-coloure': string;
 }
 
-const SidebarComponent: React.FC<SidebarProps> = ({ change_current_theme}) => {
+const SidebarComponent: React.FC<SidebarProps> = ({currentTheme}) => {
   const [isOpen, setIsOpen] = useState(false);
 
 
-  const [currentTheme, setCurrentTheme] = useState<ThemeSpecs>({
-    '--background-color': '#f4f7f6',
-    '--border-color': '#d9e0e3',
-    '--main-text-coloure': '#333'
-  });
 
-
-
-  const theme = localStorage.getItem('theme');
-  // theme is a String. i shopuld transfer it to json object to use it
-  useEffect(() => {
-    if (theme) {
-      const themeSpecs = JSON.parse(theme);
-      console.log(themeSpecs)
-      setCurrentTheme(themeSpecs);
-    }
-  }, [change_current_theme]);
 
 
 

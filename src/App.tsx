@@ -29,13 +29,19 @@ const App: React.FC = () => {
     username: ''
   });
 
-
-
+  const [currentTheme, setCurrentTheme] = useState<ThemeSpecs>({
+    '--background-color': '#f4f7f6',
+    '--border-color': '#d9e0e3',
+    '--main-text-coloure': '#333'
+  });
 
   const [change_current_theme, setChange_current_theme] = useState(false);
 
   const accessToken: string | null = localStorage.getItem('access_token');
   const refreshToken: string | null = localStorage.getItem('refresh_token');
+
+
+
   // ====================================  useEffect for theme change ===============================================
   useEffect(() => {
     const savedTheme = localStorage.getItem('theme');
@@ -47,6 +53,21 @@ const App: React.FC = () => {
       document.body.style.backgroundColor = themeSpecs['--background-color'];
     }
   }, [change_current_theme]);
+
+  // ------------------------------------------------------------------------------------
+
+  const theme = localStorage.getItem('theme');
+  // theme is a String. i shopuld transfer it to json object to use it
+  useEffect(() => {
+    if (theme) {
+      const themeSpecs = JSON.parse(theme);
+      console.log(themeSpecs)
+      setCurrentTheme(themeSpecs);
+    }
+  }, [change_current_theme]);
+
+
+
   //======================================== fetch profile data ==================================================
   useEffect(() => {
     const fetchProfile = async () => {
@@ -128,7 +149,7 @@ const App: React.FC = () => {
         <Route path="/login" element={<Login setIsAuthenticated={setIsAuthenticated} />} />
         <Route path="/register" element={<Register />} />
         <Route path="/" element={<MainPage
-          change_current_theme={change_current_theme}
+          currentTheme={currentTheme}
         />} />
         <Route path='/boards' element={<Boards />} />
       </Routes>

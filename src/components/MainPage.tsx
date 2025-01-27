@@ -1,7 +1,7 @@
 import "../styles/MainPage.css";
 import React from "react";
 import SidebarComponent from "./SideBar";
-
+import { ThemeSpecs } from "../header/Header";
 
 
 
@@ -9,18 +9,18 @@ import SidebarComponent from "./SideBar";
 
 
 interface MainPageProps {
-  change_current_theme: boolean;
+  currentTheme: ThemeSpecs;
 }
 
 
 
 
 
-const MainPage: React.FC<MainPageProps> = ({ change_current_theme }) => {
+const MainPage: React.FC<MainPageProps> = ({  currentTheme }) => {
 
   return (
     <div>
-      <SidebarComponent  change_current_theme={change_current_theme} />
+      <SidebarComponent  currentTheme={currentTheme} />
 
     </div>
   )
