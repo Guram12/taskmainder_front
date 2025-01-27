@@ -2,25 +2,27 @@ import "../styles/MainPage.css";
 import React from "react";
 import SidebarComponent from "./SideBar";
 import { ThemeSpecs } from "../header/Header";
-
-
-
+import { board } from "../App";
 
 
 
 interface MainPageProps {
   currentTheme: ThemeSpecs;
+  boards: board[];
 }
 
 
 
+const MainPage: React.FC<MainPageProps> = ({ currentTheme, boards }) => {
 
 
-const MainPage: React.FC<MainPageProps> = ({  currentTheme }) => {
+
+
 
   return (
     <div>
-      <SidebarComponent  currentTheme={currentTheme} />
+      <SidebarComponent currentTheme={currentTheme} boards={boards} />
+
 
     </div>
   )

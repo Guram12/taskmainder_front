@@ -47,6 +47,11 @@
   transition: background-color 0.3s ease;
 }
 
+/* ========================================= boards_contaioner_for_scroll ===================================== */
+
+
+
+
 /* =================================== pin styles ===================================== */
 .pin_container {
   display: flex;
@@ -60,10 +65,9 @@
   width: 30px;
   height: 30px;
   position: absolute;
-  left: -5px;
 }
 
-/* ======================================== icon stykles in sidebar ===================================== */
+/* ======================================== icon styles in sidebar ===================================== */
 
 .dashboard_icon{
   font-size: 30px !important;

@@ -1,8 +1,6 @@
 import axios from 'axios';
 
-// const baseURL = process.env.NODE_ENV === 'development' ? 'http://localhost:8000' : 'https://api.mepunity.com';
 const baseURL = "http://localhost:8000"
-
 
 const axiosInstance = axios.create({
   baseURL: baseURL,
@@ -21,7 +19,6 @@ axiosInstance.interceptors.request.use(
     return Promise.reject(error);
   }
 );
-
 
 // Response interceptor to handle token refresh
 axiosInstance.interceptors.response.use(

@@ -28,7 +28,7 @@ const Header: React.FC<HeaderProps> = ({
 
 
 
-
+// ============================== theme change function ======================================
   const changeTheme = (themeSpecs: ThemeSpecs) => {
     for (const [key, value] of Object.entries(themeSpecs)) {
       document.documentElement.style.setProperty(key, value)
@@ -37,7 +37,7 @@ const Header: React.FC<HeaderProps> = ({
     document.body.style.backgroundColor = themeSpecs['--background-color'];
     setChange_current_theme(!change_current_theme);
   }
-
+// ===========================================================================================
 
 
   return (

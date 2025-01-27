@@ -4,11 +4,11 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import MainPage from './components/MainPage'
 import Login from './auth/login'
 import Register from './auth/register'
-import Boards from './components/Boards';
 import Header from './header/Header';
 import { useState } from 'react';
 import axiosInstance from './utils/axiosinstance';
 import { ThemeSpecs } from './header/Header';
+
 
 export interface ProfileData {
   email: string;
@@ -17,7 +17,30 @@ export interface ProfileData {
   username: string;
 }
 
+export interface board {
+  id: number;
+  name: string;
+  created_at: string;
+  lists: lists[];
+  owner: string;
+}
 
+export interface lists {
+  id: number;
+  name: string;
+  created_at: string;
+  board: number;
+  tasks: tasks[];
+}
+
+export interface tasks {
+  created_at: string;
+  description: string;
+  due_date: string;
+  id: number;
+  list: number;
+  title: string;
+}
 
 
 const App: React.FC = () => {
@@ -36,11 +59,34 @@ const App: React.FC = () => {
   });
 
   const [change_current_theme, setChange_current_theme] = useState(false);
+  const [boards, setBoards] = useState<board[]>([]);
+
+
+
 
   const accessToken: string | null = localStorage.getItem('access_token');
   const refreshToken: string | null = localStorage.getItem('refresh_token');
 
+  // ========================================== fetch  boards ==================================================
+  useEffect(() => {
+    const fetchBoards = async () => {
+      try {
+        const response = await axiosInstance.get('api/boards/', {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('access_token')}`
+          }
+        });
+        console.log(response.data);
+        setBoards(response.data);
+      } catch (error) {
+        console.error("Error while retrieving boards", error);
+      }
+    };
 
+    if (isAuthenticated) {
+      fetchBoards();
+    }
+  }, [isAuthenticated]);
 
   // ====================================  useEffect for theme change ===============================================
   useEffect(() => {
@@ -55,17 +101,13 @@ const App: React.FC = () => {
   }, [change_current_theme]);
 
   // ------------------------------------------------------------------------------------
-
   const theme = localStorage.getItem('theme');
-  // theme is a String. i shopuld transfer it to json object to use it
   useEffect(() => {
     if (theme) {
       const themeSpecs = JSON.parse(theme);
-      console.log(themeSpecs)
       setCurrentTheme(themeSpecs);
     }
   }, [change_current_theme]);
-
 
 
   //======================================== fetch profile data ==================================================
@@ -79,7 +121,6 @@ const App: React.FC = () => {
             }
           });
           setProfileData(response.data);
-          console.log("Profile data", response.data);
         } catch (error) {
           console.error("Error while retrieving profile data", error);
         }
@@ -91,13 +132,11 @@ const App: React.FC = () => {
 
   // =================================  validate tokens on website load ==================================
   const validateTokens = async () => {
-    console.log("validateTokens called");
     if (accessToken) {
       try {
         const response = await axiosInstance.post(`acc/token/verify/`, {
           token: accessToken,
         });
-        console.log("Access token is valid", response);
         return response.status === 200;
       } catch (error) {
         console.error('Access token is invalid', error);
@@ -131,10 +170,8 @@ const App: React.FC = () => {
 
     checkAuthentication();
   }, []);
+
   // ========================================================================================================
-
-
-
 
 
   return (
@@ -148,10 +185,11 @@ const App: React.FC = () => {
       <Routes>
         <Route path="/login" element={<Login setIsAuthenticated={setIsAuthenticated} />} />
         <Route path="/register" element={<Register />} />
-        <Route path="/" element={<MainPage
+        <Route path="/" 
+        element={<MainPage
           currentTheme={currentTheme}
+          boards={boards}
         />} />
-        <Route path='/boards' element={<Boards />} />
       </Routes>
     </Router>
   );
