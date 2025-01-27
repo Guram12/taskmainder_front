@@ -1,9 +1,12 @@
 import React, { useState } from "react";
 import '../styles/Sidebar.css';
 import { Sidebar, Menu, MenuItem, SubMenu } from 'react-pro-sidebar';
-import { MdOutlineSpaceDashboard } from "react-icons/md";
-import { FaChartPie, FaChartLine, FaBook, FaCalendarAlt } from "react-icons/fa";
+import { FaBook, FaCalendarAlt } from "react-icons/fa";
 import { TiPin, TiPinOutline } from "react-icons/ti";
+import { MdSpaceDashboard } from "react-icons/md";
+import { GrTasks } from "react-icons/gr";
+import { FaClipboardList } from "react-icons/fa";
+import { RiSettings4Fill } from "react-icons/ri";
 
 
 interface SidebarProps {
@@ -75,7 +78,8 @@ const SidebarComponent: React.FC<SidebarProps> = ({ currentTheme }) => {
 
             <div>
               <Menu>
-                <MenuItem icon={<FaCalendarAlt />}>
+                {/* dashboard  */}
+                <MenuItem icon={<MdSpaceDashboard className="dashboard_icon" />}>
                   <div className="for_dashboard_child_container">
                     <p> Dashboard</p>
                     <div onClick={toggleSidebarPin} className="pin_container">
@@ -84,7 +88,8 @@ const SidebarComponent: React.FC<SidebarProps> = ({ currentTheme }) => {
                   </div>
                 </MenuItem>
 
-                <SubMenu label="Boards" id="board" icon={<MdOutlineSpaceDashboard />}>
+                {/* other menu items  */}
+                <SubMenu label="Boards" id="board" icon={<GrTasks  className="sidebar_big_icon"/>}>
                   {isOpen && (
                     <>
                       <MenuItem
@@ -92,19 +97,11 @@ const SidebarComponent: React.FC<SidebarProps> = ({ currentTheme }) => {
                           backgroundColor: `${currentTheme['--background-color']}`,
                           transition: 'all 0.3s',
                         }}
-                        icon={<FaChartPie />}
+                        icon={<FaClipboardList />}
                       >
                         Pie charts
                       </MenuItem>
-                      <MenuItem
-                        rootStyles={{
-                          backgroundColor: `${currentTheme['--background-color']}`,
-                          transition: 'all 0.3s',
-                        }}
-                        icon={<FaChartLine />}
-                      >
-                        Line charts
-                      </MenuItem>
+
                     </>
                   )}
                 </SubMenu>
@@ -114,7 +111,7 @@ const SidebarComponent: React.FC<SidebarProps> = ({ currentTheme }) => {
             </div>
             <div >
               <Menu style={{ marginTop: 'auto' }}>
-                <MenuItem icon={<FaCalendarAlt />}>Settings</MenuItem>
+                <MenuItem icon={<RiSettings4Fill  className="sidebar_big_icon" />}>Settings</MenuItem>
               </Menu>
             </div>
           </div>

@@ -12,6 +12,7 @@
   flex-direction: column;
 }
 
+
 .for_dashboard_child_container {
   display: flex;
   justify-content: space-around;
@@ -61,3 +62,32 @@
   position: absolute;
   left: -5px;
 }
+
+/* ======================================== icon stykles in sidebar ===================================== */
+
+.dashboard_icon{
+  font-size: 30px !important;
+  height: 30px !important;
+}
+
+.sidebar_big_icon{
+  font-size: 25px;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
