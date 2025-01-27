@@ -3,6 +3,7 @@ import '../styles/Sidebar.css';
 import { Sidebar, Menu, MenuItem, SubMenu } from 'react-pro-sidebar';
 import { MdOutlineSpaceDashboard } from "react-icons/md";
 import { FaChartPie, FaChartLine, FaBook, FaCalendarAlt } from "react-icons/fa";
+import { TiPin, TiPinOutline } from "react-icons/ti";
 
 
 interface SidebarProps {
@@ -16,15 +17,22 @@ interface ThemeSpecs {
   '--main-text-coloure': string;
 }
 
-const SidebarComponent: React.FC<SidebarProps> = ({currentTheme}) => {
-  const [isOpen, setIsOpen] = useState(false);
+const SidebarComponent: React.FC<SidebarProps> = ({ currentTheme }) => {
+  const [isOpen, setIsOpen] = useState(true);
+  const [isPinned, setIsPinned] = useState(true);
 
 
 
 
 
 
-  // make sidebar expanded while hopvering on sidebar
+
+
+  // ================================== sidebar pin and unpin ===============================================
+  const toggleSidebarPin = () => {
+    setIsPinned(!isPinned);
+  }
+
   const handleMouseEnter = () => {
     if (!isOpen) {
       setIsOpen(true);
@@ -36,15 +44,15 @@ const SidebarComponent: React.FC<SidebarProps> = ({currentTheme}) => {
       setIsOpen(false);
     }
   }
-
+  // =========================================================================================================
   return (
     <div className={`sidebar_main_container ${isOpen ? 'open' : 'closed'}`}>
       <div className="sidebar_container">
         <Sidebar
           collapsed={!isOpen}
           backgroundColor="transparent"
-          onMouseEnter={handleMouseEnter}
-          onMouseLeave={handleMouseLeave}
+          // onMouseEnter={handleMouseEnter}
+          // onMouseLeave={handleMouseLeave}
           rootStyles={{
             height: '100%',
 
@@ -62,7 +70,15 @@ const SidebarComponent: React.FC<SidebarProps> = ({currentTheme}) => {
 
             <div>
               <Menu>
-                <MenuItem icon={<FaCalendarAlt />}>Dashboard</MenuItem>
+                <MenuItem icon={<FaCalendarAlt />}>
+                  <div className="for_dashboard_child_container">
+                    <p> Dashboard</p>
+                    <div onClick={toggleSidebarPin} className="pin_container">
+                      {isPinned ? <TiPin className="pin_icon" /> : <TiPinOutline className="pin_icon" />}
+                    </div>
+                  </div>
+                </MenuItem>
+
                 <SubMenu label="Boards" id="board" icon={<MdOutlineSpaceDashboard />}>
                   {isOpen && (
                     <>
