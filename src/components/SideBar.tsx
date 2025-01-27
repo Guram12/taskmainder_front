@@ -62,9 +62,10 @@ const SidebarComponent: React.FC<SidebarProps> = ({ change_current_theme}) => {
           onMouseEnter={handleMouseEnter}
           onMouseLeave={handleMouseLeave}
           rootStyles={{
-            height: '100vh',
+            height: '100%',
 
           }}
+          id="sidebar"
         >
           <div style={{
             display: 'flex',
