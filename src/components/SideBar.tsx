@@ -19,7 +19,7 @@ interface ThemeSpecs {
 
 const SidebarComponent: React.FC<SidebarProps> = ({ currentTheme }) => {
   const [isOpen, setIsOpen] = useState(true);
-  const [isPinned, setIsPinned] = useState(true);
+  const [isPinned, setIsPinned] = useState(false);
 
 
 
@@ -34,16 +34,21 @@ const SidebarComponent: React.FC<SidebarProps> = ({ currentTheme }) => {
   }
 
   const handleMouseEnter = () => {
-    if (!isOpen) {
+    if (isPinned) {
+      setIsOpen(true);
+    } else {
       setIsOpen(true);
     }
   };
 
   const handleMouseLeave = () => {
-    if (isOpen) {
+    if (!isPinned) {
       setIsOpen(false);
+    } else {
+      setIsOpen(true);
     }
-  }
+  };
+
   // =========================================================================================================
   return (
     <div className={`sidebar_main_container ${isOpen ? 'open' : 'closed'}`}>
@@ -51,8 +56,8 @@ const SidebarComponent: React.FC<SidebarProps> = ({ currentTheme }) => {
         <Sidebar
           collapsed={!isOpen}
           backgroundColor="transparent"
-          // onMouseEnter={handleMouseEnter}
-          // onMouseLeave={handleMouseLeave}
+          onMouseEnter={handleMouseEnter}
+          onMouseLeave={handleMouseLeave}
           rootStyles={{
             height: '100%',
 
