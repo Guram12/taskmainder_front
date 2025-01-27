@@ -45,7 +45,7 @@ const Header: React.FC<HeaderProps> = ({ profileData , isAuthenticated}) => {
             changeTheme(
               {
                 '--background-color': '#000000',
-                '--main-text-coloure': '#037F45',
+                '--main-text-coloure': '#ffffff',
                 '--border-color': '#000000'
               })}></div>
         <div className='header_coloure_child_container example2'
