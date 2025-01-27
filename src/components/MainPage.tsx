@@ -1,15 +1,27 @@
 import "../styles/MainPage.css";
 import React from "react";
-import mylogo from "../assets/mylogo.svg"
+import SidebarComponent from "./SideBar";
+import { ThemeSpecs } from "../header/Header";
+import { board } from "../App";
 
 
 
-const MainPage: React.FC = () => {
+interface MainPageProps {
+  currentTheme: ThemeSpecs;
+  boards: board[];
+}
+
+
+
+const MainPage: React.FC<MainPageProps> = ({ currentTheme, boards }) => {
+
+
+
+
 
   return (
     <div>
-
-      <img src={mylogo} alt="logo" style={{width: "400px"}}/>
+      <SidebarComponent currentTheme={currentTheme} boards={boards} />
 
 
     </div>

@@ -1,3 +1,5 @@
+@import './styles//Varibles.css';
+
 body {
   margin: 0;
   padding: 0;
@@ -10,7 +12,7 @@ body {
   color-scheme: light dark; 
   text-align: center;
   transition: background-color 0.3s ease;
-
+  color: var(--main-text-coloure);
 }
 
 

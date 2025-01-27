@@ -7,6 +7,9 @@ import LogoComponent from '../components/LogoComponent';
 
 interface HeaderProps {
   profileData: ProfileData;
+  isAuthenticated: boolean;
+  setChange_current_theme: (change_current_theme: boolean) => void;
+  change_current_theme: boolean;
 }
 
 export interface ThemeSpecs {
@@ -16,24 +19,29 @@ export interface ThemeSpecs {
 }
 
 
-const Header: React.FC<HeaderProps> = ({ profileData }) => {
+const Header: React.FC<HeaderProps> = ({
+  profileData,
+  isAuthenticated,
+  setChange_current_theme,
+  change_current_theme,
+}) => {
 
 
 
-
+// ============================== theme change function ======================================
   const changeTheme = (themeSpecs: ThemeSpecs) => {
     for (const [key, value] of Object.entries(themeSpecs)) {
       document.documentElement.style.setProperty(key, value)
     }
     localStorage.setItem('theme', JSON.stringify(themeSpecs));
     document.body.style.backgroundColor = themeSpecs['--background-color'];
-
+    setChange_current_theme(!change_current_theme);
   }
-
+// ===========================================================================================
 
 
   return (
-    <div className="main_Header_container">
+    <div className={`main_Header_container ${!isAuthenticated ? "hide_container" : ''} `}>
       <div className='header_logo_container' >
         <LogoComponent />
       </div>
@@ -44,7 +52,7 @@ const Header: React.FC<HeaderProps> = ({ profileData }) => {
             changeTheme(
               {
                 '--background-color': '#000000',
-                '--main-text-coloure': '#037F45',
+                '--main-text-coloure': '#ffffff',
                 '--border-color': '#000000'
               })}></div>
         <div className='header_coloure_child_container example2'
