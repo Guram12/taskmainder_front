@@ -8,6 +8,8 @@ import LogoComponent from '../components/LogoComponent';
 interface HeaderProps {
   profileData: ProfileData;
   isAuthenticated: boolean;
+  setChange_current_theme: (change_current_theme: boolean) => void;
+  change_current_theme: boolean;
 }
 
 export interface ThemeSpecs {
@@ -17,7 +19,12 @@ export interface ThemeSpecs {
 }
 
 
-const Header: React.FC<HeaderProps> = ({ profileData , isAuthenticated}) => {
+const Header: React.FC<HeaderProps> = ({
+  profileData,
+  isAuthenticated,
+  setChange_current_theme,
+  change_current_theme,
+}) => {
 
 
 
@@ -28,13 +35,13 @@ const Header: React.FC<HeaderProps> = ({ profileData , isAuthenticated}) => {
     }
     localStorage.setItem('theme', JSON.stringify(themeSpecs));
     document.body.style.backgroundColor = themeSpecs['--background-color'];
-
+    setChange_current_theme(!change_current_theme);
   }
 
 
 
   return (
-    <div className={`main_Header_container ${!isAuthenticated ? "hide_container"  : ''  } `}>
+    <div className={`main_Header_container ${!isAuthenticated ? "hide_container" : ''} `}>
       <div className='header_logo_container' >
         <LogoComponent />
       </div>

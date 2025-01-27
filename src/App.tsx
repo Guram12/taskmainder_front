@@ -31,6 +31,9 @@ const App: React.FC = () => {
 
 
 
+
+  const [change_current_theme, setChange_current_theme] = useState(false);
+
   const accessToken: string | null = localStorage.getItem('access_token');
   const refreshToken: string | null = localStorage.getItem('refresh_token');
   // ====================================  useEffect for theme change ===============================================
@@ -43,7 +46,7 @@ const App: React.FC = () => {
       }
       document.body.style.backgroundColor = themeSpecs['--background-color'];
     }
-  }, []);
+  }, [change_current_theme]);
   //======================================== fetch profile data ==================================================
   useEffect(() => {
     const fetchProfile = async () => {
@@ -115,11 +118,18 @@ const App: React.FC = () => {
 
   return (
     <Router>
-      <Header profileData={profileData} isAuthenticated={isAuthenticated}  />
+      <Header
+        profileData={profileData}
+        isAuthenticated={isAuthenticated}
+        setChange_current_theme={setChange_current_theme}
+        change_current_theme={change_current_theme}
+      />
       <Routes>
         <Route path="/login" element={<Login setIsAuthenticated={setIsAuthenticated} />} />
         <Route path="/register" element={<Register />} />
-        <Route path="/" element={<MainPage />} />
+        <Route path="/" element={<MainPage
+          change_current_theme={change_current_theme}
+        />} />
         <Route path='/boards' element={<Boards />} />
       </Routes>
     </Router>

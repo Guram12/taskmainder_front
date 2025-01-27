@@ -8,20 +8,19 @@ import SidebarComponent from "./SideBar";
 
 
 
+interface MainPageProps {
+  change_current_theme: boolean;
+}
 
 
 
 
 
-
-
-
-
-const MainPage: React.FC = () => {
+const MainPage: React.FC<MainPageProps> = ({ change_current_theme }) => {
 
   return (
     <div>
-      <SidebarComponent />
+      <SidebarComponent  change_current_theme={change_current_theme} />
 
     </div>
   )
