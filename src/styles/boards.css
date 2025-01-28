@@ -1,37 +1,39 @@
-.kanban-board {
+@import "../styles/Varibles.css";
+
+.main_boards_container {
   display: flex;
-  flex-direction: column;
-  gap: 20px;
+  justify-content: flex-start;
+  align-items: flex-start;
+  flex-direction: row;
+  height: 100%;
+  width: 100%; /* Ensure it takes the full width of the parent */
+  overflow: hidden; /* Prevent the main container from scrolling */
 }
 
-.board {
-  border: 1px solid #18da42;
-  padding: 10px;
-  border-radius: 5px;
+.lists_container {
+  display: flex;
+  justify-content: flex-start;
+  align-items: flex-start;
+  flex-direction: row;
+  flex-grow: 1; /* Allow it to take up remaining space */
+  overflow-x: auto; 
+  overflow-y: hidden;
+  height: calc(100vh - 102px);
+  gap: 520px; /* Set a reasonable gap value */
+  padding-left: 30px;
 }
 
 .lists {
   display: flex;
-  gap: 20px;
-  overflow-x: auto;
-}
-
-.list {
-  background-color: #a3a3a3;
-  padding: 10px;
-  border-radius: 5px;
-  min-width: 200px;
-}
-
-.tasks {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-.task {
-  background-color: #666666;
-  padding: 10px;
-  border: 1px solid #9e3c3c;
-  border-radius: 5px;
+  flex-direction: column; /* Ensure this is set to column */
+  justify-content: flex-start;
+  align-items: center;
+  margin: 0;
+  padding: 0;
+  width: 300px;
+  min-width: 300px;
+  height: auto;
+  border-radius: 20px;
+  transition: background-color 0.3s ease, border-color 0.3s ease;
+  margin-top: 20px;
 }

@@ -12,6 +12,10 @@
   transition: background-color 0.3s ease, border-color 0.3s ease;
 }
 
+.hide_header {
+  display: none;
+}
+
 .hide_container {
   display: none;
 }
@@ -58,15 +62,15 @@
 */
 
 .example1 {
-  background-color: #1F271B;
+  background-color: #000000;
 }
 
 .example2 {
-  background-color: #19647E;
+  background-color: #121212;
 }
 
 .example3 {
-  background-color: #28AFB0;
+  background-color: #2e4053 ;
 }
 
 .example4 {

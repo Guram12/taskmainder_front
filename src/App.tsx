@@ -7,8 +7,7 @@ import Register from './auth/register'
 import Header from './header/Header';
 import { useState } from 'react';
 import axiosInstance from './utils/axiosinstance';
-import { ThemeSpecs } from './header/Header';
-
+import { ThemeSpecs } from './utils/theme';
 
 export interface ProfileData {
   email: string;
@@ -55,13 +54,20 @@ const App: React.FC = () => {
   const [currentTheme, setCurrentTheme] = useState<ThemeSpecs>({
     '--background-color': '#f4f7f6',
     '--border-color': '#d9e0e3',
-    '--main-text-coloure': '#333'
+    '--main-text-coloure': '#333',
+    '--scrollbar-bg-color': '#f4f7f6',
+    '--scrollbar-thumb-color': '#d9e0e3',
   });
 
   const [change_current_theme, setChange_current_theme] = useState(false);
   const [boards, setBoards] = useState<board[]>([]);
-
-
+  const [selectedBoard, setSelectedBoard] = useState<board>({
+    id: 0,
+    name: '',
+    created_at: '',
+    lists: [],
+    owner: ''
+  });
 
 
   const accessToken: string | null = localStorage.getItem('access_token');
@@ -97,6 +103,8 @@ const App: React.FC = () => {
         document.documentElement.style.setProperty(key, value);
       }
       document.body.style.backgroundColor = themeSpecs['--background-color'];
+      document.body.style.scrollbarColor = themeSpecs['--scrollbar-bg-color'] + ' ' + themeSpecs['--scrollbar-thumb-color'];
+    
     }
   }, [change_current_theme]);
 
@@ -163,8 +171,14 @@ const App: React.FC = () => {
       const isValid = await validateTokens();
       if (isValid) {
         setIsAuthenticated(true);
+        if (window.location.pathname === '/') {
+          window.location.href = '/mainpage';
+        }
       } else {
         setIsAuthenticated(false);
+        if (window.location.pathname !== '/') {
+          window.location.href = '/';
+        }
       }
     };
 
@@ -183,13 +197,15 @@ const App: React.FC = () => {
         change_current_theme={change_current_theme}
       />
       <Routes>
-        <Route path="/login" element={<Login setIsAuthenticated={setIsAuthenticated} />} />
+        <Route path="/" element={<Login setIsAuthenticated={setIsAuthenticated} />} />
         <Route path="/register" element={<Register />} />
-        <Route path="/" 
-        element={<MainPage
-          currentTheme={currentTheme}
-          boards={boards}
-        />} />
+        <Route path="/mainpage"
+          element={<MainPage
+            selectedBoard={selectedBoard}
+            setSelectedBoard={setSelectedBoard}
+            currentTheme={currentTheme}
+            boards={boards}
+          />} />
       </Routes>
     </Router>
   );

@@ -2,6 +2,10 @@ import React from 'react';
 import "./Header.css";
 import { ProfileData } from '../App';
 import LogoComponent from '../components/LogoComponent';
+import { useLocation } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import { ThemeSpecs } from '../utils/theme';
+import themes from '../utils/theme';
 
 
 
@@ -12,11 +16,6 @@ interface HeaderProps {
   change_current_theme: boolean;
 }
 
-export interface ThemeSpecs {
-  '--background-color': string;
-  '--main-text-coloure': string;
-  '--border-color': string;
-}
 
 
 const Header: React.FC<HeaderProps> = ({
@@ -26,9 +25,20 @@ const Header: React.FC<HeaderProps> = ({
   change_current_theme,
 }) => {
 
+  const [showHeader, setShowHeader] = useState<boolean>(true);
+  const location = useLocation();
+
+  useEffect(() => {
+    if (location.pathname === "/" || location.pathname === "/register") {
+      setShowHeader(false);
+    }
+    else {
+      setShowHeader(true);
+    }
+  }, [location.pathname])
 
 
-// ============================== theme change function ======================================
+  // ============================== theme change function ======================================
   const changeTheme = (themeSpecs: ThemeSpecs) => {
     for (const [key, value] of Object.entries(themeSpecs)) {
       document.documentElement.style.setProperty(key, value)
@@ -37,59 +47,29 @@ const Header: React.FC<HeaderProps> = ({
     document.body.style.backgroundColor = themeSpecs['--background-color'];
     setChange_current_theme(!change_current_theme);
   }
-// ===========================================================================================
+  // ===========================================================================================
+
 
 
   return (
-    <div className={`main_Header_container ${!isAuthenticated ? "hide_container" : ''} `}>
+    <div className={`main_Header_container ${!isAuthenticated ? "hide_container" : ''}  ${!showHeader ? 'hide_header' : ""} `}>
       <div className='header_logo_container' >
         <LogoComponent />
       </div>
 
-      <div className='header_coloure_container'  >
+      <div className='header_coloure_container'>
         <div className='header_coloure_child_container example1'
-          onClick={() =>
-            changeTheme(
-              {
-                '--background-color': '#000000',
-                '--main-text-coloure': '#ffffff',
-                '--border-color': '#000000'
-              })}></div>
+          onClick={() => changeTheme(themes.dark)}></div>
         <div className='header_coloure_child_container example2'
-          onClick={() =>
-            changeTheme({
-              '--background-color': '#19647E',
-              '--main-text-coloure': '#FFFFFF',
-              '--border-color': '#000000'
-            })}></div>
+          onClick={() => changeTheme(themes.theme1)}></div>
         <div className='header_coloure_child_container example3'
-          onClick={() =>
-            changeTheme({
-              '--background-color': '#28AFB0',
-              '--main-text-coloure': '#FFFFFF',
-              '--border-color': '#000000'
-            })}></div>
+          onClick={() => changeTheme(themes.theme2)}></div>
         <div className='header_coloure_child_container example4'
-          onClick={() =>
-            changeTheme({
-              '--background-color': '#F4D35E',
-              '--main-text-coloure': '#000000',
-              '--border-color': '#000000'
-            })}></div>
+          onClick={() => changeTheme(themes.light)}></div>
         <div className='header_coloure_child_container example5'
-          onClick={() =>
-            changeTheme({
-              '--background-color': '#708B75',
-              '--main-text-coloure': '#FFFFFF',
-              '--border-color': '#000000'
-            })}></div>
+          onClick={() => changeTheme(themes.theme3)}></div>
         <div className='header_coloure_child_container example6'
-          onClick={() =>
-            changeTheme({
-              '--background-color': '#005f54',
-              '--main-text-coloure': '#FFFFFF',
-              '--border-color': '#000000'
-            })}></div>
+          onClick={() => changeTheme(themes.theme4)}></div>
       </div>
 
       <div>
