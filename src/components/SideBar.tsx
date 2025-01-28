@@ -13,6 +13,8 @@ import { board } from "../App";
 interface SidebarProps {
   currentTheme: ThemeSpecs;
   boards: board[];
+  setSelectedBoard: (board: board) => void;
+  setSelectedComponent: (component: string) => void;
 }
 
 
@@ -22,7 +24,7 @@ interface ThemeSpecs {
   '--main-text-coloure': string;
 }
 
-const SidebarComponent: React.FC<SidebarProps> = ({ currentTheme, boards }) => {
+const SidebarComponent: React.FC<SidebarProps> = ({ currentTheme, boards, setSelectedBoard, setSelectedComponent }) => {
   const [isOpen, setIsOpen] = useState(true);
   const [isPinned, setIsPinned] = useState(false);
 
@@ -52,6 +54,14 @@ const SidebarComponent: React.FC<SidebarProps> = ({ currentTheme, boards }) => {
   };
 
   // =========================================================================================================
+
+
+  const handleBoardClick = (board: board) => {
+    setSelectedBoard(board);
+    setSelectedComponent("Boards");
+  }
+
+
   return (
     <div className={`sidebar_main_container ${isOpen ? 'open' : 'closed'}`}>
       <div className="sidebar_container">
@@ -90,7 +100,7 @@ const SidebarComponent: React.FC<SidebarProps> = ({ currentTheme, boards }) => {
                 {/* other menu items  */}
                 <SubMenu label="Boards" id="board" icon={<GrTasks className="sidebar_big_icon" />}>
                   {isOpen && (
-                    <div  >
+                    <div >
                       {boards.map((board: board) => (
                         <MenuItem
                           key={board.id}
@@ -99,6 +109,7 @@ const SidebarComponent: React.FC<SidebarProps> = ({ currentTheme, boards }) => {
                             transition: 'all 0.3s',
                           }}
                           icon={<FaClipboardList />}
+                          onClick={() => handleBoardClick(board)}
                         >
                           {board.name}
                         </MenuItem>
@@ -108,13 +119,19 @@ const SidebarComponent: React.FC<SidebarProps> = ({ currentTheme, boards }) => {
 
 
                 </SubMenu>
-                <MenuItem icon={<FaBook />}>Documentation</MenuItem>
-                <MenuItem icon={<FaCalendarAlt />}>Calendar</MenuItem>
+                <MenuItem icon={<FaBook />}  >Documentation</MenuItem>
+                <MenuItem
+                  icon={<FaCalendarAlt />}
+                  onClick={() => setSelectedComponent("Calendar")}
+                >Calendar</MenuItem>
               </Menu>
             </div>
             <div >
               <Menu style={{ marginTop: 'auto' }}>
-                <MenuItem icon={<RiSettings4Fill className="sidebar_big_icon" />}>Settings</MenuItem>
+                <MenuItem
+                  icon={<RiSettings4Fill className="sidebar_big_icon" />}
+                  onClick={() => setSelectedComponent("Settings")}
+                >Settings</MenuItem>
               </Menu>
             </div>
           </div>

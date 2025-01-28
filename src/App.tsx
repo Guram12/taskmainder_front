@@ -60,8 +60,18 @@ const App: React.FC = () => {
 
   const [change_current_theme, setChange_current_theme] = useState(false);
   const [boards, setBoards] = useState<board[]>([]);
+  const [selectedBoard, setSelectedBoard] = useState<board>({
+    id: 0,
+    name: '',
+    created_at: '',
+    lists: [],
+    owner: ''
+  });
 
 
+  useEffect(() => {
+    console.log("selectedBoard ===>>>>   ", selectedBoard);
+  }, [selectedBoard]);
 
 
   const accessToken: string | null = localStorage.getItem('access_token');
@@ -193,6 +203,8 @@ const App: React.FC = () => {
         <Route path="/register" element={<Register />} />
         <Route path="/dashboard"
           element={<MainPage
+            selectedBoard={selectedBoard}
+            setSelectedBoard={setSelectedBoard}
             currentTheme={currentTheme}
             boards={boards}
           />} />
