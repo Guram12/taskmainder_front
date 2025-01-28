@@ -69,11 +69,6 @@ const App: React.FC = () => {
   });
 
 
-  useEffect(() => {
-    console.log("selectedBoard ===>>>>   ", selectedBoard);
-  }, [selectedBoard]);
-
-
   const accessToken: string | null = localStorage.getItem('access_token');
   const refreshToken: string | null = localStorage.getItem('refresh_token');
 

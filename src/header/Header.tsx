@@ -52,6 +52,7 @@ const Header: React.FC<HeaderProps> = ({
   // ===========================================================================================
 
 
+
   return (
     <div className={`main_Header_container ${!isAuthenticated ? "hide_container" : ''}  ${!showHeader ? 'hide_header' : ""} `}>
       <div className='header_logo_container' >
@@ -70,7 +71,7 @@ const Header: React.FC<HeaderProps> = ({
         <div className='header_coloure_child_container example2'
           onClick={() =>
             changeTheme({
-              '--background-color': '#19647E',
+              '--background-color': '#121212',
               '--main-text-coloure': '#FFFFFF',
               '--border-color': '#000000'
             })}></div>
