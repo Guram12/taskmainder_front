@@ -66,21 +66,21 @@ const Header: React.FC<HeaderProps> = ({
               {
                 '--background-color': '#000000',
                 '--main-text-coloure': '#ffffff',
-                '--border-color': '#000000'
+                '--border-color': '#f2f3f4'
               })}></div>
         <div className='header_coloure_child_container example2'
           onClick={() =>
             changeTheme({
               '--background-color': '#121212',
               '--main-text-coloure': '#FFFFFF',
-              '--border-color': '#000000'
+              '--border-color': '#f2f3f4'
             })}></div>
         <div className='header_coloure_child_container example3'
           onClick={() =>
             changeTheme({
-              '--background-color': '#28AFB0',
+              '--background-color': '#2e4053',
               '--main-text-coloure': '#FFFFFF',
-              '--border-color': '#000000'
+              '--border-color': '#d6dbdf'
             })}></div>
         <div className='header_coloure_child_container example4'
           onClick={() =>

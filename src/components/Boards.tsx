@@ -1,6 +1,8 @@
 import '../styles/boards.css'
 import React from "react";
-import { useEffect , useState } from "react";
+import { useEffect , useState , useRef} from "react";
+import { ThemeSpecs } from '../header/Header';
+
 
 interface board {
   id: number;
@@ -30,12 +32,13 @@ interface tasks {
 
 interface BoardsProps {
   selectedBoard: board;
+  currentTheme: ThemeSpecs;
 }
 
 
-const Boards: React.FC<BoardsProps> = ({ selectedBoard }) => {
+const Boards: React.FC<BoardsProps> = ({ selectedBoard , currentTheme}) => {
   const [lists, setLists] = useState<lists[]>([]);
-
+  const listsContainerRef = useRef<HTMLDivElement>(null);
 
 
   useEffect(() => {
@@ -48,13 +51,37 @@ const Boards: React.FC<BoardsProps> = ({ selectedBoard }) => {
 
 
 
+  useEffect(() => {
+    const handleWheel = (event: WheelEvent) => {
+      if (listsContainerRef.current) {
+        event.preventDefault();
+        listsContainerRef.current.scrollLeft += event.deltaY;
+      }
+    };
+
+    const container = listsContainerRef.current;
+    if (container) {
+      container.addEventListener('wheel', handleWheel);
+    }
+
+    return () => {
+      if (container) {
+        container.removeEventListener('wheel', handleWheel);
+      }
+    };
+  }, []);
+
 
   return (
     <div className="main_boards_container" >
-      <div className="lists_container">
+      <div className="lists_container" ref={listsContainerRef}>
         {lists.map((list, index) => (
           // list 
-          <div className="lists" key={index} >
+          <div className="lists" key={index} style={{
+            backgroundColor: currentTheme['--background-color'],
+            color: currentTheme['--main-text-coloure'],
+            border: `1px solid ${currentTheme['--border-color']}`
+          }} >
             <h1>{list.name}</h1>
             {/* task */}
             {list.tasks.map((task, index) => {

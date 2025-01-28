@@ -169,7 +169,7 @@ const App: React.FC = () => {
       if (isValid) {
         setIsAuthenticated(true);
         if (window.location.pathname === '/') {
-          window.location.href = '/dashboard';
+          window.location.href = '/mainpage';
         }
       } else {
         setIsAuthenticated(false);
@@ -196,7 +196,7 @@ const App: React.FC = () => {
       <Routes>
         <Route path="/" element={<Login setIsAuthenticated={setIsAuthenticated} />} />
         <Route path="/register" element={<Register />} />
-        <Route path="/dashboard"
+        <Route path="/mainpage"
           element={<MainPage
             selectedBoard={selectedBoard}
             setSelectedBoard={setSelectedBoard}

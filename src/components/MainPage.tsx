@@ -29,7 +29,7 @@ const MainPage: React.FC<MainPageProps> = ({ currentTheme, boards, setSelectedBo
       case "Calendar":
         return <Calendar  boards={boards} />;
         case "Boards":
-          return <Boards  selectedBoard={selectedBoard} />;
+          return <Boards  selectedBoard={selectedBoard} currentTheme={currentTheme} />;
       default:
         return <div>Select a component from the sidebar</div>;
     }

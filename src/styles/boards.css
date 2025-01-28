@@ -7,7 +7,6 @@
   flex-direction: row;
   height: 100%;
   width: 100%; /* Ensure it takes the full width of the parent */
-  border: 1px solid red;
   overflow: hidden; /* Prevent the main container from scrolling */
 }
 
@@ -19,19 +18,20 @@
   flex-grow: 1; /* Allow it to take up remaining space */
   overflow-x: auto; 
   overflow-y: hidden;
-  height: calc(100vh - 104px);
-  gap: 720px; /* Set a reasonable gap value */
+  height: calc(100vh - 102px);
+  gap: 520px; /* Set a reasonable gap value */
+  padding-left: 30px;
 }
 
 .lists {
   display: flex;
   flex-direction: column; /* Ensure this is set to column */
   justify-content: flex-start;
-  align-items: flex-start;
+  align-items: center;
   margin: 0;
   padding: 0;
-  width: 400px;
-  min-width: 400px;
+  width: 300px;
+  min-width: 300px;
   height: auto;
-  border: 1px solid rgb(0, 255, 136);
+  border-radius: 20px;
 }
