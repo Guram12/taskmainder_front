@@ -3,7 +3,10 @@ import "./Header.css";
 import { ProfileData } from '../App';
 import LogoComponent from '../components/LogoComponent';
 import { useLocation } from 'react-router-dom';
-import { useState , useEffect} from 'react';
+import { useState, useEffect } from 'react';
+import { ThemeSpecs } from '../utils/theme';
+import themes from '../utils/theme';
+
 
 
 interface HeaderProps {
@@ -13,11 +16,6 @@ interface HeaderProps {
   change_current_theme: boolean;
 }
 
-export interface ThemeSpecs {
-  '--background-color': string;
-  '--main-text-coloure': string;
-  '--border-color': string;
-}
 
 
 const Header: React.FC<HeaderProps> = ({
@@ -31,7 +29,7 @@ const Header: React.FC<HeaderProps> = ({
   const location = useLocation();
 
   useEffect(() => {
-    if (location.pathname === "/" || location.pathname === "/register" ) {
+    if (location.pathname === "/" || location.pathname === "/register") {
       setShowHeader(false);
     }
     else {
@@ -59,50 +57,19 @@ const Header: React.FC<HeaderProps> = ({
         <LogoComponent />
       </div>
 
-      <div className='header_coloure_container'  >
+      <div className='header_coloure_container'>
         <div className='header_coloure_child_container example1'
-          onClick={() =>
-            changeTheme(
-              {
-                '--background-color': '#000000',
-                '--main-text-coloure': '#ffffff',
-                '--border-color': '#f2f3f4'
-              })}></div>
+          onClick={() => changeTheme(themes.dark)}></div>
         <div className='header_coloure_child_container example2'
-          onClick={() =>
-            changeTheme({
-              '--background-color': '#121212',
-              '--main-text-coloure': '#FFFFFF',
-              '--border-color': '#f2f3f4'
-            })}></div>
+          onClick={() => changeTheme(themes.theme1)}></div>
         <div className='header_coloure_child_container example3'
-          onClick={() =>
-            changeTheme({
-              '--background-color': '#2e4053',
-              '--main-text-coloure': '#FFFFFF',
-              '--border-color': '#d6dbdf'
-            })}></div>
+          onClick={() => changeTheme(themes.theme2)}></div>
         <div className='header_coloure_child_container example4'
-          onClick={() =>
-            changeTheme({
-              '--background-color': '#F4D35E',
-              '--main-text-coloure': '#000000',
-              '--border-color': '#000000'
-            })}></div>
+          onClick={() => changeTheme(themes.light)}></div>
         <div className='header_coloure_child_container example5'
-          onClick={() =>
-            changeTheme({
-              '--background-color': '#708B75',
-              '--main-text-coloure': '#FFFFFF',
-              '--border-color': '#000000'
-            })}></div>
+          onClick={() => changeTheme(themes.theme3)}></div>
         <div className='header_coloure_child_container example6'
-          onClick={() =>
-            changeTheme({
-              '--background-color': '#005f54',
-              '--main-text-coloure': '#FFFFFF',
-              '--border-color': '#000000'
-            })}></div>
+          onClick={() => changeTheme(themes.theme4)}></div>
       </div>
 
       <div>

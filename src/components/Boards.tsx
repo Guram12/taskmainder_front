@@ -1,7 +1,7 @@
 import '../styles/boards.css'
 import React from "react";
-import { useEffect , useState , useRef} from "react";
-import { ThemeSpecs } from '../header/Header';
+import { useEffect, useState, useRef } from "react";
+import { ThemeSpecs } from '../utils/theme';
 
 
 interface board {
@@ -36,7 +36,7 @@ interface BoardsProps {
 }
 
 
-const Boards: React.FC<BoardsProps> = ({ selectedBoard , currentTheme}) => {
+const Boards: React.FC<BoardsProps> = ({ selectedBoard, currentTheme }) => {
   const [lists, setLists] = useState<lists[]>([]);
   const listsContainerRef = useRef<HTMLDivElement>(null);
 
@@ -77,11 +77,14 @@ const Boards: React.FC<BoardsProps> = ({ selectedBoard , currentTheme}) => {
       <div className="lists_container" ref={listsContainerRef}>
         {lists.map((list, index) => (
           // list 
-          <div className="lists" key={index} style={{
-            backgroundColor: currentTheme['--background-color'],
-            color: currentTheme['--main-text-coloure'],
-            border: `1px solid ${currentTheme['--border-color']}`
-          }} >
+          <div
+            key={index}
+            className="lists"
+            style={{
+              backgroundColor: currentTheme['--background-color'],
+              color: currentTheme['--main-text-coloure'],
+              border: `1px solid ${currentTheme['--border-color']}`
+            }} >
             <h1>{list.name}</h1>
             {/* task */}
             {list.tasks.map((task, index) => {

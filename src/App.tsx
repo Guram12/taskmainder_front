@@ -7,8 +7,7 @@ import Register from './auth/register'
 import Header from './header/Header';
 import { useState } from 'react';
 import axiosInstance from './utils/axiosinstance';
-import { ThemeSpecs } from './header/Header';
-
+import { ThemeSpecs } from './utils/theme';
 
 export interface ProfileData {
   email: string;
@@ -55,7 +54,9 @@ const App: React.FC = () => {
   const [currentTheme, setCurrentTheme] = useState<ThemeSpecs>({
     '--background-color': '#f4f7f6',
     '--border-color': '#d9e0e3',
-    '--main-text-coloure': '#333'
+    '--main-text-coloure': '#333',
+    '--scrollbar-bg-color': '#f4f7f6',
+    '--scrollbar-thumb-color': '#d9e0e3',
   });
 
   const [change_current_theme, setChange_current_theme] = useState(false);
@@ -102,6 +103,8 @@ const App: React.FC = () => {
         document.documentElement.style.setProperty(key, value);
       }
       document.body.style.backgroundColor = themeSpecs['--background-color'];
+      document.body.style.scrollbarColor = themeSpecs['--scrollbar-bg-color'] + ' ' + themeSpecs['--scrollbar-thumb-color'];
+    
     }
   }, [change_current_theme]);
 

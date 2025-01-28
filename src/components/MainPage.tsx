@@ -1,13 +1,12 @@
 import "../styles/MainPage.css";
 import React from "react";
 import SidebarComponent from "./SideBar";
-import { ThemeSpecs } from "../header/Header";
 import { board } from "../App";
 import { useState } from "react"; 
 import Settings from "./Settings";
 import Calendar from "./Calendar";
 import Boards from "./Boards";
-
+import { ThemeSpecs } from "../utils/theme";
 
 
 interface MainPageProps {
