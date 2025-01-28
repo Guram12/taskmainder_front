@@ -163,8 +163,14 @@ const App: React.FC = () => {
       const isValid = await validateTokens();
       if (isValid) {
         setIsAuthenticated(true);
+        if (window.location.pathname === '/') {
+          window.location.href = '/dashboard';
+        }
       } else {
         setIsAuthenticated(false);
+        if (window.location.pathname !== '/') {
+          window.location.href = '/';
+        }
       }
     };
 
@@ -183,13 +189,13 @@ const App: React.FC = () => {
         change_current_theme={change_current_theme}
       />
       <Routes>
-        <Route path="/login" element={<Login setIsAuthenticated={setIsAuthenticated} />} />
+        <Route path="/" element={<Login setIsAuthenticated={setIsAuthenticated} />} />
         <Route path="/register" element={<Register />} />
-        <Route path="/" 
-        element={<MainPage
-          currentTheme={currentTheme}
-          boards={boards}
-        />} />
+        <Route path="/dashboard"
+          element={<MainPage
+            currentTheme={currentTheme}
+            boards={boards}
+          />} />
       </Routes>
     </Router>
   );

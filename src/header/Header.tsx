@@ -2,7 +2,8 @@ import React from 'react';
 import "./Header.css";
 import { ProfileData } from '../App';
 import LogoComponent from '../components/LogoComponent';
-
+import { useLocation } from 'react-router-dom';
+import { useState , useEffect} from 'react';
 
 
 interface HeaderProps {
@@ -26,9 +27,20 @@ const Header: React.FC<HeaderProps> = ({
   change_current_theme,
 }) => {
 
+  const [showHeader, setShowHeader] = useState<boolean>(true);
+  const location = useLocation();
+
+  useEffect(() => {
+    if (location.pathname === "/" || location.pathname === "/register" ) {
+      setShowHeader(false);
+    }
+    else {
+      setShowHeader(true);
+    }
+  }, [location.pathname])
 
 
-// ============================== theme change function ======================================
+  // ============================== theme change function ======================================
   const changeTheme = (themeSpecs: ThemeSpecs) => {
     for (const [key, value] of Object.entries(themeSpecs)) {
       document.documentElement.style.setProperty(key, value)
@@ -37,11 +49,11 @@ const Header: React.FC<HeaderProps> = ({
     document.body.style.backgroundColor = themeSpecs['--background-color'];
     setChange_current_theme(!change_current_theme);
   }
-// ===========================================================================================
+  // ===========================================================================================
 
 
   return (
-    <div className={`main_Header_container ${!isAuthenticated ? "hide_container" : ''} `}>
+    <div className={`main_Header_container ${!isAuthenticated ? "hide_container" : ''}  ${!showHeader ? 'hide_header' : ""} `}>
       <div className='header_logo_container' >
         <LogoComponent />
       </div>

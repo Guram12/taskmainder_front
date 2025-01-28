@@ -31,7 +31,7 @@ const Login: React.FC<loginProps> = ({ setIsAuthenticated }) => {
       localStorage.setItem('refresh_token', response.data.refresh);
       localStorage.setItem("login_status", "true");
       setIsAuthenticated(true);
-      navigate('/');
+      navigate('/dashboard');
     } catch (err) {
       if (axios.isAxiosError(err)) {
         if (err.response && err.response.status === 400) {
