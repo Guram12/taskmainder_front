@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axiosInstance from '../utils/axiosinstance';
 import axios from 'axios';
-
+import GoogleSignIn from './GoogleSignIn';
 
 interface loginProps {
   setIsAuthenticated: (value: boolean) => void;
@@ -64,6 +64,14 @@ const Login: React.FC<loginProps> = ({ setIsAuthenticated }) => {
         </div>
         <button type="submit">Login</button>
       </form>
+      <div style={{
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginTop: '20px',
+      }}>
+        <GoogleSignIn setIsAuthenticated={setIsAuthenticated} />
+      </div>
       {message && <p>{message}</p>}
     </div>
   );

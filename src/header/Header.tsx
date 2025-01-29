@@ -38,6 +38,10 @@ const Header: React.FC<HeaderProps> = ({
   }, [location.pathname])
 
 
+  useEffect(() => {
+    console.log(";profiledata --->>>", profileData);
+  }, [profileData])
+
   // ============================== theme change function ======================================
   const changeTheme = (themeSpecs: ThemeSpecs) => {
     for (const [key, value] of Object.entries(themeSpecs)) {
@@ -75,7 +79,7 @@ const Header: React.FC<HeaderProps> = ({
       <div>
         <div className='header_profile_container' >
           <h3 className="header_profile_username">{profileData.username}</h3>
-          <img src={profileData.profile_picture} alt="profile" className="header_profile_picture" />
+          <img src={profileData?.profile_picture} alt="profile" className="header_profile_picture" />
         </div>
       </div>
 
@@ -84,9 +88,6 @@ const Header: React.FC<HeaderProps> = ({
 }
 
 export default Header;
-
-
-
 
 
 
