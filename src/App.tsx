@@ -166,7 +166,7 @@ const App: React.FC = () => {
   };
   // --------------------------------------------------------------------------------------------------------
   useEffect(() => {
-    console.log("useEffect called");
+    console.log("useEffect called for check Authentication");
     const checkAuthentication = async () => {
       const isValid = await validateTokens();
       if (isValid) {
@@ -193,6 +193,7 @@ const App: React.FC = () => {
       <Header
         profileData={profileData}
         isAuthenticated={isAuthenticated}
+        setIsAuthenticated={setIsAuthenticated}
         setChange_current_theme={setChange_current_theme}
         change_current_theme={change_current_theme}
       />

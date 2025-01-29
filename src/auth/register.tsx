@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import axiosInstance from '../utils/axiosinstance';
-
+import { useNavigate } from 'react-router-dom';
 
 
 
@@ -14,7 +14,7 @@ const Register: React.FC = () => {
   const [phoneNumber, setPhoneNumber] = useState('');
   const [profileImage, setProfileImage] = useState<File | null>(null);
   const [message, setMessage] = useState('');
-
+  const navigate = useNavigate();
 
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -34,15 +34,23 @@ const Register: React.FC = () => {
         },
       });
       setMessage('Registration successful!');
+      setTimeout(() => {
+        navigate('/');
+      }, 2000);
     } catch (error) {
       setMessage('Registration failed. Please try again.');
     }
   };
 
 
+  const habdleLogin = () => {
+    navigate('/');
+  }
+
   return (
     <div>
       <h2>Register</h2>
+      <p>guramshanidze44@gmail.com</p>
       <form onSubmit={handleRegister}>
         <div>
           <label>Email:</label>
@@ -66,6 +74,7 @@ const Register: React.FC = () => {
         </div>
         <button type="submit">Register</button>
       </form>
+      <button onClick={habdleLogin} > Go to login</button>
       {message && <p>{message}</p>}
     </div>
   );
