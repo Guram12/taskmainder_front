@@ -50,6 +50,7 @@ const Register: React.FC = () => {
   return (
     <div>
       <h2>Register</h2>
+      <p>guramshanidze44@gmail.com</p>
       <form onSubmit={handleRegister}>
         <div>
           <label>Email:</label>
