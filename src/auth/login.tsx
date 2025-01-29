@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axiosInstance from '../utils/axiosinstance';
-import axios from 'axios';
 import GoogleSignIn from './GoogleSignIn';
 
 interface loginProps {
@@ -11,15 +10,13 @@ interface loginProps {
 
 
 const Login: React.FC<loginProps> = ({ setIsAuthenticated }) => {
-
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [message, setMessage] = useState('');
+  const [error, setError] = useState('');
 
   const navigate = useNavigate();
 
-
-  // ===================================== login ====================================
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
@@ -27,28 +24,28 @@ const Login: React.FC<loginProps> = ({ setIsAuthenticated }) => {
         email,
         password,
       });
-      localStorage.setItem('access_token', response.data.access);
-      localStorage.setItem('refresh_token', response.data.refresh);
-      localStorage.setItem("login_status", "true");
-      setIsAuthenticated(true);
-      navigate('/mainpage');
-    } catch (err) {
-      if (axios.isAxiosError(err)) {
-        if (err.response && err.response.status === 400) {
-          const errorMessage = err.response.data.email || 'Invalid email or password';
-          console.error(errorMessage);
-        } else {
-          console.error('An error occurred. Please try again later.');
-          setMessage('An error occurred. Please try again later.');
-        }
-      } else {
-        console.error('An unexpected error occurred. Please try again later.');
-        setMessage('An unexpected error occurred. Please try again later.');
+
+      if (response.data.access && response.data.refresh) {
+        localStorage.setItem('access_token', response.data.access);
+        localStorage.setItem('refresh_token', response.data.refresh);
+        setIsAuthenticated(true);
+        navigate('/mainpage');
+      } else {  
+        setError('An error occurred during login.');
+        setMessage('An error occurred during login.');
       }
+
+    } catch (err: any) {
+      console.error('Error during login:', err.response);
+      setError(err.response?.data?.detail || 'An error occurred during login.');
+      setMessage('An error occurred during login.');
     }
   };
-  // =================================================================================
 
+
+  const handleRegisterButtonClick = () => {
+    navigate('/register');
+  }
 
   return (
     <div>
@@ -72,7 +69,9 @@ const Login: React.FC<loginProps> = ({ setIsAuthenticated }) => {
       }}>
         <GoogleSignIn setIsAuthenticated={setIsAuthenticated} />
       </div>
+      <button onClick={handleRegisterButtonClick} >Register</button>
       {message && <p>{message}</p>}
+      {error && <p>{error}</p>}
     </div>
   );
 };
