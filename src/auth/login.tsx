@@ -8,11 +8,9 @@ interface loginProps {
 }
 
 
-
 const Login: React.FC<loginProps> = ({ setIsAuthenticated }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [message, setMessage] = useState('');
   const [error, setError] = useState('');
 
   const navigate = useNavigate();
@@ -32,13 +30,11 @@ const Login: React.FC<loginProps> = ({ setIsAuthenticated }) => {
         navigate('/mainpage');
       } else {  
         setError('An error occurred during login.');
-        setMessage('An error occurred during login.');
       }
 
     } catch (err: any) {
       console.error('Error during login:', err.response);
-      setError(err.response?.data?.detail || 'An error occurred during login.');
-      setMessage('An error occurred during login.');
+      setError(err.response.data.error || 'An error occurred during login.');
     }
   };
 
@@ -70,7 +66,6 @@ const Login: React.FC<loginProps> = ({ setIsAuthenticated }) => {
         <GoogleSignIn setIsAuthenticated={setIsAuthenticated} />
       </div>
       <button onClick={handleRegisterButtonClick} >Register</button>
-      {message && <p>{message}</p>}
       {error && <p>{error}</p>}
     </div>
   );
