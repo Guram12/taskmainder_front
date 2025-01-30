@@ -2,9 +2,9 @@ import '../styles/boards.css'
 import React from "react";
 import { useEffect, useState, useRef } from "react";
 import { ThemeSpecs } from '../utils/theme';
+import { FaPlus } from "react-icons/fa";
 
-
-interface board {
+export interface board {
   id: number;
   name: string;
   created_at: string;
@@ -12,7 +12,7 @@ interface board {
   owner: string;
 }
 
-interface lists {
+export interface lists {
   id: number;
   name: string;
   created_at: string;
@@ -20,17 +20,18 @@ interface lists {
   tasks: tasks[];
 }
 
-interface tasks {
+export interface tasks {
   created_at: string;
   description: string;
   due_date: string;
   id: number;
   list: number;
   title: string;
+  completed: boolean;
 }
 
 
-interface BoardsProps {
+export interface BoardsProps {
   selectedBoard: board;
   currentTheme: ThemeSpecs;
 }
@@ -38,9 +39,24 @@ interface BoardsProps {
 
 const Boards: React.FC<BoardsProps> = ({ selectedBoard, currentTheme }) => {
   const [lists, setLists] = useState<lists[]>([]);
+  const [activeListId, setActiveListId] = useState<number | null>(null);
+  const [taskTitle, setTaskTitle] = useState<string>('');
+  const [taskDescription, setTaskDescription] = useState<string>('');
+  const [taskDueDate, setTaskDueDate] = useState<string>('');
+
+
+  const [isNewTaskChecked, setIsNewTaskChecked] = useState(false);
+
   const listsContainerRef = useRef<HTMLDivElement>(null);
 
 
+
+
+
+
+
+
+  // --------------------------------------------------------------------------------
   useEffect(() => {
     setLists(selectedBoard.lists);
   }, [selectedBoard]);
@@ -50,27 +66,39 @@ const Boards: React.FC<BoardsProps> = ({ selectedBoard, currentTheme }) => {
   }, [lists]);
 
 
+  // ======================================== mouse wheel scroll effect ========================================
+  // useEffect(() => {
+  //   const handleWheel = (event: WheelEvent) => {
+  //     if (listsContainerRef.current) {
+  //       event.preventDefault();
+  //       listsContainerRef.current.scrollLeft += event.deltaY;
+  //     }
+  //   };
 
-  useEffect(() => {
-    const handleWheel = (event: WheelEvent) => {
-      if (listsContainerRef.current) {
-        event.preventDefault();
-        listsContainerRef.current.scrollLeft += event.deltaY;
-      }
-    };
+  //   const container = listsContainerRef.current;
+  //   if (container) {
+  //     container.addEventListener('wheel', handleWheel);
+  //   }
 
-    const container = listsContainerRef.current;
-    if (container) {
-      container.addEventListener('wheel', handleWheel);
-    }
+  //   return () => {
+  //     if (container) {
+  //       container.removeEventListener('wheel', handleWheel);
+  //     }
+  //   };
+  // }, []);
+  // ==============================================================================================================
+  // ================================================== task add functionalisy ====================================
+  const handleTaskModalOpen = (listId: number) => {
+    setActiveListId(listId);
+  };
 
-    return () => {
-      if (container) {
-        container.removeEventListener('wheel', handleWheel);
-      }
-    };
-  }, []);
+  const handleTaskModalClose = () => {
+    setActiveListId(null);
+  };
 
+
+
+  // ==============================================================================================================
 
   return (
     <div className="main_boards_container" >
@@ -85,15 +113,70 @@ const Boards: React.FC<BoardsProps> = ({ selectedBoard, currentTheme }) => {
               color: currentTheme['--main-text-coloure'],
               border: `1px solid ${currentTheme['--border-color']}`
             }} >
-            <h1>{list.name}</h1>
+            <h1 className='list_title' >{list.name}</h1>
             {/* task */}
-            {list.tasks.map((task, index) => {
-              return (
-                <div key={index}>
+
+            <div className='all_tasks_container' >
+              {list.tasks.map((task, index) => (
+                <div className='task_container' key={index}>
                   <p> {task.title}</p>
+                  <p> {task.description}</p>
+                  <p> {task.due_date}</p>
+                  <input type="checkbox"
+                    checked={task.completed}
+                    onChange={() => { }}
+
+                  />
                 </div>
               )
-            })}
+              )}
+              <div className="line_before_plus" style={{ backgroundColor: currentTheme['--border-color'] }} ></div>
+
+              {/* task add  elements  */}
+              <div>
+                <FaPlus className='plus_sign' onClick={() => handleTaskModalOpen(list.id)} />
+                {activeListId === list.id && (
+                  <>
+                    <div className="overlay active" onClick={handleTaskModalClose}></div>
+                    <div className='task_add_modal'>
+                      <p>List : {list.name}</p>
+                      <div className='task_add_inputs_container' >
+
+                        <input
+                          type="text"
+                          placeholder="Title"
+                          value={taskTitle}
+                          onChange={(e) => setTaskTitle(e.target.value)}
+                        />
+                        <input
+                          type="text"
+                          placeholder="Description"
+                          value={taskDescription}
+                          onChange={(e) => setTaskDescription(e.target.value)}
+                        />
+                        <input
+                          type="date"
+                          placeholder="Due Date"
+                          value={taskDueDate}
+                          onChange={(e) => setTaskDueDate(e.target.value)}
+
+                        />
+                        <input
+                          type="checkbox"
+                          checked={isNewTaskChecked}
+                          onChange={(e) => setIsNewTaskChecked(e.target.checked)}
+
+                        />
+                      </div>
+                      <button>Add Task</button>
+                      <button onClick={handleTaskModalClose}>Close</button>
+                    </div>
+                  </>
+                )}
+              </div>
+
+            </div>
+
 
           </div>
         ))}

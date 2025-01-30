@@ -8,37 +8,14 @@ import Header from './header/Header';
 import { useState } from 'react';
 import axiosInstance from './utils/axiosinstance';
 import { ThemeSpecs } from './utils/theme';
+import { board } from './components/Boards';
+
 
 export interface ProfileData {
   email: string;
   phone_number: string;
   profile_picture: string;
   username: string;
-}
-
-export interface board {
-  id: number;
-  name: string;
-  created_at: string;
-  lists: lists[];
-  owner: string;
-}
-
-export interface lists {
-  id: number;
-  name: string;
-  created_at: string;
-  board: number;
-  tasks: tasks[];
-}
-
-export interface tasks {
-  created_at: string;
-  description: string;
-  due_date: string;
-  id: number;
-  list: number;
-  title: string;
 }
 
 
