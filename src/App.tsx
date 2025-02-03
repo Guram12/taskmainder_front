@@ -9,13 +9,14 @@ import { useState } from 'react';
 import axiosInstance from './utils/axiosinstance';
 import { ThemeSpecs } from './utils/theme';
 import { board } from './components/Boards';
-
+import FinishGoogleSignIn from './auth/FinishGoogleSignIn';
 
 export interface ProfileData {
   email: string;
   phone_number: string;
   profile_picture: string;
   username: string;
+  timezone: string;
 }
 
 
@@ -25,7 +26,8 @@ const App: React.FC = () => {
     email: '',
     phone_number: '',
     profile_picture: '',
-    username: ''
+    username: '',
+    timezone: '',
   });
 
   const [currentTheme, setCurrentTheme] = useState<ThemeSpecs>({
@@ -81,7 +83,7 @@ const App: React.FC = () => {
       }
       document.body.style.backgroundColor = themeSpecs['--background-color'];
       document.body.style.scrollbarColor = themeSpecs['--scrollbar-bg-color'] + ' ' + themeSpecs['--scrollbar-thumb-color'];
-    
+
     }
   }, [change_current_theme]);
 
@@ -177,6 +179,7 @@ const App: React.FC = () => {
       <Routes>
         <Route path="/" element={<Login setIsAuthenticated={setIsAuthenticated} />} />
         <Route path="/register" element={<Register />} />
+        <Route path="/finish_profile" element={<FinishGoogleSignIn setIsAuthenticated={setIsAuthenticated} />} />
         <Route path="/mainpage"
           element={<MainPage
             selectedBoard={selectedBoard}
