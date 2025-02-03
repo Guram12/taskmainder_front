@@ -1,11 +1,16 @@
-import React, { useState } from 'react';
+import "../styles/Register.css";
+import React, { useEffect, useState } from 'react';
 import axiosInstance from '../utils/axiosinstance';
 import { useNavigate } from 'react-router-dom';
+import timezone_data from "../utils/data.json";
 
 
 
-
-
+interface FilteredCountry {
+  name: string;
+  timezone: string;
+  utc_offset: string;
+}
 
 const Register: React.FC = () => {
   const [email, setEmail] = useState('');
@@ -14,6 +19,13 @@ const Register: React.FC = () => {
   const [phoneNumber, setPhoneNumber] = useState('');
   const [profileImage, setProfileImage] = useState<File | null>(null);
   const [message, setMessage] = useState('');
+  const [countryInput, setCountryInput] = useState('');
+  const [filteredCountries, setFilteredCountries] = useState<FilteredCountry[]>([]);
+
+  const [selectedTimeZone, setSelectedTimeZone] = useState('');
+
+
+
   const navigate = useNavigate();
 
   const handleRegister = async (e: React.FormEvent) => {
@@ -23,6 +35,7 @@ const Register: React.FC = () => {
     formData.append('username', username);
     formData.append('password', password);
     formData.append('phone_number', phoneNumber);
+    formData.append('timezone', selectedTimeZone);
     if (profileImage) {
       formData.append('profile_picture', profileImage);
     }
@@ -42,10 +55,35 @@ const Register: React.FC = () => {
     }
   };
 
-
-  const habdleLogin = () => {
+  const handleLogin = () => {
     navigate('/');
-  }
+  };
+
+  const handleCountryInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setCountryInput(value);
+    if (value) {
+      const filtered: FilteredCountry[] = [];
+      timezone_data.forEach(entry => {
+        if (entry.country_name.toLowerCase().includes(value.toLowerCase())) {
+          filtered.push({ name: entry.country_name, timezone: entry.timezone, utc_offset: entry.utc_offset });
+        }
+      });
+      setFilteredCountries(filtered);
+    } else {
+      setFilteredCountries([]);
+    }
+  };
+  const handleTimeZoneClick = (country: FilteredCountry) => {
+    setSelectedTimeZone(country.timezone);
+    setCountryInput(country.timezone);
+    setFilteredCountries([]);
+  };
+
+  useEffect(() => {
+    console.log("selectedTimeZone:===>", selectedTimeZone);
+  }, [selectedTimeZone]);
+
 
   return (
     <div>
@@ -72,20 +110,27 @@ const Register: React.FC = () => {
           <label>Profile Image:</label>
           <input type="file" onChange={(e) => setProfileImage(e.target.files ? e.target.files[0] : null)} />
         </div>
+        <div className="country_select_inputs_container" >
+          <label>Country:</label>
+          <input type="text" value={countryInput} onChange={handleCountryInputChange} />
+          {filteredCountries.length > 0 && (
+            <div className='country_list'>
+              {filteredCountries.map((country, index) => (
+                <p
+                  className='country'
+                  key={index}
+                  onClick={() => handleTimeZoneClick(country)}
+                >{country.name} (Timezone: {country.timezone} , {country.utc_offset})</p>
+              ))}
+            </div>
+          )}
+        </div>
         <button type="submit">Register</button>
       </form>
-      <button onClick={habdleLogin} > Go to login</button>
+      <button onClick={handleLogin}>Go to login</button>
       {message && <p>{message}</p>}
     </div>
   );
 };
 
 export default Register;
-
-
-
-
-
-
-
-

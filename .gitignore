@@ -22,3 +22,7 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+test.py
+data.txt
+src/utils/countries.json
+src/utils/countries2.json
