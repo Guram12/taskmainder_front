@@ -13,16 +13,16 @@ interface FilteredCountry {
 }
 
 const Register: React.FC = () => {
-  const [email, setEmail] = useState('');
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
-  const [phoneNumber, setPhoneNumber] = useState('');
+  const [email, setEmail] = useState<string>('');
+  const [username, setUsername] = useState<string>('');
+  const [password, setPassword] = useState<string>('');
+  const [phoneNumber, setPhoneNumber] = useState<string>('');
   const [profileImage, setProfileImage] = useState<File | null>(null);
-  const [message, setMessage] = useState('');
-  const [countryInput, setCountryInput] = useState('');
+  const [message, setMessage] = useState<string>('');
+  const [countryInput, setCountryInput] = useState<string>('');
   const [filteredCountries, setFilteredCountries] = useState<FilteredCountry[]>([]);
 
-  const [selectedTimeZone, setSelectedTimeZone] = useState('');
+  const [selectedTimeZone, setSelectedTimeZone] = useState<string>('');
 
 
 

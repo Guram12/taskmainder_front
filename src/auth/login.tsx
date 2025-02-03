@@ -9,9 +9,9 @@ interface loginProps {
 
 
 const Login: React.FC<loginProps> = ({ setIsAuthenticated }) => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
+  const [email, setEmail] = useState<string>('');
+  const [password, setPassword] = useState<string>('');
+  const [error, setError] = useState<string>('');
 
   const navigate = useNavigate();
 
