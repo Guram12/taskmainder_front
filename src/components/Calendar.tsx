@@ -1,7 +1,6 @@
 
 
-import { board } from "../App";
-
+import { board } from "./Boards";
 
 
 

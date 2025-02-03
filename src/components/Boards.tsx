@@ -66,27 +66,6 @@ const Boards: React.FC<BoardsProps> = ({ selectedBoard, currentTheme }) => {
   }, [lists]);
 
 
-  // ======================================== mouse wheel scroll effect ========================================
-  // useEffect(() => {
-  //   const handleWheel = (event: WheelEvent) => {
-  //     if (listsContainerRef.current) {
-  //       event.preventDefault();
-  //       listsContainerRef.current.scrollLeft += event.deltaY;
-  //     }
-  //   };
-
-  //   const container = listsContainerRef.current;
-  //   if (container) {
-  //     container.addEventListener('wheel', handleWheel);
-  //   }
-
-  //   return () => {
-  //     if (container) {
-  //       container.removeEventListener('wheel', handleWheel);
-  //     }
-  //   };
-  // }, []);
-  // ==============================================================================================================
   // ================================================== task add functionalisy ====================================
   const handleTaskModalOpen = (listId: number) => {
     setActiveListId(listId);

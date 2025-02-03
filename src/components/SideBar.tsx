@@ -7,8 +7,7 @@ import { MdSpaceDashboard } from "react-icons/md";
 import { GrTasks } from "react-icons/gr";
 import { FaClipboardList } from "react-icons/fa";
 import { RiSettings4Fill } from "react-icons/ri";
-import { board } from "../App";
-
+import { board } from "./Boards";
 
 interface SidebarProps {
   currentTheme: ThemeSpecs;
