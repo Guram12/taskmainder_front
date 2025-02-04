@@ -1,5 +1,5 @@
-import React, { useState } from "react";
 import '../styles/Sidebar.css';
+import React, { useState } from "react";
 import { Sidebar, Menu, MenuItem, SubMenu } from 'react-pro-sidebar';
 import { FaBook, FaCalendarAlt } from "react-icons/fa";
 import { TiPin, TiPinOutline } from "react-icons/ti";

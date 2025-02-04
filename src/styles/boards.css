@@ -7,9 +7,7 @@
   flex-direction: row;
   height: 100%;
   width: 100%;
-  /* Ensure it takes the full width of the parent */
   overflow: hidden;
-  /* Prevent the main container from scrolling */
 }
 
 .lists_container {
@@ -18,13 +16,12 @@
   align-items: flex-start;
   flex-direction: row;
   flex-grow: 1;
-  /* Allow it to take up remaining space */
   overflow-x: auto;
   overflow-y: hidden;
   height: calc(100vh - 102px);
   gap: 520px;
-  /* Set a reasonable gap value */
   padding-left: 30px;
+  scrollbar-width: auto ;
 }
 
 .lists {
