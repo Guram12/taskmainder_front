@@ -4,6 +4,7 @@ import { useEffect, useState, useRef } from "react";
 import { ThemeSpecs } from '../utils/theme';
 import { FaPlus } from "react-icons/fa";
 import axiosInstance from '../utils/axiosinstance';
+import { MdPlaylistAdd } from "react-icons/md";
 
 
 export interface board {
@@ -41,6 +42,7 @@ export interface BoardsProps {
 
 
 const Boards: React.FC<BoardsProps> = ({ selectedBoard, currentTheme, setIsLoading }) => {
+
   const [lists, setLists] = useState<lists[]>([]);
   const [activeListId, setActiveListId] = useState<number | null>(null);
   const [taskTitle, setTaskTitle] = useState<string>('');
@@ -48,14 +50,14 @@ const Boards: React.FC<BoardsProps> = ({ selectedBoard, currentTheme, setIsLoadi
   const [taskDueDate, setTaskDueDate] = useState<string>('');
   const [isNewTaskChecked, setIsNewTaskChecked] = useState<boolean>(false);
 
+  //new list add
+  const [addingNewList, setAddingNewList] = useState<boolean>(false);
+  const [newListName, setNewListName] = useState<string>('');
+
+
 
 
   const listsContainerRef = useRef<HTMLDivElement>(null);
-
-
-
-
-
 
 
 
@@ -65,8 +67,8 @@ const Boards: React.FC<BoardsProps> = ({ selectedBoard, currentTheme, setIsLoadi
   }, [selectedBoard]);
 
   useEffect(() => {
-    console.log("lists--->>>", lists);
-  }, [lists]);
+    console.log("selected_board--->>>", selectedBoard);
+  }, [selectedBoard]);
 
 
   // ================================================== task add functionalisy ====================================
@@ -127,12 +129,38 @@ const Boards: React.FC<BoardsProps> = ({ selectedBoard, currentTheme, setIsLoadi
   }
 
 
+  // =========================================   add new list   ====================================================
+  const handleAddNewList = () => {
+    setAddingNewList(true);
+  }
 
+  const handleCanselClick = () => {
+    setAddingNewList(false);
+  }
+
+
+  const add_new_list = async () => {
+    const response = await axiosInstance.post(`api/lists/`, {
+      name: newListName,
+      board: selectedBoard.id
+    },
+      {
+        headers:
+          { Authorization: `Bearer ${localStorage.getItem('access_token')}` }
+      })
+    console.log('response--->>>', response.data)
+    if (response.status === 201) {
+      const updatedList = response.data;
+      setLists(prevLists => [...prevLists, updatedList]);
+      setNewListName('');
+      setAddingNewList(false);
+    }
+  }
   // ==============================================================================================================
-
   return (
     <div className="main_boards_container" >
       <div className="lists_container" ref={listsContainerRef}>
+
         {lists.map((list, index) => (
           // list 
           <div
@@ -204,16 +232,51 @@ const Boards: React.FC<BoardsProps> = ({ selectedBoard, currentTheme, setIsLoadi
                 )}
                 <div className='add_task_and_plus_container' onClick={() => handleTaskModalOpen(list.id)} >
                   <FaPlus className='plus_sign' />
-                  <h2 className='add_task_p' >Add Task</h2>
+                  <h2 className='add_task_p'  >Add Task</h2>
                 </div>
 
               </div>
 
             </div>
-
-
           </div>
         ))}
+
+        {!addingNewList && (
+          <div className='add_new_list_container'
+            style={{
+              backgroundColor: currentTheme['--background-color'],
+              color: currentTheme['--main-text-coloure'],
+              border: `1px solid ${currentTheme['--border-color']}`
+            }}
+            onClick={handleAddNewList}
+          >
+            <MdPlaylistAdd className='add_new_list_icon' />
+            <p className='add_new_list_p' > Add new List </p>
+          </div>
+        )}
+
+        {addingNewList && (
+          <div className='add_new_list_container_for_input'
+            style={{
+              backgroundColor: currentTheme['--background-color'],
+              color: currentTheme['--main-text-coloure'],
+              border: `1px solid ${currentTheme['--border-color']}`
+            }}
+          >
+            <input
+              type="text"
+              placeholder="Name"
+              value={newListName}
+              onChange={(e) => setNewListName(e.target.value)}
+            />
+            <div className='ad_list_buttons_container'>
+              <button onClick={add_new_list} > Add List</button>
+              <button onClick={handleCanselClick} > Cansel</button>
+            </div>
+          </div>
+        )}
+
+
       </div>
 
     </div>

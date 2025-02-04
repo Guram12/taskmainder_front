@@ -19,7 +19,7 @@
   overflow-x: auto;
   overflow-y: hidden;
   height: calc(100vh - 102px);
-  gap: 520px;
+  gap: 120px;
   padding-left: 30px;
   scrollbar-width: auto;
 }
@@ -55,6 +55,66 @@
   padding: 5;
   /* max-height: calc(100vh - 102px); */
   overflow-y: auto;
+  width: 100%;
+}
+
+/* =================================================== add new list styles ============================================== */
+.add_new_list_container {
+  display: flex;
+  justify-content:center;
+  align-items: center;
+  flex-direction: row;
+  width: 300px;
+  transition: background-color 0.3s ease, border-color 0.3s ease;
+  margin-top: 20px;
+  min-width: 300px;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  border-radius: 20px;
+  cursor: pointer;
+  margin-right: 100px;
+}
+
+.add_new_list_container:hover {
+  background-color: #2b2b2b !important;
+}
+
+.add_new_list_icon{
+  width: 20px;
+  height: 20px;
+  margin-right: 10px;
+}
+
+.add_new_list_p {
+  margin: 0px;
+  font-size: 16px;
+}
+
+
+.add_new_list_container_for_input {
+  display: flex;
+  justify-content:center;
+  align-items: center;
+  flex-direction: column;
+  width: 300px;
+  transition: background-color 0.3s ease, border-color 0.3s ease;
+  margin-top: 20px;
+  min-width: 300px;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  border-radius: 20px;
+  cursor: pointer;
+  margin-right: 100px;
+}
+
+
+.ad_list_buttons_container{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: row;
+  gap: 10px;
+  margin-top: 10px;
 }
 
 /* ====================================== list card  element styles ====================================== */
@@ -100,6 +160,10 @@
 
 .task_add_mother_cont {
   width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
 }
 
 .task_add_modal {
@@ -139,6 +203,8 @@
   cursor: pointer;
   transition: all 0.3s ease;
   border-radius: 15px;
+  margin-bottom: 30px;
+  width: 80%;
 }
 
 .add_task_and_plus_container:hover {
