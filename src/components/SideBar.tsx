@@ -25,7 +25,8 @@ interface ThemeSpecs {
 
 const SidebarComponent: React.FC<SidebarProps> = ({ currentTheme, boards, setSelectedBoard, setSelectedComponent }) => {
   const [isOpen, setIsOpen] = useState(true);
-  const [isPinned, setIsPinned] = useState(false);
+  const is_Pinned_Value : boolean = JSON.parse(localStorage.getItem('isPinned') || 'false');
+  const [isPinned, setIsPinned] = useState<boolean>(is_Pinned_Value);
 
 
 
@@ -33,6 +34,7 @@ const SidebarComponent: React.FC<SidebarProps> = ({ currentTheme, boards, setSel
 
   // ================================== sidebar pin and unpin ===============================================
   const toggleSidebarPin = () => {
+    localStorage.setItem( 'isPinned', JSON.stringify(!isPinned));
     setIsPinned(!isPinned);
   }
 
