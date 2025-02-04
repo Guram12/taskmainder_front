@@ -13,11 +13,12 @@ interface MainPageProps {
   boards: board[];
   setSelectedBoard: (board: board) => void;
   selectedBoard: board;
+  setIsLoading: (value: boolean) => void;
 }
 
 
 
-const MainPage: React.FC<MainPageProps> = ({ currentTheme, boards, setSelectedBoard , selectedBoard}) => {
+const MainPage: React.FC<MainPageProps> = ({ currentTheme, boards, setSelectedBoard , selectedBoard , setIsLoading}) => {
   const [selectedComponent, setSelectedComponent] = useState<string>("");
 
   const renderComponent = () => {
@@ -27,7 +28,7 @@ const MainPage: React.FC<MainPageProps> = ({ currentTheme, boards, setSelectedBo
       case "Calendar":
         return <Calendar  boards={boards} />;
         case "Boards":
-          return <Boards  selectedBoard={selectedBoard} currentTheme={currentTheme}  />;
+          return <Boards  selectedBoard={selectedBoard} currentTheme={currentTheme}  setIsLoading={setIsLoading}   />;
       default:
         return <div>Select a component from the sidebar</div>;
     }

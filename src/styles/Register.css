@@ -29,3 +29,9 @@
   cursor: pointer;
   background-color: #555555;
 } 
+
+
+.highlight {
+  font-weight: bold;
+  color: tomato; /* You can change the color as needed */
+}

@@ -28,6 +28,8 @@ const Register: React.FC = () => {
 
   const navigate = useNavigate();
 
+
+  // ===================================== register =====================================
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
     const formData = new FormData();
@@ -55,9 +57,12 @@ const Register: React.FC = () => {
     }
   };
 
+
   const handleLogin = () => {
     navigate('/');
   };
+
+  // ==================================== search country by name =====================================
 
   const handleCountryInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
@@ -83,6 +88,16 @@ const Register: React.FC = () => {
   useEffect(() => {
     console.log("selectedTimeZone:===>", selectedTimeZone);
   }, [selectedTimeZone]);
+
+  // ============================================== hilight countri latters that match ================================
+
+  const getHighlightedText = (text: string, highlight: string) => {
+    const parts = text.split(new RegExp(`(${highlight})`, 'gi'));
+    return parts.map((part, index) =>
+      part.toLowerCase() === highlight.toLowerCase() ? <span key={index} className="highlight">{part}</span> : part
+    );
+  }
+
 
 
   return (
@@ -116,11 +131,11 @@ const Register: React.FC = () => {
           {filteredCountries.length > 0 && (
             <div className='country_list'>
               {filteredCountries.map((country, index) => (
-                <p
-                  className='country'
-                  key={index}
-                  onClick={() => handleTimeZoneClick(country)}
-                >{country.name} (Timezone: {country.timezone} , {country.utc_offset})</p>
+                <p className='country' key={index} onClick={() => handleTimeZoneClick(country)}>
+                  {/* {country.name} (Timezone: {country.timezone} , {country.utc_offset */}
+                  {getHighlightedText(country.name, countryInput)} (Timezone: {country.timezone} , {country.utc_offset})
+
+                </p>
               ))}
             </div>
           )}

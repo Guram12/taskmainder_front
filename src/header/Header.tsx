@@ -1,5 +1,5 @@
-import React from 'react';
 import "./Header.css";
+import React from 'react';
 import { ProfileData } from '../App';
 import LogoComponent from '../components/LogoComponent';
 import { useLocation } from 'react-router-dom';
@@ -7,7 +7,8 @@ import { useState, useEffect } from 'react';
 import { ThemeSpecs } from '../utils/theme';
 import themes from '../utils/theme';
 import { useNavigate } from 'react-router-dom';
-
+import { MdBookmarkAdded } from "react-icons/md";
+import { motion, AnimatePresence } from 'framer-motion';
 
 interface HeaderProps {
   profileData: ProfileData;
@@ -15,6 +16,7 @@ interface HeaderProps {
   setIsAuthenticated: (value: boolean) => void;
   setChange_current_theme: (change_current_theme: boolean) => void;
   change_current_theme: boolean;
+  isLoading: boolean;
 }
 
 
@@ -25,6 +27,7 @@ const Header: React.FC<HeaderProps> = ({
   setIsAuthenticated,
   setChange_current_theme,
   change_current_theme,
+  isLoading,
 }) => {
 
   const [showHeader, setShowHeader] = useState<boolean>(true);
@@ -58,13 +61,28 @@ const Header: React.FC<HeaderProps> = ({
   }
   // ===========================================================================================
 
-
   const handleLogOut = () => {
     localStorage.removeItem('access_token');
     localStorage.removeItem('refresh_token');
     setIsAuthenticated(false);
     navigate('/');
   }
+  // ==============================================================================================
+  const [showSavedSign, setShowSavedSign] = useState<boolean>(false);
+
+  useEffect(() => {
+    if (!isLoading) {
+      const timer = setTimeout(() => {
+        setShowSavedSign(true);
+      }, 200); // Delay to ensure the loader has finished its exit animation
+      return () => clearTimeout(timer);
+    } else {
+      setShowSavedSign(false);
+    }
+  }, [isLoading]);
+
+
+  // ==============================================================================================
   return (
     <div className={`main_Header_container ${!isAuthenticated ? "hide_container" : ''}  ${!showHeader ? 'hide_header' : ""} `}>
       <div className='header_logo_container' >
@@ -84,6 +102,36 @@ const Header: React.FC<HeaderProps> = ({
           onClick={() => changeTheme(themes.theme3)}></div>
         <div className='header_coloure_child_container example6'
           onClick={() => changeTheme(themes.theme4)}></div>
+      </div>
+
+
+      <div className="loader_container">
+      <AnimatePresence  mode="wait">
+          {isLoading ? (
+            <motion.div
+              key="loader"
+              className="loader-container"
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.8 }}
+              transition={{ duration: 0.2 }}
+            >
+              <div className="loader"></div>
+            </motion.div>
+          ) : (
+            showSavedSign && (
+              <motion.div
+                key="saved_sign"
+                initial={{ opacity: 0, scale: 0.8 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.8 }}
+                transition={{ duration: 0.2 }}
+              >
+                <MdBookmarkAdded className="saved_sign" />
+              </motion.div>
+            )
+          )}
+        </AnimatePresence>
       </div>
 
       <div>

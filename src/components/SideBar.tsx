@@ -1,13 +1,16 @@
-import React, { useState } from "react";
 import '../styles/Sidebar.css';
+import React, { useState } from "react";
 import { Sidebar, Menu, MenuItem, SubMenu } from 'react-pro-sidebar';
-import { FaBook, FaCalendarAlt } from "react-icons/fa";
+import { FaCalendarAlt } from "react-icons/fa";
 import { TiPin, TiPinOutline } from "react-icons/ti";
 import { MdSpaceDashboard } from "react-icons/md";
 import { GrTasks } from "react-icons/gr";
 import { FaClipboardList } from "react-icons/fa";
 import { RiSettings4Fill } from "react-icons/ri";
 import { board } from "./Boards";
+import { GoRepoTemplate } from "react-icons/go";
+
+
 
 interface SidebarProps {
   currentTheme: ThemeSpecs;
@@ -25,7 +28,8 @@ interface ThemeSpecs {
 
 const SidebarComponent: React.FC<SidebarProps> = ({ currentTheme, boards, setSelectedBoard, setSelectedComponent }) => {
   const [isOpen, setIsOpen] = useState(true);
-  const [isPinned, setIsPinned] = useState(false);
+  const is_Pinned_Value: boolean = JSON.parse(localStorage.getItem('isPinned') || 'false');
+  const [isPinned, setIsPinned] = useState<boolean>(is_Pinned_Value);
 
 
 
@@ -33,6 +37,7 @@ const SidebarComponent: React.FC<SidebarProps> = ({ currentTheme, boards, setSel
 
   // ================================== sidebar pin and unpin ===============================================
   const toggleSidebarPin = () => {
+    localStorage.setItem('isPinned', JSON.stringify(!isPinned));
     setIsPinned(!isPinned);
   }
 
@@ -118,9 +123,9 @@ const SidebarComponent: React.FC<SidebarProps> = ({ currentTheme, boards, setSel
 
 
                 </SubMenu>
-                <MenuItem icon={<FaBook />}  >Documentation</MenuItem>
+                <MenuItem icon={<GoRepoTemplate className='sidebar_big_icon' />}  >Templates</MenuItem>
                 <MenuItem
-                  icon={<FaCalendarAlt />}
+                  icon={<FaCalendarAlt className='sidebar_big_icon' />}
                   onClick={() => setSelectedComponent("Calendar")}
                 >Calendar</MenuItem>
               </Menu>

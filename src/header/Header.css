@@ -70,7 +70,7 @@
 }
 
 .example3 {
-  background-color: #2e4053 ;
+  background-color: #2e4053;
 }
 
 .example4 {
@@ -117,4 +117,52 @@
 }
 
 
-/* ============================================================================================================== */
+/* ===========================================   loader styles   ========================================================== */
+
+.loader_container{
+  /* border: 1px solid red; */
+  max-height: 43px;
+  max-width: 43px;
+  width: 43px;
+  height: 43px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  padding: 2px;
+}
+
+.saved_sign{
+  width: 22px;
+  height: 22px;
+}
+/* From Uiverse.io by Leoodaviid */ 
+.loader-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.loader {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+    box-shadow: 0 -1px 0 rgb(255, 255, 255);
+  }
+
+  50% {
+    transform: rotate(180deg);
+    box-shadow: 0 -1px 0 rgb(255, 255, 255);
+  }
+
+  100% {
+    transform: rotate(360deg);
+    box-shadow: 0 -1px 0 rgb(255, 255, 255);
+  }
+}
