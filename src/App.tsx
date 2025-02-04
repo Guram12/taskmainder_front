@@ -47,6 +47,9 @@ const App: React.FC = () => {
     lists: [],
     owner: ''
   });
+  
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+
 
 
   const accessToken: string | null = localStorage.getItem('access_token');
@@ -175,6 +178,7 @@ const App: React.FC = () => {
         setIsAuthenticated={setIsAuthenticated}
         setChange_current_theme={setChange_current_theme}
         change_current_theme={change_current_theme}
+        isLoading={isLoading}
       />
       <Routes>
         <Route path="/" element={<Login setIsAuthenticated={setIsAuthenticated} />} />
@@ -186,6 +190,7 @@ const App: React.FC = () => {
             setSelectedBoard={setSelectedBoard}
             currentTheme={currentTheme}
             boards={boards}
+            setIsLoading={setIsLoading}
           />} />
       </Routes>
     </Router>

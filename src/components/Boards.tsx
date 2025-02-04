@@ -3,6 +3,8 @@ import React from "react";
 import { useEffect, useState, useRef } from "react";
 import { ThemeSpecs } from '../utils/theme';
 import { FaPlus } from "react-icons/fa";
+import axiosInstance from '../utils/axiosinstance';
+
 
 export interface board {
   id: number;
@@ -34,18 +36,19 @@ export interface tasks {
 export interface BoardsProps {
   selectedBoard: board;
   currentTheme: ThemeSpecs;
+  setIsLoading: (value: boolean) => void;
 }
 
 
-const Boards: React.FC<BoardsProps> = ({ selectedBoard, currentTheme }) => {
+const Boards: React.FC<BoardsProps> = ({ selectedBoard, currentTheme, setIsLoading }) => {
   const [lists, setLists] = useState<lists[]>([]);
   const [activeListId, setActiveListId] = useState<number | null>(null);
   const [taskTitle, setTaskTitle] = useState<string>('');
   const [taskDescription, setTaskDescription] = useState<string>('');
   const [taskDueDate, setTaskDueDate] = useState<string>('');
+  const [isNewTaskChecked, setIsNewTaskChecked] = useState<boolean>(false);
 
 
-  const [isNewTaskChecked, setIsNewTaskChecked] = useState(false);
 
   const listsContainerRef = useRef<HTMLDivElement>(null);
 
@@ -68,12 +71,60 @@ const Boards: React.FC<BoardsProps> = ({ selectedBoard, currentTheme }) => {
 
   // ================================================== task add functionalisy ====================================
   const handleTaskModalOpen = (listId: number) => {
+    console.log('clicked')
     setActiveListId(listId);
   };
 
   const handleTaskModalClose = () => {
     setActiveListId(null);
   };
+
+  const handleTaskAdd = async (event: React.FormEvent) => {
+    event.preventDefault();
+    const formData = new FormData();
+    setIsLoading(true);
+    if (activeListId !== null) {
+      formData.append('list', activeListId.toString());
+    }
+    formData.append('title', taskTitle);
+    formData.append('description', taskDescription);
+    formData.append('due_date', taskDueDate);
+    formData.append('completed', isNewTaskChecked.toString());
+
+    try {
+      const response = await axiosInstance.post('api/tasks/', formData, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('access_token')}`
+        }
+      })
+
+      if (response.status === 201) {
+        // add newly added task to the list to show in frontend
+        const newTask = response.data;
+        console.log('newTask--->>>', newTask)
+        const updateList = lists.map((list) => {
+          if (list.id === activeListId) {
+            return {
+              ...list,
+              tasks: [...list.tasks, newTask]
+            };
+          }
+          return list;
+        });
+        setLists(updateList);
+
+        // Reset form fields
+        setTaskTitle('');
+        setTaskDescription('');
+        setTaskDueDate('');
+        setIsNewTaskChecked(false);
+        handleTaskModalClose();
+        setIsLoading(false);
+      }
+    } catch (error) {
+      console.log("Error while adding task", error);
+    }
+  }
 
 
 
@@ -112,46 +163,50 @@ const Boards: React.FC<BoardsProps> = ({ selectedBoard, currentTheme }) => {
               <div className="line_before_plus" style={{ backgroundColor: currentTheme['--border-color'] }} ></div>
 
               {/* task add  elements  */}
-              <div>
-                <FaPlus className='plus_sign' onClick={() => handleTaskModalOpen(list.id)} />
+              <div className='task_add_mother_cont' >
                 {activeListId === list.id && (
                   <>
-                    <div className="overlay active" onClick={handleTaskModalClose}></div>
-                    <div className='task_add_modal'>
-                      <p>List : {list.name}</p>
-                      <div className='task_add_inputs_container' >
+                    <form onSubmit={handleTaskAdd}>
+                      <div className='task_add_modal'>
+                        <div className='task_add_inputs_container' >
 
-                        <input
-                          type="text"
-                          placeholder="Title"
-                          value={taskTitle}
-                          onChange={(e) => setTaskTitle(e.target.value)}
-                        />
-                        <input
-                          type="text"
-                          placeholder="Description"
-                          value={taskDescription}
-                          onChange={(e) => setTaskDescription(e.target.value)}
-                        />
-                        <input
-                          type="date"
-                          placeholder="Due Date"
-                          value={taskDueDate}
-                          onChange={(e) => setTaskDueDate(e.target.value)}
+                          <input
+                            type="text"
+                            placeholder="Title"
+                            value={taskTitle}
+                            onChange={(e) => setTaskTitle(e.target.value)}
+                          />
+                          <input
+                            type="text"
+                            placeholder="Description"
+                            value={taskDescription}
+                            onChange={(e) => setTaskDescription(e.target.value)}
+                          />
+                          <input
+                            type="datetime-local"
+                            placeholder="Due Date"
+                            value={taskDueDate}
+                            onChange={(e) => setTaskDueDate(e.target.value)}
 
-                        />
-                        <input
-                          type="checkbox"
-                          checked={isNewTaskChecked}
-                          onChange={(e) => setIsNewTaskChecked(e.target.checked)}
+                          />
+                          <input
+                            type="checkbox"
+                            checked={isNewTaskChecked}
+                            onChange={(e) => setIsNewTaskChecked(e.target.checked)}
 
-                        />
+                          />
+                        </div>
                       </div>
-                      <button>Add Task</button>
-                      <button onClick={handleTaskModalClose}>Close</button>
-                    </div>
+                      <button type='submit'>Add Task</button>
+                    </form>
+                    <button onClick={handleTaskModalClose}>Close</button>
                   </>
                 )}
+                <div className='add_task_and_plus_container' onClick={() => handleTaskModalOpen(list.id)} >
+                  <FaPlus className='plus_sign' />
+                  <h2 className='add_task_p' >Add Task</h2>
+                </div>
+
               </div>
 
             </div>
