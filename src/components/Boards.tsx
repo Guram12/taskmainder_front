@@ -140,22 +140,26 @@ const Boards: React.FC<BoardsProps> = ({ selectedBoard, currentTheme, setIsLoadi
 
 
   const add_new_list = async () => {
-    const response = await axiosInstance.post(`api/lists/`, {
-      name: newListName,
-      board: selectedBoard.id
-    },
-      {
-        headers:
-          { Authorization: `Bearer ${localStorage.getItem('access_token')}` }
-      })
-    console.log('response--->>>', response.data)
-    if (response.status === 201) {
-      const updatedList = response.data;
-      setLists(prevLists => [...prevLists, updatedList]);
-      setNewListName('');
-      setAddingNewList(false);
+    try {
+      const response = await axiosInstance.post(`api/lists/`, {
+        name: newListName,
+        board: selectedBoard.id
+      }, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('access_token')}`
+        }
+      });
+
+      if (response.status === 201) {
+        const updatedList = response.data;
+        setLists(prevLists => [...prevLists, updatedList]);
+        setNewListName('');
+        setAddingNewList(false);
+      }
+    } catch (error) {
+      console.log("Error while adding new list", error);
     }
-  }
+  };
   // ==============================================================================================================
   return (
     <div className="main_boards_container" >
