@@ -1,12 +1,16 @@
 import "../styles/MainPage.css";
 import React from "react";
 import SidebarComponent from "./SideBar";
-import { useState } from "react"; 
+import { useState } from "react";
 import Settings from "./Settings";
 import Calendar from "./Calendar";
-import Boards from "./Boards";
+import Boards, { tasks } from "./Boards";
 import { ThemeSpecs } from "../utils/theme";
 import { board } from "./Boards";
+import { lists } from "./Boards";
+
+// onNewListAdded={handleNewListAdded} 
+
 
 interface MainPageProps {
   currentTheme: ThemeSpecs;
@@ -14,21 +18,40 @@ interface MainPageProps {
   setSelectedBoard: (board: board) => void;
   selectedBoard: board;
   setIsLoading: (value: boolean) => void;
+  onNewListAdded: (list: lists) => void;
+  onNewTaskAdded: (task: tasks , axtiveListId : number | null) => void;
 }
 
 
 
-const MainPage: React.FC<MainPageProps> = ({ currentTheme, boards, setSelectedBoard , selectedBoard , setIsLoading}) => {
+const MainPage: React.FC<MainPageProps> = ({
+  currentTheme,
+  boards,
+  setSelectedBoard,
+  selectedBoard,
+  setIsLoading,
+  onNewListAdded,
+  onNewTaskAdded
+}) => {
+
   const [selectedComponent, setSelectedComponent] = useState<string>("");
 
   const renderComponent = () => {
     switch (selectedComponent) {
       case "Settings":
-        return <Settings  boards={boards}  />;
+        return <Settings boards={boards} />;
       case "Calendar":
-        return <Calendar  boards={boards} />;
-        case "Boards":
-          return <Boards  selectedBoard={selectedBoard} currentTheme={currentTheme}  setIsLoading={setIsLoading}   />;
+        return <Calendar boards={boards} />;
+      case "Boards":
+        return (
+          <Boards
+            selectedBoard={selectedBoard}
+            currentTheme={currentTheme}
+            setIsLoading={setIsLoading}
+            onNewListAdded={onNewListAdded}
+            onNewTaskAdded={onNewTaskAdded}
+          />
+        );
       default:
         return <div>Select a component from the sidebar</div>;
     }

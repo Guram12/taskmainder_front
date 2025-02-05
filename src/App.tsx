@@ -10,6 +10,9 @@ import axiosInstance from './utils/axiosinstance';
 import { ThemeSpecs } from './utils/theme';
 import { board } from './components/Boards';
 import FinishGoogleSignIn from './auth/FinishGoogleSignIn';
+import { lists } from './components/Boards';
+import { tasks } from './components/Boards';
+
 
 export interface ProfileData {
   email: string;
@@ -47,9 +50,9 @@ const App: React.FC = () => {
     lists: [],
     owner: ''
   });
-  
+
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  
+
 
 
   const accessToken: string | null = localStorage.getItem('access_token');
@@ -75,6 +78,45 @@ const App: React.FC = () => {
       fetchBoards();
     }
   }, [isAuthenticated]);
+
+
+  // =========================================  add new list ==================================================
+
+  const handleNewListAdded = (newList: lists) => {
+    setBoards(prevBoards => {
+      return prevBoards.map(board => {
+        if (board.id === selectedBoard.id) {
+          return {
+            ...board,
+            lists: [...board.lists, newList]
+          };
+        }
+        return board;
+      });
+    });
+  };
+  // =========================================  add new task ==================================================
+  const handleNewTaskAdded = (newTask: tasks, listId: number | null) => {
+    setBoards(prevBoards => {
+      return prevBoards.map(board => {
+        if (board.id === selectedBoard.id) {
+          return {
+            ...board,
+            lists: board.lists.map(list => {
+              if (list.id === listId) {
+                return {
+                  ...list,
+                  tasks: [...list.tasks, newTask]
+                };
+              }
+              return list;
+            })
+          };
+        }
+        return board;
+      });
+    });
+  };
 
   // ====================================  useEffect for theme change ===============================================
   useEffect(() => {
@@ -191,6 +233,8 @@ const App: React.FC = () => {
             currentTheme={currentTheme}
             boards={boards}
             setIsLoading={setIsLoading}
+            onNewListAdded={handleNewListAdded}
+            onNewTaskAdded={handleNewTaskAdded}
           />} />
       </Routes>
     </Router>

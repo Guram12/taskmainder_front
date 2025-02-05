@@ -38,10 +38,12 @@ export interface BoardsProps {
   selectedBoard: board;
   currentTheme: ThemeSpecs;
   setIsLoading: (value: boolean) => void;
+  onNewListAdded: (list: lists) => void;
+  onNewTaskAdded: (task: tasks , axtiveListId : number | null) => void;
 }
 
 
-const Boards: React.FC<BoardsProps> = ({ selectedBoard, currentTheme, setIsLoading }) => {
+const Boards: React.FC<BoardsProps> = ({ selectedBoard, currentTheme, setIsLoading, onNewListAdded , onNewTaskAdded}) => {
 
   const [lists, setLists] = useState<lists[]>([]);
   const [activeListId, setActiveListId] = useState<number | null>(null);
@@ -114,7 +116,7 @@ const Boards: React.FC<BoardsProps> = ({ selectedBoard, currentTheme, setIsLoadi
           return list;
         });
         setLists(updateList);
-
+        onNewTaskAdded(newTask, activeListId);
         // Reset form fields
         setTaskTitle('');
         setTaskDescription('');
@@ -140,22 +142,27 @@ const Boards: React.FC<BoardsProps> = ({ selectedBoard, currentTheme, setIsLoadi
 
 
   const add_new_list = async () => {
-    const response = await axiosInstance.post(`api/lists/`, {
-      name: newListName,
-      board: selectedBoard.id
-    },
-      {
-        headers:
-          { Authorization: `Bearer ${localStorage.getItem('access_token')}` }
-      })
-    console.log('response--->>>', response.data)
-    if (response.status === 201) {
-      const updatedList = response.data;
-      setLists(prevLists => [...prevLists, updatedList]);
-      setNewListName('');
-      setAddingNewList(false);
+    try {
+      const response = await axiosInstance.post(`api/lists/`, {
+        name: newListName,
+        board: selectedBoard.id
+      }, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('access_token')}`
+        }
+      });
+
+      if (response.status === 201) {
+        const updatedList = response.data;
+        setLists(prevLists => [...prevLists, updatedList]);
+        setNewListName('');
+        setAddingNewList(false);
+        onNewListAdded(updatedList);
+      }
+    } catch (error) {
+      console.log("Error while adding new list", error);
     }
-  }
+  };
   // ==============================================================================================================
   return (
     <div className="main_boards_container" >
