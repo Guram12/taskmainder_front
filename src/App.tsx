@@ -14,6 +14,8 @@ import { lists } from './components/Boards';
 import { tasks } from './components/Boards';
 
 
+
+
 export interface ProfileData {
   email: string;
   phone_number: string;
@@ -78,6 +80,14 @@ const App: React.FC = () => {
       fetchBoards();
     }
   }, [isAuthenticated]);
+
+  // =========================================  add new board ==================================================
+
+  const handleNewBoardAdded = (newBoard: board) => {
+    setBoards(prevBoards => {
+      return [...prevBoards, newBoard];
+    });
+  };
 
 
   // =========================================  add new list ==================================================
@@ -235,6 +245,7 @@ const App: React.FC = () => {
             setIsLoading={setIsLoading}
             onNewListAdded={handleNewListAdded}
             onNewTaskAdded={handleNewTaskAdded}
+            onNewBoardAdded={handleNewBoardAdded}
           />} />
       </Routes>
     </Router>

@@ -1,6 +1,5 @@
 import React from "react";
-import { board } from "../App";
-
+import { board } from "./Boards";
 
 interface SettingsProps {
   boards: board[];

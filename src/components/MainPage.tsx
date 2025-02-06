@@ -8,8 +8,7 @@ import Boards, { tasks } from "./Boards";
 import { ThemeSpecs } from "../utils/theme";
 import { board } from "./Boards";
 import { lists } from "./Boards";
-
-// onNewListAdded={handleNewListAdded} 
+import Templates from "./Templates";
 
 
 interface MainPageProps {
@@ -20,6 +19,7 @@ interface MainPageProps {
   setIsLoading: (value: boolean) => void;
   onNewListAdded: (list: lists) => void;
   onNewTaskAdded: (task: tasks , axtiveListId : number | null) => void;
+  onNewBoardAdded: (board: board) => void;
 }
 
 
@@ -31,7 +31,8 @@ const MainPage: React.FC<MainPageProps> = ({
   selectedBoard,
   setIsLoading,
   onNewListAdded,
-  onNewTaskAdded
+  onNewTaskAdded,
+  onNewBoardAdded,
 }) => {
 
   const [selectedComponent, setSelectedComponent] = useState<string>("");
@@ -42,6 +43,8 @@ const MainPage: React.FC<MainPageProps> = ({
         return <Settings boards={boards} />;
       case "Calendar":
         return <Calendar boards={boards} />;
+      case "Templates":
+        return <Templates />;
       case "Boards":
         return (
           <Boards
@@ -66,6 +69,7 @@ const MainPage: React.FC<MainPageProps> = ({
         boards={boards}
         setSelectedBoard={setSelectedBoard}
         setSelectedComponent={setSelectedComponent}
+        onNewBoardAdded={onNewBoardAdded}
       />
 
       {renderComponent()}

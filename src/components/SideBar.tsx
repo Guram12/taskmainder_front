@@ -9,6 +9,7 @@ import { FaClipboardList } from "react-icons/fa";
 import { RiSettings4Fill } from "react-icons/ri";
 import { board } from "./Boards";
 import { GoRepoTemplate } from "react-icons/go";
+import axiosInstance from '../utils/axiosinstance';
 
 
 
@@ -17,6 +18,7 @@ interface SidebarProps {
   boards: board[];
   setSelectedBoard: (board: board) => void;
   setSelectedComponent: (component: string) => void;
+  onNewBoardAdded: (board: board) => void;
 }
 
 
@@ -26,10 +28,16 @@ interface ThemeSpecs {
   '--main-text-coloure': string;
 }
 
-const SidebarComponent: React.FC<SidebarProps> = ({ currentTheme, boards, setSelectedBoard, setSelectedComponent }) => {
+const SidebarComponent: React.FC<SidebarProps> = ({ currentTheme, boards, setSelectedBoard, setSelectedComponent, onNewBoardAdded }) => {
   const [isOpen, setIsOpen] = useState(true);
   const is_Pinned_Value: boolean = JSON.parse(localStorage.getItem('isPinned') || 'false');
   const [isPinned, setIsPinned] = useState<boolean>(is_Pinned_Value);
+  const [selectedBoardId, setSelectedBoardId] = useState<number | null>(null);
+
+
+
+  const [newBoardName, setNewBoardName] = useState<string>('');
+  const [addingNewBoard, setAddingNewBoard] = useState<boolean>(false);
 
 
 
@@ -63,7 +71,39 @@ const SidebarComponent: React.FC<SidebarProps> = ({ currentTheme, boards, setSel
   const handleBoardClick = (board: board) => {
     setSelectedBoard(board);
     setSelectedComponent("Boards");
+    setSelectedBoardId(board.id); // Update the selected board ID
   }
+  // ========================================== add new board =================================================
+  const handleBoardAddClick = () => {
+    setAddingNewBoard(true);
+  }
+
+  const canselBoardAdding = () => {
+    setAddingNewBoard(false);
+  }
+
+
+  const handle_add_new_board = async () => {
+    try {
+      const response = await axiosInstance.post('api/boards/', {
+        name: newBoardName
+      },
+        {
+          headers:
+            { Authorization: `Bearer ${localStorage.getItem('access_token')}` }
+        });
+        const newBoard = response.data;
+        onNewBoardAdded(newBoard);
+        console.log('newBoard--->>>', newBoard)
+
+    } catch (error) {
+
+    }
+  }
+
+
+
+  // =========================================================================================================
 
 
   return (
@@ -111,6 +151,7 @@ const SidebarComponent: React.FC<SidebarProps> = ({ currentTheme, boards, setSel
                           rootStyles={{
                             backgroundColor: `${currentTheme['--background-color']}`,
                             transition: 'all 0.3s',
+                            color: selectedBoardId === board.id ? 'green' : currentTheme['--main-text-coloure'], // Apply different color if selected
                           }}
                           icon={<FaClipboardList />}
                           onClick={() => handleBoardClick(board)}
@@ -122,8 +163,31 @@ const SidebarComponent: React.FC<SidebarProps> = ({ currentTheme, boards, setSel
                   )}
 
 
+                  {!addingNewBoard && (
+                    <div style={{
+                      backgroundColor: `${currentTheme['--background-color']}`,
+
+                    }} >
+                      <h3 onClick={handleBoardAddClick} style={{ backgroundColor: `${currentTheme['--background-color']}`, color: 'black', margin: '0px' }} >+ New board</h3>
+                    </div>
+                  )}
+
+                  {addingNewBoard && (
+                    <div>
+                      <input
+                        type="text"
+                        placeholder='board name'
+                        value={newBoardName}
+                        onChange={(e) => setNewBoardName(e.target.value)}
+                      />
+                      <button onClick={handle_add_new_board} > Add</button>
+                      <button onClick={canselBoardAdding}> Cansel</button>
+                    </div>
+                  )}
+
                 </SubMenu>
-                <MenuItem icon={<GoRepoTemplate className='sidebar_big_icon' />}  >Templates</MenuItem>
+
+                <MenuItem icon={<GoRepoTemplate className='sidebar_big_icon' />} onClick={() => setSelectedComponent("Templates")} >Templates</MenuItem>
                 <MenuItem
                   icon={<FaCalendarAlt className='sidebar_big_icon' />}
                   onClick={() => setSelectedComponent("Calendar")}
