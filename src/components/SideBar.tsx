@@ -30,10 +30,7 @@ const SidebarComponent: React.FC<SidebarProps> = ({ currentTheme, boards, setSel
   const [isOpen, setIsOpen] = useState(true);
   const is_Pinned_Value: boolean = JSON.parse(localStorage.getItem('isPinned') || 'false');
   const [isPinned, setIsPinned] = useState<boolean>(is_Pinned_Value);
-
-
-
-
+  const [selectedBoardId, setSelectedBoardId] = useState<number | null>(null);
 
   // ================================== sidebar pin and unpin ===============================================
   const toggleSidebarPin = () => {
@@ -63,6 +60,7 @@ const SidebarComponent: React.FC<SidebarProps> = ({ currentTheme, boards, setSel
   const handleBoardClick = (board: board) => {
     setSelectedBoard(board);
     setSelectedComponent("Boards");
+    setSelectedBoardId(board.id); // Update the selected board ID
   }
 
 
@@ -111,6 +109,7 @@ const SidebarComponent: React.FC<SidebarProps> = ({ currentTheme, boards, setSel
                           rootStyles={{
                             backgroundColor: `${currentTheme['--background-color']}`,
                             transition: 'all 0.3s',
+                            color: selectedBoardId === board.id ? 'green' : currentTheme['--main-text-coloure'], // Apply different color if selected
                           }}
                           icon={<FaClipboardList />}
                           onClick={() => handleBoardClick(board)}
@@ -123,7 +122,7 @@ const SidebarComponent: React.FC<SidebarProps> = ({ currentTheme, boards, setSel
 
 
                 </SubMenu>
-                <MenuItem icon={<GoRepoTemplate className='sidebar_big_icon' />}  >Templates</MenuItem>
+                <MenuItem icon={<GoRepoTemplate className='sidebar_big_icon' />} onClick={() => setSelectedComponent("Templates")} >Templates</MenuItem>
                 <MenuItem
                   icon={<FaCalendarAlt className='sidebar_big_icon' />}
                   onClick={() => setSelectedComponent("Calendar")}

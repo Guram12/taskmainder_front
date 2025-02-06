@@ -8,8 +8,7 @@ import Boards, { tasks } from "./Boards";
 import { ThemeSpecs } from "../utils/theme";
 import { board } from "./Boards";
 import { lists } from "./Boards";
-
-// onNewListAdded={handleNewListAdded} 
+import Templates from "./Templates";
 
 
 interface MainPageProps {
@@ -42,6 +41,8 @@ const MainPage: React.FC<MainPageProps> = ({
         return <Settings boards={boards} />;
       case "Calendar":
         return <Calendar boards={boards} />;
+      case "Templates":
+        return <Templates />;
       case "Boards":
         return (
           <Boards
