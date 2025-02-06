@@ -19,6 +19,7 @@ interface MainPageProps {
   setIsLoading: (value: boolean) => void;
   onNewListAdded: (list: lists) => void;
   onNewTaskAdded: (task: tasks , axtiveListId : number | null) => void;
+  onNewBoardAdded: (board: board) => void;
 }
 
 
@@ -30,7 +31,8 @@ const MainPage: React.FC<MainPageProps> = ({
   selectedBoard,
   setIsLoading,
   onNewListAdded,
-  onNewTaskAdded
+  onNewTaskAdded,
+  onNewBoardAdded,
 }) => {
 
   const [selectedComponent, setSelectedComponent] = useState<string>("");
@@ -67,6 +69,7 @@ const MainPage: React.FC<MainPageProps> = ({
         boards={boards}
         setSelectedBoard={setSelectedBoard}
         setSelectedComponent={setSelectedComponent}
+        onNewBoardAdded={onNewBoardAdded}
       />
 
       {renderComponent()}

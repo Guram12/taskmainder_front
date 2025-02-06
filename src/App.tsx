@@ -81,6 +81,14 @@ const App: React.FC = () => {
     }
   }, [isAuthenticated]);
 
+  // =========================================  add new board ==================================================
+
+  const handleNewBoardAdded = (newBoard: board) => {
+    setBoards(prevBoards => {
+      return [...prevBoards, newBoard];
+    });
+  };
+
 
   // =========================================  add new list ==================================================
 
@@ -237,6 +245,7 @@ const App: React.FC = () => {
             setIsLoading={setIsLoading}
             onNewListAdded={handleNewListAdded}
             onNewTaskAdded={handleNewTaskAdded}
+            onNewBoardAdded={handleNewBoardAdded}
           />} />
       </Routes>
     </Router>
