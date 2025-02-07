@@ -39,11 +39,11 @@ export interface BoardsProps {
   currentTheme: ThemeSpecs;
   setIsLoading: (value: boolean) => void;
   onNewListAdded: (list: lists) => void;
-  onNewTaskAdded: (task: tasks , axtiveListId : number | null) => void;
+  onNewTaskAdded: (task: tasks, axtiveListId: number | null) => void;
 }
 
 
-const Boards: React.FC<BoardsProps> = ({ selectedBoard, currentTheme, setIsLoading, onNewListAdded , onNewTaskAdded}) => {
+const Boards: React.FC<BoardsProps> = ({ selectedBoard, currentTheme, setIsLoading, onNewListAdded, onNewTaskAdded }) => {
 
   const [lists, setLists] = useState<lists[]>([]);
   const [activeListId, setActiveListId] = useState<number | null>(null);
@@ -175,30 +175,31 @@ const Boards: React.FC<BoardsProps> = ({ selectedBoard, currentTheme, setIsLoadi
             className="lists"
             style={{
               // backgroundColor: currentTheme['--background-color'],
-              backgroundColor:'#0d1b2a',
+              backgroundColor: '#0d1b2a',
               color: currentTheme['--main-text-coloure'],
               border: `1px solid ${currentTheme['--border-color']}`
             }} >
             <h1 className='list_title' >{list.name}</h1>
+            
             {/* task */}
-
             <div className='all_tasks_container' >
               {list.tasks.map((task, index) => (
                 <div className='task_container' key={index}>
                   <p> {task.title}</p>
                   <p> {task.description}</p>
                   <p> {task.due_date}</p>
-                  <input type="checkbox"
+                  {/* <input type="checkbox"
                     checked={task.completed}
                     onChange={() => { }}
 
-                  />
+                  /> */}
                 </div>
               )
               )}
+
               <div className="line_before_plus" style={{ backgroundColor: currentTheme['--border-color'] }} ></div>
 
-              {/* task add  elements  */}
+              {/* ==========================  task add  elements   =============================================*/}
               <div className='task_add_mother_cont' >
                 {activeListId === list.id && (
                   <>
