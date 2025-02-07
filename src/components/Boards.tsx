@@ -174,7 +174,8 @@ const Boards: React.FC<BoardsProps> = ({ selectedBoard, currentTheme, setIsLoadi
             key={index}
             className="lists"
             style={{
-              backgroundColor: currentTheme['--background-color'],
+              // backgroundColor: currentTheme['--background-color'],
+              backgroundColor:'#0d1b2a',
               color: currentTheme['--main-text-coloure'],
               border: `1px solid ${currentTheme['--border-color']}`
             }} >

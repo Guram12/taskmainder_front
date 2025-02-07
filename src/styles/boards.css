@@ -32,6 +32,8 @@
   align-items: center;
   margin: 0;
   padding: 0;
+  padding-left: 5px;
+  padding-right: 5px;
   width: 300px;
   min-width: 300px;
   height: auto;
@@ -43,6 +45,7 @@
 }
 
 .list_title {
+  margin-top: 5px;
   margin-bottom: 0px;
 }
 
