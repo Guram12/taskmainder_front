@@ -46,9 +46,6 @@ const Header: React.FC<HeaderProps> = ({
   }, [location.pathname])
 
 
-  useEffect(() => {
-    console.log(";profiledata --->>>", profileData);
-  }, [profileData])
 
   // ============================== theme change function ======================================
   const changeTheme = (themeSpecs: ThemeSpecs) => {
