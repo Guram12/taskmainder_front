@@ -1,5 +1,8 @@
 @import "../styles/Varibles.css";
 
+
+
+
 .main_boards_container {
   display: flex;
   justify-content: flex-start;
@@ -32,6 +35,8 @@
   align-items: center;
   margin: 0;
   padding: 0;
+  padding-left: 5px;
+  padding-right: 5px;
   width: 300px;
   min-width: 300px;
   height: auto;
@@ -43,6 +48,7 @@
 }
 
 .list_title {
+  margin-top: 5px;
   margin-bottom: 0px;
 }
 
@@ -56,12 +62,13 @@
   /* max-height: calc(100vh - 102px); */
   overflow-y: auto;
   width: 100%;
+  min-width: 300px;
 }
 
 /* =================================================== add new list styles ============================================== */
 .add_new_list_container {
   display: flex;
-  justify-content:center;
+  justify-content: center;
   align-items: center;
   flex-direction: row;
   width: 300px;
@@ -79,7 +86,7 @@
   background-color: #2b2b2b !important;
 }
 
-.add_new_list_icon{
+.add_new_list_icon {
   width: 20px;
   height: 20px;
   margin-right: 10px;
@@ -93,7 +100,7 @@
 
 .add_new_list_container_for_input {
   display: flex;
-  justify-content:center;
+  justify-content: center;
   align-items: center;
   flex-direction: column;
   width: 300px;
@@ -108,7 +115,7 @@
 }
 
 
-.ad_list_buttons_container{
+.ad_list_buttons_container {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -127,12 +134,19 @@
   margin: 0;
   padding: 5;
   width: 100%;
+  max-width: 280px;
   height: auto;
   border-radius: 20px;
   transition: background-color 0.3s ease, border-color 0.3s ease;
   margin-top: 20px;
-  border-top: 1px solid #121212;
-  border-bottom: 1px solid red;
+  border: 1px solid #646464;
+  cursor: pointer;
+
+}
+
+.task_container:hover {
+  border: 1px solid rgb(14, 129, 129) !important;
+
 }
 
 
@@ -143,7 +157,120 @@
   margin-bottom: 10px;
   border: 1px solid rgb(43, 43, 43);
 }
+/* ====================================== task uopdate and delete window  ====================================== */
+.dark_background{
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.295);
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 98;
+}
 
+.task_update_window{
+  width: 700px;
+  height: 600px;
+  background-color: #121212;
+  border-radius: 20px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 200;
+  display: flex;
+  justify-content: flex-start;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.task_title_container{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: row;
+  gap: 30px;
+  background-color: tomato;
+  height: 80px;
+  padding: 5px;
+  position: relative;
+}
+
+.selected_task_title_icon{
+  width: 40px;
+  height: 40px;
+}
+.selected_task_title{
+  font-size: 20px;
+  margin: 0px;
+}
+
+.inputs_and_icons_container{
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  flex-direction: row;
+  gap: 10px;
+}
+
+.save_task_icon{
+  cursor: pointer;
+  width: 20px;
+  height: 20px;
+  transition: all 0.3s ease;
+}
+.save_task_icon:hover {
+  transform: matrix(1.1, 0, 0, 1.1, 0, 0);
+  fill: green;
+
+}
+
+.cansell_task_icon{
+  cursor: pointer;
+  width: 20px;
+  height: 20px;
+  transition: all 0.3s ease;
+}
+.cansell_task_icon:hover {
+  transform: matrix(1.1, 0, 0, 1.1, 0, 0);
+  fill: red;
+}
+
+.selectedtask_edit_icon{
+  width: 35px;
+  height: 35px;
+  cursor: pointer;
+  position: absolute;
+  right: 15px;
+}
+.selectedtask_edit_icon:hover {
+  fill: #121212;
+}
+/* -------------------- contebt -------------- */
+.task_content_container{
+  display: flex;
+  justify-content: flex-start;
+  align-items: flex-start;
+  flex-direction: column;
+  width: 100%;
+  padding-left: 5px;
+  padding-right: 5px;
+
+}
+
+.description_and_icon_container{
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  flex-direction: row;
+  gap: 20px;
+}
+.selected_task_description_icon{
+  width: 30px;
+  height: 30px;
+}
+
+/* ================================================================================================================ */
 
 .plus_sign {
   width: 20px;

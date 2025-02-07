@@ -5,6 +5,13 @@ import { ThemeSpecs } from '../utils/theme';
 import { FaPlus } from "react-icons/fa";
 import axiosInstance from '../utils/axiosinstance';
 import { MdPlaylistAdd } from "react-icons/md";
+import { MdOutlineSubtitles } from "react-icons/md";
+import { PiTextAlignRightLight } from "react-icons/pi";
+import { MdOutlineEdit } from "react-icons/md";
+import { IoMdCheckmark } from "react-icons/io";
+import { HiX } from "react-icons/hi";
+import { useEditor, EditorContent } from '@tiptap/react';
+import StarterKit from '@tiptap/starter-kit';
 
 
 export interface board {
@@ -39,11 +46,11 @@ export interface BoardsProps {
   currentTheme: ThemeSpecs;
   setIsLoading: (value: boolean) => void;
   onNewListAdded: (list: lists) => void;
-  onNewTaskAdded: (task: tasks , axtiveListId : number | null) => void;
+  onNewTaskAdded: (task: tasks, axtiveListId: number | null) => void;
 }
 
 
-const Boards: React.FC<BoardsProps> = ({ selectedBoard, currentTheme, setIsLoading, onNewListAdded , onNewTaskAdded}) => {
+const Boards: React.FC<BoardsProps> = ({ selectedBoard, currentTheme, setIsLoading, onNewListAdded, onNewTaskAdded }) => {
 
   const [lists, setLists] = useState<lists[]>([]);
   const [activeListId, setActiveListId] = useState<number | null>(null);
@@ -56,11 +63,33 @@ const Boards: React.FC<BoardsProps> = ({ selectedBoard, currentTheme, setIsLoadi
   const [addingNewList, setAddingNewList] = useState<boolean>(false);
   const [newListName, setNewListName] = useState<string>('');
 
+  // task editing and deleting states
+  const [isTaskUpdating, setIsTaskUpdating] = useState<boolean>(false);
+  const [selectedTask, setSelectedTask] = useState<tasks>({
+    created_at: '',
+    description: '',
+    due_date: '',
+    id: 0,
+    list: 0,
+    title: '',
+    completed: false
+  });
+
+  // -------- editing selected task title 
+  const [itSelectedTaskEditing, setItSelectedTaskEditing] = useState<boolean>(false);
+  const [selectedTaskTitle, setSelectedTaskTitle] = useState<string>('');
+
+  // -------- editing selected task description 
+  // const [isDescriptionEditing, setIsDescriptionEditing] = useState<boolean>(false);
+  const [selectedTaskDescription, setSelectedTaskDescription] = useState<string>('');
+
+
+
 
 
 
   const listsContainerRef = useRef<HTMLDivElement>(null);
-
+  const taskUpdateWindowRef = useRef<HTMLDivElement>(null);
 
 
   // --------------------------------------------------------------------------------
@@ -163,7 +192,87 @@ const Boards: React.FC<BoardsProps> = ({ selectedBoard, currentTheme, setIsLoadi
       console.log("Error while adding new list", error);
     }
   };
-  // ==============================================================================================================
+
+  // =======================================  adit and delete selected task ===============================================
+
+  const handleTaskClick = (task: tasks) => {
+    setIsTaskUpdating(true);
+    setSelectedTask(task);
+  }
+
+  const handle_Edit_Task_Title_click = () => {
+    setItSelectedTaskEditing(true);
+    setSelectedTaskTitle(selectedTask.title);
+    console.log('clicked')
+  }
+
+  const cansell_editing_task_title = () => {
+    setItSelectedTaskEditing(false);
+    setSelectedTaskTitle(selectedTask.title);
+  }
+  // -------------------- update task title --------------------
+  const update_selected_task_title = async (task: tasks) => {
+    try {
+      const response = await axiosInstance.put(`api/tasks/${task.id}/`, {
+        title: selectedTaskTitle,
+        list: task.list,
+        description: selectedTaskDescription,
+        // due_date: task.due_date,
+        // completed: task.completed,
+
+
+      }, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('access_token')}`
+        }
+      })
+      console.log(response.data)
+      // update the task title in the frontend
+      const updatedTask = response.data;
+      const updatedLists = lists.map((list) => {
+        if (list.id === task.list) {
+          return {
+            ...list,
+            tasks: list.tasks.map((task) => {
+              if (task.id === updatedTask.id) {
+                return updatedTask;
+              }
+              return task;
+            })
+          };
+        }
+        return list;
+      });
+      setLists(updatedLists);
+      setSelectedTask(updatedTask);
+      setItSelectedTaskEditing(false);
+      onNewTaskAdded(updatedTask, task.list);
+    } catch (error) {
+      console.log("Error while editing task title", error);
+    }
+  }
+
+  // ---------------------------- update task description --------------------
+
+  
+  // -------------------------------  close window when outside click opcures-------------------
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (taskUpdateWindowRef.current && !taskUpdateWindowRef.current.contains(event.target as Node)) {
+        setIsTaskUpdating(false);
+        setItSelectedTaskEditing(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [taskUpdateWindowRef]);
+
+
+  // =================================================================================================================
+
   return (
     <div className="main_boards_container" >
       <div className="lists_container" ref={listsContainerRef}>
@@ -174,30 +283,77 @@ const Boards: React.FC<BoardsProps> = ({ selectedBoard, currentTheme, setIsLoadi
             key={index}
             className="lists"
             style={{
-              backgroundColor: currentTheme['--background-color'],
+              // backgroundColor: currentTheme['--background-color'],
+              backgroundColor: '#0d1b2a',
               color: currentTheme['--main-text-coloure'],
               border: `1px solid ${currentTheme['--border-color']}`
             }} >
             <h1 className='list_title' >{list.name}</h1>
-            {/* task */}
 
+            {/* task */}
             <div className='all_tasks_container' >
               {list.tasks.map((task, index) => (
-                <div className='task_container' key={index}>
+                <div
+                  className='task_container'
+                  key={index}
+                  onClick={() => handleTaskClick(task)}
+                >
                   <p> {task.title}</p>
-                  <p> {task.description}</p>
+                  {/* <p> {task.description}</p> */}
                   <p> {task.due_date}</p>
-                  <input type="checkbox"
+                  {/* <input type="checkbox"
                     checked={task.completed}
                     onChange={() => { }}
 
-                  />
+                  /> */}
                 </div>
               )
               )}
-              <div className="line_before_plus" style={{ backgroundColor: currentTheme['--border-color'] }} ></div>
 
-              {/* task add  elements  */}
+              <div className="line_before_plus" style={{ backgroundColor: currentTheme['--border-color'] }} ></div>
+              {/* ==========================   containers for task adit and delete   ===============================*/}
+
+              {isTaskUpdating && (
+                <>
+                  <div className='dark_background' ></div>
+                  <div className='task_update_window' ref={taskUpdateWindowRef} >
+
+                    <div className='task_title_container' >
+                      <MdOutlineSubtitles className='selected_task_title_icon' />
+                      {!itSelectedTaskEditing ?
+                        <h1 className='selected_task_title' >{selectedTask.title}</h1>
+                        :
+                        <div className='inputs_and_icons_container' >
+                          <input
+                            type="text"
+                            value={selectedTaskTitle}
+                            onChange={(e) => setSelectedTaskTitle(e.target.value)}
+                          />
+                          <IoMdCheckmark onClick={() => update_selected_task_title(selectedTask)} className='save_task_icon' />
+                          <HiX onClick={cansell_editing_task_title} className='cansell_task_icon' />
+                        </div>
+                      }
+                      <MdOutlineEdit className='selectedtask_edit_icon' onClick={() => handle_Edit_Task_Title_click()} />
+                    </div>
+
+                    <div className='task_content_container' >
+
+                      <div className='description_and_icon_container' >
+                        <PiTextAlignRightLight className='selected_task_description_icon' />
+                        <h2>Description : </h2>
+                      </div>
+
+                      <p className='selected_task_description' >{selectedTask.description}</p>
+                    </div>
+
+                  </div>
+                </>
+              )}
+
+
+
+
+              {/* ==========================  task add  elements   =============================================*/}
               <div className='task_add_mother_cont' >
                 {activeListId === list.id && (
                   <>
