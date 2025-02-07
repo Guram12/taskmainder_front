@@ -10,6 +10,8 @@ import { PiTextAlignRightLight } from "react-icons/pi";
 import { MdOutlineEdit } from "react-icons/md";
 import { IoMdCheckmark } from "react-icons/io";
 import { HiX } from "react-icons/hi";
+import { useEditor, EditorContent } from '@tiptap/react';
+import StarterKit from '@tiptap/starter-kit';
 
 
 export interface board {
@@ -76,6 +78,11 @@ const Boards: React.FC<BoardsProps> = ({ selectedBoard, currentTheme, setIsLoadi
   // -------- editing selected task title 
   const [itSelectedTaskEditing, setItSelectedTaskEditing] = useState<boolean>(false);
   const [selectedTaskTitle, setSelectedTaskTitle] = useState<string>('');
+
+  // -------- editing selected task description 
+  // const [isDescriptionEditing, setIsDescriptionEditing] = useState<boolean>(false);
+  const [selectedTaskDescription, setSelectedTaskDescription] = useState<string>('');
+
 
 
 
@@ -203,12 +210,17 @@ const Boards: React.FC<BoardsProps> = ({ selectedBoard, currentTheme, setIsLoadi
     setItSelectedTaskEditing(false);
     setSelectedTaskTitle(selectedTask.title);
   }
-
+  // -------------------- update task title --------------------
   const update_selected_task_title = async (task: tasks) => {
     try {
       const response = await axiosInstance.put(`api/tasks/${task.id}/`, {
         title: selectedTaskTitle,
         list: task.list,
+        description: selectedTaskDescription,
+        // due_date: task.due_date,
+        // completed: task.completed,
+
+
       }, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem('access_token')}`
@@ -240,8 +252,9 @@ const Boards: React.FC<BoardsProps> = ({ selectedBoard, currentTheme, setIsLoadi
     }
   }
 
+  // ---------------------------- update task description --------------------
 
-
+  
   // -------------------------------  close window when outside click opcures-------------------
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -324,7 +337,7 @@ const Boards: React.FC<BoardsProps> = ({ selectedBoard, currentTheme, setIsLoadi
                     </div>
 
                     <div className='task_content_container' >
-                      
+
                       <div className='description_and_icon_container' >
                         <PiTextAlignRightLight className='selected_task_description_icon' />
                         <h2>Description : </h2>
