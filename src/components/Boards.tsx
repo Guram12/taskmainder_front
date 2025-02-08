@@ -10,8 +10,8 @@ import { PiTextAlignRightLight } from "react-icons/pi";
 import { MdOutlineEdit } from "react-icons/md";
 import { IoMdCheckmark } from "react-icons/io";
 import { HiX } from "react-icons/hi";
-import { useEditor, EditorContent } from '@tiptap/react';
-import StarterKit from '@tiptap/starter-kit';
+// import { TbEdit } from "react-icons/tb";
+
 
 
 export interface board {
@@ -80,8 +80,8 @@ const Boards: React.FC<BoardsProps> = ({ selectedBoard, currentTheme, setIsLoadi
   const [selectedTaskTitle, setSelectedTaskTitle] = useState<string>('');
 
   // -------- editing selected task description 
-  // const [isDescriptionEditing, setIsDescriptionEditing] = useState<boolean>(false);
-  const [selectedTaskDescription, setSelectedTaskDescription] = useState<string>('');
+  const [isDescriptionEditing, setIsDescriptionEditing] = useState<boolean>(false);
+  const [selectedTaskDescription, setSelectedTaskDescription] = useState<string>(selectedTask.description);
 
 
 
@@ -254,7 +254,7 @@ const Boards: React.FC<BoardsProps> = ({ selectedBoard, currentTheme, setIsLoadi
 
   // ---------------------------- update task description --------------------
 
-  
+
   // -------------------------------  close window when outside click opcures-------------------
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -269,7 +269,6 @@ const Boards: React.FC<BoardsProps> = ({ selectedBoard, currentTheme, setIsLoadi
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, [taskUpdateWindowRef]);
-
 
   // =================================================================================================================
 
@@ -311,8 +310,7 @@ const Boards: React.FC<BoardsProps> = ({ selectedBoard, currentTheme, setIsLoadi
               )}
 
               <div className="line_before_plus" style={{ backgroundColor: currentTheme['--border-color'] }} ></div>
-              {/* ==========================   containers for task adit and delete   ===============================*/}
-
+              {/* ==============================   containers for task adit and delete   =================================*/}
               {isTaskUpdating && (
                 <>
                   <div className='dark_background' ></div>
@@ -343,7 +341,11 @@ const Boards: React.FC<BoardsProps> = ({ selectedBoard, currentTheme, setIsLoadi
                         <h2>Description : </h2>
                       </div>
 
+
                       <p className='selected_task_description' >{selectedTask.description}</p>
+
+
+
                     </div>
 
                   </div>

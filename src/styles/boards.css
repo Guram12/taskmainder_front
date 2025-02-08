@@ -171,7 +171,7 @@
 .task_update_window{
   width: 700px;
   height: 600px;
-  background-color: #121212;
+  background-color: #5e5e5e;
   border-radius: 20px;
   position: absolute;
   top: 50%;
@@ -270,6 +270,27 @@
   height: 30px;
 }
 
+/* ------------------------------- edit description ------------ */
+.descr_and_icon_container{
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+  align-items: self-start;
+  flex-direction: row;
+  gap: 10px;
+}
+
+.selected_task_description{
+  text-align: left;
+  max-width: 500px;
+  margin: 0px;
+}
+.decsr_edit_icon{
+  width: 30px;
+  height: 30px;
+  cursor: pointer;
+  margin-right: 20px;
+}
 /* ================================================================================================================ */
 
 .plus_sign {
