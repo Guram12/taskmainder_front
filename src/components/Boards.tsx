@@ -165,6 +165,7 @@ const Boards: React.FC<BoardsProps> = ({ selectedBoard, currentTheme, setIsLoadi
 
 
   const add_new_list = async () => {
+      setIsLoading(true);
     try {
       const response = await axiosInstance.post(`api/lists/`, {
         name: newListName,
@@ -181,6 +182,7 @@ const Boards: React.FC<BoardsProps> = ({ selectedBoard, currentTheme, setIsLoadi
         setNewListName('');
         setAddingNewList(false);
         onNewListAdded(updatedList);
+        setIsLoading(false);
       }
     } catch (error) {
       console.log("Error while adding new list", error);
@@ -206,6 +208,7 @@ const Boards: React.FC<BoardsProps> = ({ selectedBoard, currentTheme, setIsLoadi
   }
   // -------------------------------------------------------- update task title -------------------------------------------
   const update_selected_task = async (task: tasks) => {
+    setIsLoading(true);
     try {
       const response = await axiosInstance.put(`api/tasks/${task.id}/`, {
         title: selectedTaskTitle,
@@ -242,6 +245,7 @@ const Boards: React.FC<BoardsProps> = ({ selectedBoard, currentTheme, setIsLoadi
       setItSelectedTaskEditing(false);
       setIsDescriptionEditing(false);
       onNewTaskAdded(updatedTask, task.list);
+      setIsLoading(false);
     } catch (error) {
       console.log("Error while editing task title", error);
     }
@@ -253,7 +257,7 @@ const Boards: React.FC<BoardsProps> = ({ selectedBoard, currentTheme, setIsLoadi
     setSelectedTaskDescription(selectedTask.description);
     setSelectedTaskTitle(selectedTask.title);
   };
-  
+
   const cansell_editing_task_description = () => {
     setIsDescriptionEditing(false);
     setSelectedTaskDescription(selectedTask.description);
@@ -278,6 +282,10 @@ const Boards: React.FC<BoardsProps> = ({ selectedBoard, currentTheme, setIsLoadi
   }, [taskUpdateWindowRef]);
 
   // =================================================================================================================
+  const formatDate = (dateString: string) => {
+    const date = new Date(dateString);
+    return `${date.toLocaleDateString()} ${date.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' })}`;
+  };
 
   return (
     <div className="main_boards_container" >
@@ -304,9 +312,10 @@ const Boards: React.FC<BoardsProps> = ({ selectedBoard, currentTheme, setIsLoadi
                   key={index}
                   onClick={() => handleTaskClick(task)}
                 >
-                  <p> {task.title}</p>
-                  {/* <p> {task.description}</p> */}
-                  <p> {task.due_date}</p>
+                  <p className='task_title'> {task.title}</p>
+
+                  {task.due_date ? <p className='due_date_p' > {formatDate(task.due_date)}</p> : <p className='due_date_p' > No due date</p>}
+
                   {/* <input type="checkbox"
                     checked={task.completed}
                     onChange={() => { }}
@@ -354,17 +363,17 @@ const Boards: React.FC<BoardsProps> = ({ selectedBoard, currentTheme, setIsLoadi
                           <>
                             <p className='selected_task_description' >{selectedTask.description}</p>
                             <TbEdit className='decsr_edit_icon' onClick={handle_Edit_Task_Description_click} />
-                            </>
+                          </>
                           :
                           <div>
-                          <textarea
-                            value={selectedTaskDescription}
-                            className='selected_task_description_input'
-                            onChange={(e) => setSelectedTaskDescription(e.target.value)}
-                          />
-                          <IoMdCheckmark onClick={() => update_selected_task(selectedTask)} className='save_task_icon' />
-                          <HiX onClick={cansell_editing_task_description} className='cansell_task_icon' />
-                        </div>
+                            <textarea
+                              value={selectedTaskDescription}
+                              className='selected_task_description_input'
+                              onChange={(e) => setSelectedTaskDescription(e.target.value)}
+                            />
+                            <IoMdCheckmark onClick={() => update_selected_task(selectedTask)} className='save_task_icon' />
+                            <HiX onClick={cansell_editing_task_description} className='cansell_task_icon' />
+                          </div>
                         }
 
                       </div>

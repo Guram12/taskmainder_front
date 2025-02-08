@@ -22,7 +22,7 @@
   overflow-x: auto;
   overflow-y: hidden;
   height: calc(100vh - 102px);
-  gap: 120px;
+  gap: 80px;
   padding-left: 30px;
   scrollbar-width: auto;
 }
@@ -63,6 +63,7 @@
   overflow-y: auto;
   width: 100%;
   min-width: 300px;
+  overflow-x: hidden;
 }
 
 /* =================================================== add new list styles ============================================== */
@@ -149,6 +150,20 @@
 
 }
 
+.task_title {
+  font-weight: 800;
+  width: 100%;
+  text-align: left;
+  margin-left: 15px;
+}
+
+.due_date_p{
+  margin: 0px;
+  width: 100%;
+  text-align: right;
+  margin-right: 15px;
+  color: #646464;
+}
 
 .line_before_plus {
   width: 80%;
@@ -157,8 +172,9 @@
   margin-bottom: 10px;
   border: 1px solid rgb(43, 43, 43);
 }
+
 /* ====================================== task uopdate and delete window  ====================================== */
-.dark_background{
+.dark_background {
   width: 100%;
   height: 100%;
   background-color: rgba(0, 0, 0, 0.295);
@@ -168,7 +184,7 @@
   z-index: 98;
 }
 
-.task_update_window{
+.task_update_window {
   width: 700px;
   height: 600px;
   background-color: #121212;
@@ -184,7 +200,7 @@
   overflow: hidden;
 }
 
-.task_title_container{
+.task_title_container {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -196,16 +212,17 @@
   position: relative;
 }
 
-.selected_task_title_icon{
+.selected_task_title_icon {
   width: 40px;
   height: 40px;
 }
-.selected_task_title{
+
+.selected_task_title {
   font-size: 20px;
   margin: 0px;
 }
 
-.inputs_and_icons_container{
+.inputs_and_icons_container {
   display: flex;
   justify-content: flex-start;
   align-items: center;
@@ -213,41 +230,45 @@
   gap: 10px;
 }
 
-.save_task_icon{
+.save_task_icon {
   cursor: pointer;
   width: 20px;
   height: 20px;
   transition: all 0.3s ease;
 }
+
 .save_task_icon:hover {
   transform: matrix(1.1, 0, 0, 1.1, 0, 0);
   fill: green;
 
 }
 
-.cansell_task_icon{
+.cansell_task_icon {
   cursor: pointer;
   width: 20px;
   height: 20px;
   transition: all 0.3s ease;
 }
+
 .cansell_task_icon:hover {
   transform: matrix(1.1, 0, 0, 1.1, 0, 0);
   fill: red;
 }
 
-.selectedtask_edit_icon{
+.selectedtask_edit_icon {
   width: 35px;
   height: 35px;
   cursor: pointer;
   position: absolute;
   right: 15px;
 }
+
 .selectedtask_edit_icon:hover {
   fill: #121212;
 }
+
 /* -------------------- contebt -------------- */
-.task_content_container{
+.task_content_container {
   display: flex;
   justify-content: flex-start;
   align-items: flex-start;
@@ -258,20 +279,21 @@
 
 }
 
-.description_and_icon_container{
+.description_and_icon_container {
   display: flex;
   justify-content: flex-start;
   align-items: center;
   flex-direction: row;
   gap: 20px;
 }
-.selected_task_description_icon{
+
+.selected_task_description_icon {
   width: 30px;
   height: 30px;
 }
 
 /* ------------------------------- edit description ------------ */
-.descr_and_icon_container{
+.descr_and_icon_container {
   display: flex;
   width: 100%;
   justify-content: space-between;
@@ -280,18 +302,20 @@
   gap: 10px;
 }
 
-.selected_task_description{
+.selected_task_description {
   text-align: left;
   max-width: 500px;
   margin: 0px;
 }
-.decsr_edit_icon{
+
+.decsr_edit_icon {
   width: 30px;
   height: 30px;
   cursor: pointer;
   margin-right: 20px;
 }
-.selected_task_description_input{
+
+.selected_task_description_input {
   width: 600px;
   height: 200px;
   max-height: 300px;
