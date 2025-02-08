@@ -10,8 +10,7 @@ import { PiTextAlignRightLight } from "react-icons/pi";
 import { MdOutlineEdit } from "react-icons/md";
 import { IoMdCheckmark } from "react-icons/io";
 import { HiX } from "react-icons/hi";
-// import { TbEdit } from "react-icons/tb";
-
+import { TbEdit } from "react-icons/tb";
 
 
 export interface board {
@@ -97,10 +96,6 @@ const Boards: React.FC<BoardsProps> = ({ selectedBoard, currentTheme, setIsLoadi
     setLists(selectedBoard.lists);
   }, [selectedBoard]);
 
-  useEffect(() => {
-    console.log("selected_board--->>>", selectedBoard);
-  }, [selectedBoard]);
-
 
   // ================================================== task add functionalisy ====================================
   const handleTaskModalOpen = (listId: number) => {
@@ -146,7 +141,6 @@ const Boards: React.FC<BoardsProps> = ({ selectedBoard, currentTheme, setIsLoadi
         });
         setLists(updateList);
         onNewTaskAdded(newTask, activeListId);
-        // Reset form fields
         setTaskTitle('');
         setTaskDescription('');
         setTaskDueDate('');
@@ -210,8 +204,8 @@ const Boards: React.FC<BoardsProps> = ({ selectedBoard, currentTheme, setIsLoadi
     setItSelectedTaskEditing(false);
     setSelectedTaskTitle(selectedTask.title);
   }
-  // -------------------- update task title --------------------
-  const update_selected_task_title = async (task: tasks) => {
+  // -------------------------------------------------------- update task title -------------------------------------------
+  const update_selected_task = async (task: tasks) => {
     try {
       const response = await axiosInstance.put(`api/tasks/${task.id}/`, {
         title: selectedTaskTitle,
@@ -252,15 +246,27 @@ const Boards: React.FC<BoardsProps> = ({ selectedBoard, currentTheme, setIsLoadi
     }
   }
 
-  // ---------------------------- update task description --------------------
+  // ------------------------------------------------ update task description ------------------------------------------
+  const handle_Edit_Task_Description_click = () => {
+    setIsDescriptionEditing(true);
+    setSelectedTaskDescription(selectedTask.description);
+    setSelectedTaskTitle(selectedTask.title);
+  };
+  
+  const cansell_editing_task_description = () => {
+    setIsDescriptionEditing(false);
+    setSelectedTaskDescription(selectedTask.description);
+  };
 
 
-  // -------------------------------  close window when outside click opcures-------------------
+
+  // -------------------------------------------  close window when outside click ocures--------------------------------
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (taskUpdateWindowRef.current && !taskUpdateWindowRef.current.contains(event.target as Node)) {
         setIsTaskUpdating(false);
         setItSelectedTaskEditing(false);
+        setIsDescriptionEditing(false);
       }
     };
 
@@ -310,6 +316,7 @@ const Boards: React.FC<BoardsProps> = ({ selectedBoard, currentTheme, setIsLoadi
               )}
 
               <div className="line_before_plus" style={{ backgroundColor: currentTheme['--border-color'] }} ></div>
+
               {/* ==============================   containers for task adit and delete   =================================*/}
               {isTaskUpdating && (
                 <>
@@ -327,7 +334,7 @@ const Boards: React.FC<BoardsProps> = ({ selectedBoard, currentTheme, setIsLoadi
                             value={selectedTaskTitle}
                             onChange={(e) => setSelectedTaskTitle(e.target.value)}
                           />
-                          <IoMdCheckmark onClick={() => update_selected_task_title(selectedTask)} className='save_task_icon' />
+                          <IoMdCheckmark onClick={() => update_selected_task(selectedTask)} className='save_task_icon' />
                           <HiX onClick={cansell_editing_task_title} className='cansell_task_icon' />
                         </div>
                       }
@@ -341,11 +348,25 @@ const Boards: React.FC<BoardsProps> = ({ selectedBoard, currentTheme, setIsLoadi
                         <h2>Description : </h2>
                       </div>
 
+                      <div className='descr_and_icon_container'>
+                        {!isDescriptionEditing ?
+                          <>
+                            <p className='selected_task_description' >{selectedTask.description}</p>
+                            <TbEdit className='decsr_edit_icon' onClick={handle_Edit_Task_Description_click} />
+                            </>
+                          :
+                          <div>
+                          <textarea
+                            value={selectedTaskDescription}
+                            className='selected_task_description_input'
+                            onChange={(e) => setSelectedTaskDescription(e.target.value)}
+                          />
+                          <IoMdCheckmark onClick={() => update_selected_task(selectedTask)} className='save_task_icon' />
+                          <HiX onClick={cansell_editing_task_description} className='cansell_task_icon' />
+                        </div>
+                        }
 
-                      <p className='selected_task_description' >{selectedTask.description}</p>
-
-
-
+                      </div>
                     </div>
 
                   </div>

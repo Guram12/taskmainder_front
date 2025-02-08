@@ -171,7 +171,7 @@
 .task_update_window{
   width: 700px;
   height: 600px;
-  background-color: #5e5e5e;
+  background-color: #121212;
   border-radius: 20px;
   position: absolute;
   top: 50%;
@@ -291,6 +291,13 @@
   cursor: pointer;
   margin-right: 20px;
 }
+.selected_task_description_input{
+  width: 600px;
+  height: 200px;
+  max-height: 300px;
+
+}
+
 /* ================================================================================================================ */
 
 .plus_sign {
