@@ -240,6 +240,7 @@ const Boards: React.FC<BoardsProps> = ({ selectedBoard, currentTheme, setIsLoadi
       setLists(updatedLists);
       setSelectedTask(updatedTask);
       setItSelectedTaskEditing(false);
+      setIsDescriptionEditing(false);
       onNewTaskAdded(updatedTask, task.list);
     } catch (error) {
       console.log("Error while editing task title", error);
