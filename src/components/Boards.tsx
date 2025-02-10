@@ -84,7 +84,9 @@ const Boards: React.FC<BoardsProps> = ({ selectedBoard, currentTheme, setIsLoadi
 
 
 
-
+useEffect(() => {
+    console.log('selectedTask--->>>', selectedTask) 
+}, [selectedTask])
 
 
   const listsContainerRef = useRef<HTMLDivElement>(null);
@@ -216,7 +218,6 @@ const Boards: React.FC<BoardsProps> = ({ selectedBoard, currentTheme, setIsLoadi
         description: selectedTaskDescription,
         // due_date: task.due_date,
         // completed: task.completed,
-
 
       }, {
         headers: {
