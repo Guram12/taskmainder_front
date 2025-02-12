@@ -84,11 +84,6 @@ const Boards: React.FC<BoardsProps> = ({ selectedBoard, currentTheme, setIsLoadi
 
 
 
-useEffect(() => {
-    console.log('selectedTask--->>>', selectedTask) 
-}, [selectedTask])
-
-
   const listsContainerRef = useRef<HTMLDivElement>(null);
   const taskUpdateWindowRef = useRef<HTMLDivElement>(null);
 
@@ -167,7 +162,7 @@ useEffect(() => {
 
 
   const add_new_list = async () => {
-      setIsLoading(true);
+    setIsLoading(true);
     try {
       const response = await axiosInstance.post(`api/lists/`, {
         name: newListName,
@@ -216,6 +211,7 @@ useEffect(() => {
         title: selectedTaskTitle,
         list: task.list,
         description: selectedTaskDescription,
+        // this should be added later
         // due_date: task.due_date,
         // completed: task.completed,
 
