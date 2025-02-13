@@ -7,10 +7,52 @@ interface SettingsProps {
 
 
 const Settings: React.FC<SettingsProps> = () => {
-  
+
   return (
     <div>
       <h1>Settings componennt</h1>
+      {/* settings content  */}
+      <div className="settings-content">
+        <div className="settings-content__header">
+          <h2>Settings</h2>
+        </div>
+        <div className="settings-content__body">
+          <div className="settings-content__body__section">
+            <h3>Profile</h3>
+            <div className="settings-content__body__section__content">
+              <div className="settings-content__body__section__content__item">
+                <label htmlFor="username">Username</label>
+                <input type="text" id="username" />
+              </div>
+              <div className="settings-content__body__section__content__item">
+                <label htmlFor="email">Email</label>
+                <input type="email" id="email" />
+              </div>
+              <div className="settings-content__body__section__content__item">
+                <label htmlFor="phone">Phone</label>
+                <input type="text" id="phone" />
+              </div>
+              <div className="settings-content__body__section__content__item">
+                <label htmlFor="timezone">Timezone</label>
+                <input type="text" id="timezone" />
+              </div>
+            </div>
+          </div>
+          <div className="settings-content__body__section">
+            <h3>Theme</h3>
+            <div className="settings-content__body__section__content">
+              <div className="settings-content__body__section__content__item">
+                <label htmlFor="theme">Theme</label>
+                <select name="theme" id="theme">
+                  <option value="light">Light</option>
+                  <option value="dark">Dark</option>
+                </select>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
     </div>
   )
 }
