@@ -1,7 +1,6 @@
 import "../styles/MainPage.css";
-import React from "react";
+import React, { useState, useMemo, useCallback } from "react";
 import SidebarComponent from "./SideBar";
-import { useState } from "react";
 import Settings from "./Settings";
 import Calendar from "./Calendar";
 import Boards, { tasks } from "./Boards";
@@ -10,7 +9,6 @@ import { board } from "./Boards";
 import { lists } from "./Boards";
 import Templates from "./Templates";
 
-
 interface MainPageProps {
   currentTheme: ThemeSpecs;
   boards: board[];
@@ -18,11 +16,9 @@ interface MainPageProps {
   selectedBoard: board;
   setIsLoading: (value: boolean) => void;
   onNewListAdded: (list: lists) => void;
-  onNewTaskAdded: (task: tasks , axtiveListId : number | null) => void;
+  onNewTaskAdded: (task: tasks, activeListId: number | null) => void;
   onNewBoardAdded: (board: board) => void;
 }
-
-
 
 const MainPage: React.FC<MainPageProps> = ({
   currentTheme,
@@ -34,10 +30,9 @@ const MainPage: React.FC<MainPageProps> = ({
   onNewTaskAdded,
   onNewBoardAdded,
 }) => {
-
   const [selectedComponent, setSelectedComponent] = useState<string>("");
 
-  const renderComponent = () => {
+  const renderComponent = useCallback(() => {
     switch (selectedComponent) {
       case "Settings":
         return <Settings boards={boards} />;
@@ -58,12 +53,12 @@ const MainPage: React.FC<MainPageProps> = ({
       default:
         return <div>Select a component from the sidebar</div>;
     }
-  }
+  }, [selectedComponent, boards, selectedBoard, currentTheme, setIsLoading, onNewListAdded, onNewTaskAdded]);
 
-
+  const memoizedRenderComponent = useMemo(() => renderComponent(), [renderComponent]);
 
   return (
-    <div className="mainpage_component" >
+    <div className="mainpage_component">
       <SidebarComponent
         currentTheme={currentTheme}
         boards={boards}
@@ -71,52 +66,9 @@ const MainPage: React.FC<MainPageProps> = ({
         setSelectedComponent={setSelectedComponent}
         onNewBoardAdded={onNewBoardAdded}
       />
-
-      {renderComponent()}
+      {memoizedRenderComponent}
     </div>
-  )
-}
+  );
+};
 
 export default MainPage;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

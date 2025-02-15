@@ -49,7 +49,7 @@ const Settings: React.FC<SettingsProps> = () => {
                 </select>
               </div>
             </div>
-
+            
           </div>
         </div>
       </div>
