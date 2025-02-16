@@ -38,19 +38,6 @@ const Settings: React.FC<SettingsProps> = () => {
               </div>
             </div>
           </div>
-          <div className="settings-content__body__section">
-            <h3>Theme</h3>
-            <div className="settings-content__body__section__content">
-              <div className="settings-content__body__section__content__item">
-                <label htmlFor="theme">Theme</label>
-                <select name="theme" id="theme">
-                  <option value="light">Light</option>
-                  <option value="dark">Dark</option>
-                </select>
-              </div>
-            </div>
-            
-          </div>
         </div>
       </div>
     </div>
