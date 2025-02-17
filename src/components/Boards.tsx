@@ -11,6 +11,7 @@ import { MdOutlineEdit } from "react-icons/md";
 import { IoMdCheckmark } from "react-icons/io";
 import { HiX } from "react-icons/hi";
 import { TbEdit } from "react-icons/tb";
+import { RiDeleteBin6Line } from "react-icons/ri";
 
 
 export interface board {
@@ -46,10 +47,12 @@ export interface BoardsProps {
   setIsLoading: (value: boolean) => void;
   onNewListAdded: (list: lists) => void;
   onNewTaskAdded: (task: tasks, axtiveListId: number | null) => void;
+  setSelectedBoard: (board: board) => void;
+  handleTaskDeleted: (task: tasks) => void;
 }
 
 
-const Boards: React.FC<BoardsProps> = ({ selectedBoard, currentTheme, setIsLoading, onNewListAdded, onNewTaskAdded }) => {
+const Boards: React.FC<BoardsProps> = ({ selectedBoard, currentTheme, setIsLoading, onNewListAdded, onNewTaskAdded, handleTaskDeleted }) => {
 
   const [lists, setLists] = useState<lists[]>([]);
   const [activeListId, setActiveListId] = useState<number | null>(null);
@@ -82,6 +85,8 @@ const Boards: React.FC<BoardsProps> = ({ selectedBoard, currentTheme, setIsLoadi
   const [isDescriptionEditing, setIsDescriptionEditing] = useState<boolean>(false);
   const [selectedTaskDescription, setSelectedTaskDescription] = useState<string>(selectedTask.description);
 
+  // -------- deleting selected task
+  const [isTaskDeleting, setIsTaskDeleting] = useState<boolean>(false);
 
 
   const listsContainerRef = useRef<HTMLDivElement>(null);
@@ -94,7 +99,7 @@ const Boards: React.FC<BoardsProps> = ({ selectedBoard, currentTheme, setIsLoadi
   }, [selectedBoard]);
 
 
-  // ================================================== task add functionalisy ====================================
+  // ==================================================  ADD  new task  ====================================
   const handleTaskModalOpen = (listId: number) => {
     console.log('clicked')
     setActiveListId(listId);
@@ -151,7 +156,7 @@ const Boards: React.FC<BoardsProps> = ({ selectedBoard, currentTheme, setIsLoadi
   }
 
 
-  // =========================================   add new list   ====================================================
+  // =========================================   ADD new list   ====================================================
   const handleAddNewList = () => {
     setAddingNewList(true);
   }
@@ -186,7 +191,7 @@ const Boards: React.FC<BoardsProps> = ({ selectedBoard, currentTheme, setIsLoadi
     }
   };
 
-  // =======================================  adit and delete selected task ===============================================
+  // =======================================  EDIT  selected task ===============================================
 
   const handleTaskClick = (task: tasks) => {
     setIsTaskUpdating(true);
@@ -203,7 +208,7 @@ const Boards: React.FC<BoardsProps> = ({ selectedBoard, currentTheme, setIsLoadi
     setItSelectedTaskEditing(false);
     setSelectedTaskTitle(selectedTask.title);
   }
-  // -------------------------------------------------------- update task title -------------------------------------------
+  // -------------------------------------------------------- UPDATE task title -------------------------------------------
   const update_selected_task = async (task: tasks) => {
     setIsLoading(true);
     try {
@@ -248,7 +253,7 @@ const Boards: React.FC<BoardsProps> = ({ selectedBoard, currentTheme, setIsLoadi
     }
   }
 
-  // ------------------------------------------------ update task description ------------------------------------------
+  // ------------------------------------------------ UPDATE task description ------------------------------------------
   const handle_Edit_Task_Description_click = () => {
     setIsDescriptionEditing(true);
     setSelectedTaskDescription(selectedTask.description);
@@ -260,6 +265,45 @@ const Boards: React.FC<BoardsProps> = ({ selectedBoard, currentTheme, setIsLoadi
     setSelectedTaskDescription(selectedTask.description);
   };
 
+  // ------------------------------------------------ DELETE selected task ------------------------------------------
+  const handle_Cansel_Delete_Click = () => {
+    setIsTaskDeleting(false);
+  }
+
+  const handle_Delete_Click = async (task: tasks) => {
+    setIsLoading(true);
+    try {
+      const response = await axiosInstance.delete(`api/tasks/${task.id}/`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('access_token')}`
+        }
+      });
+      if (response.status === 204) {
+        const updatedLists = lists.map((list) => {
+          if (list.id === task.list) {
+            return {
+              ...list,
+              tasks: list.tasks.filter((t) => t.id !== task.id)
+            };
+          }
+          return list;
+        });
+
+        setLists(updatedLists);
+        handleTaskDeleted(task);
+
+        setIsTaskUpdating(false);
+        setIsTaskDeleting(false);
+        setIsLoading(false);
+      }
+    } catch (error) {
+      console.log("Error while deleting task", error);
+    }
+  }
+
+
+
+
 
 
   // -------------------------------------------  close window when outside click ocures--------------------------------
@@ -269,6 +313,7 @@ const Boards: React.FC<BoardsProps> = ({ selectedBoard, currentTheme, setIsLoadi
         setIsTaskUpdating(false);
         setItSelectedTaskEditing(false);
         setIsDescriptionEditing(false);
+        setIsTaskDeleting(false);
       }
     };
 
@@ -283,6 +328,8 @@ const Boards: React.FC<BoardsProps> = ({ selectedBoard, currentTheme, setIsLoadi
     const date = new Date(dateString);
     return `${date.toLocaleDateString()} ${date.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' })}`;
   };
+  // =================================================================================================================
+
 
   return (
     <div className="main_boards_container" >
@@ -328,7 +375,7 @@ const Boards: React.FC<BoardsProps> = ({ selectedBoard, currentTheme, setIsLoadi
               {isTaskUpdating && (
                 <>
                   <div className='dark_background' ></div>
-                  <div className='task_update_window' ref={taskUpdateWindowRef} >
+                  <div className={`task_update_window ${isTaskDeleting ? 'blur_while_ deleting' : ''} `} ref={taskUpdateWindowRef} >
 
                     <div className='task_title_container' >
                       <MdOutlineSubtitles className='selected_task_title_icon' />
@@ -350,12 +397,12 @@ const Boards: React.FC<BoardsProps> = ({ selectedBoard, currentTheme, setIsLoadi
 
                     <div className='task_content_container' >
 
-                      <div className='description_and_icon_container' >
+                      <div className={`description_and_icon_container ${isTaskDeleting ? 'blur_while_deleting' : ''}`} >
                         <PiTextAlignRightLight className='selected_task_description_icon' />
                         <h2>Description : </h2>
                       </div>
 
-                      <div className='descr_and_icon_container'>
+                      <div className={`descr_and_icon_container ${isTaskDeleting ? 'blur_while_deleting' : ''}`}>
                         {!isDescriptionEditing ?
                           <>
                             <p className='selected_task_description' >{selectedTask.description}</p>
@@ -372,8 +419,21 @@ const Boards: React.FC<BoardsProps> = ({ selectedBoard, currentTheme, setIsLoadi
                             <HiX onClick={cansell_editing_task_description} className='cansell_task_icon' />
                           </div>
                         }
-
                       </div>
+
+                      <div className='delete_task_container' >
+                        <RiDeleteBin6Line className='delete_icon' onClick={() => setIsTaskDeleting(true)} />
+                        {isTaskDeleting && (
+                          <div className='delete_task_window' >
+                            <h1>Are you sure you want to delete this task?</h1>
+                            <div className='delete_task_buttons_container' >
+                              <button onClick={() => handle_Delete_Click(selectedTask)} >Yes</button>
+                              <button onClick={handle_Cansel_Delete_Click} >No</button>
+                            </div>
+                          </div>
+                        )}
+                      </div>
+
                     </div>
 
                   </div>
@@ -397,12 +457,7 @@ const Boards: React.FC<BoardsProps> = ({ selectedBoard, currentTheme, setIsLoadi
                             value={taskTitle}
                             onChange={(e) => setTaskTitle(e.target.value)}
                           />
-                          <input
-                            type="text"
-                            placeholder="Description"
-                            value={taskDescription}
-                            onChange={(e) => setTaskDescription(e.target.value)}
-                          />
+
                           <input
                             type="datetime-local"
                             placeholder="Due Date"
@@ -410,12 +465,15 @@ const Boards: React.FC<BoardsProps> = ({ selectedBoard, currentTheme, setIsLoadi
                             onChange={(e) => setTaskDueDate(e.target.value)}
 
                           />
-                          <input
-                            type="checkbox"
-                            checked={isNewTaskChecked}
-                            onChange={(e) => setIsNewTaskChecked(e.target.checked)}
+                          <div>
+                            finished ?
+                            <input
+                              type="checkbox"
+                              checked={isNewTaskChecked}
+                              onChange={(e) => setIsNewTaskChecked(e.target.checked)}
 
-                          />
+                            />
+                          </div>
                         </div>
                       </div>
                       <button type='submit'>Add Task</button>
