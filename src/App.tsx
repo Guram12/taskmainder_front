@@ -128,6 +128,31 @@ const App: React.FC = () => {
     });
   };
 
+ // =========================================  DELETE task ==================================================
+
+  const handleTaskDeleted = (deletedTask: tasks) => {
+    setBoards(prevBoards => {
+      return prevBoards.map(board => {
+        if (board.id === selectedBoard.id) {
+          return {
+            ...board,
+            lists: board.lists.map(list => {
+              if (list.id === deletedTask.list) {
+                return {
+                  ...list,
+                  tasks: list.tasks.filter(task => task.id !== deletedTask.id)
+                };
+              }
+              return list;
+            })
+          };
+        }
+        return board;
+      });
+    });
+  };
+
+
   // ====================================  useEffect for theme change ===============================================
   useEffect(() => {
     const savedTheme = localStorage.getItem('theme');
@@ -246,6 +271,7 @@ const App: React.FC = () => {
             onNewListAdded={handleNewListAdded}
             onNewTaskAdded={handleNewTaskAdded}
             onNewBoardAdded={handleNewBoardAdded}
+            handleTaskDeleted={handleTaskDeleted}
           />} />
       </Routes>
     </Router>
