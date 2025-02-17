@@ -80,6 +80,7 @@ const SidebarComponent: React.FC<SidebarProps> = ({ currentTheme, boards, setSel
 
   const canselBoardAdding = () => {
     setAddingNewBoard(false);
+    setNewBoardName('');
   }
 
 
@@ -94,6 +95,8 @@ const SidebarComponent: React.FC<SidebarProps> = ({ currentTheme, boards, setSel
         });
         const newBoard = response.data;
         onNewBoardAdded(newBoard);
+        setAddingNewBoard(false);
+        setNewBoardName('');
         console.log('newBoard--->>>', newBoard)
 
     } catch (error) {
