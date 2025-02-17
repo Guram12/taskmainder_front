@@ -302,10 +302,6 @@ const Boards: React.FC<BoardsProps> = ({ selectedBoard, currentTheme, setIsLoadi
   }
 
 
-
-
-
-
   // -------------------------------------------  close window when outside click ocures--------------------------------
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
