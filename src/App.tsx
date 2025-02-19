@@ -60,6 +60,12 @@ const App: React.FC = () => {
   const accessToken: string | null = localStorage.getItem('access_token');
   const refreshToken: string | null = localStorage.getItem('refresh_token');
 
+  useEffect(() => {
+    console.log("accessToken", accessToken);
+    console.log("refreshToken", refreshToken);
+  }, [accessToken, refreshToken])
+
+
   // ========================================== fetch  boards ==================================================
   useEffect(() => {
     const fetchBoards = async () => {
@@ -128,7 +134,7 @@ const App: React.FC = () => {
     });
   };
 
- // =========================================  DELETE task ==================================================
+  // =========================================  DELETE task ==================================================
 
   const handleTaskDeleted = (deletedTask: tasks) => {
     setBoards(prevBoards => {
