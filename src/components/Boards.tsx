@@ -479,7 +479,7 @@ const Boards: React.FC<BoardsProps> = ({ selectedBoard, currentTheme, setIsLoadi
                 )}
                 <div className='add_task_and_plus_container' onClick={() => handleTaskModalOpen(list.id)} >
                   <FaPlus className='plus_sign' />
-                  <h2 className='add_task_p'  >Add Task</h2>
+                  <h2 className='add_task_p'  >Add New Task</h2>
                 </div>
 
               </div>
