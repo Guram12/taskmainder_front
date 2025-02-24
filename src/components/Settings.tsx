@@ -32,6 +32,11 @@ const Settings: React.FC<SettingsProps> = () => {
                 <label htmlFor="phone">Phone</label>
                 <input type="text" id="phone" />
               </div>
+              <div className="settings-content__body__section__content__item">
+                <label htmlFor="phone">name  </label>
+                <input type="text" id="phone" />
+              </div>
+
             </div>
           </div>
         </div>
