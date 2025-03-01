@@ -33,11 +33,6 @@ const Settings: React.FC<SettingsProps> = () => {
                 <label htmlFor="email">Email</label>
                 <input type="email" id="email" />
               </div>
-              <div className="settings-content__body__section__content__item">
-                <label htmlFor="phone">Phone</label>
-                <input type="text" id="phone" />
-              </div>
-
 
             </div>
           </div>
