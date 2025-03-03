@@ -29,10 +29,6 @@ const Settings: React.FC<SettingsProps> = () => {
                 <label htmlFor="username">Username</label>
                 <input type="text" id="username" />
               </div>
-              <div className="settings-content__body__section__content__item">
-                <label htmlFor="email">Email</label>
-                <input type="email" id="email" />
-              </div>
 
             </div>
           </div>
