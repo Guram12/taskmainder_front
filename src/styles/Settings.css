@@ -36,20 +36,19 @@
 }
 
 .settings-content__body__section__content__item {
-  margin-bottom: 15px;
+  margin-bottom: 10px;
 }
 
 .settings-content__body__section__content__item label {
   display: block;
   margin-bottom: 5px;
-  font-size: 14px;
-  color: #777;
+  font-size: 16px;
+  color: #666;
 }
 
 .settings-content__body__section__content__item input {
-  width: 100%;
   padding: 8px;
-  border: 1px solid #ddd;
+  font-size: 16px;
+  border: 1px solid #ccc;
   border-radius: 4px;
-  font-size: 14px;
 }
