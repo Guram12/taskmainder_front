@@ -1,6 +1,5 @@
-// filepath: /home/guram/Desktop/task_management_app/task_front/taskmainder/src/components/MainPage.tsx
 import "../styles/MainPage.css";
-import React, { useState, useMemo, useCallback } from "react";
+import React, { useState, useMemo, useCallback, useEffect } from "react";
 import SidebarComponent from "./SideBar";
 import Settings from "./Settings";
 import Calendar from "./Calendar";
@@ -25,7 +24,13 @@ const MainPage: React.FC<MainPageProps> = ({
   selectedBoard,
   setIsLoading,
 }) => {
-  const [selectedComponent, setSelectedComponent] = useState<string>("");
+  const [selectedComponent, setSelectedComponent] = useState<string>("Boards");
+
+  useEffect(() => {
+    if (boards.length > 0 && selectedBoard.id === 0) {
+      setSelectedBoard(boards[0]);
+    }
+  }, [boards, selectedBoard, setSelectedBoard]);
 
   const renderComponent = useCallback(() => {
     switch (selectedComponent) {

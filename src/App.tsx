@@ -42,61 +42,18 @@ const App: React.FC = () => {
 
   const [change_current_theme, setChange_current_theme] = useState(false);
   const [boards, setBoards] = useState<board[]>([]);
-  // const [selectedBoard, setSelectedBoard] = useState<board>({
-  //   id: 0,
-  //   name: '',
-  //   created_at: '',
-  //   lists: [],
-  //   owner: ''
-  // });
-
-
   const [selectedBoard, setSelectedBoard] = useState<board>({
-    id: 1,
-    name: 'Sample Board',
+    id: 0,
+    name: '',
     created_at: '',
-    lists: [
-      {
-        id: 1,
-        name: 'To Do',
-        created_at: '',
-        board: 1,
-        tasks: [
-          { id: 1, title: 'Task 1', description: '', due_date: '', created_at: '', list: 1, completed: false },
-          { id: 2, title: 'Task 2', description: '', due_date: '', created_at: '', list: 1, completed: false },
-        ],
-      },
-      {
-        id: 2,
-        name: 'In Progress',
-        created_at: '',
-        board: 1,
-        tasks: [
-          { id: 3, title: 'Task 3', description: '', due_date: '', created_at: '', list: 2, completed: false },
-        ],
-      },
-      {
-        id: 3,
-        name: 'Done',
-        created_at: '',
-        board: 1,
-        tasks: [
-          { id: 4, title: 'Task 4', description: '', due_date: '', created_at: '', list: 3, completed: false },
-        ],
-      },
-    ],
-    owner: '',
+    lists: [],
+    owner: ''
   });
-
 
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
-
-
   const accessToken: string | null = localStorage.getItem('access_token');
   const refreshToken: string | null = localStorage.getItem('refresh_token');
-
-
 
   // ========================================== fetch  boards ==================================================
   useEffect(() => {
@@ -118,7 +75,6 @@ const App: React.FC = () => {
       fetchBoards();
     }
   }, [isAuthenticated]);
-
 
   // ====================================  useEffect for theme change ===============================================
   useEffect(() => {

@@ -1,19 +1,25 @@
 @import "../styles/Varibles.css";
 
-
-
 .main_boards_container {
   display: flex;
   gap: 20px;
   color: black;
+  height: calc(100vh - 102px);
+  overflow-y: hidden;
+  overflow-x: scroll;
 }
 
 .list {
   background-color: #427999;
   padding: 10px;
   border-radius: 5px;
-  width: 200px;
+  width: 300px;
   height: min-content;
+  transition: background-color 0.3s;
+}
+
+.list.hover {
+  background-color: #5a9bd8; /* Change this to your desired hover color */
 }
 
 .list h3 {
@@ -27,3 +33,6 @@
   border-radius: 3px;
   cursor: pointer;
 }
+
+
+
