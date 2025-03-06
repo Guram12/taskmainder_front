@@ -18,7 +18,6 @@ interface SidebarProps {
   boards: board[];
   setSelectedBoard: (board: board) => void;
   setSelectedComponent: (component: string) => void;
-  onNewBoardAdded: (board: board) => void;
 }
 
 
@@ -28,7 +27,7 @@ interface ThemeSpecs {
   '--main-text-coloure': string;
 }
 
-const SidebarComponent: React.FC<SidebarProps> = ({ currentTheme, boards, setSelectedBoard, setSelectedComponent, onNewBoardAdded }) => {
+const SidebarComponent: React.FC<SidebarProps> = ({ currentTheme, boards, setSelectedBoard, setSelectedComponent }) => {
   const [isOpen, setIsOpen] = useState(true);
   const is_Pinned_Value: boolean = JSON.parse(localStorage.getItem('isPinned') || 'false');
   const [isPinned, setIsPinned] = useState<boolean>(is_Pinned_Value);
@@ -94,7 +93,6 @@ const SidebarComponent: React.FC<SidebarProps> = ({ currentTheme, boards, setSel
             { Authorization: `Bearer ${localStorage.getItem('access_token')}` }
         });
         const newBoard = response.data;
-        onNewBoardAdded(newBoard);
         setAddingNewBoard(false);
         setNewBoardName('');
         console.log('newBoard--->>>', newBoard)
