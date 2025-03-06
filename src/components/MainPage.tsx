@@ -1,15 +1,14 @@
+// filepath: /home/guram/Desktop/task_management_app/task_front/taskmainder/src/components/MainPage.tsx
 import "../styles/MainPage.css";
 import React, { useState, useMemo, useCallback } from "react";
 import SidebarComponent from "./SideBar";
 import Settings from "./Settings";
 import Calendar from "./Calendar";
-import Boards, { tasks } from "./Boards";
+import Boards from "./Boards";
 import { ThemeSpecs } from "../utils/theme";
 import { board } from "./Boards";
-import { lists } from "./Boards";
 import Templates from "./Templates";
 import LearnDrag from "./LearnDrag";
-
 
 interface MainPageProps {
   currentTheme: ThemeSpecs;
@@ -17,10 +16,6 @@ interface MainPageProps {
   setSelectedBoard: (board: board) => void;
   selectedBoard: board;
   setIsLoading: (value: boolean) => void;
-  onNewListAdded: (list: lists) => void;
-  onNewTaskAdded: (task: tasks, activeListId: number | null) => void;
-  onNewBoardAdded: (board: board) => void;
-  handleTaskDeleted: (task: tasks) =>   void;
 }
 
 const MainPage: React.FC<MainPageProps> = ({
@@ -29,10 +24,6 @@ const MainPage: React.FC<MainPageProps> = ({
   setSelectedBoard,
   selectedBoard,
   setIsLoading,
-  onNewListAdded,
-  onNewTaskAdded,
-  onNewBoardAdded,
-  handleTaskDeleted
 }) => {
   const [selectedComponent, setSelectedComponent] = useState<string>("");
 
@@ -50,16 +41,13 @@ const MainPage: React.FC<MainPageProps> = ({
             selectedBoard={selectedBoard}
             currentTheme={currentTheme}
             setIsLoading={setIsLoading}
-            onNewListAdded={onNewListAdded}
-            onNewTaskAdded={onNewTaskAdded}
             setSelectedBoard={setSelectedBoard}
-            handleTaskDeleted={handleTaskDeleted}
           />
         );
       default:
         return <LearnDrag />;
     }
-  }, [selectedComponent, boards, selectedBoard, currentTheme, setIsLoading, onNewListAdded, onNewTaskAdded]);
+  }, [selectedComponent, boards, selectedBoard, currentTheme, setIsLoading]);
 
   const memoizedRenderComponent = useMemo(() => renderComponent(), [renderComponent]);
 
@@ -70,7 +58,6 @@ const MainPage: React.FC<MainPageProps> = ({
         boards={boards}
         setSelectedBoard={setSelectedBoard}
         setSelectedComponent={setSelectedComponent}
-        onNewBoardAdded={onNewBoardAdded}
       />
       {memoizedRenderComponent}
     </div>

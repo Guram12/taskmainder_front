@@ -10,9 +10,6 @@ import axiosInstance from './utils/axiosinstance';
 import { ThemeSpecs } from './utils/theme';
 import { board } from './components/Boards';
 import FinishGoogleSignIn from './auth/FinishGoogleSignIn';
-import { lists } from './components/Boards';
-import { tasks } from './components/Boards';
-
 
 
 
@@ -45,13 +42,52 @@ const App: React.FC = () => {
 
   const [change_current_theme, setChange_current_theme] = useState(false);
   const [boards, setBoards] = useState<board[]>([]);
+  // const [selectedBoard, setSelectedBoard] = useState<board>({
+  //   id: 0,
+  //   name: '',
+  //   created_at: '',
+  //   lists: [],
+  //   owner: ''
+  // });
+
+
   const [selectedBoard, setSelectedBoard] = useState<board>({
-    id: 0,
-    name: '',
+    id: 1,
+    name: 'Sample Board',
     created_at: '',
-    lists: [],
-    owner: ''
+    lists: [
+      {
+        id: 1,
+        name: 'To Do',
+        created_at: '',
+        board: 1,
+        tasks: [
+          { id: 1, title: 'Task 1', description: '', due_date: '', created_at: '', list: 1, completed: false },
+          { id: 2, title: 'Task 2', description: '', due_date: '', created_at: '', list: 1, completed: false },
+        ],
+      },
+      {
+        id: 2,
+        name: 'In Progress',
+        created_at: '',
+        board: 1,
+        tasks: [
+          { id: 3, title: 'Task 3', description: '', due_date: '', created_at: '', list: 2, completed: false },
+        ],
+      },
+      {
+        id: 3,
+        name: 'Done',
+        created_at: '',
+        board: 1,
+        tasks: [
+          { id: 4, title: 'Task 4', description: '', due_date: '', created_at: '', list: 3, completed: false },
+        ],
+      },
+    ],
+    owner: '',
   });
+
 
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
@@ -60,10 +96,6 @@ const App: React.FC = () => {
   const accessToken: string | null = localStorage.getItem('access_token');
   const refreshToken: string | null = localStorage.getItem('refresh_token');
 
-  useEffect(() => {
-    console.log("accessToken", accessToken);
-    console.log("refreshToken", refreshToken);
-  }, [accessToken, refreshToken])
 
 
   // ========================================== fetch  boards ==================================================
@@ -86,77 +118,6 @@ const App: React.FC = () => {
       fetchBoards();
     }
   }, [isAuthenticated]);
-
-  // =========================================  add new board ==================================================
-
-  const handleNewBoardAdded = (newBoard: board) => {
-    setBoards(prevBoards => {
-      return [...prevBoards, newBoard];
-    });
-  };
-
-
-  // =========================================  add new list ==================================================
-
-  const handleNewListAdded = (newList: lists) => {
-    setBoards(prevBoards => {
-      return prevBoards.map(board => {
-        if (board.id === selectedBoard.id) {
-          return {
-            ...board,
-            lists: [...board.lists, newList]
-          };
-        }
-        return board;
-      });
-    });
-  };
-  // =========================================  add new task ==================================================
-  const handleNewTaskAdded = (newTask: tasks, listId: number | null) => {
-    setBoards(prevBoards => {
-      return prevBoards.map(board => {
-        if (board.id === selectedBoard.id) {
-          return {
-            ...board,
-            lists: board.lists.map(list => {
-              if (list.id === listId) {
-                return {
-                  ...list,
-                  tasks: [...list.tasks, newTask]
-                };
-              }
-              return list;
-            })
-          };
-        }
-        return board;
-      });
-    });
-  };
-
-  // =========================================  DELETE task ==================================================
-
-  const handleTaskDeleted = (deletedTask: tasks) => {
-    setBoards(prevBoards => {
-      return prevBoards.map(board => {
-        if (board.id === selectedBoard.id) {
-          return {
-            ...board,
-            lists: board.lists.map(list => {
-              if (list.id === deletedTask.list) {
-                return {
-                  ...list,
-                  tasks: list.tasks.filter(task => task.id !== deletedTask.id)
-                };
-              }
-              return list;
-            })
-          };
-        }
-        return board;
-      });
-    });
-  };
 
 
   // ====================================  useEffect for theme change ===============================================
@@ -274,10 +235,7 @@ const App: React.FC = () => {
             currentTheme={currentTheme}
             boards={boards}
             setIsLoading={setIsLoading}
-            onNewListAdded={handleNewListAdded}
-            onNewTaskAdded={handleNewTaskAdded}
-            onNewBoardAdded={handleNewBoardAdded}
-            handleTaskDeleted={handleTaskDeleted}
+
           />} />
       </Routes>
     </Router>
