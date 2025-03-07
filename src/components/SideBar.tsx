@@ -18,6 +18,8 @@ interface SidebarProps {
   boards: board[];
   setSelectedBoard: (board: board) => void;
   setSelectedComponent: (component: string) => void;
+  setSelected_board_ID_for_sidebar?: (id: number | null) => void;
+  selected_board_ID_for_sidebar?: number | null;
 }
 
 
@@ -27,11 +29,18 @@ interface ThemeSpecs {
   '--main-text-coloure': string;
 }
 
-const SidebarComponent: React.FC<SidebarProps> = ({ currentTheme, boards, setSelectedBoard, setSelectedComponent }) => {
+const SidebarComponent: React.FC<SidebarProps> = ({
+  currentTheme,
+  boards,
+  setSelectedBoard,
+  setSelectedComponent,
+  selected_board_ID_for_sidebar,
+  setSelected_board_ID_for_sidebar
+}) => {
+
   const [isOpen, setIsOpen] = useState(true);
   const is_Pinned_Value: boolean = JSON.parse(localStorage.getItem('isPinned') || 'false');
   const [isPinned, setIsPinned] = useState<boolean>(is_Pinned_Value);
-  const [selectedBoardId, setSelectedBoardId] = useState<number | null>(null);
 
 
 
@@ -70,8 +79,26 @@ const SidebarComponent: React.FC<SidebarProps> = ({ currentTheme, boards, setSel
   const handleBoardClick = (board: board) => {
     setSelectedBoard(board);
     setSelectedComponent("Boards");
-    setSelectedBoardId(board.id); // Update the selected board ID
+    if (setSelected_board_ID_for_sidebar) {
+      setSelected_board_ID_for_sidebar(board.id); // Update the selected board ID
+    }
+  };
+
+  const handel_sidebar_page_click = (component_name: string) => {
+    setSelectedComponent(component_name);
+    setSelectedBoard(
+      {
+        id: 0,
+        name: '',
+        created_at: '',
+        lists: [],
+        owner: ''
+      });
+    if (setSelected_board_ID_for_sidebar) {
+      setSelected_board_ID_for_sidebar(null);
+    }
   }
+
   // ========================================== add new board =================================================
   const handleBoardAddClick = () => {
     setAddingNewBoard(true);
@@ -92,10 +119,10 @@ const SidebarComponent: React.FC<SidebarProps> = ({ currentTheme, boards, setSel
           headers:
             { Authorization: `Bearer ${localStorage.getItem('access_token')}` }
         });
-        const newBoard = response.data;
-        setAddingNewBoard(false);
-        setNewBoardName('');
-        console.log('newBoard--->>>', newBoard)
+      const newBoard = response.data;
+      setAddingNewBoard(false);
+      setNewBoardName('');
+      console.log('newBoard--->>>', newBoard)
 
     } catch (error) {
 
@@ -152,7 +179,7 @@ const SidebarComponent: React.FC<SidebarProps> = ({ currentTheme, boards, setSel
                           rootStyles={{
                             backgroundColor: `${currentTheme['--background-color']}`,
                             transition: 'all 0.3s',
-                            color: selectedBoardId === board.id ? 'green' : currentTheme['--main-text-coloure'], // Apply different color if selected
+                            color: selected_board_ID_for_sidebar === board.id ? 'green' : currentTheme['--main-text-coloure'],
                           }}
                           icon={<FaClipboardList />}
                           onClick={() => handleBoardClick(board)}
@@ -188,10 +215,10 @@ const SidebarComponent: React.FC<SidebarProps> = ({ currentTheme, boards, setSel
 
                 </SubMenu>
 
-                <MenuItem icon={<GoRepoTemplate className='sidebar_big_icon' />} onClick={() => setSelectedComponent("Templates")} >Templates</MenuItem>
+                <MenuItem icon={<GoRepoTemplate className='sidebar_big_icon' />} onClick={() => handel_sidebar_page_click("Templates")} >Templates</MenuItem>
                 <MenuItem
                   icon={<FaCalendarAlt className='sidebar_big_icon' />}
-                  onClick={() => setSelectedComponent("Calendar")}
+                  onClick={() => handel_sidebar_page_click("Calendar")}
                 >Calendar</MenuItem>
               </Menu>
             </div>
@@ -199,7 +226,7 @@ const SidebarComponent: React.FC<SidebarProps> = ({ currentTheme, boards, setSel
               <Menu style={{ marginTop: 'auto' }}>
                 <MenuItem
                   icon={<RiSettings4Fill className="sidebar_big_icon" />}
-                  onClick={() => setSelectedComponent("Settings")}
+                  onClick={() => handel_sidebar_page_click("Settings")}
                 >Settings</MenuItem>
               </Menu>
             </div>

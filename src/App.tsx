@@ -50,6 +50,10 @@ const App: React.FC = () => {
     owner: ''
   });
 
+
+
+  const [selected_board_ID_for_sidebar, setSelected_board_ID_for_sidebar] = useState<number | null>(null);
+
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const accessToken: string | null = localStorage.getItem('access_token');
@@ -191,7 +195,8 @@ const App: React.FC = () => {
             currentTheme={currentTheme}
             boards={boards}
             setIsLoading={setIsLoading}
-
+            setSelected_board_ID_for_sidebar={setSelected_board_ID_for_sidebar}
+            selected_board_ID_for_sidebar={selected_board_ID_for_sidebar}
           />} />
       </Routes>
     </Router>
