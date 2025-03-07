@@ -83,6 +83,8 @@ const List: React.FC<{ list: lists, moveTask: (taskId: number, sourceListId: num
 const Boards: React.FC<BoardsProps> = ({ selectedBoard, setSelectedBoard }) => {
   const [boardData, setBoardData] = useState(selectedBoard);
   const socketRef = useRef<WebSocket | null>(null);
+  const listsContainerRef = useRef<HTMLDivElement | null>(null);
+  const scrollRef = useRef<{ direction: 'left' | 'right' | null, speed: number }>({ direction: null, speed: 5 }); // Reduced speed
 
   useEffect(() => {
     setBoardData(selectedBoard);
@@ -193,21 +195,65 @@ const Boards: React.FC<BoardsProps> = ({ selectedBoard, setSelectedBoard }) => {
     }
   };
 
+  useEffect(() => {
+    const handleWheel = (event: WheelEvent) => {
+      if (listsContainerRef.current) {
+        listsContainerRef.current.scrollLeft += event.deltaY;
+      }
+    };
+
+    const handleDragOver = (event: DragEvent) => {
+      if (listsContainerRef.current) {
+        const { clientX, currentTarget } = event;
+        const { left, right } = (currentTarget as HTMLElement).getBoundingClientRect();
+
+        if (clientX < left + 150) {
+          scrollRef.current.direction = 'left';
+        } else if (clientX > right - 150) {
+          scrollRef.current.direction = 'right';
+        } else {
+          scrollRef.current.direction = null;
+        }
+      }
+    };
+
+    const scroll = () => {
+      if (listsContainerRef.current && scrollRef.current.direction) {
+        if (scrollRef.current.direction === 'left') {
+          listsContainerRef.current.scrollLeft -= scrollRef.current.speed;
+        } else if (scrollRef.current.direction === 'right') {
+          listsContainerRef.current.scrollLeft += scrollRef.current.speed;
+        }
+      }
+      requestAnimationFrame(scroll);
+    };
+
+    const listsContainer = listsContainerRef.current;
+    if (listsContainer) {
+      listsContainer.addEventListener('wheel', handleWheel);
+      listsContainer.addEventListener('dragover', handleDragOver);
+      requestAnimationFrame(scroll);
+    }
+
+    return () => {
+      if (listsContainer) {
+        listsContainer.removeEventListener('wheel', handleWheel);
+        listsContainer.removeEventListener('dragover', handleDragOver);
+      }
+    };
+  }, []);
+
+  
   return (
-
-      <DndProvider backend={HTML5Backend}>
-        {/* <div>
-          wef wef wef
-        </div> */}
-        <div className="main_boards_container">
-          <div className='lists_container'>
-
+    <DndProvider backend={HTML5Backend}>
+      <div className="main_boards_container">
+        <div className='lists_container' ref={listsContainerRef}>
           {boardData.lists.map((list) => (
             <List key={list.id} list={list} moveTask={moveTask} />
           ))}
-          </div>
         </div>
-      </DndProvider>
+      </div>
+    </DndProvider>
   );
 };
 
