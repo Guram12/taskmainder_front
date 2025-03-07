@@ -15,6 +15,8 @@ interface MainPageProps {
   setSelectedBoard: (board: board) => void;
   selectedBoard: board;
   setIsLoading: (value: boolean) => void;
+  setSelected_board_ID_for_sidebar?: (id: number| null) => void;
+  selected_board_ID_for_sidebar?: number | null;
 }
 
 const MainPage: React.FC<MainPageProps> = ({
@@ -23,6 +25,9 @@ const MainPage: React.FC<MainPageProps> = ({
   setSelectedBoard,
   selectedBoard,
   setIsLoading,
+  setSelected_board_ID_for_sidebar,
+  selected_board_ID_for_sidebar,
+
 }) => {
   const [selectedComponent, setSelectedComponent] = useState<string>("Boards");
 
@@ -40,6 +45,8 @@ const MainPage: React.FC<MainPageProps> = ({
         return <Calendar boards={boards} />;
       case "Templates":
         return <Templates />;
+      // case '':
+      //   return ;
       case "Boards":
         return (
           <Boards
@@ -63,6 +70,8 @@ const MainPage: React.FC<MainPageProps> = ({
         boards={boards}
         setSelectedBoard={setSelectedBoard}
         setSelectedComponent={setSelectedComponent}
+        setSelected_board_ID_for_sidebar={setSelected_board_ID_for_sidebar}
+        selected_board_ID_for_sidebar={selected_board_ID_for_sidebar}
       />
       {memoizedRenderComponent}
     </div>
