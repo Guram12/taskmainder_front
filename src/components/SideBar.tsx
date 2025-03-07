@@ -170,7 +170,7 @@ const SidebarComponent: React.FC<SidebarProps> = ({
                 </MenuItem>
 
                 {/* other menu items  */}
-                <SubMenu label="Boards" id="board" icon={<GrTasks className="sidebar_big_icon" />}>
+                <SubMenu label="Boards" id="board" icon={<GrTasks className="sidebar_big_icon" />} defaultOpen={true}>
                   {isOpen && (
                     <div >
                       {boards.map((board: board) => (
