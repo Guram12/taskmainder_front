@@ -1,5 +1,5 @@
 import '../styles/boards.css'
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useDrag, useDrop, DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import { ThemeSpecs } from '../utils/theme';
@@ -82,7 +82,7 @@ const List: React.FC<{ list: lists, moveTask: (taskId: number, sourceListId: num
 
 const Boards: React.FC<BoardsProps> = ({ selectedBoard, setSelectedBoard }) => {
   const [boardData, setBoardData] = useState(selectedBoard);
-  const [socket, setSocket] = useState<WebSocket | null>(null);
+  const socketRef = useRef<WebSocket | null>(null);
 
   useEffect(() => {
     setBoardData(selectedBoard);
@@ -91,8 +91,13 @@ const Boards: React.FC<BoardsProps> = ({ selectedBoard, setSelectedBoard }) => {
   useEffect(() => {
     if (!selectedBoard.id) return;
 
+    // Close the previous WebSocket connection if it exists
+    if (socketRef.current) {
+      socketRef.current.close();
+    }
+
     const newSocket = new WebSocket(`ws://${window.location.hostname}:8000/ws/boards/${selectedBoard.id}/`);
-    setSocket(newSocket);
+    socketRef.current = newSocket;
 
     newSocket.onopen = () => {
       console.log('WebSocket connection established');
@@ -146,7 +151,9 @@ const Boards: React.FC<BoardsProps> = ({ selectedBoard, setSelectedBoard }) => {
     };
 
     return () => {
-      newSocket.close();
+      if (newSocket) {
+        newSocket.close();
+      }
     };
   }, [selectedBoard.id]);
 
@@ -166,7 +173,7 @@ const Boards: React.FC<BoardsProps> = ({ selectedBoard, setSelectedBoard }) => {
     setBoardData({ ...boardData });
     setSelectedBoard({ ...boardData });
 
-    if (socket) {
+    if (socketRef.current && socketRef.current.readyState === WebSocket.OPEN) {
       console.log('Sending move_task message:', {
         action: 'move_task',
         payload: {
@@ -175,7 +182,7 @@ const Boards: React.FC<BoardsProps> = ({ selectedBoard, setSelectedBoard }) => {
           target_list_id: targetListId
         }
       });
-      socket.send(JSON.stringify({
+      socketRef.current.send(JSON.stringify({
         action: 'move_task',
         payload: {
           task_id: taskId,
