@@ -84,7 +84,8 @@ const Boards: React.FC<BoardsProps> = ({ selectedBoard, setSelectedBoard }) => {
   const [boardData, setBoardData] = useState(selectedBoard);
   const socketRef = useRef<WebSocket | null>(null);
   const listsContainerRef = useRef<HTMLDivElement | null>(null);
-  const scrollRef = useRef<{ direction: 'left' | 'right' | null, speed: number }>({ direction: null, speed: 5 }); // Reduced speed
+  const scrollRef = useRef<{ direction: 'left' | 'right' | null, speed: number }>({ direction: null, speed: 2 }); // Reduced speed
+  const isManualScrollRef = useRef(false);
 
   useEffect(() => {
     setBoardData(selectedBoard);
@@ -198,6 +199,7 @@ const Boards: React.FC<BoardsProps> = ({ selectedBoard, setSelectedBoard }) => {
   useEffect(() => {
     const handleWheel = (event: WheelEvent) => {
       if (listsContainerRef.current) {
+        isManualScrollRef.current = true;
         listsContainerRef.current.scrollLeft += event.deltaY;
       }
     };
@@ -217,8 +219,13 @@ const Boards: React.FC<BoardsProps> = ({ selectedBoard, setSelectedBoard }) => {
       }
     };
 
+    const handleDrop = () => {
+      scrollRef.current.direction = null;
+      isManualScrollRef.current = false; // Reset manual scroll flag on drop
+    };
+
     const scroll = () => {
-      if (listsContainerRef.current && scrollRef.current.direction) {
+      if (listsContainerRef.current && scrollRef.current.direction && !isManualScrollRef.current) {
         if (scrollRef.current.direction === 'left') {
           listsContainerRef.current.scrollLeft -= scrollRef.current.speed;
         } else if (scrollRef.current.direction === 'right') {
@@ -228,10 +235,16 @@ const Boards: React.FC<BoardsProps> = ({ selectedBoard, setSelectedBoard }) => {
       requestAnimationFrame(scroll);
     };
 
+    const handleScrollEnd = () => {
+      isManualScrollRef.current = false;
+    };
+
     const listsContainer = listsContainerRef.current;
     if (listsContainer) {
       listsContainer.addEventListener('wheel', handleWheel);
       listsContainer.addEventListener('dragover', handleDragOver);
+      listsContainer.addEventListener('drop', handleDrop);
+      listsContainer.addEventListener('scroll', handleScrollEnd);
       requestAnimationFrame(scroll);
     }
 
@@ -239,11 +252,12 @@ const Boards: React.FC<BoardsProps> = ({ selectedBoard, setSelectedBoard }) => {
       if (listsContainer) {
         listsContainer.removeEventListener('wheel', handleWheel);
         listsContainer.removeEventListener('dragover', handleDragOver);
+        listsContainer.removeEventListener('drop', handleDrop);
+        listsContainer.removeEventListener('scroll', handleScrollEnd);
       }
     };
   }, []);
 
-  
   return (
     <DndProvider backend={HTML5Backend}>
       <div className="main_boards_container">
