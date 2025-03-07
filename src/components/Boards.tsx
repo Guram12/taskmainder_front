@@ -194,13 +194,20 @@ const Boards: React.FC<BoardsProps> = ({ selectedBoard, setSelectedBoard }) => {
   };
 
   return (
-    <DndProvider backend={HTML5Backend}>
-      <div className="main_boards_container">
-        {boardData.lists.map((list) => (
-          <List key={list.id} list={list} moveTask={moveTask} />
-        ))}
-      </div>
-    </DndProvider>
+
+      <DndProvider backend={HTML5Backend}>
+        {/* <div>
+          wef wef wef
+        </div> */}
+        <div className="main_boards_container">
+          <div className='lists_container'>
+
+          {boardData.lists.map((list) => (
+            <List key={list.id} list={list} moveTask={moveTask} />
+          ))}
+          </div>
+        </div>
+      </DndProvider>
   );
 };
 
