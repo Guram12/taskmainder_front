@@ -1,5 +1,5 @@
 import "../styles/Members.css";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { board } from "./Boards";
 import { Board_Users } from "./Boards";
 import testimage from "../assets/profile_3.png";
@@ -42,21 +42,37 @@ const Members: React.FC<MembersProps> = ({ selectedBoard, socketRef }) => {
     }
   };
 
-  const handleSearchInputChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+  const debounce = (func: Function, delay: number) => {
+    let timeoutId: NodeJS.Timeout;
+    return (...args: any[]) => {
+      if (timeoutId) clearTimeout(timeoutId);
+      timeoutId = setTimeout(() => {
+        func(...args);
+      }, delay);
+    };
+  };
+
+  const fetchSuggestedUsers = async (value: string) => {
+    try {
+      const response = await axiosInstance.get(`acc/user-emails/?search=${value}`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('access_token')}`
+        }
+      });
+      setSuggestedUsers(response.data);
+    } catch (error) {
+      console.error("Error fetching user emails:", error);
+    }
+  };
+
+  const debouncedFetchSuggestedUsers = useCallback(debounce(fetchSuggestedUsers, 300), []);
+
+  const handleSearchInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     setSearchInput(value);
 
     if (value.length > 0) {
-      try {
-        const response = await axiosInstance.get(`acc/user-emails/?search=${value}`, {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem('access_token')}`
-          }
-        });
-        setSuggestedUsers(response.data);
-      } catch (error) {
-        console.error("Error fetching user emails:", error);
-      }
+      debouncedFetchSuggestedUsers(value);
     } else {
       setSuggestedUsers([]);
     }
@@ -82,12 +98,16 @@ const Members: React.FC<MembersProps> = ({ selectedBoard, socketRef }) => {
               <div className="close_icon_cont">
                 <CgCloseR className="close_icon" onClick={() => setIsUsersWindowOpen(false)} />
               </div>
+
+              {/* search input for searchjing users  */}
               <input
                 type="text"
                 value={searchInput}
                 onChange={handleSearchInputChange}
                 placeholder="Search users by email"
               />
+
+              {/* suggested users conmtainer  */}
               <div className="suggested_users_list">
                 {suggestedUsers.map((user) => (
                   <div key={user.email} className="suggested_user">
@@ -95,6 +115,8 @@ const Members: React.FC<MembersProps> = ({ selectedBoard, socketRef }) => {
                   </div>
                 ))}
               </div>
+
+
               {current_board_users.map(boardUser => (
                 <div className="each_user" key={boardUser.id}>
                   <div className="image_and_name_cont">
