@@ -1,10 +1,17 @@
 @import "../styles/Varibles.css";
+.members_container{
+  display: flex;
+  flex-direction: column;
+  overflow-x: auto;
+}
+
+
 
 .main_boards_container {
   display: flex;
   gap: 20px;
   color: black;
-  height: calc(100vh - 102px);
+  height: calc(100vh - 152px);
   overflow-x: auto; /* Allow horizontal overflow */
   overflow-y: hidden; /* Prevent vertical overflow */
 }
@@ -30,6 +37,8 @@
   transition: background-color 0.3s;
   display: inline-block; /* Ensure lists are inline */
   min-width: 300px;
+  margin-top: 20px;
+  margin-left: 20px;
 }
 
 .list.hover {

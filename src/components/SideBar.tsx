@@ -1,5 +1,5 @@
 import '../styles/Sidebar.css';
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Sidebar, Menu, MenuItem, SubMenu } from 'react-pro-sidebar';
 import { FaCalendarAlt } from "react-icons/fa";
 import { TiPin, TiPinOutline } from "react-icons/ti";
@@ -86,14 +86,16 @@ const SidebarComponent: React.FC<SidebarProps> = ({
 
   const handel_sidebar_page_click = (component_name: string) => {
     setSelectedComponent(component_name);
-    setSelectedBoard(
-      {
-        id: 0,
-        name: '',
-        created_at: '',
-        lists: [],
-        owner: ''
-      });
+    setSelectedBoard({
+      id: 0,
+      name: '',
+      created_at: '',
+      lists: [],
+      owner: '',
+      owner_email: '',
+      members: [],
+      board_users: []
+    });
     if (setSelected_board_ID_for_sidebar) {
       setSelected_board_ID_for_sidebar(null);
     }
@@ -125,11 +127,13 @@ const SidebarComponent: React.FC<SidebarProps> = ({
       console.log('newBoard--->>>', newBoard)
 
     } catch (error) {
-
+      console.error('Error while adding new board', error);
     }
   }
 
-
+  useEffect(() => {
+    console.log('selected_board_ID_for_sidebar', selected_board_ID_for_sidebar);
+  }, [selected_board_ID_for_sidebar])
 
   // =========================================================================================================
 

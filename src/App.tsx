@@ -47,7 +47,10 @@ const App: React.FC = () => {
     name: '',
     created_at: '',
     lists: [],
-    owner: ''
+    owner: '',
+    owner_email: '',
+    members: [],
+    board_users: []
   });
 
 

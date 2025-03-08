@@ -3,6 +3,15 @@ import React, { useState, useEffect, useRef } from "react";
 import { useDrag, useDrop, DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import { ThemeSpecs } from '../utils/theme';
+import Members from './Members';
+
+export interface Board_Users {
+  email: string;
+  id: number;
+  profile_picture: string;
+  status: string;
+  username: string;
+}
 
 export interface board {
   id: number;
@@ -10,6 +19,9 @@ export interface board {
   created_at: string;
   lists: lists[];
   owner: string;
+  owner_email: string;
+  members: string[];
+  board_users: Board_Users[];
 }
 
 export interface lists {
@@ -94,7 +106,6 @@ const Boards: React.FC<BoardsProps> = ({ selectedBoard, setSelectedBoard }) => {
   useEffect(() => {
     if (!selectedBoard.id) return;
 
-    // Close the previous WebSocket connection if it exists
     if (socketRef.current) {
       socketRef.current.close();
     }
@@ -128,6 +139,16 @@ const Boards: React.FC<BoardsProps> = ({ selectedBoard, setSelectedBoard }) => {
             newBoardData.lists[targetListIndex].tasks.push(movedTask);
 
             return newBoardData;
+          });
+          break;
+        case 'set_status':
+          setBoardData((prevData) => {
+            const newBoardData = { ...prevData };
+            const userIndex = newBoardData.board_users.findIndex(user => user.id === payload.user_id);
+            if (userIndex !== -1) {
+              newBoardData.board_users[userIndex].status = payload.new_status;
+            }
+            return newBoardData; 
           });
           break;
         case 'create':
@@ -260,11 +281,16 @@ const Boards: React.FC<BoardsProps> = ({ selectedBoard, setSelectedBoard }) => {
 
   return (
     <DndProvider backend={HTML5Backend}>
-      <div className="main_boards_container">
-        <div className='lists_container' ref={listsContainerRef}>
-          {boardData.lists.map((list) => (
-            <List key={list.id} list={list} moveTask={moveTask} />
-          ))}
+      <div className='members_container'>
+        <div>
+          <Members selectedBoard={selectedBoard} socketRef={socketRef} />
+        </div>
+        <div className="main_boards_container">
+          <div className='lists_container' ref={listsContainerRef}>
+            {boardData.lists.map((list) => (
+              <List key={list.id} list={list} moveTask={moveTask} />
+            ))}
+          </div>
         </div>
       </div>
     </DndProvider>

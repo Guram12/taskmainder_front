@@ -15,7 +15,7 @@ interface MainPageProps {
   setSelectedBoard: (board: board) => void;
   selectedBoard: board;
   setIsLoading: (value: boolean) => void;
-  setSelected_board_ID_for_sidebar?: (id: number| null) => void;
+  setSelected_board_ID_for_sidebar?: (id: number | null) => void;
   selected_board_ID_for_sidebar?: number | null;
 }
 
@@ -31,11 +31,23 @@ const MainPage: React.FC<MainPageProps> = ({
 }) => {
   const [selectedComponent, setSelectedComponent] = useState<string>("Boards");
 
+
+  // ------------------------------ set selected board depenging  previous user board selection ---------------------------
+
+
   useEffect(() => {
     if (boards.length > 0 && selectedBoard.id === 0) {
       setSelectedBoard(boards[0]);
     }
   }, [boards, selectedBoard, setSelectedBoard]);
+
+
+  // ---------------------------------------------------------------------------------------------------------------------
+  useEffect(() => {
+    if (boards.length > 0 && selected_board_ID_for_sidebar === null) {
+      setSelected_board_ID_for_sidebar?.(boards[0].id);
+    }
+  }, [boards, selected_board_ID_for_sidebar, setSelected_board_ID_for_sidebar]);
 
   const renderComponent = useCallback(() => {
     switch (selectedComponent) {
@@ -50,10 +62,10 @@ const MainPage: React.FC<MainPageProps> = ({
       case "Boards":
         return (
           <Boards
-            selectedBoard={selectedBoard}
             currentTheme={currentTheme}
             setIsLoading={setIsLoading}
             setSelectedBoard={setSelectedBoard}
+            selectedBoard={selectedBoard}
           />
         );
       default:
