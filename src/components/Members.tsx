@@ -5,6 +5,7 @@ import { Board_Users } from "./Boards";
 import testimage from "../assets/profile_3.png";
 import { LuUserRoundPlus } from "react-icons/lu";
 import { CgCloseR } from "react-icons/cg";
+import axiosInstance from "../utils/axiosinstance";
 
 interface MembersProps {
   selectedBoard: board;
@@ -14,6 +15,8 @@ interface MembersProps {
 const Members: React.FC<MembersProps> = ({ selectedBoard, socketRef }) => {
   const [current_board_users, setCurrent_board_users] = useState<Board_Users[]>([]);
   const [isUsersWindowOpen, setIsUsersWindowOpen] = useState<boolean>(false);
+  const [searchInput, setSearchInput] = useState<string>("");
+  const [suggestedUsers, setSuggestedUsers] = useState<{ email: string }[]>([]);
 
   useEffect(() => {
     if (selectedBoard?.board_users) {
@@ -39,6 +42,26 @@ const Members: React.FC<MembersProps> = ({ selectedBoard, socketRef }) => {
     }
   };
 
+  const handleSearchInputChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setSearchInput(value);
+
+    if (value.length > 0) {
+      try {
+        const response = await axiosInstance.get(`acc/user-emails/?search=${value}`, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('access_token')}`
+          }
+        });
+        setSuggestedUsers(response.data);
+      } catch (error) {
+        console.error("Error fetching user emails:", error);
+      }
+    } else {
+      setSuggestedUsers([]);
+    }
+  };
+
   return (
     <div className="main_members_container">
       <h3 className="members_h2">Members:</h3>
@@ -58,6 +81,19 @@ const Members: React.FC<MembersProps> = ({ selectedBoard, socketRef }) => {
             <div className="each_user_container">
               <div className="close_icon_cont">
                 <CgCloseR className="close_icon" onClick={() => setIsUsersWindowOpen(false)} />
+              </div>
+              <input
+                type="text"
+                value={searchInput}
+                onChange={handleSearchInputChange}
+                placeholder="Search users by email"
+              />
+              <div className="suggested_users_list">
+                {suggestedUsers.map((user) => (
+                  <div key={user.email} className="suggested_user">
+                    {user.email}
+                  </div>
+                ))}
               </div>
               {current_board_users.map(boardUser => (
                 <div className="each_user" key={boardUser.id}>
