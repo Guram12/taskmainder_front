@@ -18,6 +18,8 @@ const Members: React.FC<MembersProps> = ({ selectedBoard, socketRef }) => {
   const [searchInput, setSearchInput] = useState<string>("");
   const [suggestedUsers, setSuggestedUsers] = useState<{ email: string }[]>([]);
 
+
+
   useEffect(() => {
     if (selectedBoard?.board_users) {
       setCurrent_board_users(selectedBoard.board_users);
@@ -41,7 +43,7 @@ const Members: React.FC<MembersProps> = ({ selectedBoard, socketRef }) => {
       }));
     }
   };
-
+  // ======================================== debaunce function for search input ========================================
   const debounce = (func: Function, delay: number) => {
     let timeoutId: NodeJS.Timeout;
     return (...args: any[]) => {
@@ -77,7 +79,9 @@ const Members: React.FC<MembersProps> = ({ selectedBoard, socketRef }) => {
       setSuggestedUsers([]);
     }
   };
+  // =========================================================================================================
 
+  
   return (
     <div className="main_members_container">
       <h3 className="members_h2">Members:</h3>
