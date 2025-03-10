@@ -6,6 +6,7 @@ import testimage from "../assets/profile_3.png";
 import { LuUserRoundPlus } from "react-icons/lu";
 import { CgCloseR } from "react-icons/cg";
 import axiosInstance from "../utils/axiosinstance";
+import { RiCloseFill } from "react-icons/ri";
 
 interface MembersProps {
   selectedBoard: board;
@@ -18,6 +19,8 @@ const Members: React.FC<MembersProps> = ({ selectedBoard, socketRef }) => {
   const [searchInput, setSearchInput] = useState<string>("");
   const [suggestedUsers, setSuggestedUsers] = useState<{ email: string }[]>([]);
 
+
+  const [selected_emails, setSelected_emails] = useState<string[]>([]);
 
 
   useEffect(() => {
@@ -81,7 +84,33 @@ const Members: React.FC<MembersProps> = ({ selectedBoard, socketRef }) => {
   };
   // =========================================================================================================
 
-  
+  const handle_email_click = (email: string) => {
+    setSelected_emails((prev_emails) => {
+      if (prev_emails.includes(email)) {
+        return prev_emails.filter((prev_email) => prev_email !== email);
+      } else {
+        return [...prev_emails, email];
+      }
+    });
+  };
+
+  const handleAddUsers = () => {
+    if (socketRef.current && socketRef.current.readyState === WebSocket.OPEN) {
+      socketRef.current.send(JSON.stringify({
+        action: 'add_user',
+        payload: {
+          emails: selected_emails, // Send an array of emails
+          board_id: selectedBoard.id, // Include the current board ID
+        }
+      }));
+      setIsUsersWindowOpen(false);
+      setSelected_emails([]);
+      setSearchInput("");
+      setSuggestedUsers([]);
+    }
+  };
+
+
   return (
     <div className="main_members_container">
       <h3 className="members_h2">Members:</h3>
@@ -114,11 +143,24 @@ const Members: React.FC<MembersProps> = ({ selectedBoard, socketRef }) => {
               {/* suggested users conmtainer  */}
               <div className="suggested_users_list">
                 {suggestedUsers.map((user) => (
-                  <div key={user.email} className="suggested_user">
+                  <div key={user.email} className="suggested_user" onClick={() => handle_email_click(user.email)}>
                     {user.email}
                   </div>
                 ))}
               </div>
+
+              <div style={{ width: '80%', height: '1px', backgroundColor: "black" }} ></div>
+
+              <div className="selected_emails_cont" >
+                {selected_emails.map((email) => (
+                  <div key={email} className="selected_email" >
+                    {email}
+                    <RiCloseFill className='unselect_email' />
+                  </div>
+                ))}
+              </div>
+
+              <button onClick={handleAddUsers}>Add Users</button>
 
 
               {current_board_users.map(boardUser => (
