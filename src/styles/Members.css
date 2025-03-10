@@ -71,15 +71,15 @@
   max-height: 700px;
 }
 
-.close_icon_cont{
+.close_icon_cont {
   display: flex;
   justify-content: flex-end;
   align-items: center;
   width: 100%;
   height: 50px;
 }
-  
-.close_icon{
+
+.close_icon {
   width: 30px;
   height: 30px;
   margin-left: 10px;
@@ -88,7 +88,7 @@
   margin-right: 20px;
 }
 
-.suggested_users_list{
+.suggested_users_list {
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
@@ -102,7 +102,7 @@
   padding: 10px;
 }
 
-.suggested_user{
+.suggested_user {
   border: 1px solid black;
   padding: 3px;
   background-color: rgba(42, 194, 143, 0.459);
@@ -113,6 +113,31 @@
   color: rgb(255, 255, 255);
 }
 
+.selected_emails_cont {
+  display: flex;
+  justify-content: flex-start;
+  align-items: flex-start;
+}
+
+.selected_email {
+  border: 1px solid black;
+  padding: 3px;
+  background-color: rgba(42, 194, 143, 0.459);
+  border-radius: 15px;
+  padding-left: 5px;
+  padding-right: 5px;
+  cursor: pointer;
+  color: rgb(255, 255, 255);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+}
+
+.unselect_email{
+  cursor: pointer;
+  color: tomato;
+}
 
 .each_user {
   display: flex;
