@@ -26,19 +26,23 @@ const Members: React.FC<MembersProps> = ({ selectedBoard, socketRef, current_use
 
 
 
-  // const is_current_user_owner = current_board_users.find(user => user.email === current_user_email)?.status === 'owner'
-  // const is_current_user_admin = current_board_users.find(user => user.email === current_user_email)?.status === 'admin'
-  // const is_current_user_member = current_board_users.find(user => user.email === current_user_email)?.status === 'member'
-  // const is_current_user_admin_or_owner = is_current_user_owner || is_current_user_admin 
+  const is_current_user_owner = current_board_users.find(user => user.email === current_user_email)?.status === 'owner'
+  const is_current_user_admin = current_board_users.find(user => user.email === current_user_email)?.status === 'admin'
+  const is_current_user_member = current_board_users.find(user => user.email === current_user_email)?.status === 'member'
+  const is_current_user_admin_or_owner = is_current_user_owner || is_current_user_admin
 
 
+  useEffect(() => {
+    console.log('is_current_user_owner >>', is_current_user_owner)
+    console.log('is_current_user_admin >>', is_current_user_admin)
+    console.log('is_current_user_member >>', is_current_user_member)
 
-  // console.log('is_current_user_admin_or_owner >>', is_current_user_admin_or_owner)
-  // // =========================================================================================================
+  }, [is_current_user_owner, is_current_user_admin, is_current_user_member])
+  // =========================================================================================================
 
-  // useEffect(() => {
-  //   console.log("suggestedUsers", suggestedUsers);
-  // }, [suggestedUsers]);
+  useEffect(() => {
+    console.log("current_board_users", current_board_users);
+  }, [current_board_users]);
 
 
   useEffect(() => {
@@ -47,19 +51,28 @@ const Members: React.FC<MembersProps> = ({ selectedBoard, socketRef, current_use
     }
   }, [selectedBoard]);
 
+  // ============================================  set new statuses for users ============================================
   const handleStatusChange = (userId: number, newStatus: string) => {
-    setCurrent_board_users((prevUsers) =>
-      prevUsers.map((user) =>
+    setCurrent_board_users((prevUsers) => {
+      const updatedUsers = prevUsers.map((user) =>
         user.id === userId ? { ...user, status: newStatus } : user
-      )
-    );
-
+      );
+  
+      // Remove any duplicate users
+      const uniqueUsers = updatedUsers.filter((user, index, self) =>
+        index === self.findIndex((u) => u.id === user.id)
+      );
+  
+      return uniqueUsers;
+    });
+  
     if (socketRef.current && socketRef.current.readyState === WebSocket.OPEN) {
       socketRef.current.send(JSON.stringify({
         action: 'set_status',
         payload: {
           user_id: userId,
           new_status: newStatus,
+          board_id: selectedBoard.id
         }
       }));
     }
@@ -118,7 +131,7 @@ const Members: React.FC<MembersProps> = ({ selectedBoard, socketRef, current_use
       setSuggestedUsers([]);
     }
   };
-  // =========================================================================================================
+  // ==========================================   add new users   =================================================
 
   const handle_email_click = (email: string) => {
     setSelected_emails((prev_emails) => {
@@ -211,17 +224,22 @@ const Members: React.FC<MembersProps> = ({ selectedBoard, socketRef, current_use
                   </div>
 
                   <div className="select_and_delete_icon">
-                    <select
-                      className="select_status"
-                      value={boardUser.status}
-                      onChange={(e) => handleStatusChange(boardUser.id, e.target.value)}
-                    >
-                      <option value="owner">owner</option>
-                      <option value="admin">admin</option>
-                      <option value="member">member</option>
-                    </select>
+                    {is_current_user_admin_or_owner ?
 
-                    {/* <RiDeleteBinLine className={`delete_user ${is_current_user_admin_or_owner ? "delete_icon_for_admin" : "delete_icon_for_member"} `} /> */}
+                      <select
+                        className="select_status"
+                        value={boardUser.status}
+                        onChange={(e) => handleStatusChange(boardUser.id, e.target.value)}
+                      >
+                        <option value="owner" disabled={!is_current_user_owner}>owner</option>
+                        <option value="admin">admin</option>
+                        <option value="member">member</option>
+                      </select>
+                      :
+                      <p> {boardUser.status}</p>
+
+                    }
+                    <RiDeleteBinLine className={`delete_user ${is_current_user_admin_or_owner ? "delete_icon_for_admin" : "delete_icon_for_member"} `} />
 
                   </div>
                 </div>

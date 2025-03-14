@@ -147,15 +147,19 @@ const Boards: React.FC<BoardsProps> = ({ selectedBoard, setSelectedBoard , curre
             return newBoardData;
           });
           break;
-        case 'set_status':
-          setBoardData((prevData) => {
-            const newBoardData = { ...prevData };
-            const userIndex = newBoardData.board_users.findIndex(user => user.id === payload.user_id);
-            if (userIndex !== -1) {
-              newBoardData.board_users[userIndex].status = payload.new_status;
-            }
-            return newBoardData; 
-          });
+          case 'set_status':
+            setBoardData((prevData) => {
+              const newBoardData = { ...prevData };
+              const userIndex = newBoardData.board_users.findIndex(user => user.id === payload.user_id);
+              if (userIndex !== -1) {
+                newBoardData.board_users[userIndex].status = payload.new_status;
+              }
+              // Remove any duplicate users
+              newBoardData.board_users = newBoardData.board_users.filter((user, index, self) =>
+                index === self.findIndex((u) => u.id === user.id)
+              );
+              return newBoardData; 
+            });
           break;
         case 'create':
         case 'update':
