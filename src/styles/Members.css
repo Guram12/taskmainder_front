@@ -11,6 +11,7 @@
 }
 
 
+
 .members_h2 {
   color: white;
   font-size: 20px;
@@ -169,3 +170,38 @@
   border-radius: 50%;
   margin-left: 10px;
 }
+
+.select_and_delete_icon{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 15px;
+}
+
+.select_status{
+  cursor: pointer;
+}
+
+.delete_user{
+  width: 20px;
+  height: 20px;
+}
+
+.delete_icon_for_admin {
+  cursor: pointer;
+  color: tomato;
+
+}
+
+.delete_icon_for_member {
+  cursor:not-allowed;
+  color: rgb(119, 119, 119);
+
+}
+
+
+
+
+
+
+

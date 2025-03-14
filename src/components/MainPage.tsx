@@ -17,6 +17,7 @@ interface MainPageProps {
   setIsLoading: (value: boolean) => void;
   setSelected_board_ID_for_sidebar?: (id: number | null) => void;
   selected_board_ID_for_sidebar?: number | null;
+  current_user_email: string;
 }
 
 const MainPage: React.FC<MainPageProps> = ({
@@ -27,7 +28,7 @@ const MainPage: React.FC<MainPageProps> = ({
   setIsLoading,
   setSelected_board_ID_for_sidebar,
   selected_board_ID_for_sidebar,
-
+  current_user_email,
 }) => {
   const [selectedComponent, setSelectedComponent] = useState<string>("Boards");
 
@@ -66,6 +67,7 @@ const MainPage: React.FC<MainPageProps> = ({
             setIsLoading={setIsLoading}
             setSelectedBoard={setSelectedBoard}
             selectedBoard={selectedBoard}
+            current_user_email={current_user_email}
           />
         );
       default:
@@ -84,6 +86,7 @@ const MainPage: React.FC<MainPageProps> = ({
         setSelectedComponent={setSelectedComponent}
         setSelected_board_ID_for_sidebar={setSelected_board_ID_for_sidebar}
         selected_board_ID_for_sidebar={selected_board_ID_for_sidebar}
+
       />
       {memoizedRenderComponent}
     </div>

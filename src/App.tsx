@@ -200,6 +200,7 @@ const App: React.FC = () => {
             setIsLoading={setIsLoading}
             setSelected_board_ID_for_sidebar={setSelected_board_ID_for_sidebar}
             selected_board_ID_for_sidebar={selected_board_ID_for_sidebar}
+            current_user_email={profileData.email}
           />} />
       </Routes>
     </Router>
