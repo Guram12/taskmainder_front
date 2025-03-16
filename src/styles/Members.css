@@ -66,7 +66,7 @@
   flex-direction: column;
   align-items: center;
   border: 1px solid red;
-  width: 600px;
+  width: 700px;
   height: 80%;
   gap: 20px;
   max-height: 700px;
@@ -89,6 +89,14 @@
   margin-right: 20px;
 }
 
+.parent_of_input_and_emails{
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
 .suggested_users_list {
   display: flex;
   flex-direction: column;
@@ -101,6 +109,7 @@
   max-height: 300px;
   border-radius: 5px;
   padding: 10px;
+  border :1px solid green;
 }
 
 .suggested_user {
@@ -151,7 +160,7 @@
   background-color: rgb(206, 249, 255);
   border-radius: 5px;
   height: 50px;
-  width: 400px;
+  width: 600px;
   padding: 5px;
 
 }
@@ -169,6 +178,11 @@
   height: 30px;
   border-radius: 50%;
   margin-left: 10px;
+}
+
+.boarduser_email{
+  font-size: 15px;
+  color: rgb(94, 94, 94);
 }
 
 .select_and_delete_icon{
