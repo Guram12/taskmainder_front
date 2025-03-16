@@ -57,15 +57,15 @@ const Members: React.FC<MembersProps> = ({ selectedBoard, socketRef, current_use
       const updatedUsers = prevUsers.map((user) =>
         user.id === userId ? { ...user, status: newStatus } : user
       );
-  
+
       // Remove any duplicate users
       const uniqueUsers = updatedUsers.filter((user, index, self) =>
         index === self.findIndex((u) => u.id === user.id)
       );
-  
+
       return uniqueUsers;
     });
-  
+
     if (socketRef.current && socketRef.current.readyState === WebSocket.OPEN) {
       socketRef.current.send(JSON.stringify({
         action: 'set_status',
@@ -182,34 +182,49 @@ const Members: React.FC<MembersProps> = ({ selectedBoard, socketRef, current_use
               </div>
 
               {/* search input for searchjing users  */}
-              <input
-                type="text"
-                value={searchInput}
-                onChange={handleSearchInputChange}
-                placeholder="Search users by email"
-              />
+              {is_current_user_admin_or_owner && (
+                <div className="parent_of_input_and_emails" >
 
-              {/* suggested users conmtainer  */}
-              <div className="suggested_users_list">
-                {suggestedUsers.map((user) => (
-                  <div key={user.email} className="suggested_user" onClick={() => handle_email_click(user.email)}>
-                    {user.email}
+                  <input
+                    type="text"
+                    value={searchInput}
+                    onChange={handleSearchInputChange}
+                    placeholder="Search users by email"
+                  />
+
+                  {/* suggested users conmtainer  */}
+                  <div className="suggested_users_list">
+                    {suggestedUsers.map((user) => (
+                      <div key={user.email} className="suggested_user" onClick={() => handle_email_click(user.email)}>
+                        {user.email}
+                      </div>
+                    ))}
                   </div>
-                ))}
-              </div>
 
-              <div style={{ width: '80%', height: '1px', backgroundColor: "black" }} ></div>
+                  <div style={{ width: '80%', height: '1px', backgroundColor: "black" }} ></div>
 
-              <div className="selected_emails_cont" >
-                {selected_emails.map((email) => (
-                  <div key={email} className="selected_email" >
-                    {email}
-                    <RiCloseFill className='unselect_email' />
+                  <div className="selected_emails_cont" >
+                    {selected_emails.map((email) => (
+                      <div key={email} className="selected_email" >
+                        {email}
+                        <RiCloseFill className='unselect_email' />
+                      </div>
+                    ))}
                   </div>
-                ))}
-              </div>
 
-              <button onClick={handleAddUsers}>Add Users</button>
+                </div>
+              )}
+
+              {/* button for adding selected emails to board users  */}
+              {is_current_user_admin_or_owner && (
+                <button
+                  onClick={handleAddUsers}
+                  style={{ cursor: `${selected_emails.length > 0 ? 'pointer' : 'not-allowed'}` }}
+                  disabled={selected_emails.length === 0}
+                >
+                  Add Users
+                </button>
+              )}
 
 
               {current_board_users.map(boardUser => (
@@ -221,26 +236,28 @@ const Members: React.FC<MembersProps> = ({ selectedBoard, socketRef, current_use
                       className="board_user_images"
                     />
                     <p>{boardUser.username}</p>
+                    <p className="boarduser_email">{boardUser.email}</p>
                   </div>
 
                   <div className="select_and_delete_icon">
-                    {is_current_user_admin_or_owner ?
-
-                      <select
-                        className="select_status"
-                        value={boardUser.status}
-                        onChange={(e) => handleStatusChange(boardUser.id, e.target.value)}
-                      >
-                        <option value="owner" disabled={!is_current_user_owner}>owner</option>
-                        <option value="admin">admin</option>
-                        <option value="member">member</option>
-                      </select>
-                      :
-                      <p> {boardUser.status}</p>
-
-                    }
-                    <RiDeleteBinLine className={`delete_user ${is_current_user_admin_or_owner ? "delete_icon_for_admin" : "delete_icon_for_member"} `} />
-
+                    {is_current_user_admin_or_owner ? (
+                      boardUser.status === 'owner' && !is_current_user_owner ? (
+                        <p>{boardUser.status}</p>
+                      ) : (
+                        <select
+                          className="select_status"
+                          value={boardUser.status}
+                          onChange={(e) => handleStatusChange(boardUser.id, e.target.value)}
+                        >
+                          <option value="owner" disabled={!is_current_user_owner}>owner</option>
+                          <option value="admin">admin</option>
+                          <option value="member">member</option>
+                        </select>
+                      )
+                    ) : (
+                      <p>{boardUser.status}</p>
+                    )}
+                    <RiDeleteBinLine className={`delete_user ${is_current_user_admin_or_owner ? "delete_icon_for_admin" : "delete_icon_for_member"}`} />
                   </div>
                 </div>
               ))}
