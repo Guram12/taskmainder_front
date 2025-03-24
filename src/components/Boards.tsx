@@ -9,7 +9,7 @@ export interface Board_Users {
   email: string;
   id: number;
   profile_picture: string;
-  status: string;
+  user_status: string;
   username: string;
 }
 
@@ -93,7 +93,7 @@ const List: React.FC<{ list: lists, moveTask: (taskId: number, sourceListId: num
   );
 };
 
-const Boards: React.FC<BoardsProps> = ({ selectedBoard, setSelectedBoard , current_user_email }) => {
+const Boards: React.FC<BoardsProps> = ({ selectedBoard, setSelectedBoard, current_user_email }) => {
   const [boardData, setBoardData] = useState(selectedBoard);
   const socketRef = useRef<WebSocket | null>(null);
   const listsContainerRef = useRef<HTMLDivElement | null>(null);
@@ -112,12 +112,9 @@ const Boards: React.FC<BoardsProps> = ({ selectedBoard, setSelectedBoard , curre
     }
 
 
-    const token = localStorage.getItem('access_token'); 
+    const token = localStorage.getItem('access_token');
     const newSocket = new WebSocket(`ws://${window.location.hostname}:8000/ws/boards/${selectedBoard.id}/?token=${token}`);
     socketRef.current = newSocket;
-
-    // const newSocket = new WebSocket(`ws://${window.location.hostname}:8000/ws/boards/${selectedBoard.id}/`);
-    // socketRef.current = newSocket;
 
     newSocket.onopen = () => {
       console.log('WebSocket connection established');
@@ -147,20 +144,24 @@ const Boards: React.FC<BoardsProps> = ({ selectedBoard, setSelectedBoard , curre
             return newBoardData;
           });
           break;
-          case 'set_status':
-            setBoardData((prevData) => {
-              const newBoardData = { ...prevData };
-              const userIndex = newBoardData.board_users.findIndex(user => user.id === payload.user_id);
-              if (userIndex !== -1) {
-                newBoardData.board_users[userIndex].status = payload.new_status;
-              }
-              // Remove any duplicate users
-              newBoardData.board_users = newBoardData.board_users.filter((user, index, self) =>
-                index === self.findIndex((u) => u.id === user.id)
-              );
-              return newBoardData; 
-            });
+
+
+        case 'set_status':
+          setBoardData((prevData) => {
+            const newBoardData = { ...prevData };
+            const userIndex = newBoardData.board_users.findIndex(user => user.id === payload.user_id);
+            if (userIndex !== -1) {
+              newBoardData.board_users[userIndex].user_status = payload.new_status;
+            }
+            // Remove any duplicate users
+            newBoardData.board_users = newBoardData.board_users.filter((user, index, self) =>
+              index === self.findIndex((u) => u.id === user.id)
+            );
+            return newBoardData;
+          });
           break;
+
+
         case 'create':
         case 'update':
           setBoardData((prevData) => ({
@@ -168,9 +169,9 @@ const Boards: React.FC<BoardsProps> = ({ selectedBoard, setSelectedBoard , curre
             ...payload,
           }));
           break;
-        case 'delete':
-          // Handle delete action if necessary
-          break;
+
+
+
         default:
           break;
       }
@@ -293,7 +294,7 @@ const Boards: React.FC<BoardsProps> = ({ selectedBoard, setSelectedBoard , curre
     <DndProvider backend={HTML5Backend}>
       <div className='members_container'>
         <div>
-          <Members selectedBoard={selectedBoard} socketRef={socketRef}  current_user_email={current_user_email}  />
+          <Members selectedBoard={selectedBoard} socketRef={socketRef} current_user_email={current_user_email} />
         </div>
         <div className="main_boards_container">
           <div className='lists_container' ref={listsContainerRef}>

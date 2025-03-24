@@ -9,6 +9,7 @@ import axiosInstance from "../utils/axiosinstance";
 import { RiCloseFill } from "react-icons/ri";
 import { RiDeleteBinLine } from "react-icons/ri";
 
+
 interface MembersProps {
   selectedBoard: board;
   socketRef: React.MutableRefObject<WebSocket | null>;
@@ -22,48 +23,29 @@ const Members: React.FC<MembersProps> = ({ selectedBoard, socketRef, current_use
   const [suggestedUsers, setSuggestedUsers] = useState<{ email: string }[]>([]);
 
 
+  const [isDeletingSelectedUser, setIsDeletingSelectedUser] = useState<boolean>(false);
+  const [current_board_user_to_delete, setCurrent_board_user_to_delete] = useState({} as Board_Users);
   const [selected_emails, setSelected_emails] = useState<string[]>([]);
 
 
 
-  const is_current_user_owner = current_board_users.find(user => user.email === current_user_email)?.status === 'owner'
-  const is_current_user_admin = current_board_users.find(user => user.email === current_user_email)?.status === 'admin'
-  const is_current_user_member = current_board_users.find(user => user.email === current_user_email)?.status === 'member'
+  const is_current_user_owner = current_board_users.find(user => user.email === current_user_email)?.user_status === 'owner'
+  const is_current_user_admin = current_board_users.find(user => user.email === current_user_email)?.user_status === 'admin'
+  // const is_current_user_member = current_board_users.find(user => user.email === current_user_email)?.user_status === 'member'
   const is_current_user_admin_or_owner = is_current_user_owner || is_current_user_admin
 
 
-  useEffect(() => {
-    console.log('is_current_user_owner >>', is_current_user_owner)
-    console.log('is_current_user_admin >>', is_current_user_admin)
-    console.log('is_current_user_member >>', is_current_user_member)
-
-  }, [is_current_user_owner, is_current_user_admin, is_current_user_member])
-  // =========================================================================================================
-
-  useEffect(() => {
-    console.log("current_board_users", current_board_users);
-  }, [current_board_users]);
-
-
-  useEffect(() => {
-    if (selectedBoard?.board_users) {
-      setCurrent_board_users(selectedBoard.board_users);
-    }
-  }, [selectedBoard]);
 
   // ============================================  set new statuses for users ============================================
   const handleStatusChange = (userId: number, newStatus: string) => {
+    console.log(`Changing status for user ${userId} to ${newStatus}`);
     setCurrent_board_users((prevUsers) => {
       const updatedUsers = prevUsers.map((user) =>
         user.id === userId ? { ...user, status: newStatus } : user
       );
 
-      // Remove any duplicate users
-      const uniqueUsers = updatedUsers.filter((user, index, self) =>
-        index === self.findIndex((u) => u.id === user.id)
-      );
-
-      return uniqueUsers;
+      console.log('Updated users:', updatedUsers);
+      return updatedUsers;
     });
 
     if (socketRef.current && socketRef.current.readyState === WebSocket.OPEN) {
@@ -131,33 +113,93 @@ const Members: React.FC<MembersProps> = ({ selectedBoard, socketRef, current_use
       setSuggestedUsers([]);
     }
   };
-  // ==========================================   add new users   =================================================
+
+
+
+  // ======================================== fetch current  board useers ==================================================
+
+  useEffect(() => {
+    if (selectedBoard.id) {
+      fetch_current_board_users();
+    }
+  }, [selectedBoard]);
+  // -------------------------------------------- fetch current board users ------------------------------------------------
+  const fetch_current_board_users = async () => {
+    try {
+      const response = await axiosInstance.get(`/api/boards/${selectedBoard.id}/users/`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('access_token')}`
+        }
+      });
+      console.log("fetched board users ", response.data);
+      setCurrent_board_users(response.data);
+    } catch (error) {
+      console.error('Error fetching board users:', error);
+    }
+  };
+
+
+  // -------------------------------------------- add new users to board ------------------------------------------------
+
+  const handleAddUsers = async () => {
+    console.log('Adding users:', selected_emails);
+    try {
+      const response = await axiosInstance.post(`/api/boards/${selectedBoard.id}/add_users/`, {
+        emails: selected_emails
+      }, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('access_token')}`
+        }
+      });
+      console.log("Added users to board:", response.data);
+      if (response.status === 200) {
+        fetch_current_board_users();
+      }
+      else {
+        console.log('Error adding users to board:', response.data);
+      }
+    } catch (error) {
+      console.error('Error adding users to board:', error);
+    }
+  };
+
+  // --------------------------------------------- email click --------------------------------------
 
   const handle_email_click = (email: string) => {
     setSelected_emails((prev_emails) => {
       if (prev_emails.includes(email)) {
-        return prev_emails.filter((prev_email) => prev_email !== email);
+        let filtered_emails = prev_emails.filter((prev_email) => prev_email !== email);
+        return filtered_emails;
       } else {
         return [...prev_emails, email];
       }
     });
   };
 
-  const handleAddUsers = () => {
-    if (socketRef.current && socketRef.current.readyState === WebSocket.OPEN) {
-      socketRef.current.send(JSON.stringify({
-        action: 'add_user',
-        payload: {
-          emails: selected_emails, // Send an array of emails
-          board_id: selectedBoard.id, // Include the current board ID
-        }
-      }));
-      setIsUsersWindowOpen(false);
-      setSelected_emails([]);
-      setSearchInput("");
-      setSuggestedUsers([]);
+  // ========================================== delete user from members ==================================================
+  const handleDeleteUser = async (userId: number) => {
+    console.log('Deleting user:', userId);
+    const response = await axiosInstance.delete(`/api/boards/${selectedBoard.id}/users/${userId}/delete/`, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem('access_token')}`
+      }
+    })
+    console.log("response", response)
+    if (response.status === 200) {
+      fetch_current_board_users();
+      setIsDeletingSelectedUser(false);
     }
   };
+
+
+  const handle_delete_icon_click = (boardUser: Board_Users) => {
+    setIsDeletingSelectedUser(true);
+    setCurrent_board_user_to_delete(boardUser);
+  }
+
+
+  // =========================================================================================================================
+
 
 
   return (
@@ -218,7 +260,7 @@ const Members: React.FC<MembersProps> = ({ selectedBoard, socketRef, current_use
               {/* button for adding selected emails to board users  */}
               {is_current_user_admin_or_owner && (
                 <button
-                  onClick={handleAddUsers}
+                  onClick={() => handleAddUsers()}
                   style={{ cursor: `${selected_emails.length > 0 ? 'pointer' : 'not-allowed'}` }}
                   disabled={selected_emails.length === 0}
                 >
@@ -228,7 +270,8 @@ const Members: React.FC<MembersProps> = ({ selectedBoard, socketRef, current_use
 
 
               {current_board_users.map(boardUser => (
-                <div className="each_user" key={boardUser.id}>
+                <div className="each_user" key={boardUser.id}  >
+
                   <div className="image_and_name_cont">
                     <img
                       src={boardUser.profile_picture || testimage}
@@ -241,12 +284,12 @@ const Members: React.FC<MembersProps> = ({ selectedBoard, socketRef, current_use
 
                   <div className="select_and_delete_icon">
                     {is_current_user_admin_or_owner ? (
-                      boardUser.status === 'owner' && !is_current_user_owner ? (
-                        <p>{boardUser.status}</p>
+                      boardUser.user_status === 'owner' && !is_current_user_owner ? (
+                        <p>{boardUser.user_status}</p>
                       ) : (
                         <select
                           className="select_status"
-                          value={boardUser.status}
+                          value={boardUser.user_status}
                           onChange={(e) => handleStatusChange(boardUser.id, e.target.value)}
                         >
                           <option value="owner" disabled={!is_current_user_owner}>owner</option>
@@ -255,12 +298,23 @@ const Members: React.FC<MembersProps> = ({ selectedBoard, socketRef, current_use
                         </select>
                       )
                     ) : (
-                      <p>{boardUser.status}</p>
+                      <p>{boardUser.user_status}</p>
                     )}
-                    <RiDeleteBinLine className={`delete_user ${is_current_user_admin_or_owner ? "delete_icon_for_admin" : "delete_icon_for_member"}`} />
+                    <RiDeleteBinLine
+                      className={`delete_user ${is_current_user_admin_or_owner ? "delete_icon_for_admin" : "delete_icon_for_member"}`}
+                      onClick={() => handle_delete_icon_click(boardUser)}
+                    />
                   </div>
                 </div>
               ))}
+              {isDeletingSelectedUser && (
+                <div className="delete_user_window">
+                  <div className="dark_background_for_delete" ></div>
+                  <p>Do you want to delete <b>{current_board_user_to_delete.username}</b> from current board?</p>
+                  <button onClick={() => handleDeleteUser(current_board_user_to_delete.id)} >Yes</button>
+                  <button onClick={() => setIsDeletingSelectedUser(false)} >No</button>
+                </div>
+              )}
             </div>
           </div>
         )}
