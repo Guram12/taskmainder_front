@@ -341,9 +341,6 @@ const Boards: React.FC<BoardsProps> = ({ selectedBoard, setSelectedBoard, curren
     };
   }, []);
 
-  // const [Adding_new_list, setAdding_new_list] = useState<boolean>(false);
-  // const [ListName, setListName] = useState<string>('');
-
 
   return (
     <DndProvider backend={HTML5Backend}>
@@ -376,9 +373,6 @@ const Boards: React.FC<BoardsProps> = ({ selectedBoard, setSelectedBoard, curren
                   </div>
                 )
               }
-
-
-              {/* <button onClick={() => addList(prompt("Enter list name") || "New List")}>Add List</button> */}
 
             </div>
           </div>
