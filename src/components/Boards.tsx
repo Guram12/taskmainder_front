@@ -54,6 +54,10 @@ const ItemTypes = {
   TASK: 'task',
 };
 
+// ===================================================================================================================================
+// ====================================================      Task Componeejnmt      ==================================================
+
+
 const Task: React.FC<{ task: tasks }> = ({ task }) => {
   const [{ isDragging }, drag] = useDrag(() => ({
     type: ItemTypes.TASK,
@@ -69,6 +73,10 @@ const Task: React.FC<{ task: tasks }> = ({ task }) => {
     </div>
   );
 };
+
+
+// ===================================================================================================================================
+// ====================================================      List Componeejnmt      ==================================================
 
 const List: React.FC<{ list: lists, moveTask: (taskId: number, sourceListId: number, targetListId: number) => void }> = ({ list, moveTask }) => {
   const [{ isOver }, drop] = useDrop(() => ({
@@ -93,12 +101,26 @@ const List: React.FC<{ list: lists, moveTask: (taskId: number, sourceListId: num
   );
 };
 
+// ===================================================================================================================================
+// ====================================================     Board Componeejnmt      ==================================================
+
 const Boards: React.FC<BoardsProps> = ({ selectedBoard, setSelectedBoard, current_user_email }) => {
   const [boardData, setBoardData] = useState(selectedBoard);
+  const [Adding_new_list, setAdding_new_list] = useState<boolean>(false);
+  const [ListName, setListName] = useState<string>('');
+
+
+
+
+
+
+
   const socketRef = useRef<WebSocket | null>(null);
   const listsContainerRef = useRef<HTMLDivElement | null>(null);
   const scrollRef = useRef<{ direction: 'left' | 'right' | null, speed: number }>({ direction: null, speed: 2 }); // Reduced speed
   const isManualScrollRef = useRef(false);
+
+
 
   useEffect(() => {
     setBoardData(selectedBoard);
@@ -170,7 +192,12 @@ const Boards: React.FC<BoardsProps> = ({ selectedBoard, setSelectedBoard, curren
           }));
           break;
 
-
+        case 'add_list':
+          setBoardData((prevData) => ({
+            ...prevData,
+            lists: [...prevData.lists, payload],
+          }));
+          break;
 
         default:
           break;
@@ -193,38 +220,62 @@ const Boards: React.FC<BoardsProps> = ({ selectedBoard, setSelectedBoard, curren
   }, [selectedBoard.id]);
 
   const moveTask = (taskId: number, sourceListId: number, targetListId: number) => {
-    const sourceListIndex = boardData.lists.findIndex(list => list.id === sourceListId);
-    const targetListIndex = boardData.lists.findIndex(list => list.id === targetListId);
+    setBoardData((prevBoardData) => {
+      const sourceListIndex = prevBoardData.lists.findIndex(list => list.id === sourceListId);
+      const targetListIndex = prevBoardData.lists.findIndex(list => list.id === targetListId);
 
-    if (sourceListIndex === -1 || targetListIndex === -1) return;
+      if (sourceListIndex === -1 || targetListIndex === -1) return prevBoardData;
 
-    const taskIndex = boardData.lists[sourceListIndex].tasks.findIndex(task => task.id === taskId);
-    if (taskIndex === -1) return;
+      const taskIndex = prevBoardData.lists[sourceListIndex].tasks.findIndex(task => task.id === taskId);
+      if (taskIndex === -1) return prevBoardData;
 
-    const [movedTask] = boardData.lists[sourceListIndex].tasks.splice(taskIndex, 1);
-    movedTask.list = targetListId;
-    boardData.lists[targetListIndex].tasks.push(movedTask);
+      const [movedTask] = prevBoardData.lists[sourceListIndex].tasks.splice(taskIndex, 1);
+      movedTask.list = targetListId;
+      prevBoardData.lists[targetListIndex].tasks.push(movedTask);
 
-    setBoardData({ ...boardData });
-    setSelectedBoard({ ...boardData });
+      const newBoardData = { ...prevBoardData };
+      setSelectedBoard(newBoardData);
 
+      if (socketRef.current && socketRef.current.readyState === WebSocket.OPEN) {
+        console.log('Sending move_task message:', {
+          action: 'move_task',
+          payload: {
+            task_id: taskId,
+            source_list_id: sourceListId,
+            target_list_id: targetListId
+          }
+        });
+        socketRef.current.send(JSON.stringify({
+          action: 'move_task',
+          payload: {
+            task_id: taskId,
+            source_list_id: sourceListId,
+            target_list_id: targetListId
+          }
+        }));
+      }
+
+      return newBoardData;
+    });
+  };
+
+
+  const addList = () => {
     if (socketRef.current && socketRef.current.readyState === WebSocket.OPEN) {
-      console.log('Sending move_task message:', {
-        action: 'move_task',
-        payload: {
-          task_id: taskId,
-          source_list_id: sourceListId,
-          target_list_id: targetListId
-        }
-      });
+      const newList = {
+        id: Date.now(), // Temporary ID, replace with server-generated ID
+        name: ListName,
+        created_at: new Date().toISOString(),
+        board: selectedBoard.id,
+        tasks: [],
+      };
+
       socketRef.current.send(JSON.stringify({
-        action: 'move_task',
-        payload: {
-          task_id: taskId,
-          source_list_id: sourceListId,
-          target_list_id: targetListId
-        }
+        action: 'add_list',
+        payload: newList,
       }));
+      setListName('');
+      setAdding_new_list(false);
     }
   };
 
@@ -290,6 +341,10 @@ const Boards: React.FC<BoardsProps> = ({ selectedBoard, setSelectedBoard, curren
     };
   }, []);
 
+  // const [Adding_new_list, setAdding_new_list] = useState<boolean>(false);
+  // const [ListName, setListName] = useState<string>('');
+
+
   return (
     <DndProvider backend={HTML5Backend}>
       <div className='members_container'>
@@ -301,6 +356,31 @@ const Boards: React.FC<BoardsProps> = ({ selectedBoard, setSelectedBoard, curren
             {boardData.lists.map((list) => (
               <List key={list.id} list={list} moveTask={moveTask} />
             ))}
+            <div className='list' >
+              {!Adding_new_list ?
+                (
+                  <button onClick={() => setAdding_new_list(true)} >Add NewList</button>
+                )
+                :
+                (
+                  <div className='add_new_list_cont' >
+                    <input
+                      type="text"
+                      placeholder='List Name'
+                      value={ListName}
+                      onChange={(e) => setListName(e.target.value)}
+                      required
+                    />
+                    <button onClick={() => addList()}  >Add</button>
+                    <button onClick={() => setAdding_new_list(false)}  >Cansel</button>
+                  </div>
+                )
+              }
+
+
+              {/* <button onClick={() => addList(prompt("Enter list name") || "New List")}>Add List</button> */}
+
+            </div>
           </div>
         </div>
       </div>
