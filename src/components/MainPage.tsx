@@ -12,6 +12,7 @@ import LearnDrag from "./LearnDrag";
 interface MainPageProps {
   currentTheme: ThemeSpecs;
   boards: board[];
+  setBoards: (boards: board[]) => void;
   setSelectedBoard: (board: board) => void;
   selectedBoard: board;
   setIsLoading: (value: boolean) => void;
@@ -23,6 +24,7 @@ interface MainPageProps {
 const MainPage: React.FC<MainPageProps> = ({
   currentTheme,
   boards,
+  setBoards,
   setSelectedBoard,
   selectedBoard,
   setIsLoading,
@@ -82,6 +84,7 @@ const MainPage: React.FC<MainPageProps> = ({
       <SidebarComponent
         currentTheme={currentTheme}
         boards={boards}
+        setBoards={setBoards}
         setSelectedBoard={setSelectedBoard}
         setSelectedComponent={setSelectedComponent}
         setSelected_board_ID_for_sidebar={setSelected_board_ID_for_sidebar}

@@ -196,6 +196,7 @@ const App: React.FC = () => {
             setSelectedBoard={setSelectedBoard}
             currentTheme={currentTheme}
             boards={boards}
+            setBoards={setBoards}
             setIsLoading={setIsLoading}
             setSelected_board_ID_for_sidebar={setSelected_board_ID_for_sidebar}
             selected_board_ID_for_sidebar={selected_board_ID_for_sidebar}
