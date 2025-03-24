@@ -9,7 +9,6 @@ import { FaClipboardList } from "react-icons/fa";
 import { RiSettings4Fill } from "react-icons/ri";
 import { board } from "./Boards";
 import { GoRepoTemplate } from "react-icons/go";
-import axiosInstance from '../utils/axiosinstance';
 
 
 
@@ -47,7 +46,9 @@ const SidebarComponent: React.FC<SidebarProps> = ({
   const [newBoardName, setNewBoardName] = useState<string>('');
   const [addingNewBoard, setAddingNewBoard] = useState<boolean>(false);
 
-
+  useEffect(() => {
+    console.log('boards----------', boards);
+  }, [boards])
 
 
 
@@ -77,10 +78,11 @@ const SidebarComponent: React.FC<SidebarProps> = ({
 
 
   const handleBoardClick = (board: board) => {
+    console.log('Selected board:', board);
     setSelectedBoard(board);
     setSelectedComponent("Boards");
     if (setSelected_board_ID_for_sidebar) {
-      setSelected_board_ID_for_sidebar(board.id); // Update the selected board ID
+      setSelected_board_ID_for_sidebar(board.id);
     }
   };
 
@@ -112,24 +114,6 @@ const SidebarComponent: React.FC<SidebarProps> = ({
   }
 
 
-  const handle_add_new_board = async () => {
-    try {
-      const response = await axiosInstance.post('api/boards/', {
-        name: newBoardName
-      },
-        {
-          headers:
-            { Authorization: `Bearer ${localStorage.getItem('access_token')}` }
-        });
-      const newBoard = response.data;
-      setAddingNewBoard(false);
-      setNewBoardName('');
-      console.log('newBoard--->>>', newBoard)
-
-    } catch (error) {
-      console.error('Error while adding new board', error);
-    }
-  }
 
   useEffect(() => {
     console.log('selected_board_ID_for_sidebar', selected_board_ID_for_sidebar);
@@ -212,7 +196,7 @@ const SidebarComponent: React.FC<SidebarProps> = ({
                         value={newBoardName}
                         onChange={(e) => setNewBoardName(e.target.value)}
                       />
-                      <button onClick={handle_add_new_board} > Add</button>
+                      <button  > Add</button>
                       <button onClick={canselBoardAdding}> Cansel</button>
                     </div>
                   )}

@@ -71,7 +71,6 @@ const App: React.FC = () => {
             Authorization: `Bearer ${localStorage.getItem('access_token')}`
           }
         });
-        console.log(response.data);
         setBoards(response.data);
       } catch (error) {
         console.error("Error while retrieving boards", error);
@@ -155,7 +154,7 @@ const App: React.FC = () => {
   };
   // --------------------------------------------------------------------------------------------------------
   useEffect(() => {
-    console.log("useEffect called for check Authentication");
+    // console.log("useEffect called for check Authentication");
     const checkAuthentication = async () => {
       const isValid = await validateTokens();
       if (isValid) {
