@@ -57,4 +57,10 @@
   cursor: pointer;
 }
 
-
+.add_new_list_cont{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  background-color: transparent !important;
+}

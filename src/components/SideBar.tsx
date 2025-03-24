@@ -9,12 +9,13 @@ import { FaClipboardList } from "react-icons/fa";
 import { RiSettings4Fill } from "react-icons/ri";
 import { board } from "./Boards";
 import { GoRepoTemplate } from "react-icons/go";
-
+import axiosInstance from '../utils/axiosinstance';
 
 
 interface SidebarProps {
   currentTheme: ThemeSpecs;
   boards: board[];
+  setBoards?: (boards: board[]) => void;
   setSelectedBoard: (board: board) => void;
   setSelectedComponent: (component: string) => void;
   setSelected_board_ID_for_sidebar?: (id: number | null) => void;
@@ -31,6 +32,7 @@ interface ThemeSpecs {
 const SidebarComponent: React.FC<SidebarProps> = ({
   currentTheme,
   boards,
+  setBoards,
   setSelectedBoard,
   setSelectedComponent,
   selected_board_ID_for_sidebar,
@@ -119,6 +121,29 @@ const SidebarComponent: React.FC<SidebarProps> = ({
     console.log('selected_board_ID_for_sidebar', selected_board_ID_for_sidebar);
   }, [selected_board_ID_for_sidebar])
 
+
+  const handle_create_new_board = async () => {
+    try {
+      const response = await axiosInstance.post('api/boards/', {
+        name: newBoardName
+      }, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('access_token')}`
+        }
+
+      })
+      console.log('response', response);
+      if (response.status === 201 && setBoards) {
+        setBoards([...boards, response.data]);
+        setAddingNewBoard(false);
+        setNewBoardName('');
+      }
+    } catch (error) {
+
+    }
+  }
+
+
   // =========================================================================================================
 
 
@@ -196,7 +221,7 @@ const SidebarComponent: React.FC<SidebarProps> = ({
                         value={newBoardName}
                         onChange={(e) => setNewBoardName(e.target.value)}
                       />
-                      <button  > Add</button>
+                      <button onClick={() => handle_create_new_board()}  > Add</button>
                       <button onClick={canselBoardAdding}> Cansel</button>
                     </div>
                   )}
