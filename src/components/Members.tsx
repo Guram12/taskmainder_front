@@ -31,8 +31,18 @@ const Members: React.FC<MembersProps> = ({ selectedBoard, socketRef, current_use
 
   const is_current_user_owner = current_board_users.find(user => user.email === current_user_email)?.user_status === 'owner'
   const is_current_user_admin = current_board_users.find(user => user.email === current_user_email)?.user_status === 'admin'
-  // const is_current_user_member = current_board_users.find(user => user.email === current_user_email)?.user_status === 'member'
+  const is_current_user_member = current_board_users.find(user => user.email === current_user_email)?.user_status === 'member'
   const is_current_user_admin_or_owner = is_current_user_owner || is_current_user_admin
+
+
+useEffect(() => {
+  console.log('current_board_users:', current_board_users);
+  console.log('is_current_user_owner:', is_current_user_owner);
+  console.log('is_current_user_admin:', is_current_user_admin);
+  console.log('is_current_user_member:', is_current_user_member);
+  console.log('is_current_user_admin_or_owner:', is_current_user_admin_or_owner);
+}
+, [current_board_users]);
 
 
 
