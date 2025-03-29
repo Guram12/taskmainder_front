@@ -35,16 +35,6 @@ const Members: React.FC<MembersProps> = ({ selectedBoard, socketRef, current_use
   const is_current_user_admin_or_owner = is_current_user_owner || is_current_user_admin
 
 
-useEffect(() => {
-  console.log('current_board_users:', current_board_users);
-  console.log('is_current_user_owner:', is_current_user_owner);
-  console.log('is_current_user_admin:', is_current_user_admin);
-  console.log('is_current_user_member:', is_current_user_member);
-  console.log('is_current_user_admin_or_owner:', is_current_user_admin_or_owner);
-}
-, [current_board_users]);
-
-
 
   // ============================================  set new statuses for users ============================================
   const handleStatusChange = (userId: number, newStatus: string) => {

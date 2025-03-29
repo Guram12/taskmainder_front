@@ -59,8 +59,26 @@ const App: React.FC = () => {
 
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
+
+
   const accessToken: string | null = localStorage.getItem('access_token');
   const refreshToken: string | null = localStorage.getItem('refresh_token');
+
+
+  // -----------------------------------------------------------------------------------
+  useEffect(() => {
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme) {
+      const themeSpecs: ThemeSpecs = JSON.parse(savedTheme);
+      for (const [key, value] of Object.entries(themeSpecs)) {
+        document.documentElement.style.setProperty(key, value);
+      }
+      document.body.style.backgroundColor = themeSpecs['--background-color'];
+      document.body.style.scrollbarColor = themeSpecs['--scrollbar-bg-color'] + ' ' + themeSpecs['--scrollbar-thumb-color'];
+
+    }
+  }, [change_current_theme]);
+  // -----------------------------------------------------------------------------------
 
   // ========================================== fetch  boards ==================================================
   useEffect(() => {
