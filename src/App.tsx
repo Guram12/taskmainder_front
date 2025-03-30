@@ -80,6 +80,12 @@ const App: React.FC = () => {
   }, [change_current_theme]);
   // -----------------------------------------------------------------------------------
 
+
+  useEffect(() => {
+    const savedTheme = localStorage.getItem('theme');
+    console.log("savedTheme", savedTheme);
+  }
+    , [change_current_theme]);
   // ========================================== fetch  boards ==================================================
   useEffect(() => {
     const fetchBoards = async () => {

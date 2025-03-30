@@ -31,7 +31,7 @@ const Members: React.FC<MembersProps> = ({ selectedBoard, socketRef, current_use
 
   const is_current_user_owner = current_board_users.find(user => user.email === current_user_email)?.user_status === 'owner'
   const is_current_user_admin = current_board_users.find(user => user.email === current_user_email)?.user_status === 'admin'
-  const is_current_user_member = current_board_users.find(user => user.email === current_user_email)?.user_status === 'member'
+  // const is_current_user_member = current_board_users.find(user => user.email === current_user_email)?.user_status === 'member'
   const is_current_user_admin_or_owner = is_current_user_owner || is_current_user_admin
 
 
@@ -310,7 +310,7 @@ const Members: React.FC<MembersProps> = ({ selectedBoard, socketRef, current_use
               {isDeletingSelectedUser && (
                 <div className="delete_user_window">
                   <div className="dark_background_for_delete" ></div>
-                  <p>Do you want to delete <b>{current_board_user_to_delete.username}</b> from current board?</p>
+                  <p>Do you want to delete board: <b>{current_board_user_to_delete.username}</b> from current board?</p>
                   <button onClick={() => handleDeleteUser(current_board_user_to_delete.id)} >Yes</button>
                   <button onClick={() => setIsDeletingSelectedUser(false)} >No</button>
                 </div>
