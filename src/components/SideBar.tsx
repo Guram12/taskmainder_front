@@ -117,11 +117,6 @@ const SidebarComponent: React.FC<SidebarProps> = ({
 
 
 
-  useEffect(() => {
-    console.log('selected_board_ID_for_sidebar', selected_board_ID_for_sidebar);
-  }, [selected_board_ID_for_sidebar])
-
-
   const handle_create_new_board = async () => {
     try {
       const response = await axiosInstance.post('api/boards/', {

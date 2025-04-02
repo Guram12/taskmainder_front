@@ -178,7 +178,6 @@ const App: React.FC = () => {
   };
   // --------------------------------------------------------------------------------------------------------
   useEffect(() => {
-    // console.log("useEffect called for check Authentication");
     const checkAuthentication = async () => {
       const isValid = await validateTokens();
       if (isValid) {
