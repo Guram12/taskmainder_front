@@ -1,3 +1,4 @@
+import '../styles/Login.css';
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axiosInstance from '../utils/axiosinstance';
@@ -6,7 +7,6 @@ import GoogleSignIn from './GoogleSignIn';
 interface loginProps {
   setIsAuthenticated: (value: boolean) => void;
 }
-
 
 const Login: React.FC<loginProps> = ({ setIsAuthenticated }) => {
   const [email, setEmail] = useState<string>('');
@@ -28,45 +28,54 @@ const Login: React.FC<loginProps> = ({ setIsAuthenticated }) => {
         localStorage.setItem('refresh_token', response.data.refresh);
         setIsAuthenticated(true);
         navigate('/mainpage');
-      } else {  
+      } else {
         setError('An error occurred during login.');
       }
-
     } catch (err: any) {
       console.error('Error during login:', err.response);
       setError(err.response.data.error || 'An error occurred during login.');
     }
   };
 
-
   const handleRegisterButtonClick = () => {
     navigate('/register');
-  }
+  };
 
   return (
-    <div>
-      <h2>Login</h2>
-      <form onSubmit={handleLogin}>
-        <div>
-          <label>Email:</label>
-          <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
+    <div className="login-container">
+      <h2 className="login-title">Login</h2>
+      <form className="login-form" onSubmit={handleLogin}>
+        <div className="form-group">
+          <label className="form-label">Email:</label>
+          <input
+            className="form-input"
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+          />
         </div>
-        <div>
-          <label>Password:</label>
-          <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} required />
+        <div className="form-group">
+          <label className="form-label">Password:</label>
+          <input
+            className="form-input"
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+          />
         </div>
-        <button type="submit">Login</button>
+        <button className="login-button" type="submit">
+          Login
+        </button>
       </form>
-      <div style={{
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        marginTop: '20px',
-      }}>
+      <div className="google-signin-container">
         <GoogleSignIn setIsAuthenticated={setIsAuthenticated} />
       </div>
-      <button onClick={handleRegisterButtonClick} >Register</button>
-      {error && <p>{error}</p>}
+      <button className="register-button" onClick={handleRegisterButtonClick}>
+        Register
+      </button>
+      {error && <p className="error-message">{error}</p>}
     </div>
   );
 };
