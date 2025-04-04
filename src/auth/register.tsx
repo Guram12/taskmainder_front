@@ -99,53 +99,86 @@ const Register: React.FC = () => {
   }
 
 
-
   return (
-    <div>
-      <h2>Register</h2>
+    <div className="register_container">
+      <h2 className="register_header">Register</h2>
       <p>guramshanidze44@gmail.com</p>
-      <form onSubmit={handleRegister}>
+      <form onSubmit={handleRegister} className="register_form">
         <div>
-          <label>Email:</label>
-          <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
+          <label className="register_label">Email:</label>
+          <input
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+            className="register_input"
+          />
         </div>
         <div>
-          <label>Username:</label>
-          <input type="text" value={username} onChange={(e) => setUsername(e.target.value)} required />
+          <label className="register_label">Username:</label>
+          <input
+            type="text"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+            required
+            className="register_input"
+          />
         </div>
         <div>
-          <label>Password:</label>
-          <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} required />
+          <label className="register_label">Password:</label>
+          <input
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+            className="register_input"
+          />
         </div>
         <div>
-          <label>Phone Number:</label>
-          <input type="text" value={phoneNumber} onChange={(e) => setPhoneNumber(e.target.value)} />
+          <label className="register_label">Phone Number:</label>
+          <input
+            type="text"
+            value={phoneNumber}
+            onChange={(e) => setPhoneNumber(e.target.value)}
+            className="register_input"
+          />
         </div>
         <div>
-          <label>Profile Image:</label>
-          <input type="file" onChange={(e) => setProfileImage(e.target.files ? e.target.files[0] : null)} />
+          <label className="register_label">Profile Image:</label>
+          <input
+            type="file"
+            onChange={(e) => setProfileImage(e.target.files ? e.target.files[0] : null)}
+            className="register_file_input"
+          />
         </div>
-        <div className="country_select_inputs_container" >
-          <label>Country:</label>
-          <input type="text" value={countryInput} onChange={handleCountryInputChange} />
+        <div className="country_select_inputs_container">
+          <label className="register_label">Country:</label>
+          <input
+            type="text"
+            value={countryInput}
+            onChange={handleCountryInputChange}
+            className="register_input"
+          />
           {filteredCountries.length > 0 && (
-            <div className='country_list'>
+            <div className="country_list">
               {filteredCountries.map((country, index) => (
-                <p className='country' key={index} onClick={() => handleTimeZoneClick(country)}>
-                  {/* {country.name} (Timezone: {country.timezone} , {country.utc_offset */}
-                  {getHighlightedText(country.name, countryInput)} (Timezone: {country.timezone} , {country.utc_offset})
-
+                <p
+                  className="country"
+                  key={index}
+                  onClick={() => handleTimeZoneClick(country)}
+                >
+                  {getHighlightedText(country.name, countryInput)} (Timezone: {country.timezone}, {country.utc_offset})
                 </p>
               ))}
             </div>
           )}
         </div>
-        <button type="submit">Register</button>
+        <button type="submit" className="register_button">Register</button>
       </form>
-      <button onClick={handleLogin}>Go to login</button>
-      {message && <p>{message}</p>}
+      <button onClick={handleLogin} className="register_button">Go to login</button>
+      {message && <p className={`register_message ${message.includes('failed') ? 'error' : ''}`}>{message}</p>}
     </div>
   );
-};
+}
 
 export default Register;

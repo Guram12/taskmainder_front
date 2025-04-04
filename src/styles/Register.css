@@ -1,3 +1,88 @@
+/* Container for the entire register form */
+.register_container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  background-color: #f9f9f9;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  max-width: 500px;
+  margin: 20px auto;
+}
+
+/* Header styles */
+.register_header {
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 10px;
+  color: #333;
+}
+
+/* Form styles */
+.register_form {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+/* Label styles */
+.register_label {
+  font-size: 14px;
+  font-weight: bold;
+  color: #555;
+}
+
+/* Input styles */
+.register_input {
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 14px;
+  width: 100%;
+}
+
+.register_input:focus {
+  border-color: #007bff;
+  outline: none;
+}
+
+/* File input styles */
+.register_file_input {
+  padding: 5px;
+  font-size: 14px;
+}
+
+/* Button styles */
+.register_button {
+  padding: 10px 15px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.register_button:hover {
+  background-color: #0056b3;
+}
+
+/* Message styles */
+.register_message {
+  font-size: 14px;
+  color: green;
+  margin-top: 10px;
+}
+
+.register_message.error {
+  color: red;
+}
+
+/* Country input container */
 .country_select_inputs_container {
   display: flex;
   flex-direction: column;
@@ -5,6 +90,7 @@
   align-items: center;
 }
 
+/* Country list dropdown */
 .country_list {
   display: flex;
   flex-direction: column;
@@ -13,25 +99,29 @@
   margin-top: 5px;
   border: 1px solid black;
   background-color: #cecece;
-  width: 400px;
-  border-radius: 30px;
-  max-height: 400px;
+  width: 100%;
+  border-radius: 10px;
+  max-height: 200px;
   overflow-y: auto;
-  padding: 20px;
+  padding: 10px;
 }
 
+/* Individual country item */
 .country {
-  margin: 0px;
+  margin: 5px 0;
   color: #121212;
+  padding: 5px;
+  border-radius: 5px;
 }
 
 .country:hover {
   cursor: pointer;
   background-color: #555555;
-} 
+  color: white;
+}
 
-
+/* Highlighted text */
 .highlight {
   font-weight: bold;
-  color: tomato; /* You can change the color as needed */
+  color: tomato;
 }
