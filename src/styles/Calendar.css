@@ -1,0 +1,82 @@
+/* Calendar container */
+.calendar_container {
+  max-width: 600px;
+  margin: 20px auto;
+  padding: 20px;
+  background-color: #f9f9f9;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  font-family: Arial, sans-serif;
+}
+
+/* Header styles */
+.calendar_header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.calendar_month {
+  font-size: 20px;
+  font-weight: bold;
+  color: #333;
+}
+
+.calendar_nav_button {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  padding: 5px 10px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.3s ease;
+}
+
+.calendar_nav_button:hover {
+  background-color: #0056b3;
+}
+
+/* Days of the week */
+.calendar_days_of_week {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  text-align: center;
+  font-weight: bold;
+  color: #555;
+  margin-bottom: 10px;
+}
+
+.calendar_day_of_week {
+  padding: 10px 0;
+}
+
+/* Days grid */
+.calendar_days {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 5px;
+}
+
+/* Individual day styles */
+.calendar_day {
+  text-align: center;
+  padding: 10px;
+  background-color: #fff;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.calendar_day:hover {
+  background-color: #007bff;
+  color: white;
+}
+
+.calendar_day.empty {
+  background-color: transparent;
+  border: none;
+  cursor: default;
+}
