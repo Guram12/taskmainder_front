@@ -1,7 +1,7 @@
 import '../styles/Calendar.css';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
-interface CalendarProps {}
+interface CalendarProps { }
 
 const Calendar: React.FC<CalendarProps> = () => {
   const [currentDate, setCurrentDate] = useState(new Date());
@@ -31,6 +31,17 @@ const Calendar: React.FC<CalendarProps> = () => {
     for (let i = 0; i < firstDayOfMonth; i++) {
       days.push(<div key={`empty-${i}`} className="calendar_day empty"></div>);
     }
+
+
+    useEffect(() => {
+      const handleResize = () => {
+        // Handle window resize if needed
+      };
+      window.addEventListener('resize', handleResize);
+      return () => {
+        window.removeEventListener('resize', handleResize);
+      };
+    }, []);
 
     // Add days of the month
     for (let day = 1; day <= daysInMonth; day++) {
