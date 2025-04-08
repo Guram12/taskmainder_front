@@ -1,5 +1,5 @@
 import '../styles/Calendar.css';
-import React, { useEffect, useState } from 'react';
+import React, {  useState } from 'react';
 
 interface CalendarProps { }
 
@@ -21,37 +21,32 @@ const Calendar: React.FC<CalendarProps> = () => {
   const handleNextMonth = () => {
     setCurrentDate(new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 1));
   };
-
   const renderDays = () => {
     const daysInMonth = getDaysInMonth(currentDate);
     const firstDayOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1).getDay();
+    const today = new Date();
+  
     const days = [];
-
+  
     // Add empty cells for days before the first day of the month
     for (let i = 0; i < firstDayOfMonth; i++) {
       days.push(<div key={`empty-${i}`} className="calendar_day empty"></div>);
     }
-
-
-    useEffect(() => {
-      const handleResize = () => {
-        // Handle window resize if needed
-      };
-      window.addEventListener('resize', handleResize);
-      return () => {
-        window.removeEventListener('resize', handleResize);
-      };
-    }, []);
-
+  
     // Add days of the month
     for (let day = 1; day <= daysInMonth; day++) {
+      const isToday =
+        today.getFullYear() === currentDate.getFullYear() &&
+        today.getMonth() === currentDate.getMonth() &&
+        today.getDate() === day;
+  
       days.push(
-        <div key={day} className="calendar_day">
+        <div key={day} className={`calendar_day ${isToday ? 'today' : ''}`}>
           {day}
         </div>
       );
     }
-
+  
     return days;
   };
 
