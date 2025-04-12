@@ -3,13 +3,19 @@
   font-family: Arial, sans-serif;
   max-width: 800px;
   margin: 0 auto;
+  background-color: #f4f4f9;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
 
 .header {
-  color: #333;
+  color: #222;
   margin-bottom: 20px;
   text-align: center;
-  font-size: 2rem;
+  font-size: 2.5rem;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 1px;
 }
 
 .template-list {
@@ -18,28 +24,34 @@
 }
 
 .template-item {
-  background: #f9f9f9;
-  margin: 10px 0;
-  padding: 15px;
-  border-radius: 8px;
+  background: #ffffff;
+  margin: 15px 0;
+  padding: 20px;
+  border-radius: 10px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-  transition: transform 0.2s, box-shadow 0.2s;
+  transition: transform 0.3s, box-shadow 0.3s;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
 
 .template-item:hover {
   transform: translateY(-5px);
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
 }
 
 .template-item h2 {
-  margin: 0 0 10px;
-  font-size: 1.5rem;
-  color: #555;
+  margin: 0;
+  font-size: 1.8rem;
+  color: #333;
+  font-weight: 600;
 }
 
 .template-item p {
-  margin: 0 0 15px;
-  color: #777;
+  margin: 0;
+  color: #666;
+  font-size: 1rem;
+  line-height: 1.5;
 }
 
 .template-item .template-actions {
@@ -51,13 +63,20 @@
   background-color: #007bff;
   color: white;
   border: none;
-  padding: 8px 12px;
+  padding: 10px 15px;
   border-radius: 5px;
   cursor: pointer;
-  font-size: 0.9rem;
-  transition: background-color 0.2s;
+  font-size: 1rem;
+  font-weight: bold;
+  text-transform: uppercase;
+  transition: background-color 0.3s, transform 0.2s;
 }
 
 .template-item .template-button:hover {
   background-color: #0056b3;
+  transform: scale(1.05);
+}
+
+.template-item .template-button:active {
+  transform: scale(0.95);
 }
