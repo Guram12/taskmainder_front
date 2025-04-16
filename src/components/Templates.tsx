@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import "../styles/Templates.css";
 
 const Templates: React.FC = () => {
@@ -8,8 +8,18 @@ const Templates: React.FC = () => {
     { id: 3, name: "Template 3", description: "This is the third template" }
   ];
 
+  const [favorites, setFavorites] = useState<number[]>([]);
+
   const handleButtonClick = (templateName: string) => {
     alert(`You clicked on ${templateName}`);
+  };
+
+  const toggleFavorite = (templateId: number) => {
+    setFavorites((prevFavorites) =>
+      prevFavorites.includes(templateId)
+        ? prevFavorites.filter((id) => id !== templateId)
+        : [...prevFavorites, templateId]
+    );
   };
 
   return (
@@ -27,10 +37,32 @@ const Templates: React.FC = () => {
               >
                 Select
               </button>
+              <button
+                className={`favorite-button ${
+                  favorites.includes(template.id) ? "favorited" : ""
+                }`}
+                onClick={() => toggleFavorite(template.id)}
+              >
+                {favorites.includes(template.id) ? "Unfavorite" : "Favorite"}
+              </button>
             </div>
           </li>
         ))}
       </ul>
+      {favorites.length > 0 && (
+        <div className="favorites-section">
+          <h2>Favorite Templates</h2>
+          <ul className="favorite-list">
+            {templates
+              .filter((template) => favorites.includes(template.id))
+              .map((template) => (
+                <li key={template.id} className="favorite-item">
+                  {template.name}
+                </li>
+              ))}
+          </ul>
+        </div>
+      )}
     </div>
   );
 };

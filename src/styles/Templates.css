@@ -105,6 +105,34 @@
   text-align: center;
 }
 
+
+.favorite-button {
+  margin-left: 10px;
+  background-color: #f0f0f0;
+  border: 1px solid #ccc;
+  padding: 5px 10px;
+  cursor: pointer;
+}
+
+.favorite-button.favorited {
+  background-color: #ffd700;
+  color: #fff;
+}
+
+.favorites-section {
+  margin-top: 20px;
+}
+
+.favorite-list {
+  list-style-type: none;
+  padding: 0;
+}
+
+.favorite-item {
+  margin: 5px 0;
+  font-weight: bold;
+}
+
 @media (max-width: 480px) {
   .login-form {
     padding: 20px;
