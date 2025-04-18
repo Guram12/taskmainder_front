@@ -1,5 +1,5 @@
 import '../styles/Login.css';
-import React, { useEffect, useState } from 'react';
+import React, {  useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axiosInstance from '../utils/axiosinstance';
 import GoogleSignIn from './GoogleSignIn';
@@ -41,9 +41,7 @@ const Login: React.FC<loginProps> = ({ setIsAuthenticated }) => {
     navigate('/register');
   };
 
-  useEffect(() => {
-    console.log("email", email)
-  }, []);
+
 
   return (
     <div className="login-container">
