@@ -103,7 +103,7 @@ const Header: React.FC<HeaderProps> = ({
 
 
       <div className="loader_container">
-      <AnimatePresence  mode="wait">
+        <AnimatePresence mode="wait">
           {isLoading ? (
             <motion.div
               key="loader"

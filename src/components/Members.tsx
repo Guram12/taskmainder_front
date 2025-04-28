@@ -201,6 +201,17 @@ const Members: React.FC<MembersProps> = ({ selectedBoard, socketRef, current_use
   // =========================================================================================================================
 
 
+  // ====================================== for testint ====================================
+  useEffect(() => {
+    if (isUsersWindowOpen) {
+      document.body.style.overflow = "hidden"; // Disable scrolling when the window is open
+    } else {
+      document.body.style.overflow = "auto"; // Enable scrolling when the window is closed
+    }
+  }
+    , [isUsersWindowOpen]);
+
+
 
   return (
     <div className="main_members_container">
