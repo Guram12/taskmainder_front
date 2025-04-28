@@ -119,7 +119,7 @@
 
 /* ===========================================   loader styles   ========================================================== */
 
-.loader_container{
+.loader_container {
   /* border: 1px solid red; */
   max-height: 43px;
   max-width: 43px;
@@ -132,11 +132,12 @@
   padding: 2px;
 }
 
-.saved_sign{
+.saved_sign {
   width: 22px;
   height: 22px;
 }
-/* From Uiverse.io by Leoodaviid */ 
+
+/* From Uiverse.io by Leoodaviid */
 .loader-container {
   display: flex;
   justify-content: center;
