@@ -5,50 +5,24 @@
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-.settings-content__header {
-  margin-bottom: 20px;
-}
 
-.settings-content__header h2 {
-  font-size: 24px;
-  color: #333;
-}
-
-.settings-content__body {
+.profil_image_cont{
   display: flex;
   flex-direction: column;
-}
-
-.settings-content__body__section {
+  justify-content: center;
+  align-items: center;
+  gap: 30px;
   margin-bottom: 20px;
+  border: 1px solid grey;
+  padding: 10px;
+  min-width: 300px;
 }
 
-.settings-content__body__section h3 {
-  font-size: 20px;
-  color: #555;
-  margin-bottom: 10px;
-}
-
-.settings-content__body__section__content {
-  display: flex;
-  flex-direction: column;
-}
-
-.settings-content__body__section__content__item {
-  margin-bottom: 15px;
-}
-
-.settings-content__body__section__content__item label {
-  display: block;
-  font-size: 14px;
-  color: #666;
-  margin-bottom: 5px;
-}
-
-.settings-content__body__section__content__item input {
-  width: 100%;
-  padding: 8px;
-  font-size: 14px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
+.profile_image{
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  margin-left: 10px;
+  cursor: pointer;
+  color: white;
 }

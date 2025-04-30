@@ -192,6 +192,11 @@
   gap: 15px;
 }
 
+.owner_status{
+  margin-right: 35px;
+  font-weight: bold;
+}
+
 .select_status{
   cursor: pointer;
 }

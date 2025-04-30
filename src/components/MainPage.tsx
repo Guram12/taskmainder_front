@@ -8,6 +8,11 @@ import { ThemeSpecs } from "../utils/theme";
 import { board } from "./Boards";
 import Templates from "./Templates";
 import LearnDrag from "./LearnDrag";
+import { ProfileData } from "../App";
+import { StyledEngineProvider } from '@mui/material/styles';
+
+
+
 
 interface MainPageProps {
   currentTheme: ThemeSpecs;
@@ -19,6 +24,8 @@ interface MainPageProps {
   setSelected_board_ID_for_sidebar?: (id: number | null) => void;
   selected_board_ID_for_sidebar?: number | null;
   current_user_email: string;
+  profileData: ProfileData;
+  FetchProfileData: () => Promise<void>;
 }
 
 const MainPage: React.FC<MainPageProps> = ({
@@ -31,6 +38,8 @@ const MainPage: React.FC<MainPageProps> = ({
   setSelected_board_ID_for_sidebar,
   selected_board_ID_for_sidebar,
   current_user_email,
+  profileData,
+  FetchProfileData,
 }) => {
   const [selectedComponent, setSelectedComponent] = useState<string>("Boards");
 
@@ -55,13 +64,17 @@ const MainPage: React.FC<MainPageProps> = ({
   const renderComponent = useCallback(() => {
     switch (selectedComponent) {
       case "Settings":
-        return <Settings boards={boards} />;
+        return <Settings boards={boards} profileData={profileData} FetchProfileData={FetchProfileData} />;
+
       case "Calendar":
-        return <Calendar boards={boards} />;
+        return <StyledEngineProvider injectFirst>
+          <Calendar boards={boards} />
+        </StyledEngineProvider>;
+
       case "Templates":
         return <Templates />;
-      // case '':
-      //   return ;
+
+
       case "Boards":
         return (
           <Boards
@@ -72,6 +85,7 @@ const MainPage: React.FC<MainPageProps> = ({
             current_user_email={current_user_email}
           />
         );
+
       default:
         return <LearnDrag />;
     }

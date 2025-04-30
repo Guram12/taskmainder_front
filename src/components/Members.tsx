@@ -201,17 +201,6 @@ const Members: React.FC<MembersProps> = ({ selectedBoard, socketRef, current_use
   // =========================================================================================================================
 
 
-  // ====================================== for testint ====================================
-  useEffect(() => {
-    if (isUsersWindowOpen) {
-      document.body.style.overflow = "hidden"; // Disable scrolling when the window is open
-    } else {
-      document.body.style.overflow = "auto"; // Enable scrolling when the window is closed
-    }
-  }
-    , [isUsersWindowOpen]);
-
-
 
   return (
     <div className="main_members_container">
@@ -280,8 +269,9 @@ const Members: React.FC<MembersProps> = ({ selectedBoard, socketRef, current_use
               )}
 
 
+              {/* Rendering each user */}
               {current_board_users.map(boardUser => (
-                <div className="each_user" key={boardUser.id}  >
+                <div className="each_user" key={boardUser.id}>
 
                   <div className="image_and_name_cont">
                     <img
@@ -295,29 +285,31 @@ const Members: React.FC<MembersProps> = ({ selectedBoard, socketRef, current_use
 
                   <div className="select_and_delete_icon">
                     {is_current_user_admin_or_owner ? (
-                      boardUser.user_status === 'owner' && !is_current_user_owner ? (
-                        <p>{boardUser.user_status}</p>
+                      boardUser.user_status === 'owner' ? (
+                        <p className="owner_status" >{boardUser.user_status}</p> // Owner cannot change their status
                       ) : (
                         <select
                           className="select_status"
                           value={boardUser.user_status}
                           onChange={(e) => handleStatusChange(boardUser.id, e.target.value)}
                         >
-                          <option value="owner" disabled={!is_current_user_owner}>owner</option>
                           <option value="admin">admin</option>
                           <option value="member">member</option>
                         </select>
                       )
                     ) : (
-                      <p>{boardUser.user_status}</p>
+                      <p >{boardUser.user_status}</p>
                     )}
-                    <RiDeleteBinLine
-                      className={`delete_user ${is_current_user_admin_or_owner ? "delete_icon_for_admin" : "delete_icon_for_member"}`}
-                      onClick={() => handle_delete_icon_click(boardUser)}
-                    />
+                    {boardUser.user_status !== 'owner' && (
+                      <RiDeleteBinLine
+                        className={`delete_user ${is_current_user_admin_or_owner ? "delete_icon_for_admin" : "delete_icon_for_member"}`}
+                        onClick={() => handle_delete_icon_click(boardUser)}
+                      />
+                    )}
                   </div>
                 </div>
               ))}
+
               {isDeletingSelectedUser && (
                 <div className="delete_user_window">
                   <div className="dark_background_for_delete" ></div>
