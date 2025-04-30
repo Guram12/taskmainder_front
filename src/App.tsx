@@ -131,24 +131,30 @@ const App: React.FC = () => {
 
 
   //======================================== fetch profile data ==================================================
-  useEffect(() => {
-    const fetchProfile = async () => {
-      if (accessToken) {
-        try {
-          const response = await axiosInstance.get(`/acc/profile/`, {
-            headers: {
-              Authorization: `Bearer ${accessToken}`
-            }
-          });
-          setProfileData(response.data);
-        } catch (error) {
-          console.error("Error while retrieving profile data", error);
-        }
+  const FetchProfileData = async () => {
+    if (accessToken) {
+      try {
+        const response = await axiosInstance.get(`/acc/profile/`, {
+          headers: {
+            Authorization: `Bearer ${accessToken}`
+          }
+        });
+        setProfileData(response.data);
+      } catch (error) {
+        console.error("Error while retrieving profile data", error);
       }
-    };
+    }
+  };
 
-    fetchProfile();
+  useEffect(() => {
+    FetchProfileData();
   }, [isAuthenticated, accessToken, refreshToken]);
+
+
+
+  useEffect(() => {
+    console.log('profiledata-->>', profileData);
+  }, [profileData]);
 
   // =================================  validate tokens on website load ==================================
   const validateTokens = async () => {
@@ -224,6 +230,8 @@ const App: React.FC = () => {
             setSelected_board_ID_for_sidebar={setSelected_board_ID_for_sidebar}
             selected_board_ID_for_sidebar={selected_board_ID_for_sidebar}
             current_user_email={profileData.email}
+            profileData={profileData}
+            FetchProfileData={FetchProfileData}
           />} />
       </Routes>
     </Router>
