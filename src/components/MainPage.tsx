@@ -8,6 +8,10 @@ import { ThemeSpecs } from "../utils/theme";
 import { board } from "./Boards";
 import Templates from "./Templates";
 import LearnDrag from "./LearnDrag";
+import { StyledEngineProvider } from '@mui/material/styles';
+
+
+
 
 interface MainPageProps {
   currentTheme: ThemeSpecs;
@@ -56,12 +60,16 @@ const MainPage: React.FC<MainPageProps> = ({
     switch (selectedComponent) {
       case "Settings":
         return <Settings boards={boards} />;
+
       case "Calendar":
-        return <Calendar boards={boards} />;
+        return <StyledEngineProvider injectFirst>
+          <Calendar boards={boards} />
+        </StyledEngineProvider>;
+
       case "Templates":
         return <Templates />;
-      // case '':
-      //   return ;
+
+
       case "Boards":
         return (
           <Boards
@@ -72,6 +80,7 @@ const MainPage: React.FC<MainPageProps> = ({
             current_user_email={current_user_email}
           />
         );
+        
       default:
         return <LearnDrag />;
     }

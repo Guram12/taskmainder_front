@@ -1,127 +1,19 @@
 /* Calendar container */
 .calendar_container {
-  max-width: 600px;
-  margin: 20px auto;
-  padding: 20px;
-  background-color: #ffffff;
-  border-radius: 12px;
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
-  font-family: 'Arial', sans-serif;
-  overflow: hidden;
+  border: 1px solid red;
+
 }
 
-/* Header styles */
-.calendar_header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 20px;
-}
 
-.calendar_month {
-  font-size: 22px;
+
+.MuiTypography-root{
+  color: aliceblue;
+
   font-weight: bold;
-  color: #333;
-  text-transform: capitalize;
+
 }
 
-.calendar_nav_button {
-  background-color: #007bff;
-  color: white;
-  border: none;
-  border-radius: 50%;
-  padding: 8px 12px;
-  cursor: pointer;
-  font-size: 18px;
-  transition: background-color 0.3s ease, transform 0.2s ease;
-}
-
-.calendar_nav_button:hover {
-  background-color: #0056b3;
-  transform: scale(1.1);
-}
-
-/* Days of the week */
-.calendar_days_of_week {
-  display: grid;
-  grid-template-columns: repeat(7, 1fr);
-  text-align: center;
-  font-weight: bold;
-  color: #555;
-  margin-bottom: 10px;
-  border-bottom: 1px solid #ddd;
-  padding-bottom: 5px;
-}
-
-.calendar_day_of_week {
-  padding: 10px 0;
-  font-size: 14px;
-  text-transform: uppercase;
-}
-
-/* Days grid */
-.calendar_days {
-  display: grid;
-  grid-template-columns: repeat(7, 1fr);
-  gap: 8px;
-}
-
-/* Individual day styles */
-.calendar_day {
-  text-align: center;
-  padding: 12px;
-  background-color: #f9f9f9;
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  font-size: 14px;
-  font-weight: bold;
-  color: #333;
-  cursor: pointer;
-  transition: background-color 0.3s ease, color 0.3s ease, transform 0.2s ease;
-}
-
-.calendar_day:hover {
-  background-color: #007bff;
-  color: white;
-  transform: scale(1.05);
-}
-
-.calendar_day.empty {
-  background-color: transparent;
-  border: none;
-  cursor: default;
-}
-
-/* Highlight today's date */
-.calendar_day.today {
-  background-color: #ffeb3b;
-  color: #333;
-  font-weight: bold;
-  border: 2px solid #fbc02d;
-}
-
-.calendar_day.today:hover {
-  background-color: #fbc02d;
-  color: white;
-}
-
-/* Responsive design */
-@media (max-width: 768px) {
-  .calendar_container {
-    padding: 15px;
-  }
-
-  .calendar_month {
-    font-size: 18px;
-  }
-
-  .calendar_nav_button {
-    padding: 6px 10px;
-    font-size: 16px;
-  }
-
-  .calendar_day {
-    padding: 10px;
-    font-size: 12px;
-  }
+.MuiButtonBase-root{
+  color: aliceblue;
+  
 }
