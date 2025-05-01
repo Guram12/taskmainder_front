@@ -1,6 +1,6 @@
 import '../styles/Calendar.css';
 import React from 'react';
-import { board } from './Boards';
+import { board } from './Boards/Boards';
 import dayjs, { Dayjs } from 'dayjs';
 import { DemoContainer, DemoItem } from '@mui/x-date-pickers/internals/demo';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';

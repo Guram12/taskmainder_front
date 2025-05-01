@@ -1,7 +1,7 @@
 import "../styles/Members.css";
 import React, { useEffect, useState, useCallback } from "react";
-import { board } from "./Boards";
-import { Board_Users } from "./Boards";
+import { board } from "../utils/interface";
+import { Board_Users } from "../utils/interface";
 import testimage from "../assets/profile_3.png";
 import { LuUserRoundPlus } from "react-icons/lu";
 import { CgCloseR } from "react-icons/cg";

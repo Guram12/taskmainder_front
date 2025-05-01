@@ -1,0 +1,32 @@
+.list-title{
+  margin-top: 0px;
+}
+
+
+.list {
+  background-color: #427999;
+  padding: 10px;
+  border-radius: 5px;
+  width: 300px;
+  height: min-content;
+  transition: background-color 0.3s;
+  display: inline-block; /* Ensure lists are inline */
+  min-width: 300px;
+  margin-top: 20px;
+  margin-left: 20px;
+}
+
+.list.hover {
+  background-color: #2d5479; /* Change this to your desired hover color */
+}
+
+
+
+
+
+
+
+
+
+
+

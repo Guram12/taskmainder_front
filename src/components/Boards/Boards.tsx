@@ -1,46 +1,11 @@
-import '../styles/boards.css'
+import '../../styles/Board Styles/Boards.css';
 import React, { useState, useEffect, useRef } from "react";
-import { useDrag, useDrop, DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
-import { ThemeSpecs } from '../utils/theme';
-import Members from './Members';
-
-export interface Board_Users {
-  email: string;
-  id: number;
-  profile_picture: string;
-  user_status: string;
-  username: string;
-}
-
-export interface board {
-  id: number;
-  name: string;
-  created_at: string;
-  lists: lists[];
-  owner: string;
-  owner_email: string;
-  members: string[];
-  board_users: Board_Users[];
-}
-
-export interface lists {
-  id: number;
-  name: string;
-  created_at: string;
-  board: number;
-  tasks: tasks[];
-}
-
-export interface tasks {
-  created_at: string;
-  description: string;
-  due_date: string;
-  id: number;
-  list: number;
-  title: string;
-  completed: boolean;
-}
+import { ThemeSpecs } from '../../utils/theme';
+import Members from '../Members';
+import { DndProvider } from 'react-dnd';
+import List from './Lists';
+import { board } from '../../utils/interface';
 
 export interface BoardsProps {
   selectedBoard: board;
@@ -50,67 +15,10 @@ export interface BoardsProps {
   current_user_email: string;
 }
 
-const ItemTypes = {
-  TASK: 'task',
-};
-
-// ===================================================================================================================================
-// ====================================================      Task Componeejnmt      ==================================================
-
-
-const Task: React.FC<{ task: tasks }> = ({ task }) => {
-  const [{ isDragging }, drag] = useDrag(() => ({
-    type: ItemTypes.TASK,
-    item: { id: task.id, listId: task.list },
-    collect: (monitor) => ({
-      isDragging: !!monitor.isDragging(),
-    }),
-  }));
-
-  return (
-    <div ref={drag} style={{ opacity: isDragging ? 0.5 : 1 }}>
-      {task.title}
-    </div>
-  );
-};
-
-
-// ===================================================================================================================================
-// ====================================================      List Componeejnmt      ==================================================
-
-const List: React.FC<{ list: lists, moveTask: (taskId: number, sourceListId: number, targetListId: number) => void }> = ({ list, moveTask }) => {
-  const [{ isOver }, drop] = useDrop(() => ({
-    accept: ItemTypes.TASK,
-    drop: (item: { id: number, listId: number }) => {
-      if (item.listId !== list.id) {
-        moveTask(item.id, item.listId, list.id);
-      }
-    },
-    collect: (monitor) => ({
-      isOver: !!monitor.isOver(),
-    }),
-  }));
-
-  return (
-    <div ref={drop} className={`list ${isOver ? 'hover' : ''}`}>
-      <h3>{list.name}</h3>
-      {list.tasks.map((task) => (
-        <Task key={task.id} task={task} />
-      ))}
-    </div>
-  );
-};
-
-// ===================================================================================================================================
-// ====================================================     Board Componeejnmt      ==================================================
-
 const Boards: React.FC<BoardsProps> = ({ selectedBoard, setSelectedBoard, current_user_email }) => {
   const [boardData, setBoardData] = useState(selectedBoard);
   const [Adding_new_list, setAdding_new_list] = useState<boolean>(false);
   const [ListName, setListName] = useState<string>('');
-
-
-
 
 
 
@@ -147,6 +55,11 @@ const Boards: React.FC<BoardsProps> = ({ selectedBoard, setSelectedBoard, curren
       const { action, payload } = data;
 
       switch (action) {
+        case 'full_board_state':
+          console.log('Received full board state:', payload);
+          setBoardData(payload); // Update the board data with the full state
+          break;
+
         case 'move_task':
           const { task_id, source_list_id, target_list_id } = payload;
           setBoardData((prevData) => {
@@ -199,6 +112,34 @@ const Boards: React.FC<BoardsProps> = ({ selectedBoard, setSelectedBoard, curren
           }));
           break;
 
+        case 'add_task':
+          console.log('Received add_task:', payload);
+          setBoardData((prevData) => {
+            const updatedLists = prevData.lists.map((list) => {
+              if (list.id === payload.list) {
+                return { ...list, tasks: [...list.tasks, payload] };
+              }
+              return list;
+            });
+
+            return { ...prevData, lists: updatedLists };
+          });
+          break;
+          
+        case 'delete_task':
+          console.log('Received delete_task:', payload);
+          setBoardData((prevData) => {
+            const updatedLists = prevData.lists.map((list) => {
+              if (list.id === payload.list_id) {
+                return { ...list, tasks: list.tasks.filter((task) => task.id !== payload.task_id) };
+              }
+              return list;
+            });
+            return { ...prevData, lists: updatedLists };
+          });
+          break;
+
+
         default:
           break;
       }
@@ -218,6 +159,69 @@ const Boards: React.FC<BoardsProps> = ({ selectedBoard, setSelectedBoard, curren
       }
     };
   }, [selectedBoard.id]);
+
+
+
+
+  // =================================================  Add task =========================================================
+
+  const addTask = (listId: number, taskTitle: string) => {
+    console.log('Adding task:', { listId, taskTitle });
+    if (socketRef.current && socketRef.current.readyState === WebSocket.OPEN) {
+      const newTask = {
+        id: Date.now(), // Temporary ID, replace with server-generated ID
+        title: taskTitle,
+        list: listId,
+        created_at: new Date().toISOString(),
+      };
+
+      console.log('Sending add_task message:', {
+        action: 'add_task',
+        payload: newTask,
+      });
+
+      socketRef.current.send(JSON.stringify({
+        action: 'add_task',
+        payload: newTask,
+      }));
+
+    } else {
+      console.error('WebSocket is not open. Cannot send add_task message.');
+    }
+  };
+
+// ================================================== delete task =========================================================
+
+const deleteTask = (taskId: number, listId: number) => {
+  setBoardData((prevBoardData) => {
+    const updatedLists = prevBoardData.lists.map((list) => {
+      if (list.id === listId) {
+        return {
+          ...list,
+          tasks: list.tasks.filter((task) => task.id !== taskId),
+        };
+      }
+      return list;
+    });
+
+    const newBoardData = { ...prevBoardData, lists: updatedLists };
+    setSelectedBoard(newBoardData);
+
+    if (socketRef.current && socketRef.current.readyState === WebSocket.OPEN) {
+      socketRef.current.send(JSON.stringify({
+        action: 'delete_task',
+        payload: { task_id: taskId, list_id: listId },
+      }));
+    }
+
+    return newBoardData;
+  });
+};
+
+
+
+  // =================================================  move task =========================================================
+
 
   const moveTask = (taskId: number, sourceListId: number, targetListId: number) => {
     setBoardData((prevBoardData) => {
@@ -259,6 +263,8 @@ const Boards: React.FC<BoardsProps> = ({ selectedBoard, setSelectedBoard, curren
     });
   };
 
+
+  // =================================================== add list =========================================================
 
   const addList = () => {
     if (socketRef.current && socketRef.current.readyState === WebSocket.OPEN) {
@@ -342,6 +348,7 @@ const Boards: React.FC<BoardsProps> = ({ selectedBoard, setSelectedBoard, curren
   }, []);
 
 
+
   return (
     <DndProvider backend={HTML5Backend}>
       <div className='members_container'>
@@ -351,7 +358,13 @@ const Boards: React.FC<BoardsProps> = ({ selectedBoard, setSelectedBoard, curren
         <div className="main_boards_container">
           <div className='lists_container' ref={listsContainerRef}>
             {boardData.lists.map((list) => (
-              <List key={list.id} list={list} moveTask={moveTask} />
+              <List
+               key={list.id}
+                list={list}
+                 moveTask={moveTask}
+                  addTask={addTask}
+                  deleteTask={deleteTask}
+                   />
             ))}
             <div className='list' >
               {!Adding_new_list ?

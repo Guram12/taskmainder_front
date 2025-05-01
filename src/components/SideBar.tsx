@@ -7,7 +7,7 @@ import { MdSpaceDashboard } from "react-icons/md";
 import { GrTasks } from "react-icons/gr";
 import { FaClipboardList } from "react-icons/fa";
 import { RiSettings4Fill } from "react-icons/ri";
-import { board } from "./Boards";
+import { board } from "./Boards/Boards";
 import { GoRepoTemplate } from "react-icons/go";
 import axiosInstance from '../utils/axiosinstance';
 

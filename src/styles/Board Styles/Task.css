@@ -1,0 +1,22 @@
+.each_task {
+  background-color: #2ed8c1;
+  padding: 5px;
+  margin-bottom: 5px;
+  border-radius: 3px;
+  cursor: pointer;
+  position: relative;
+}
+
+.delete_task_button {
+  background-color: transparent;
+  border: none;
+  position: absolute;
+  right: 3px;
+}
+
+.delete_icon {
+  color: tomato;
+  font-size: 20px;
+  cursor: pointer;
+
+}

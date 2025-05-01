@@ -8,18 +8,9 @@ import Header from './header/Header';
 import { useState } from 'react';
 import axiosInstance from './utils/axiosinstance';
 import { ThemeSpecs } from './utils/theme';
-import { board } from './components/Boards';
+import { board } from './utils/interface';
 import FinishGoogleSignIn from './auth/FinishGoogleSignIn';
-
-
-
-export interface ProfileData {
-  email: string;
-  phone_number: string;
-  profile_picture: string;
-  username: string;
-  timezone: string;
-}
+import { ProfileData } from './utils/interface';
 
 
 const App: React.FC = () => {
@@ -65,27 +56,21 @@ const App: React.FC = () => {
   const refreshToken: string | null = localStorage.getItem('refresh_token');
 
 
-  // -----------------------------------------------------------------------------------
-  useEffect(() => {
-    const savedTheme = localStorage.getItem('theme');
-    if (savedTheme) {
-      const themeSpecs: ThemeSpecs = JSON.parse(savedTheme);
-      for (const [key, value] of Object.entries(themeSpecs)) {
-        document.documentElement.style.setProperty(key, value);
-      }
-      document.body.style.backgroundColor = themeSpecs['--background-color'];
-      document.body.style.scrollbarColor = themeSpecs['--scrollbar-bg-color'] + ' ' + themeSpecs['--scrollbar-thumb-color'];
+  // // -----------------------------------------------------------------------------------
+  // useEffect(() => {
+  //   const savedTheme = localStorage.getItem('theme');
+  //   if (savedTheme) {
+  //     const themeSpecs: ThemeSpecs = JSON.parse(savedTheme);
+  //     for (const [key, value] of Object.entries(themeSpecs)) {
+  //       document.documentElement.style.setProperty(key, value);
+  //     }
+  //     document.body.style.backgroundColor = themeSpecs['--background-color'];
+  //     document.body.style.scrollbarColor = themeSpecs['--scrollbar-bg-color'] + ' ' + themeSpecs['--scrollbar-thumb-color'];
 
-    }
-  }, [change_current_theme]);
-  // -----------------------------------------------------------------------------------
+  //   }
+  // }, [change_current_theme]);
+  // // -----------------------------------------------------------------------------------
 
-
-  useEffect(() => {
-    const savedTheme = localStorage.getItem('theme');
-    console.log("savedTheme", savedTheme);
-  }
-    , [change_current_theme]);
   // ========================================== fetch  boards ==================================================
   useEffect(() => {
     const fetchBoards = async () => {
@@ -150,11 +135,6 @@ const App: React.FC = () => {
     FetchProfileData();
   }, [isAuthenticated, accessToken, refreshToken]);
 
-
-
-  useEffect(() => {
-    console.log('profiledata-->>', profileData);
-  }, [profileData]);
 
   // =================================  validate tokens on website load ==================================
   const validateTokens = async () => {
