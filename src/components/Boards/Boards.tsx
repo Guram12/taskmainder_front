@@ -1,46 +1,11 @@
-import '../styles/boards.css'
+import '../../styles/boards.css';
 import React, { useState, useEffect, useRef } from "react";
-import { useDrag, useDrop, DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
-import { ThemeSpecs } from '../utils/theme';
-import Members from './Members';
-
-export interface Board_Users {
-  email: string;
-  id: number;
-  profile_picture: string;
-  user_status: string;
-  username: string;
-}
-
-export interface board {
-  id: number;
-  name: string;
-  created_at: string;
-  lists: lists[];
-  owner: string;
-  owner_email: string;
-  members: string[];
-  board_users: Board_Users[];
-}
-
-export interface lists {
-  id: number;
-  name: string;
-  created_at: string;
-  board: number;
-  tasks: tasks[];
-}
-
-export interface tasks {
-  created_at: string;
-  description: string;
-  due_date: string;
-  id: number;
-  list: number;
-  title: string;
-  completed: boolean;
-}
+import { ThemeSpecs } from '../../utils/theme';
+import Members from '../Members';
+import { useDrag, useDrop, DndProvider } from 'react-dnd';
+import List from './Lists';
+import { board } from '../../utils/interface';
 
 export interface BoardsProps {
   selectedBoard: board;
@@ -49,60 +14,6 @@ export interface BoardsProps {
   setSelectedBoard: (board: board) => void;
   current_user_email: string;
 }
-
-const ItemTypes = {
-  TASK: 'task',
-};
-
-// ===================================================================================================================================
-// ====================================================      Task Componeejnmt      ==================================================
-
-
-const Task: React.FC<{ task: tasks }> = ({ task }) => {
-  const [{ isDragging }, drag] = useDrag(() => ({
-    type: ItemTypes.TASK,
-    item: { id: task.id, listId: task.list },
-    collect: (monitor) => ({
-      isDragging: !!monitor.isDragging(),
-    }),
-  }));
-
-  return (
-    <div ref={drag} style={{ opacity: isDragging ? 0.5 : 1 }}>
-      {task.title}
-    </div>
-  );
-};
-
-
-// ===================================================================================================================================
-// ====================================================      List Componeejnmt      ==================================================
-
-const List: React.FC<{ list: lists, moveTask: (taskId: number, sourceListId: number, targetListId: number) => void }> = ({ list, moveTask }) => {
-  const [{ isOver }, drop] = useDrop(() => ({
-    accept: ItemTypes.TASK,
-    drop: (item: { id: number, listId: number }) => {
-      if (item.listId !== list.id) {
-        moveTask(item.id, item.listId, list.id);
-      }
-    },
-    collect: (monitor) => ({
-      isOver: !!monitor.isOver(),
-    }),
-  }));
-
-  return (
-    <div ref={drop} className={`list ${isOver ? 'hover' : ''}`}>
-      <h3>{list.name}</h3>
-      {list.tasks.map((task) => (
-        <Task key={task.id} task={task} />
-      ))}
-    </div>
-  );
-};
-
-// ===================================================================================================================================
-// ====================================================     Board Componeejnmt      ==================================================
 
 const Boards: React.FC<BoardsProps> = ({ selectedBoard, setSelectedBoard, current_user_email }) => {
   const [boardData, setBoardData] = useState(selectedBoard);

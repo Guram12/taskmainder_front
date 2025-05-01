@@ -3,12 +3,12 @@ import React, { useState, useMemo, useCallback, useEffect } from "react";
 import SidebarComponent from "./SideBar";
 import Settings from "./Settings";
 import Calendar from "./Calendar";
-import Boards from "./Boards";
+import Boards from "./Boards/Boards";
 import { ThemeSpecs } from "../utils/theme";
-import { board } from "./Boards";
+import { board } from "../utils/interface";
 import Templates from "./Templates";
 import LearnDrag from "./LearnDrag";
-import { ProfileData } from "../App";
+import { ProfileData } from "../utils/interface";
 import { StyledEngineProvider } from '@mui/material/styles';
 
 

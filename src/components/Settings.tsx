@@ -1,6 +1,6 @@
 import "../styles/Settings.css";
 import React, { useEffect, useState } from "react";
-import { board } from "./Boards";
+import { board } from "./Boards/Boards";
 import { ProfileData } from "../App";
 import axiosInstance from "../utils/axiosinstance";
 
