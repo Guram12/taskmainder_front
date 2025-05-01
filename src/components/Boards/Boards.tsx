@@ -3,9 +3,9 @@ import React, { useState, useEffect, useRef } from "react";
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import { ThemeSpecs } from '../../utils/theme';
 import Members from '../Members';
-import { useDrag, useDrop, DndProvider } from 'react-dnd';
+import { DndProvider } from 'react-dnd';
 import List from './Lists';
-import { board } from '../../utils/interface';
+import { board, lists } from '../../utils/interface';
 
 export interface BoardsProps {
   selectedBoard: board;
@@ -19,9 +19,6 @@ const Boards: React.FC<BoardsProps> = ({ selectedBoard, setSelectedBoard, curren
   const [boardData, setBoardData] = useState(selectedBoard);
   const [Adding_new_list, setAdding_new_list] = useState<boolean>(false);
   const [ListName, setListName] = useState<string>('');
-
-
-
 
 
 
@@ -110,6 +107,21 @@ const Boards: React.FC<BoardsProps> = ({ selectedBoard, setSelectedBoard, curren
           }));
           break;
 
+        case 'add_task':
+          console.log('Received add_task:', payload);
+          setBoardData((prevData) => {
+            const updatedLists = prevData.lists.map((list) => {
+              if (list.id === payload.list) {
+                return { ...list, tasks: [...list.tasks, payload] };
+              }
+              return list;
+            });
+
+            return { ...prevData, lists: updatedLists };
+          });
+          break;
+
+
         default:
           break;
       }
@@ -129,6 +141,41 @@ const Boards: React.FC<BoardsProps> = ({ selectedBoard, setSelectedBoard, curren
       }
     };
   }, [selectedBoard.id]);
+
+
+
+
+  // =================================================  Add task =========================================================
+
+  const addTask = (listId: number, taskTitle: string) => {
+    console.log('Adding task:', { listId, taskTitle });
+    if (socketRef.current && socketRef.current.readyState === WebSocket.OPEN) {
+      const newTask = {
+        id: Date.now(), // Temporary ID, replace with server-generated ID
+        title: taskTitle,
+        list: listId,
+        created_at: new Date().toISOString(),
+      };
+
+      console.log('Sending add_task message:', {
+        action: 'add_task',
+        payload: newTask,
+      });
+
+      socketRef.current.send(JSON.stringify({
+        action: 'add_task',
+        payload: newTask,
+      }));
+      
+    } else {
+      console.error('WebSocket is not open. Cannot send add_task message.');
+    }
+  };
+
+
+
+  // =================================================  move task =========================================================
+
 
   const moveTask = (taskId: number, sourceListId: number, targetListId: number) => {
     setBoardData((prevBoardData) => {
@@ -169,7 +216,7 @@ const Boards: React.FC<BoardsProps> = ({ selectedBoard, setSelectedBoard, curren
       return newBoardData;
     });
   };
-
+  // =================================================== add list =========================================================
 
   const addList = () => {
     if (socketRef.current && socketRef.current.readyState === WebSocket.OPEN) {
@@ -253,6 +300,7 @@ const Boards: React.FC<BoardsProps> = ({ selectedBoard, setSelectedBoard, curren
   }, []);
 
 
+
   return (
     <DndProvider backend={HTML5Backend}>
       <div className='members_container'>
@@ -262,7 +310,7 @@ const Boards: React.FC<BoardsProps> = ({ selectedBoard, setSelectedBoard, curren
         <div className="main_boards_container">
           <div className='lists_container' ref={listsContainerRef}>
             {boardData.lists.map((list) => (
-              <List key={list.id} list={list} moveTask={moveTask} />
+              <List key={list.id} list={list} moveTask={moveTask} addTask={addTask} />
             ))}
             <div className='list' >
               {!Adding_new_list ?
