@@ -1,3 +1,4 @@
+import '../../styles/Board Styles/Task.css';
 import React from 'react';
 import { tasks } from '../../utils/interface';
 import { useDrag } from 'react-dnd';

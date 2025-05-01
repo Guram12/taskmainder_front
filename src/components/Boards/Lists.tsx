@@ -1,3 +1,4 @@
+import '../../styles/Board Styles/List.css';
 import React, { useState } from "react";
 import { useDrop } from 'react-dnd';
 import Task from "./Tasks";

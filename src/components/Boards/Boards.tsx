@@ -1,4 +1,4 @@
-import '../../styles/boards.css';
+import '../../styles/Board Styles/Boards.css';
 import React, { useState, useEffect, useRef } from "react";
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import { ThemeSpecs } from '../../utils/theme';

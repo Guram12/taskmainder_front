@@ -1,4 +1,6 @@
-@import "../styles/Varibles.css";
+@import "../../styles/Varibles.css";
+
+
 .members_container{
   display: flex;
   flex-direction: column;
