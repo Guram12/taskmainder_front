@@ -13,6 +13,7 @@ interface SettingsProps {
 const Settings: React.FC<SettingsProps> = ({ profileData, FetchProfileData }) => {
   const [currentProfileImage, setCurrentProfileImage] = useState<string>(profileData.profile_picture);
   const [newProfileImage, setNewProfileImage] = useState<File | null>(null);
+  const [previewImage, setPreviewImage] = useState<string | null>(null); // State for preview
   const [isUploading, setIsUploading] = useState<boolean>(false);
 
   // Synchronize currentProfileImage with profileData.profile_picture
@@ -23,7 +24,9 @@ const Settings: React.FC<SettingsProps> = ({ profileData, FetchProfileData }) =>
   // Handle file input change
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
-      setNewProfileImage(e.target.files[0]);
+      const file = e.target.files[0];
+      setNewProfileImage(file);
+      setPreviewImage(URL.createObjectURL(file)); // Set preview image
     }
   };
 
@@ -48,18 +51,17 @@ const Settings: React.FC<SettingsProps> = ({ profileData, FetchProfileData }) =>
 
       console.log("Image uploaded successfully:", response.data);
 
-
       await FetchProfileData();
       // Update the current profile image with the new one
       setCurrentProfileImage(URL.createObjectURL(newProfileImage));
 
       setNewProfileImage(null);
+      setPreviewImage(null); // Clear preview after upload
     } catch (error) {
       console.error("Error uploading image:", error);
       alert("Failed to upload the image. Please try again.");
     } finally {
       setIsUploading(false);
-
     }
   };
 
@@ -67,7 +69,7 @@ const Settings: React.FC<SettingsProps> = ({ profileData, FetchProfileData }) =>
     <div>
       <div className="profil_image_cont">
         <img
-          src={currentProfileImage}
+          src={previewImage || currentProfileImage} // Show preview if available
           alt="Profile"
           className="profile_image"
         />
@@ -76,8 +78,12 @@ const Settings: React.FC<SettingsProps> = ({ profileData, FetchProfileData }) =>
           accept="image/*"
           onChange={handleImageChange}
           className="image_input"
-          
         />
+        {previewImage && (
+          <div className="preview_container">
+            <img src={previewImage} alt="Preview" className="preview_image" />
+          </div>
+        )}
         <button
           onClick={change_profile_image}
           className="upload_button"
