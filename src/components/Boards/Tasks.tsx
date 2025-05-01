@@ -1,6 +1,6 @@
 import React from 'react';
 import { tasks } from '../../utils/interface';
-import { useDrag, useDrop, } from 'react-dnd';
+import { useDrag } from 'react-dnd';
 
 
 

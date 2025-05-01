@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useDrag, useDrop } from 'react-dnd';
+import { useDrop } from 'react-dnd';
 import Task from "./Tasks";
 import { lists } from "../../utils/interface";
 

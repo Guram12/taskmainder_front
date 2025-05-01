@@ -5,7 +5,7 @@ import { ThemeSpecs } from '../../utils/theme';
 import Members from '../Members';
 import { DndProvider } from 'react-dnd';
 import List from './Lists';
-import { board, lists } from '../../utils/interface';
+import { board } from '../../utils/interface';
 
 export interface BoardsProps {
   selectedBoard: board;
@@ -55,6 +55,11 @@ const Boards: React.FC<BoardsProps> = ({ selectedBoard, setSelectedBoard, curren
       const { action, payload } = data;
 
       switch (action) {
+        case 'full_board_state':
+          console.log('Received full board state:', payload);
+          setBoardData(payload); // Update the board data with the full state
+          break;
+
         case 'move_task':
           const { task_id, source_list_id, target_list_id } = payload;
           setBoardData((prevData) => {
@@ -166,7 +171,7 @@ const Boards: React.FC<BoardsProps> = ({ selectedBoard, setSelectedBoard, curren
         action: 'add_task',
         payload: newTask,
       }));
-      
+
     } else {
       console.error('WebSocket is not open. Cannot send add_task message.');
     }
