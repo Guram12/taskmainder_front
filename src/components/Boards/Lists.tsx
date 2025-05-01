@@ -7,11 +7,14 @@ import { lists } from "../../utils/interface";
 
 
 
-const List: React.FC<{
-  list: lists,
-  moveTask: (taskId: number, sourceListId: number, targetListId: number) => void,
-  addTask: (listId: number, taskTitle: string) => void
-}> = ({ list, moveTask, addTask }) => {
+interface ListProps {
+  list: lists;
+  moveTask: (taskId: number, sourceListId: number, targetListId: number) => void;
+  addTask: (listId: number, taskTitle: string) => void;
+  deleteTask: (taskId: number, listId: number) => void;
+}
+
+const List: React.FC<ListProps> = ({ list, moveTask, addTask, deleteTask }) => {
 
   const [newTaskTitle, setNewTaskTitle] = useState<string>('');
   const [isAddingTask, setIsAddingTask] = useState<boolean>(false);
@@ -40,16 +43,23 @@ const List: React.FC<{
     }
   };
 
+
+  
   return (
     <div ref={drop} className={`list ${isOver ? 'hover' : ''}`}>
-      <h3>{list.name}</h3>
+      <h3 className='list-title' >{list.name}</h3>
       {list.tasks.map((task) => (
-        <Task key={task.id} task={task} />
+        <Task
+          key={task.id}
+          task={task}
+          deleteTask={deleteTask}
+        />
       ))}
+
       {!isAddingTask ? (
         <button onClick={() => setIsAddingTask(true)}>Add Task</button>
       ) : (
-        <div>
+        <div className='each_task' >
           <input
             type="text"
             placeholder="Task Title"

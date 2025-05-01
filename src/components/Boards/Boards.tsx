@@ -125,6 +125,19 @@ const Boards: React.FC<BoardsProps> = ({ selectedBoard, setSelectedBoard, curren
             return { ...prevData, lists: updatedLists };
           });
           break;
+          
+        case 'delete_task':
+          console.log('Received delete_task:', payload);
+          setBoardData((prevData) => {
+            const updatedLists = prevData.lists.map((list) => {
+              if (list.id === payload.list_id) {
+                return { ...list, tasks: list.tasks.filter((task) => task.id !== payload.task_id) };
+              }
+              return list;
+            });
+            return { ...prevData, lists: updatedLists };
+          });
+          break;
 
 
         default:
@@ -177,6 +190,34 @@ const Boards: React.FC<BoardsProps> = ({ selectedBoard, setSelectedBoard, curren
     }
   };
 
+// ================================================== delete task =========================================================
+
+const deleteTask = (taskId: number, listId: number) => {
+  setBoardData((prevBoardData) => {
+    const updatedLists = prevBoardData.lists.map((list) => {
+      if (list.id === listId) {
+        return {
+          ...list,
+          tasks: list.tasks.filter((task) => task.id !== taskId),
+        };
+      }
+      return list;
+    });
+
+    const newBoardData = { ...prevBoardData, lists: updatedLists };
+    setSelectedBoard(newBoardData);
+
+    if (socketRef.current && socketRef.current.readyState === WebSocket.OPEN) {
+      socketRef.current.send(JSON.stringify({
+        action: 'delete_task',
+        payload: { task_id: taskId, list_id: listId },
+      }));
+    }
+
+    return newBoardData;
+  });
+};
+
 
 
   // =================================================  move task =========================================================
@@ -221,6 +262,8 @@ const Boards: React.FC<BoardsProps> = ({ selectedBoard, setSelectedBoard, curren
       return newBoardData;
     });
   };
+
+
   // =================================================== add list =========================================================
 
   const addList = () => {
@@ -315,7 +358,13 @@ const Boards: React.FC<BoardsProps> = ({ selectedBoard, setSelectedBoard, curren
         <div className="main_boards_container">
           <div className='lists_container' ref={listsContainerRef}>
             {boardData.lists.map((list) => (
-              <List key={list.id} list={list} moveTask={moveTask} addTask={addTask} />
+              <List
+               key={list.id}
+                list={list}
+                 moveTask={moveTask}
+                  addTask={addTask}
+                  deleteTask={deleteTask}
+                   />
             ))}
             <div className='list' >
               {!Adding_new_list ?
