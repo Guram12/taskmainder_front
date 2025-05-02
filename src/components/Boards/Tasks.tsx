@@ -56,9 +56,8 @@ const Task: React.FC<TaskProps> = ({ task, deleteTask, updateTask }) => {
 
   return (
     <div className='each_task' ref={drag} style={{ opacity: isDragging ? 0.5 : 1 }} >
-      <div onClick={handleTaskClick}>
+      <div onClick={handleTaskClick} className='conteiner_for_editClick' >
         {task.title}
-        <button className='delete_task_button' onClick={handleDelete}><RiDeleteBin2Line className='delete_icon' /></button>
         {showDialog && (
           <ConfirmationDialog
             message={`Are you sure you want to delete the task "${task.title}"?`}
@@ -67,6 +66,7 @@ const Task: React.FC<TaskProps> = ({ task, deleteTask, updateTask }) => {
           />
         )}
       </div>
+      <button className='delete_task_button' onClick={handleDelete}><RiDeleteBin2Line className='delete_icon' /></button>
       {showUpdateModal && (
         <TaskUpdateModal
           task={task}
