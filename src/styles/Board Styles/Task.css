@@ -10,7 +10,7 @@
 
 .conteiner_for_editClick {
   border: 1px solid red;
-  min-width: 260px;
+  min-width: 200px;
 }
 
 .delete_task_button {
@@ -23,4 +23,19 @@
   color: tomato;
   font-size: 20px;
   cursor: pointer;
+}
+
+
+.drag_handle{
+  cursor: grab;
+  margin-right: 5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid green;
+  width: 30px;
+}
+
+.drag_handle:hover {
+  background-color: black;
 }

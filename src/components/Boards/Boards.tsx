@@ -160,11 +160,12 @@ const Boards: React.FC<BoardsProps> = ({ selectedBoard, setSelectedBoard, curren
 
 
         case 'reorder_task':
+          console.log('Received reorder_task:', payload);
           setBoardData((prevData) => {
             const updatedLists = prevData.lists.map((list) => {
               if (list.id === payload.list_id) {
                 const reorderedTasks = payload.task_order.map((taskId: number) =>
-                  list.tasks.find((task) => task.id === taskId),
+                  list.tasks.find((task) => task.id === taskId)
                 );
                 return { ...list, tasks: reorderedTasks };
               }
@@ -447,7 +448,7 @@ const Boards: React.FC<BoardsProps> = ({ selectedBoard, setSelectedBoard, curren
                 addTask={addTask}
                 deleteTask={deleteTask}
                 updateTask={updateTask}
-                // socketRef={socketRef}
+                socketRef={socketRef}
               />
             ))}
             <div className='list' >
