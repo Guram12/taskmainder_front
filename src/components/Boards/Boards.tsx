@@ -125,7 +125,7 @@ const Boards: React.FC<BoardsProps> = ({ selectedBoard, setSelectedBoard, curren
             return { ...prevData, lists: updatedLists };
           });
           break;
-          
+
         case 'delete_task':
           console.log('Received delete_task:', payload);
           setBoardData((prevData) => {
@@ -139,6 +139,24 @@ const Boards: React.FC<BoardsProps> = ({ selectedBoard, setSelectedBoard, curren
           });
           break;
 
+        case 'update_task':
+          console.log('Received update_task:', payload);
+          setBoardData((prevData) => {
+            const updatedLists = prevData.lists.map((list) => ({
+              ...list,
+              tasks: list.tasks.map((task) =>
+                task.id === payload.id ? {
+                  ...task,
+                  title: payload.title,
+                  description: payload.description,
+                  due_date: payload.due_date,
+                  completed: payload.completed
+                } : task
+              ),
+            }));
+            return { ...prevData, lists: updatedLists };
+          });
+          break;
 
         default:
           break;
@@ -190,33 +208,78 @@ const Boards: React.FC<BoardsProps> = ({ selectedBoard, setSelectedBoard, curren
     }
   };
 
-// ================================================== delete task =========================================================
+  // ================================================== delete task =========================================================
 
-const deleteTask = (taskId: number, listId: number) => {
-  setBoardData((prevBoardData) => {
-    const updatedLists = prevBoardData.lists.map((list) => {
-      if (list.id === listId) {
-        return {
-          ...list,
-          tasks: list.tasks.filter((task) => task.id !== taskId),
-        };
+  const deleteTask = (taskId: number, listId: number) => {
+    setBoardData((prevBoardData) => {
+      const updatedLists = prevBoardData.lists.map((list) => {
+        if (list.id === listId) {
+          return {
+            ...list,
+            tasks: list.tasks.filter((task) => task.id !== taskId),
+          };
+        }
+        return list;
+      });
+
+      const newBoardData = { ...prevBoardData, lists: updatedLists };
+      setSelectedBoard(newBoardData);
+
+      if (socketRef.current && socketRef.current.readyState === WebSocket.OPEN) {
+        socketRef.current.send(JSON.stringify({
+          action: 'delete_task',
+          payload: { task_id: taskId, list_id: listId },
+        }));
       }
-      return list;
+
+      return newBoardData;
     });
+  };
 
-    const newBoardData = { ...prevBoardData, lists: updatedLists };
-    setSelectedBoard(newBoardData);
 
-    if (socketRef.current && socketRef.current.readyState === WebSocket.OPEN) {
-      socketRef.current.send(JSON.stringify({
-        action: 'delete_task',
-        payload: { task_id: taskId, list_id: listId },
+  // ================================================== Update task =========================================================
+  // export interface tasks {
+  //   created_at: string;
+  //   description: string;
+  //   due_date: string;
+  //   id: number;
+  //   list: number;
+  //   title: string;
+  //   completed: boolean;
+  // }
+
+  const updateTask = (taskId: number, updatedTitle: string, due_date: string, description: string, completed: boolean) => {
+
+    console.log('Updating task:', { taskId, updatedTitle, due_date, completed });
+
+    setBoardData((prevBoardData) => {
+      const updatedLists = prevBoardData.lists.map((list) => ({
+        ...list,
+        tasks: list.tasks.map((task) =>
+          task.id === taskId ? { ...task, title: updatedTitle, due_date: due_date, completed: completed } : task
+        ),
       }));
-    }
 
-    return newBoardData;
-  });
-};
+      const newBoardData = { ...prevBoardData, lists: updatedLists };
+      setSelectedBoard(newBoardData);
+
+      if (socketRef.current && socketRef.current.readyState === WebSocket.OPEN) {
+        socketRef.current.send(JSON.stringify({
+          action: 'update_task',
+          payload: {
+            task_id: taskId,
+            title: updatedTitle,
+            due_date: due_date === '' ? null : due_date,
+            description: description,
+            completed: completed,
+          },
+        }));
+      }
+
+      return newBoardData;
+    });
+  };
+
 
 
 
@@ -285,6 +348,8 @@ const deleteTask = (taskId: number, listId: number) => {
     }
   };
 
+
+  // =================================================== scroll =========================================================
   useEffect(() => {
     const handleWheel = (event: WheelEvent) => {
       if (listsContainerRef.current) {
@@ -359,12 +424,13 @@ const deleteTask = (taskId: number, listId: number) => {
           <div className='lists_container' ref={listsContainerRef}>
             {boardData.lists.map((list) => (
               <List
-               key={list.id}
+                key={list.id}
                 list={list}
-                 moveTask={moveTask}
-                  addTask={addTask}
-                  deleteTask={deleteTask}
-                   />
+                moveTask={moveTask}
+                addTask={addTask}
+                deleteTask={deleteTask}
+                updateTask={updateTask}
+              />
             ))}
             <div className='list' >
               {!Adding_new_list ?

@@ -131,7 +131,7 @@ const Members: React.FC<MembersProps> = ({ selectedBoard, socketRef, current_use
           Authorization: `Bearer ${localStorage.getItem('access_token')}`
         }
       });
-      console.log("fetched board users ", response.data);
+      // console.log("fetched board users ", response.data);
       setCurrent_board_users(response.data);
     } catch (error) {
       console.error('Error fetching board users:', error);

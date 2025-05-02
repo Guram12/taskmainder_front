@@ -1,5 +1,5 @@
 import '../styles/Sidebar.css';
-import React, { useEffect, useState } from "react";
+import React, {useState } from "react";
 import { Sidebar, Menu, MenuItem, SubMenu } from 'react-pro-sidebar';
 import { FaCalendarAlt } from "react-icons/fa";
 import { TiPin, TiPinOutline } from "react-icons/ti";
@@ -7,7 +7,7 @@ import { MdSpaceDashboard } from "react-icons/md";
 import { GrTasks } from "react-icons/gr";
 import { FaClipboardList } from "react-icons/fa";
 import { RiSettings4Fill } from "react-icons/ri";
-import { board } from "./Boards/Boards";
+import { board } from '../utils/interface';
 import { GoRepoTemplate } from "react-icons/go";
 import axiosInstance from '../utils/axiosinstance';
 
@@ -48,9 +48,9 @@ const SidebarComponent: React.FC<SidebarProps> = ({
   const [newBoardName, setNewBoardName] = useState<string>('');
   const [addingNewBoard, setAddingNewBoard] = useState<boolean>(false);
 
-  useEffect(() => {
-    console.log('boards----------', boards);
-  }, [boards])
+  // useEffect(() => {
+  //   console.log('boards----------', boards);
+  // }, [boards])
 
 
 

@@ -12,9 +12,10 @@ interface ListProps {
   moveTask: (taskId: number, sourceListId: number, targetListId: number) => void;
   addTask: (listId: number, taskTitle: string) => void;
   deleteTask: (taskId: number, listId: number) => void;
+  updateTask: (taskId: number, updatedTitle: string, due_date: string, description: string, completed: boolean) => void;
 }
 
-const List: React.FC<ListProps> = ({ list, moveTask, addTask, deleteTask }) => {
+const List: React.FC<ListProps> = ({ list, moveTask, addTask, deleteTask, updateTask }) => {
 
   const [newTaskTitle, setNewTaskTitle] = useState<string>('');
   const [isAddingTask, setIsAddingTask] = useState<boolean>(false);
@@ -53,6 +54,7 @@ const List: React.FC<ListProps> = ({ list, moveTask, addTask, deleteTask }) => {
           key={task.id}
           task={task}
           deleteTask={deleteTask}
+          updateTask={updateTask}
         />
       ))}
 
