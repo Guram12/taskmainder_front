@@ -45,4 +45,5 @@ export interface tasks {
   list: number;
   title: string;
   completed: boolean;
+  priority: number;
 }

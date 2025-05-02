@@ -1,5 +1,5 @@
 import '../../styles/Board Styles/TaskUpdateModal.css';
-import React, { useEffect, useState } from 'react';
+import React, {  useState } from 'react';
 import { tasks } from '../../utils/interface';
 
 
