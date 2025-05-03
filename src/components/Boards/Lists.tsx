@@ -68,7 +68,7 @@ const List: React.FC<ListProps> = ({ list, moveTask, addTask, deleteTask, update
     }
   };
 
-  
+
   return (
     <div ref={drop} className={`list ${isOver ? 'hover' : ''}`}>
       <h3 className='list-title' >{list.name}</h3>
@@ -87,7 +87,7 @@ const List: React.FC<ListProps> = ({ list, moveTask, addTask, deleteTask, update
       {!isAddingTask ? (
         <button onClick={() => setIsAddingTask(true)}>Add Task</button>
       ) : (
-        <div className='each_task' >
+        <div className='each_task'>
           <input
             type="text"
             placeholder="Task Title"

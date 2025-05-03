@@ -5,12 +5,23 @@
   border-radius: 3px;
   cursor: pointer;
   display: flex;
-
+  height: auto;
+  align-items: center;
+  justify-content: space-between;
 }
 
 .conteiner_for_editClick {
   border: 1px solid red;
-  min-width: 200px;
+  height: max-content;
+}
+
+.task_title {
+  font-size: 15px;
+  font-weight: bold;
+  color: white;
+  margin: 0px;
+  width: 200px;
+  white-space: normal; /* Allow text to wrap */
 }
 
 .delete_task_button {
@@ -26,7 +37,7 @@
 }
 
 
-.drag_handle{
+.drag_handle {
   cursor: grab;
   margin-right: 5px;
   display: flex;

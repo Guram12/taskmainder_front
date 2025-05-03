@@ -1,7 +1,7 @@
 import '../../styles/Board Styles/Task.css';
 import React, { useState } from 'react';
 import { tasks } from '../../utils/interface';
-import { useDrag ,useDrop } from 'react-dnd';
+import { useDrag, useDrop } from 'react-dnd';
 import { RiDeleteBin2Line } from "react-icons/ri";
 import ConfirmationDialog from './ConfirmationDialog';
 import TaskUpdateModal from './TaskUpdateModal';
@@ -15,7 +15,7 @@ interface TaskProps {
   moveTaskWithinList: (draggedTaskId: number, targetTaskId: number, listId: number) => void;
 }
 
-const Task: React.FC<TaskProps> = ({ task, deleteTask, updateTask , moveTaskWithinList}) => {
+const Task: React.FC<TaskProps> = ({ task, deleteTask, updateTask, moveTaskWithinList }) => {
   const [showDialog, setShowDialog] = useState(false);
   const [showUpdateModal, setShowUpdateModal] = useState(false);
 
@@ -34,7 +34,7 @@ const Task: React.FC<TaskProps> = ({ task, deleteTask, updateTask , moveTaskWith
 
   const [, drop] = useDrop({
     accept: ItemTypes.REORDER,
-    hover: (draggedTask: { id: number; listId: number }) => {
+    drop: (draggedTask: { id: number; listId: number }) => {
       if (draggedTask.id !== task.id) {
         moveTaskWithinList(draggedTask.id, task.id, task.list);
       }
@@ -78,9 +78,13 @@ const Task: React.FC<TaskProps> = ({ task, deleteTask, updateTask , moveTaskWith
       className={`each_task ${isDragging || isDraggingReorder ? 'dragging' : ''}`}
       ref={(node) => drag(drop(node))}
       style={{ opacity: isDragging || isDraggingReorder ? 0.5 : 1 }}
+      data-task-id={task.id} // Add this line
+
     >
       <div onClick={handleTaskClick} className='conteiner_for_editClick'>
-        {task.title}
+        <p className='task_title'>
+          {task.title}   order-{task.order}
+        </p>
         {showDialog && (
           <ConfirmationDialog
             message={`Are you sure you want to delete the task "${task.title}"?`}
@@ -89,12 +93,17 @@ const Task: React.FC<TaskProps> = ({ task, deleteTask, updateTask , moveTaskWith
           />
         )}
       </div>
-      <button className='delete_task_button' onClick={handleDelete}>
-        <RiDeleteBin2Line className='delete_icon' />
-      </button>
-      <div ref={dragReorder} className="drag_handle">
-        <BiMoveVertical />
-      </div>
+      
+      <>
+        <button className='delete_task_button' onClick={handleDelete}>
+          <RiDeleteBin2Line className='delete_icon' />
+        </button>
+
+        <div ref={dragReorder} className="drag_handle">
+          <BiMoveVertical />
+        </div>
+      </>
+
       {showUpdateModal && (
         <TaskUpdateModal
           task={task}
