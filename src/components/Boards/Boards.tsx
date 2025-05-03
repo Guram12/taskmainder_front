@@ -6,6 +6,13 @@ import Members from '../Members';
 import { DndProvider } from 'react-dnd';
 import List from './Lists';
 import { board } from '../../utils/interface';
+import { isMobile } from 'react-device-detect'; // Install react-device-detect
+import { TouchBackend } from 'react-dnd-touch-backend';
+
+
+if (isMobile) {
+  console.log('Running on a mobile device');
+}
 
 export interface BoardsProps {
   selectedBoard: board;
@@ -56,7 +63,7 @@ const Boards: React.FC<BoardsProps> = ({ selectedBoard, setSelectedBoard, curren
 
       switch (action) {
         case 'full_board_state':
-          console.log('Received full board state:', payload);
+          // console.log('Received full board state:', payload);
           setBoardData(payload); // Update the board data with the full state
           break;
 
@@ -158,6 +165,24 @@ const Boards: React.FC<BoardsProps> = ({ selectedBoard, setSelectedBoard, curren
           });
           break;
 
+
+        case 'reorder_task':
+          console.log('Received reorder_task:', payload);
+          setBoardData((prevData) => {
+            const updatedLists = prevData.lists.map((list) => {
+              if (list.id === payload.list_id) {
+                const reorderedTasks = payload.task_order.map((taskId: number) =>
+                  list.tasks.find((task) => task.id === taskId)
+                );
+                return { ...list, tasks: reorderedTasks };
+              }
+              return list;
+            });
+            return { ...prevData, lists: updatedLists };
+          });
+          break;
+
+
         default:
           break;
       }
@@ -238,15 +263,6 @@ const Boards: React.FC<BoardsProps> = ({ selectedBoard, setSelectedBoard, curren
 
 
   // ================================================== Update task =========================================================
-  // export interface tasks {
-  //   created_at: string;
-  //   description: string;
-  //   due_date: string;
-  //   id: number;
-  //   list: number;
-  //   title: string;
-  //   completed: boolean;
-  // }
 
   const updateTask = (taskId: number, updatedTitle: string, due_date: string, description: string, completed: boolean) => {
 
@@ -352,12 +368,19 @@ const Boards: React.FC<BoardsProps> = ({ selectedBoard, setSelectedBoard, curren
   // =================================================== scroll =========================================================
   useEffect(() => {
     const handleWheel = (event: WheelEvent) => {
+      // Check if the mouse is over a list
+      const target = event.target as HTMLElement;
+      if (target.closest('.list')) {
+        // If the mouse is over a list, prevent scrolling
+        event.preventDefault();
+        return;
+      }
+
       if (listsContainerRef.current) {
         isManualScrollRef.current = true;
         listsContainerRef.current.scrollLeft += event.deltaY;
       }
     };
-
     const handleDragOver = (event: DragEvent) => {
       if (listsContainerRef.current) {
         const { clientX, currentTarget } = event;
@@ -415,7 +438,9 @@ const Boards: React.FC<BoardsProps> = ({ selectedBoard, setSelectedBoard, curren
 
 
   return (
-    <DndProvider backend={HTML5Backend}>
+    <DndProvider backend={isMobile ? TouchBackend : HTML5Backend}
+      options={isMobile ? { enableMouseEvents: true } : undefined}
+    >
       <div className='members_container'>
         <div>
           <Members selectedBoard={selectedBoard} socketRef={socketRef} current_user_email={current_user_email} />
@@ -430,6 +455,7 @@ const Boards: React.FC<BoardsProps> = ({ selectedBoard, setSelectedBoard, curren
                 addTask={addTask}
                 deleteTask={deleteTask}
                 updateTask={updateTask}
+                socketRef={socketRef}
               />
             ))}
             <div className='list' >
