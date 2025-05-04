@@ -1,5 +1,5 @@
 import '../../styles/Board Styles/List.css';
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useDrop } from 'react-dnd';
 import Task from "./Tasks";
 import { lists } from "../../utils/interface";
@@ -24,6 +24,50 @@ const List: React.FC<ListProps> = ({ list, moveTask, addTask, deleteTask, update
   const ItemTypes = {
     TASK: 'task',
   };
+
+// ---------------------------------test --------------------------------
+useEffect(() => {
+  console.log(  'List component mounted');
+  const handleSocketMessage = (event: MessageEvent) => {  
+    const data = JSON.parse(event.data);
+    if (data.action === 'reorder_task' && data.payload.list_id === list.id) {
+      const updatedTasks = data.payload.task_order.map((taskId: number) =>
+        list.tasks.find((task) => task.id === taskId)
+      );
+      list.tasks = updatedTasks.filter(Boolean);
+    }
+  }
+  if (socketRef.current) {
+    socketRef.current.addEventListener('message', handleSocketMessage);
+  }
+  return () => {
+    if (socketRef.current) {
+      socketRef.current.removeEventListener('message', handleSocketMessage);
+    }
+  }
+}, [list.id, list.tasks, socketRef]);
+  useEffect(() => {
+    const handleSocketMessage = (event: MessageEvent) => {
+      const data = JSON.parse(event.data);
+      if (data.action === 'reorder_task' && data.payload.list_id === list.id) {
+        const updatedTasks = data.payload.task_order.map((taskId: number) =>
+          list.tasks.find((task) => task.id === taskId)
+        );
+        list.tasks = updatedTasks.filter(Boolean);
+      }
+    };
+
+    if (socketRef.current) {
+      socketRef.current.addEventListener('message', handleSocketMessage);
+    }
+
+    return () => {
+      if (socketRef.current) {
+        socketRef.current.removeEventListener('message', handleSocketMessage);
+      }
+    };
+}, []);
+// ---------------------------------test --------------------------------
 
   const [{ isOver }, drop] = useDrop(() => ({
     accept: ItemTypes.TASK,
