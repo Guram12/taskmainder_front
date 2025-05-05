@@ -83,6 +83,7 @@ const MainPage: React.FC<MainPageProps> = ({
             setSelectedBoard={setSelectedBoard}
             selectedBoard={selectedBoard}
             current_user_email={current_user_email}
+            
           />
         );
 

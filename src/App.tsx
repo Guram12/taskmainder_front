@@ -29,6 +29,7 @@ const App: React.FC = () => {
     '--main-text-coloure': '#333',
     '--scrollbar-bg-color': '#f4f7f6',
     '--scrollbar-thumb-color': '#d9e0e3',
+    '--list-background-color': '#ffffff',
   });
 
   const [change_current_theme, setChange_current_theme] = useState(false);
@@ -56,20 +57,7 @@ const App: React.FC = () => {
   const refreshToken: string | null = localStorage.getItem('refresh_token');
 
 
-  // // -----------------------------------------------------------------------------------
-  // useEffect(() => {
-  //   const savedTheme = localStorage.getItem('theme');
-  //   if (savedTheme) {
-  //     const themeSpecs: ThemeSpecs = JSON.parse(savedTheme);
-  //     for (const [key, value] of Object.entries(themeSpecs)) {
-  //       document.documentElement.style.setProperty(key, value);
-  //     }
-  //     document.body.style.backgroundColor = themeSpecs['--background-color'];
-  //     document.body.style.scrollbarColor = themeSpecs['--scrollbar-bg-color'] + ' ' + themeSpecs['--scrollbar-thumb-color'];
 
-  //   }
-  // }, [change_current_theme]);
-  // // -----------------------------------------------------------------------------------
 
   // ========================================== fetch  boards ==================================================
   useEffect(() => {
@@ -91,7 +79,8 @@ const App: React.FC = () => {
     }
   }, [isAuthenticated]);
 
-  // ====================================  useEffect for theme change ===============================================
+  // ====================================  useEffect for  change  theme  ===============================================
+
   useEffect(() => {
     const savedTheme = localStorage.getItem('theme');
     if (savedTheme) {

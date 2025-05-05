@@ -1,13 +1,15 @@
 import '../../styles/Board Styles/List.css';
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useDrop } from 'react-dnd';
 import Task from "./Tasks";
 import { lists } from "../../utils/interface";
-
-
+import { MdModeEdit } from "react-icons/md";
+import { MdDeleteForever } from "react-icons/md";
+import { ThemeSpecs } from '../../utils/theme';
 
 
 interface ListProps {
+  currentTheme: ThemeSpecs;
   list: lists;
   moveTask: (taskId: number, sourceListId: number, targetListId: number) => void;
   addTask: (listId: number, taskTitle: string) => void;
@@ -16,7 +18,7 @@ interface ListProps {
   socketRef: React.RefObject<WebSocket>;
 }
 
-const List: React.FC<ListProps> = ({ list, moveTask, addTask, deleteTask, updateTask, socketRef }) => {
+const List: React.FC<ListProps> = ({ list, moveTask, addTask, deleteTask, updateTask, socketRef, currentTheme }) => {
 
   const [newTaskTitle, setNewTaskTitle] = useState<string>('');
   const [isAddingTask, setIsAddingTask] = useState<boolean>(false);
@@ -25,49 +27,6 @@ const List: React.FC<ListProps> = ({ list, moveTask, addTask, deleteTask, update
     TASK: 'task',
   };
 
-// ---------------------------------test --------------------------------
-useEffect(() => {
-  console.log(  'List component mounted');
-  const handleSocketMessage = (event: MessageEvent) => {  
-    const data = JSON.parse(event.data);
-    if (data.action === 'reorder_task' && data.payload.list_id === list.id) {
-      const updatedTasks = data.payload.task_order.map((taskId: number) =>
-        list.tasks.find((task) => task.id === taskId)
-      );
-      list.tasks = updatedTasks.filter(Boolean);
-    }
-  }
-  if (socketRef.current) {
-    socketRef.current.addEventListener('message', handleSocketMessage);
-  }
-  return () => {
-    if (socketRef.current) {
-      socketRef.current.removeEventListener('message', handleSocketMessage);
-    }
-  }
-}, [list.id, list.tasks, socketRef]);
-  useEffect(() => {
-    const handleSocketMessage = (event: MessageEvent) => {
-      const data = JSON.parse(event.data);
-      if (data.action === 'reorder_task' && data.payload.list_id === list.id) {
-        const updatedTasks = data.payload.task_order.map((taskId: number) =>
-          list.tasks.find((task) => task.id === taskId)
-        );
-        list.tasks = updatedTasks.filter(Boolean);
-      }
-    };
-
-    if (socketRef.current) {
-      socketRef.current.addEventListener('message', handleSocketMessage);
-    }
-
-    return () => {
-      if (socketRef.current) {
-        socketRef.current.removeEventListener('message', handleSocketMessage);
-      }
-    };
-}, []);
-// ---------------------------------test --------------------------------
 
   const [{ isOver }, drop] = useDrop(() => ({
     accept: ItemTypes.TASK,
@@ -114,10 +73,16 @@ useEffect(() => {
 
 
   return (
-    <div ref={drop} className={`list ${isOver ? 'hover' : ''}`}>
-      <h3 className='list-title' >{list.name}</h3>
-      {/* map and also sort  */}
-      
+    <div ref={drop} className={`list ${isOver ? 'hover' : ''}`}  style={{ backgroundColor: `${currentTheme['--list-background-color']}` }} >
+
+      <div className='list_title_and_buttons' style={{ backgroundColor: `${currentTheme['--list-background-color']}` }} >
+        <h3 className='list_title' style={{ color: currentTheme['--main-text-coloure'] }} >{list.name}</h3>
+        <div className='list_buttons' style={{ color: currentTheme['--main-text-coloure'] }} >
+          <MdModeEdit className='edit_list_icon' />
+          <MdDeleteForever className='delete_list_icon' />
+        </div>
+      </div>
+      <div className='margin_element' ></div>
       {list.tasks.map((task) => (
         <Task
           key={task.id}

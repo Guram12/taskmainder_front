@@ -1,6 +1,6 @@
 import "./Header.css";
 import React from 'react';
-import { ProfileData } from '../App';
+import { ProfileData } from "../utils/interface";
 import LogoComponent from '../components/LogoComponent';
 import { useLocation } from 'react-router-dom';
 import { useState, useEffect } from 'react';

@@ -22,7 +22,7 @@ export interface BoardsProps {
   current_user_email: string;
 }
 
-const Boards: React.FC<BoardsProps> = ({ selectedBoard, setSelectedBoard, current_user_email }) => {
+const Boards: React.FC<BoardsProps> = ({ selectedBoard, setSelectedBoard, current_user_email , currentTheme}) => {
   const [boardData, setBoardData] = useState(selectedBoard);
   const [Adding_new_list, setAdding_new_list] = useState<boolean>(false);
   const [ListName, setListName] = useState<string>('');
@@ -456,6 +456,7 @@ const Boards: React.FC<BoardsProps> = ({ selectedBoard, setSelectedBoard, curren
                 deleteTask={deleteTask}
                 updateTask={updateTask}
                 socketRef={socketRef}
+                currentTheme={currentTheme}
               />
             ))}
             <div className='list' >

@@ -4,6 +4,7 @@ export interface ThemeSpecs {
   '--border-color': string;
   '--scrollbar-bg-color': string;
   '--scrollbar-thumb-color': string;
+  '--list-background-color': string;
 }
 
 
@@ -14,42 +15,52 @@ const themes = {
     '--main-text-coloure': '#ffffff',
     '--border-color': '#f2f3f4',
     '--scrollbar-bg-color': '#1a1a1a',
-    '--scrollbar-thumb-color': '#2a2a2a'
+    '--scrollbar-thumb-color': '#2a2a2a',
+    '--list-background-color': '#24292b'
   },
   light: {
     '--background-color': '#F4D35E',
     '--main-text-coloure': '#000000',
     '--border-color': '#000000',
     '--scrollbar-bg-color': '#e0e0e0',
-    '--scrollbar-thumb-color': '#c0c0c0'
+    '--scrollbar-thumb-color': '#c0c0c0',
+    '--list-background-color': '#ffffff'
+    
   },
   theme1: {
     '--background-color': '#121212',
     '--main-text-coloure': '#FFFFFF',
     '--border-color': '#f2f3f4',
     '--scrollbar-bg-color': '#333333',
-    '--scrollbar-thumb-color': '#555555'
+    '--scrollbar-thumb-color': '#555555',
+    '--list-background-color': '#1e3a4a'
+    
   },
   theme2: {
     '--background-color': '#2e4053',
     '--main-text-coloure': '#FFFFFF',
     '--border-color': '#d6dbdf',
     '--scrollbar-bg-color': '#3e4e63',
-    '--scrollbar-thumb-color': '#4e5e73'
+    '--scrollbar-thumb-color': '#4e5e73',
+    '--list-background-color': '#1e3a4a'
+    
   },
   theme3: {
     '--background-color': '#708B75',
     '--main-text-coloure': '#FFFFFF',
     '--border-color': '#000000',
     '--scrollbar-bg-color': '#809b85',
-    '--scrollbar-thumb-color': '#90ab95'
+    '--scrollbar-thumb-color': '#90ab95',
+    '--list-background-color': '#ffffff'
+    
   },
   theme4: {
     '--background-color': '#005f54',
     '--main-text-coloure': '#FFFFFF',
     '--border-color': '#000000',
     '--scrollbar-bg-color': '#106f64',
-    '--scrollbar-thumb-color': '#207f74'
+    '--scrollbar-thumb-color': '#207f74',
+    '--list-background-color': '#ffffff'
   }
 };
 

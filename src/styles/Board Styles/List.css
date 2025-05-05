@@ -1,7 +1,31 @@
-.list-title{
-  margin-top: 0px;
+.list_title_and_buttons {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border: 1px solid red;
+  margin-bottom: 5px;
+  position: absolute;
+  width: 280px;
+  padding: 5px;
+  transition: background-color 0.3s;
+
 }
 
+
+.list_title {
+  margin: 0px;
+  margin-left: 2px;
+}
+
+.list_buttons {
+  display: flex;
+  gap: 5px;
+}
+
+
+.margin_element{
+  margin-top: 50px;
+}
 
 .list {
   background-color: #427999;
@@ -10,25 +34,18 @@
   width: 300px;
   height: min-content;
   transition: background-color 0.3s;
-  display: inline-block; /* Ensure lists are inline */
+  display: inline-block;
   min-width: 300px;
   margin-top: 20px;
   margin-left: 20px;
   max-height: 85%;
   overflow-y: auto;
+  padding-top: 0px;
+  transition: background-color 0.3s;
+
 }
 
 .list.hover {
-  background-color: #2d5479; /* Change this to your desired hover color */
+  background-color: #2d5479;
+  /* Change this to your desired hover color */
 }
-
-
-
-
-
-
-
-
-
-
-
