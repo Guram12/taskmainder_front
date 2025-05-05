@@ -119,6 +119,16 @@ const Boards: React.FC<BoardsProps> = ({ selectedBoard, setSelectedBoard, curren
           }));
           break;
 
+        case 'edit_list_name':
+          console.log('Received edit_list_name:', payload);
+          setBoardData((prevData) => {
+            const updatedLists = prevData.lists.map((list) =>
+              list.id === payload.list_id ? { ...list, name: payload.new_name } : list
+            );
+            return { ...prevData, lists: updatedLists };
+          });
+          break;
+
         case 'delete_list':
           setBoardData((prevData) => ({
             ...prevData,
@@ -371,6 +381,19 @@ const Boards: React.FC<BoardsProps> = ({ selectedBoard, setSelectedBoard, curren
     }
   };
 
+  // ====================================================  update list name ==========================================
+
+  const updateListName = (listId: number, NewListName: string) => {
+    if (socketRef.current && socketRef.current.readyState === WebSocket.OPEN) {
+      socketRef.current.send(
+        JSON.stringify({
+          action: 'edit_list_name',
+          payload: { list_id: listId, new_name: NewListName },
+        })
+      );
+    }
+  }
+
 
   // ====================================================  delete list ==========================================
 
@@ -479,6 +502,7 @@ const Boards: React.FC<BoardsProps> = ({ selectedBoard, setSelectedBoard, curren
                 socketRef={socketRef}
                 currentTheme={currentTheme}
                 deleteList={deleteList}
+                updateListName={updateListName}
               />
             ))}
             <div className='list' >

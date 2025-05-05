@@ -19,11 +19,13 @@ interface ListProps {
   updateTask: (taskId: number, updatedTitle: string, due_date: string, description: string, completed: boolean) => void;
   socketRef: React.RefObject<WebSocket>;
   deleteList: (listId: number) => void;
+  updateListName: (listId: number, newName: string) => void;
 }
 
-const List: React.FC<ListProps> = ({ list, moveTask, addTask, deleteTask, updateTask, socketRef, currentTheme, deleteList }) => {
+const List: React.FC<ListProps> = ({ list, moveTask, addTask, deleteTask, updateTask, socketRef, currentTheme, deleteList, updateListName }) => {
 
   const [isListEditing, setIsListEditing] = useState<boolean>(false);
+  const [newListName, setNewListName] = useState<string>(list.name);
   const [isListDeleting, setIsListDeleting] = useState<boolean>(false);
 
   const [newTaskTitle, setNewTaskTitle] = useState<string>('');
@@ -83,6 +85,7 @@ const List: React.FC<ListProps> = ({ list, moveTask, addTask, deleteTask, update
 
 
 
+  // ================================================ delete list ==========================================
   const handle_delete_list_click = () => {
     setIsListDeleting(true);
   }
@@ -96,6 +99,15 @@ const List: React.FC<ListProps> = ({ list, moveTask, addTask, deleteTask, update
     setIsListDeleting(false);
   };
 
+  // ================================================ update list  name ==========================================
+  
+  const handleUpdateListName = () => {
+    if (newListName.trim()) {
+      updateListName(list.id, newListName);
+      setIsListEditing(false);
+    }
+  };
+
   return (
     <div ref={drop} className={`list ${isOver ? 'hover' : ''}`} style={{ backgroundColor: `${currentTheme['--list-background-color']}` }} >
 
@@ -103,9 +115,8 @@ const List: React.FC<ListProps> = ({ list, moveTask, addTask, deleteTask, update
         {isListEditing ? (
           <input
             type="text"
-            value={list.name}
-            onChange={(e) => setNewTaskTitle(e.target.value)}
-            onBlur={() => setIsListEditing(false)}
+            value={newListName}
+            onChange={(e) => setNewListName(e.target.value)}
           />
         ) : (
           <h3 className='list_title' style={{ color: currentTheme['--main-text-coloure'] }} onClick={() => setIsListEditing(true)} >{list.name}</h3>
@@ -113,7 +124,7 @@ const List: React.FC<ListProps> = ({ list, moveTask, addTask, deleteTask, update
         <div className='list_buttons' style={{ color: currentTheme['--main-text-coloure'] }} >
           {isListEditing ? (
             <>
-              <GrFormCheckmark className='edit_list_icon' />
+              <GrFormCheckmark className='edit_list_icon' onClick={()=> handleUpdateListName()} />
               <HiOutlineXMark className='delete_list_icon' onClick={() => setIsListEditing(false)} />
             </>
           ) :
