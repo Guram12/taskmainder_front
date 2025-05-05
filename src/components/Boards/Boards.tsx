@@ -22,7 +22,7 @@ export interface BoardsProps {
   current_user_email: string;
 }
 
-const Boards: React.FC<BoardsProps> = ({ selectedBoard, setSelectedBoard, current_user_email , currentTheme}) => {
+const Boards: React.FC<BoardsProps> = ({ selectedBoard, setSelectedBoard, current_user_email, currentTheme }) => {
   const [boardData, setBoardData] = useState(selectedBoard);
   const [Adding_new_list, setAdding_new_list] = useState<boolean>(false);
   const [ListName, setListName] = useState<string>('');
@@ -116,6 +116,13 @@ const Boards: React.FC<BoardsProps> = ({ selectedBoard, setSelectedBoard, curren
           setBoardData((prevData) => ({
             ...prevData,
             lists: [...prevData.lists, payload],
+          }));
+          break;
+
+        case 'delete_list':
+          setBoardData((prevData) => ({
+            ...prevData,
+            lists: prevData.lists.filter((list) => list.id !== payload.list_id),
           }));
           break;
 
@@ -365,6 +372,20 @@ const Boards: React.FC<BoardsProps> = ({ selectedBoard, setSelectedBoard, curren
   };
 
 
+  // ====================================================  delete list ==========================================
+
+  const deleteList = (listId: number) => {
+    if (socketRef.current && socketRef.current.readyState === WebSocket.OPEN) {
+      socketRef.current.send(
+        JSON.stringify({
+          action: 'delete_list',
+          payload: { list_id: listId },
+        })
+      );
+    }
+  };
+
+
   // =================================================== scroll =========================================================
   useEffect(() => {
     const handleWheel = (event: WheelEvent) => {
@@ -457,6 +478,7 @@ const Boards: React.FC<BoardsProps> = ({ selectedBoard, setSelectedBoard, curren
                 updateTask={updateTask}
                 socketRef={socketRef}
                 currentTheme={currentTheme}
+                deleteList={deleteList}
               />
             ))}
             <div className='list' >

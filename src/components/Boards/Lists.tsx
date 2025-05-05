@@ -8,7 +8,7 @@ import { MdDeleteForever } from "react-icons/md";
 import { ThemeSpecs } from '../../utils/theme';
 import { GrFormCheckmark } from "react-icons/gr";
 import { HiOutlineXMark } from "react-icons/hi2";
-
+import ConfirmationDialog from './ConfirmationDialog';
 
 interface ListProps {
   currentTheme: ThemeSpecs;
@@ -18,21 +18,24 @@ interface ListProps {
   deleteTask: (taskId: number, listId: number) => void;
   updateTask: (taskId: number, updatedTitle: string, due_date: string, description: string, completed: boolean) => void;
   socketRef: React.RefObject<WebSocket>;
+  deleteList: (listId: number) => void;
 }
 
-const List: React.FC<ListProps> = ({ list, moveTask, addTask, deleteTask, updateTask, socketRef, currentTheme }) => {
+const List: React.FC<ListProps> = ({ list, moveTask, addTask, deleteTask, updateTask, socketRef, currentTheme, deleteList }) => {
 
   const [isListEditing, setIsListEditing] = useState<boolean>(false);
+  const [isListDeleting, setIsListDeleting] = useState<boolean>(false);
 
   const [newTaskTitle, setNewTaskTitle] = useState<string>('');
   const [isAddingTask, setIsAddingTask] = useState<boolean>(false);
 
 
 
+
+  // =========================================u=====  drag and drop ==========================================
   const ItemTypes = {
     TASK: 'task',
   };
-
 
   const [{ isOver }, drop] = useDrop(() => ({
     accept: ItemTypes.TASK,
@@ -54,6 +57,7 @@ const List: React.FC<ListProps> = ({ list, moveTask, addTask, deleteTask, update
     }
   };
 
+  // ==========================================  move task inside list ==========================================
 
   const moveTaskWithinList = (draggedTaskId: number, targetTaskId: number, listId: number) => {
     const draggedTaskIndex = list.tasks.findIndex((task) => task.id === draggedTaskId);
@@ -78,6 +82,20 @@ const List: React.FC<ListProps> = ({ list, moveTask, addTask, deleteTask, update
   };
 
 
+
+  const handle_delete_list_click = () => {
+    setIsListDeleting(true);
+  }
+
+  const confirmDelete = () => {
+    deleteList(list.id);
+    setIsListDeleting(false);
+  };
+
+  const cancelListDelete = () => {
+    setIsListDeleting(false);
+  };
+
   return (
     <div ref={drop} className={`list ${isOver ? 'hover' : ''}`} style={{ backgroundColor: `${currentTheme['--list-background-color']}` }} >
 
@@ -101,10 +119,17 @@ const List: React.FC<ListProps> = ({ list, moveTask, addTask, deleteTask, update
           ) :
             <>
               <MdModeEdit className='edit_list_icon' onClick={() => setIsListEditing(true)} />
-              <MdDeleteForever className='delete_list_icon' />
+              <MdDeleteForever className='delete_list_icon' onClick={() => handle_delete_list_click()} />
             </>
           }
         </div>
+        {isListDeleting && (
+          <ConfirmationDialog
+            message={`Are you sure you want to delete the task "${list.name}"?`}
+            onConfirm={confirmDelete}
+            onCancel={cancelListDelete}
+          />
+        )}
       </div>
       <div className='margin_element' ></div>
       {list.tasks.map((task) => (
