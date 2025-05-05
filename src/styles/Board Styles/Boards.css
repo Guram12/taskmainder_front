@@ -28,6 +28,7 @@
   overflow-y: hidden; /* Prevent vertical scrolling */
   height: 100%; /* Ensure the container takes the full height */
   white-space: nowrap; /* Prevent line breaks */
+  position: relative;
 }
 
 

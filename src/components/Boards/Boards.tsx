@@ -22,7 +22,7 @@ export interface BoardsProps {
   current_user_email: string;
 }
 
-const Boards: React.FC<BoardsProps> = ({ selectedBoard, setSelectedBoard, current_user_email }) => {
+const Boards: React.FC<BoardsProps> = ({ selectedBoard, setSelectedBoard, current_user_email, currentTheme }) => {
   const [boardData, setBoardData] = useState(selectedBoard);
   const [Adding_new_list, setAdding_new_list] = useState<boolean>(false);
   const [ListName, setListName] = useState<string>('');
@@ -116,6 +116,23 @@ const Boards: React.FC<BoardsProps> = ({ selectedBoard, setSelectedBoard, curren
           setBoardData((prevData) => ({
             ...prevData,
             lists: [...prevData.lists, payload],
+          }));
+          break;
+
+        case 'edit_list_name':
+          console.log('Received edit_list_name:', payload);
+          setBoardData((prevData) => {
+            const updatedLists = prevData.lists.map((list) =>
+              list.id === payload.list_id ? { ...list, name: payload.new_name } : list
+            );
+            return { ...prevData, lists: updatedLists };
+          });
+          break;
+
+        case 'delete_list':
+          setBoardData((prevData) => ({
+            ...prevData,
+            lists: prevData.lists.filter((list) => list.id !== payload.list_id),
           }));
           break;
 
@@ -364,6 +381,33 @@ const Boards: React.FC<BoardsProps> = ({ selectedBoard, setSelectedBoard, curren
     }
   };
 
+  // ====================================================  update list name ==========================================
+
+  const updateListName = (listId: number, NewListName: string) => {
+    if (socketRef.current && socketRef.current.readyState === WebSocket.OPEN) {
+      socketRef.current.send(
+        JSON.stringify({
+          action: 'edit_list_name',
+          payload: { list_id: listId, new_name: NewListName },
+        })
+      );
+    }
+  }
+
+
+  // ====================================================  delete list ==========================================
+
+  const deleteList = (listId: number) => {
+    if (socketRef.current && socketRef.current.readyState === WebSocket.OPEN) {
+      socketRef.current.send(
+        JSON.stringify({
+          action: 'delete_list',
+          payload: { list_id: listId },
+        })
+      );
+    }
+  };
+
 
   // =================================================== scroll =========================================================
   useEffect(() => {
@@ -456,6 +500,9 @@ const Boards: React.FC<BoardsProps> = ({ selectedBoard, setSelectedBoard, curren
                 deleteTask={deleteTask}
                 updateTask={updateTask}
                 socketRef={socketRef}
+                currentTheme={currentTheme}
+                deleteList={deleteList}
+                updateListName={updateListName}
               />
             ))}
             <div className='list' >
