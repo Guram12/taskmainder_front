@@ -8,7 +8,7 @@
   width: 280px;
   padding: 5px;
   transition: background-color 0.3s;
-
+  min-height: 33px;
 }
 
 
@@ -17,13 +17,36 @@
   margin-left: 2px;
 }
 
+/* ---------------------------------- edit and delete icon styles ----------------------------- */
 .list_buttons {
   display: flex;
   gap: 5px;
+  font-size: 20px;
+  min-height: 20px;
 }
 
+.list_edit_delete_icon {
+  cursor: pointer;
+  transition: color 0.3s ease;
+}
 
-.margin_element{
+.delete_list_icon {
+  cursor: pointer;
+  transition: color 0.3s ease;
+}
+
+.edit_list_icon:hover {
+  color: #2ed8c1;
+}
+
+.delete_list_icon:hover {
+  color: tomato;
+}
+
+/* --------------------------------------------------------------------------------------------------- */
+
+
+.margin_element {
   margin-top: 50px;
 }
 
@@ -48,4 +71,14 @@
 .list.hover {
   background-color: #2d5479;
   /* Change this to your desired hover color */
+}
+
+
+.add_task_cont {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 1px solid red;
+  margin-top: 5px;
+  padding: 5px;
 }

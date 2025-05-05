@@ -6,6 +6,8 @@ import { lists } from "../../utils/interface";
 import { MdModeEdit } from "react-icons/md";
 import { MdDeleteForever } from "react-icons/md";
 import { ThemeSpecs } from '../../utils/theme';
+import { GrFormCheckmark } from "react-icons/gr";
+import { HiOutlineXMark } from "react-icons/hi2";
 
 
 interface ListProps {
@@ -20,8 +22,12 @@ interface ListProps {
 
 const List: React.FC<ListProps> = ({ list, moveTask, addTask, deleteTask, updateTask, socketRef, currentTheme }) => {
 
+  const [isListEditing, setIsListEditing] = useState<boolean>(false);
+
   const [newTaskTitle, setNewTaskTitle] = useState<string>('');
   const [isAddingTask, setIsAddingTask] = useState<boolean>(false);
+
+
 
   const ItemTypes = {
     TASK: 'task',
@@ -73,13 +79,31 @@ const List: React.FC<ListProps> = ({ list, moveTask, addTask, deleteTask, update
 
 
   return (
-    <div ref={drop} className={`list ${isOver ? 'hover' : ''}`}  style={{ backgroundColor: `${currentTheme['--list-background-color']}` }} >
+    <div ref={drop} className={`list ${isOver ? 'hover' : ''}`} style={{ backgroundColor: `${currentTheme['--list-background-color']}` }} >
 
       <div className='list_title_and_buttons' style={{ backgroundColor: `${currentTheme['--list-background-color']}` }} >
-        <h3 className='list_title' style={{ color: currentTheme['--main-text-coloure'] }} >{list.name}</h3>
+        {isListEditing ? (
+          <input
+            type="text"
+            value={list.name}
+            onChange={(e) => setNewTaskTitle(e.target.value)}
+            onBlur={() => setIsListEditing(false)}
+          />
+        ) : (
+          <h3 className='list_title' style={{ color: currentTheme['--main-text-coloure'] }} onClick={() => setIsListEditing(true)} >{list.name}</h3>
+        )}
         <div className='list_buttons' style={{ color: currentTheme['--main-text-coloure'] }} >
-          <MdModeEdit className='edit_list_icon' />
-          <MdDeleteForever className='delete_list_icon' />
+          {isListEditing ? (
+            <>
+              <GrFormCheckmark className='edit_list_icon' />
+              <HiOutlineXMark className='delete_list_icon' onClick={() => setIsListEditing(false)} />
+            </>
+          ) :
+            <>
+              <MdModeEdit className='edit_list_icon' onClick={() => setIsListEditing(true)} />
+              <MdDeleteForever className='delete_list_icon' />
+            </>
+          }
         </div>
       </div>
       <div className='margin_element' ></div>
@@ -93,20 +117,22 @@ const List: React.FC<ListProps> = ({ list, moveTask, addTask, deleteTask, update
         />
       ))}
 
-      {!isAddingTask ? (
-        <button onClick={() => setIsAddingTask(true)}>Add Task</button>
-      ) : (
-        <div className='each_task'>
-          <input
-            type="text"
-            placeholder="Task Title"
-            value={newTaskTitle}
-            onChange={(e) => setNewTaskTitle(e.target.value)}
-          />
-          <button onClick={handleAddTask}>Add</button>
-          <button onClick={() => setIsAddingTask(false)}>Cancel</button>
-        </div>
-      )}
+      <div className='add_task_cont' >
+        {!isAddingTask ? (
+          <button onClick={() => setIsAddingTask(true)}>Add Task</button>
+        ) : (
+          <div className='each_task'>
+            <input
+              type="text"
+              placeholder="Task Title"
+              value={newTaskTitle}
+              onChange={(e) => setNewTaskTitle(e.target.value)}
+            />
+            <button onClick={handleAddTask}>Add</button>
+            <button onClick={() => setIsAddingTask(false)}>Cancel</button>
+          </div>
+        )}
+      </div>
     </div>
   );
 };
