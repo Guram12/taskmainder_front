@@ -17,7 +17,6 @@ if (isMobile) {
 export interface BoardsProps {
   selectedBoard: board;
   currentTheme: ThemeSpecs;
-  setIsLoading: (value: boolean) => void;
   setSelectedBoard: (board: board) => void;
   current_user_email: string;
   profileData: ProfileData;
@@ -338,7 +337,7 @@ const Boards: React.FC<BoardsProps> = ({ selectedBoard, setSelectedBoard, curren
 
   // ================================================== Update task =========================================================
 
-  const updateTask = (taskId: number, updatedTitle: string, due_date: string, description: string, completed: boolean) => {
+  const updateTask = (taskId: number, updatedTitle: string, due_date: string | null, description: string, completed: boolean) => {
 
     console.log('Updating task:', { taskId, updatedTitle, due_date, completed });
 
@@ -359,7 +358,7 @@ const Boards: React.FC<BoardsProps> = ({ selectedBoard, setSelectedBoard, curren
           payload: {
             task_id: taskId,
             title: updatedTitle,
-            due_date: due_date === '' ? null : due_date,
+            due_date: due_date,
             description: description,
             completed: completed,
           },

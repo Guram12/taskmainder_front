@@ -11,7 +11,7 @@ import { ThemeSpecs } from '../../utils/theme';
 interface TaskProps {
   task: tasks;
   deleteTask: (taskId: number, listId: number) => void;
-  updateTask: (taskId: number, updatedTitle: string, due_date: string, description: string, completed: boolean) => void;
+  updateTask: (taskId: number, updatedTitle: string, due_date: string | null, description: string, completed: boolean) => void;
   moveTaskWithinList: (draggedTaskId: number, targetTaskId: number, listId: number) => void;
   currentTheme : ThemeSpecs;
 }

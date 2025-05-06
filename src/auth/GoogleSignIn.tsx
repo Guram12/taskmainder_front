@@ -3,8 +3,7 @@ import React from 'react';
 import { GoogleOAuthProvider, GoogleLogin, CredentialResponse } from '@react-oauth/google';
 import axiosInstance from '../utils/axiosinstance';
 import { useNavigate } from 'react-router-dom';
-import { ProfileData } from "../App";
-
+import { ProfileData } from "../utils/interface";
 
 
 interface GoogleSignInProps {

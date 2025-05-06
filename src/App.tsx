@@ -28,7 +28,6 @@ const App: React.FC = () => {
     '--background-color': '#f4f7f6',
     '--border-color': '#d9e0e3',
     '--main-text-coloure': '#333',
-    '--scrollbar-bg-color': '#f4f7f6',
     '--scrollbar-thumb-color': '#d9e0e3',
     '--list-background-color': '#ffffff',
   });
@@ -49,9 +48,6 @@ const App: React.FC = () => {
 
 
   const [selected_board_ID_for_sidebar, setSelected_board_ID_for_sidebar] = useState<number | null>(null);
-
-  const [isLoading, setIsLoading] = useState<boolean>(false);
-
 
 
   const accessToken: string | null = localStorage.getItem('access_token');
@@ -182,7 +178,6 @@ const App: React.FC = () => {
         setIsAuthenticated={setIsAuthenticated}
         setChange_current_theme={setChange_current_theme}
         change_current_theme={change_current_theme}
-        isLoading={isLoading}
       />
       <Routes>
         <Route path="/" element={<Login setIsAuthenticated={setIsAuthenticated} />} />
@@ -195,7 +190,6 @@ const App: React.FC = () => {
             currentTheme={currentTheme}
             boards={boards}
             setBoards={setBoards}
-            setIsLoading={setIsLoading}
             setSelected_board_ID_for_sidebar={setSelected_board_ID_for_sidebar}
             selected_board_ID_for_sidebar={selected_board_ID_for_sidebar}
             current_user_email={profileData.email}

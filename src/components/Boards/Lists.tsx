@@ -16,7 +16,7 @@ interface ListProps {
   moveTask: (taskId: number, sourceListId: number, targetListId: number) => void;
   addTask: (listId: number, taskTitle: string) => void;
   deleteTask: (taskId: number, listId: number) => void;
-  updateTask: (taskId: number, updatedTitle: string, due_date: string, description: string, completed: boolean) => void;
+  updateTask: (taskId: number, updatedTitle: string, due_date: string | null, description: string, completed: boolean) => void;
   socketRef: React.RefObject<WebSocket>;
   deleteList: (listId: number) => void;
   updateListName: (listId: number, newName: string) => void;

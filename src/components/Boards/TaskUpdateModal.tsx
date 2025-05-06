@@ -8,33 +8,43 @@ import { ThemeSpecs } from '../../utils/theme';
 interface TaskUpdateModalProps {
   task: tasks;
   onClose: () => void;
-  onUpdate: (taskId: number, updatedTitle: string, due_date: string, description: string, completed: boolean) => void;
+  onUpdate: (taskId: number, updatedTitle: string, due_date: string | null, description: string, completed: boolean) => void;
   currentTheme: ThemeSpecs;
 }
-
-const TaskUpdateModal: React.FC<TaskUpdateModalProps> = ({ task, onClose, onUpdate , currentTheme }) => {
+const TaskUpdateModal: React.FC<TaskUpdateModalProps> = ({ task, onClose, onUpdate, currentTheme }) => {
   const [updatedTitle, setUpdatedTitle] = useState<string>(task.title);
   const [updatedDescription, setUpdatedDescription] = useState<string>(task.description || '');
   const [updatedDueDate, setUpdatedDueDate] = useState<string>(task.due_date ? task.due_date.split('T')[0] : ''); // Extract date
   const [updatedDueTime, setUpdatedDueTime] = useState<string>(task.due_date ? task.due_date.split('T')[1]?.slice(0, 5) : ''); // Extract time
   const [updatedCompletedStatus, setUpdatedCompletedStatus] = useState<boolean>(task.completed);
 
+
+
+
   const handleUpdate = () => {
     if (updatedTitle.trim()) {
       const combinedDueDateTime = updatedDueDate && updatedDueTime
         ? new Date(`${updatedDueDate}T${updatedDueTime}`).toISOString() // Convert to ISO string in local timezone
-        : updatedDueDate || ''; // Combine date and time or keep it empty
+        : updatedDueDate ? `${updatedDueDate}T00:00:00Z` : null; // Send null if due date is cleared
       onUpdate(task.id, updatedTitle, combinedDueDateTime, updatedDescription, updatedCompletedStatus);
       onClose();
     }
   };
+
+  const handleClearDueDate = () => {
+    setUpdatedDueDate('');
+    setUpdatedDueTime('');
+  };
+
   const handleCancel = () => {
     onClose();
   };
 
+
+
   return (
-    <div className="task-update-modal" >
-      <div className="modal-content"  style={{ backgroundColor: currentTheme['--background-color'] }}>
+    <div className="task-update-modal">
+      <div className="modal-content" style={{ backgroundColor: currentTheme['--background-color'] }}>
         <h3>Update Task</h3>
         <input
           type="text"
@@ -74,12 +84,19 @@ const TaskUpdateModal: React.FC<TaskUpdateModalProps> = ({ task, onClose, onUpda
           </label>
         </div>
         <div className="modal-actions">
-          <button onClick={handleUpdate}>Update</button>
-          <button onClick={handleCancel}>Cancel</button>
+          <button onClick={handleClearDueDate} style={{ backgroundColor: 'red', color: 'white' }}>
+            Clear Due Date
+          </button>
+          <div>
+
+            <button onClick={handleUpdate}>Save</button>
+            <button onClick={handleCancel}>Cancel</button>
+          </div>
         </div>
       </div>
     </div>
   );
 };
+
 
 export default TaskUpdateModal;

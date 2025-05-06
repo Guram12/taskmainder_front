@@ -41,7 +41,7 @@ export interface lists {
 export interface tasks {
   created_at: string;
   description: string;
-  due_date: string;
+  due_date: string | null;
   id: number;
   list: number;
   title: string;

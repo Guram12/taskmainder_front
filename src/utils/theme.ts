@@ -2,7 +2,6 @@ export interface ThemeSpecs {
   '--background-color': string;
   '--main-text-coloure': string;
   '--border-color': string;
-  '--scrollbar-bg-color': string;
   '--scrollbar-thumb-color': string;
   '--list-background-color': string;
 }
