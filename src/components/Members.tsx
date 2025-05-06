@@ -235,11 +235,11 @@ const Members: React.FC<MembersProps> = ({ selectedBoard, socketRef, current_use
     setIsBoardDeleting(true);
   }
 
-const delete_board =  () => {
+  const delete_board = () => {
     console.log('Deleting board:', selectedBoard.id);
     deleteBoard();
     setIsBoardDeleting(false);
-}
+  }
 
   const canselBoardDelete = () => {
     setIsBoardDeleting(false);
@@ -249,7 +249,8 @@ const delete_board =  () => {
 
   return (
     <div className="main_members_container">
-      <h3 className="members_h2"></h3>
+      {/* <h3 className="members_h2">User</h3> */}
+      <RiUserSettingsFill className="add_user_icon" onClick={() => setIsUsersWindowOpen(true)} />
       {current_board_users.map((boardUser) => (
         <img
           key={boardUser.id}
@@ -258,7 +259,6 @@ const delete_board =  () => {
           className="user_profile_images"
         />
       ))}
-      <RiUserSettingsFill className="add_user_icon" onClick={() => setIsUsersWindowOpen(true)} />
 
       <div className="board_name_cont">
         <FaClipboardList className='board_icon' style={{ fill: `${currentTheme['--main-text-coloure']}` }} />
@@ -284,16 +284,22 @@ const delete_board =  () => {
         ) : (
           <>
             <h3 className="board_name" style={{ color: `${currentTheme['--main-text-coloure']}` }} >{selectedBoard.name}</h3>
-            <MdModeEdit
-              className="edit_board_name_icon"
-              style={{ fill: `${currentTheme['--main-text-coloure']}` }}
-              onClick={() => handle_edit_board_click()}
-            />
-            <MdDeleteForever
-              className="delete_board_icon"
-              style={{ fill: `${currentTheme['--main-text-coloure']}` }}
-              onClick={() => handle_delete_board_icon_click()}
-            />
+            {is_current_user_admin_or_owner && (
+
+              <MdModeEdit
+                className="edit_board_name_icon"
+                style={{ fill: `${currentTheme['--main-text-coloure']}` }}
+                onClick={() => handle_edit_board_click()}
+              />
+            )}
+            {is_current_user_owner && (
+
+              <MdDeleteForever
+                className="delete_board_icon"
+                style={{ fill: `${currentTheme['--main-text-coloure']}` }}
+                onClick={() => handle_delete_board_icon_click()}
+              />
+            )}
             {isBoardDeleting && (
               <ConfirmationDialog
                 message={`Are you sure you want to delete the board "${selectedBoard.name}"?`}

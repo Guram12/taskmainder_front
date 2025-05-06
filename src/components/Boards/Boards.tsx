@@ -249,8 +249,8 @@ const Boards: React.FC<BoardsProps> = ({ selectedBoard, setSelectedBoard, curren
           });
 
           if (payload.board_id) {
-            const updatedBoards = boards.filter((board) => board.id !== payload.board_id); // Create a new array
-            setBoards(updatedBoards); // Pass the updated array directly
+            const updatedBoards = boards.filter((board) => board.id !== payload.board_id);
+            setBoards(updatedBoards);
           }
           break;
 

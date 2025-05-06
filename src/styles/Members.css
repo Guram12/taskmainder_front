@@ -11,13 +11,13 @@
 }
 
 
-
+/* 
 .members_h2 {
   color: white;
   font-size: 20px;
   margin-left: 20px;
   margin-right: 20px;
-}
+} */
 
 
 .user_profile_images {
@@ -29,11 +29,13 @@
 
 
 .add_user_icon {
-  width: 20px;
-  height: 20px;
-  /* margin-left: 10px; */
+  width: 27px;
+  height: 27px;
+  margin-left: 20px;
+  margin-right: 20px;
   cursor: pointer;
   color: white;
+
 }
 
 /* ============================== board name cont styles ========================= */
