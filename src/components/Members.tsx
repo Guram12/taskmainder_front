@@ -13,7 +13,8 @@ import { MdModeEdit } from "react-icons/md";
 import { RiUserSettingsFill } from "react-icons/ri";
 import { GrFormCheckmark } from "react-icons/gr";
 import { HiOutlineXMark } from "react-icons/hi2";
-
+import { MdDeleteForever } from "react-icons/md";
+import ConfirmationDialog from "./Boards/ConfirmationDialog";
 
 
 interface MembersProps {
@@ -22,9 +23,10 @@ interface MembersProps {
   current_user_email: string;
   currentTheme: ThemeSpecs;
   update_board_name: (new_board_name: string) => void;
+  deleteBoard: () => void;
 }
 
-const Members: React.FC<MembersProps> = ({ selectedBoard, socketRef, current_user_email, currentTheme, update_board_name }) => {
+const Members: React.FC<MembersProps> = ({ selectedBoard, socketRef, current_user_email, currentTheme, update_board_name, deleteBoard }) => {
   const [current_board_users, setCurrent_board_users] = useState<Board_Users[]>([]);
   const [isUsersWindowOpen, setIsUsersWindowOpen] = useState<boolean>(false);
   const [searchInput, setSearchInput] = useState<string>("");
@@ -36,7 +38,9 @@ const Members: React.FC<MembersProps> = ({ selectedBoard, socketRef, current_use
   const [selected_emails, setSelected_emails] = useState<string[]>([]);
 
   const [isBoardEditing, setIsBoardEditing] = useState<boolean>(false);
+  const [isBoardDeleting, setIsBoardDeleting] = useState<boolean>(false);
   const [newBoardName, setNewBoardName] = useState<string>('');
+
 
 
 
@@ -210,19 +214,36 @@ const Members: React.FC<MembersProps> = ({ selectedBoard, socketRef, current_use
   }
 
 
-  // =============================================   edit board name   ========================================================
+  // =============================================   Edit board name   ========================================================
 
 
   const handle_edit_board_click = () => {
     setIsBoardEditing(true);
   }
 
-const handleBoardNameUpdate = () => {
-  console.log('Updating board name:', newBoardName);
-  update_board_name(newBoardName);
-  setIsBoardEditing(false);
+  const handleBoardNameUpdate = () => {
+    console.log('Updating board name:', newBoardName);
+    update_board_name(newBoardName);
+    setIsBoardEditing(false);
+  }
+
+  // =============================================   Delete Board   ========================================================
+
+
+
+  const handle_delete_board_icon_click = () => {
+    setIsBoardDeleting(true);
+  }
+
+const delete_board =  () => {
+    console.log('Deleting board:', selectedBoard.id);
+    deleteBoard();
+    setIsBoardDeleting(false);
 }
 
+  const canselBoardDelete = () => {
+    setIsBoardDeleting(false);
+  }
 
 
 
@@ -252,7 +273,7 @@ const handleBoardNameUpdate = () => {
             <GrFormCheckmark
               style={{ color: `${currentTheme['--main-text-coloure']}` }}
               className="save_board_name_icon"
-              onClick={() => {  handleBoardNameUpdate() }}
+              onClick={() => { handleBoardNameUpdate() }}
             />
             <HiOutlineXMark
               style={{ color: `${currentTheme['--main-text-coloure']}` }}
@@ -268,6 +289,18 @@ const handleBoardNameUpdate = () => {
               style={{ fill: `${currentTheme['--main-text-coloure']}` }}
               onClick={() => handle_edit_board_click()}
             />
+            <MdDeleteForever
+              className="delete_board_icon"
+              style={{ fill: `${currentTheme['--main-text-coloure']}` }}
+              onClick={() => handle_delete_board_icon_click()}
+            />
+            {isBoardDeleting && (
+              <ConfirmationDialog
+                message={`Are you sure you want to delete the board "${selectedBoard.name}"?`}
+                onConfirm={delete_board}
+                onCancel={canselBoardDelete}
+              />
+            )}
           </>
         )}
 

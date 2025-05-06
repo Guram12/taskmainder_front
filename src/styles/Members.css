@@ -111,6 +111,16 @@
   color: #2ed8c1 !important;
 }
 
+.delete_board_icon{
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+.delete_board_icon:hover{
+  transform: scale(1.2);
+  color: tomato !important;
+}
 
 
 /* ========================================================================================= */

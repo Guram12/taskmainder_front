@@ -16,6 +16,7 @@ import { ProfileData } from './utils/interface';
 const App: React.FC = () => {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
   const [profileData, setProfileData] = useState<ProfileData>({
+    id: 0,
     email: '',
     phone_number: '',
     profile_picture: '',
@@ -200,6 +201,7 @@ const App: React.FC = () => {
             current_user_email={profileData.email}
             profileData={profileData}
             FetchProfileData={FetchProfileData}
+            
           />} />
       </Routes>
     </Router>
