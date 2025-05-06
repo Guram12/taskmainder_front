@@ -5,7 +5,7 @@
   border: 1px solid red;
   margin-bottom: 5px;
   position: absolute;
-  width: 280px;
+  width: 290px;
   padding: 5px;
   transition: background-color 0.3s;
   min-height: 33px;
@@ -26,6 +26,10 @@
 }
 
 .list_edit_delete_icon {
+  cursor: pointer;
+  transition: color 0.3s ease;
+}
+.edit_list_icon {
   cursor: pointer;
   transition: color 0.3s ease;
 }
@@ -59,13 +63,11 @@
   transition: background-color 0.3s;
   display: inline-block;
   min-width: 300px;
-  margin-top: 20px;
   margin-left: 20px;
-  max-height: 85%;
+  max-height: 95%;
   overflow-y: auto;
   padding-top: 0px;
   transition: background-color 0.3s;
-
 }
 
 .list.hover {

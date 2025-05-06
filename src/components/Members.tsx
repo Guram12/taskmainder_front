@@ -3,20 +3,28 @@ import React, { useEffect, useState, useCallback } from "react";
 import { board } from "../utils/interface";
 import { Board_Users } from "../utils/interface";
 import testimage from "../assets/profile_3.png";
-import { LuUserRoundPlus } from "react-icons/lu";
 import { CgCloseR } from "react-icons/cg";
 import axiosInstance from "../utils/axiosinstance";
 import { RiCloseFill } from "react-icons/ri";
 import { RiDeleteBinLine } from "react-icons/ri";
+import { FaClipboardList } from "react-icons/fa";
+import { ThemeSpecs } from "../utils/theme";
+import { MdModeEdit } from "react-icons/md";
+import { RiUserSettingsFill } from "react-icons/ri";
+import { GrFormCheckmark } from "react-icons/gr";
+import { HiOutlineXMark } from "react-icons/hi2";
+
 
 
 interface MembersProps {
   selectedBoard: board;
   socketRef: React.MutableRefObject<WebSocket | null>;
   current_user_email: string;
+  currentTheme: ThemeSpecs;
+  update_board_name: (new_board_name: string) => void;
 }
 
-const Members: React.FC<MembersProps> = ({ selectedBoard, socketRef, current_user_email }) => {
+const Members: React.FC<MembersProps> = ({ selectedBoard, socketRef, current_user_email, currentTheme, update_board_name }) => {
   const [current_board_users, setCurrent_board_users] = useState<Board_Users[]>([]);
   const [isUsersWindowOpen, setIsUsersWindowOpen] = useState<boolean>(false);
   const [searchInput, setSearchInput] = useState<string>("");
@@ -26,6 +34,10 @@ const Members: React.FC<MembersProps> = ({ selectedBoard, socketRef, current_use
   const [isDeletingSelectedUser, setIsDeletingSelectedUser] = useState<boolean>(false);
   const [current_board_user_to_delete, setCurrent_board_user_to_delete] = useState({} as Board_Users);
   const [selected_emails, setSelected_emails] = useState<string[]>([]);
+
+  const [isBoardEditing, setIsBoardEditing] = useState<boolean>(false);
+  const [newBoardName, setNewBoardName] = useState<string>('');
+
 
 
 
@@ -198,7 +210,19 @@ const Members: React.FC<MembersProps> = ({ selectedBoard, socketRef, current_use
   }
 
 
-  // =========================================================================================================================
+  // =============================================   edit board name   ========================================================
+
+
+  const handle_edit_board_click = () => {
+    setIsBoardEditing(true);
+  }
+
+const handleBoardNameUpdate = () => {
+  console.log('Updating board name:', newBoardName);
+  update_board_name(newBoardName);
+  setIsBoardEditing(false);
+}
+
 
 
 
@@ -213,7 +237,42 @@ const Members: React.FC<MembersProps> = ({ selectedBoard, socketRef, current_use
           className="user_profile_images"
         />
       ))}
-      <LuUserRoundPlus className="add_user_icon" onClick={() => setIsUsersWindowOpen(true)} />
+      <RiUserSettingsFill className="add_user_icon" onClick={() => setIsUsersWindowOpen(true)} />
+
+      <div className="board_name_cont">
+        <FaClipboardList className='board_icon' style={{ fill: `${currentTheme['--main-text-coloure']}` }} />
+        {isBoardEditing ? (
+          <div className="board_name_inp_cont" >
+            <input
+              type="text"
+              value={newBoardName}
+              onChange={(e) => setNewBoardName(e.target.value)}
+              className="board_name_input"
+            />
+            <GrFormCheckmark
+              style={{ color: `${currentTheme['--main-text-coloure']}` }}
+              className="save_board_name_icon"
+              onClick={() => {  handleBoardNameUpdate() }}
+            />
+            <HiOutlineXMark
+              style={{ color: `${currentTheme['--main-text-coloure']}` }}
+              className="discard_board_name_icon"
+              onClick={() => setIsBoardEditing(false)}
+            />
+          </div>
+        ) : (
+          <>
+            <h3 className="board_name" style={{ color: `${currentTheme['--main-text-coloure']}` }} >{selectedBoard.name}</h3>
+            <MdModeEdit
+              className="edit_board_name_icon"
+              style={{ fill: `${currentTheme['--main-text-coloure']}` }}
+              onClick={() => handle_edit_board_click()}
+            />
+          </>
+        )}
+
+      </div>
+
       <div>
         {isUsersWindowOpen && (
           <div className="all_users_main_window">

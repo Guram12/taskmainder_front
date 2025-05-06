@@ -23,7 +23,16 @@ export interface BoardsProps {
 }
 
 const Boards: React.FC<BoardsProps> = ({ selectedBoard, setSelectedBoard, current_user_email, currentTheme }) => {
-  const [boardData, setBoardData] = useState(selectedBoard);
+  const [boardData, setBoardData] = useState<board>({
+    id: 0,
+    name: '',
+    created_at: '',
+    lists: [],
+    owner: '',
+    owner_email: '',
+    members: [],
+    board_users: [],
+  });
   const [Adding_new_list, setAdding_new_list] = useState<boolean>(false);
   const [ListName, setListName] = useState<string>('');
 
@@ -198,6 +207,27 @@ const Boards: React.FC<BoardsProps> = ({ selectedBoard, setSelectedBoard, curren
             return { ...prevData, lists: updatedLists };
           });
           break;
+
+          case 'update_board_name':
+            console.log('Received update_board_name:', payload);
+          
+            // Update boardData
+            setBoardData((prevData: board) => ({
+              ...prevData,
+              name: payload.new_name, 
+            }));
+          
+            if (typeof payload.new_name === 'string') {
+              const updatedBoard: board = {
+                ...selectedBoard,
+                name: payload.new_name,
+              };
+              setSelectedBoard(updatedBoard);
+            } else {
+              console.error('Invalid board name:', payload.new_name);
+            }
+            break;
+
 
 
         default:
@@ -408,6 +438,19 @@ const Boards: React.FC<BoardsProps> = ({ selectedBoard, setSelectedBoard, curren
     }
   };
 
+  // ====================================================  delete list ==========================================
+
+
+  const update_board_name = (newName: string) => {
+    if (socketRef.current && socketRef.current.readyState === WebSocket.OPEN) {
+      socketRef.current.send(
+        JSON.stringify({
+          action: 'update_board_name',
+          payload: { board_id: selectedBoard.id, new_name: newName },
+        })
+      );
+    }
+  };
 
   // =================================================== scroll =========================================================
   useEffect(() => {
@@ -487,7 +530,13 @@ const Boards: React.FC<BoardsProps> = ({ selectedBoard, setSelectedBoard, curren
     >
       <div className='members_container'>
         <div>
-          <Members selectedBoard={selectedBoard} socketRef={socketRef} current_user_email={current_user_email} />
+          <Members
+            selectedBoard={selectedBoard}
+            socketRef={socketRef}
+            current_user_email={current_user_email}
+            currentTheme={currentTheme}
+            update_board_name={update_board_name}
+          />
         </div>
         <div className="main_boards_container">
           <div className='lists_container' ref={listsContainerRef}>

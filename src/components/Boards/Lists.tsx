@@ -100,13 +100,28 @@ const List: React.FC<ListProps> = ({ list, moveTask, addTask, deleteTask, update
   };
 
   // ================================================ update list  name ==========================================
-  
+
+  const [listInputNameErrorMessage, setlistInputNameErrorMessage] = useState<string>(''); // State for error message
+
   const handleUpdateListName = () => {
-    if (newListName.trim()) {
-      updateListName(list.id, newListName);
-      setIsListEditing(false);
+    if (newListName.trim().length < 2) {
+      setlistInputNameErrorMessage('List name must be at least 3 characters long.');
+      return;
     }
+    // if user push enter key than update the list name
+
+    setlistInputNameErrorMessage(''); // Clear the error message if validation passes
+    updateListName(list.id, newListName);
+    setIsListEditing(false);
   };
+
+
+  const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === 'Enter') {
+      handleUpdateListName();
+    }
+  }
+
 
   return (
     <div ref={drop} className={`list ${isOver ? 'hover' : ''}`} style={{ backgroundColor: `${currentTheme['--list-background-color']}` }} >
@@ -117,6 +132,12 @@ const List: React.FC<ListProps> = ({ list, moveTask, addTask, deleteTask, update
             type="text"
             value={newListName}
             onChange={(e) => setNewListName(e.target.value)}
+            style={{
+              border: listInputNameErrorMessage ? '1px solid red' : '1px solid #ccc',
+              outline: listInputNameErrorMessage ? 'none' : '',
+            }}
+            onKeyDown={handleKeyDown}
+            placeholder="List Name"
           />
         ) : (
           <h3 className='list_title' style={{ color: currentTheme['--main-text-coloure'] }} onClick={() => setIsListEditing(true)} >{list.name}</h3>
@@ -124,7 +145,7 @@ const List: React.FC<ListProps> = ({ list, moveTask, addTask, deleteTask, update
         <div className='list_buttons' style={{ color: currentTheme['--main-text-coloure'] }} >
           {isListEditing ? (
             <>
-              <GrFormCheckmark className='edit_list_icon' onClick={()=> handleUpdateListName()} />
+              <GrFormCheckmark className='edit_list_icon' onClick={() => handleUpdateListName()} />
               <HiOutlineXMark className='delete_list_icon' onClick={() => setIsListEditing(false)} />
             </>
           ) :
