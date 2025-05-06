@@ -171,6 +171,7 @@ const List: React.FC<ListProps> = ({ list, moveTask, addTask, deleteTask, update
           deleteTask={deleteTask}
           updateTask={updateTask}
           moveTaskWithinList={moveTaskWithinList}
+          currentTheme={currentTheme}
         />
       ))}
 
