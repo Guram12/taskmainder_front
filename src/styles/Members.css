@@ -11,13 +11,13 @@
 }
 
 
-
+/* 
 .members_h2 {
   color: white;
   font-size: 20px;
   margin-left: 20px;
   margin-right: 20px;
-}
+} */
 
 
 .user_profile_images {
@@ -29,12 +29,103 @@
 
 
 .add_user_icon {
-  width: 20px;
-  height: 20px;
-  margin-left: 10px;
+  width: 27px;
+  height: 27px;
+  margin-left: 20px;
+  margin-right: 20px;
   cursor: pointer;
   color: white;
+
 }
+
+/* ============================== board name cont styles ========================= */
+
+.board_name_cont {
+  margin-left: 50px;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 15px;
+  transition: all 0.3s ease;
+}
+
+.board_icon {
+  width: 20px;
+  height: 20px;
+  color: white;
+}
+
+.board_name_inp_cont{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+}
+
+.board_name_input{
+  width: min-content;
+  height: 30px;
+  border-radius: 5px;
+  padding-left: 5px;
+  border: none;
+  outline: none;
+}
+
+.save_board_name_icon{
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.save_board_name_icon:hover{
+  transform: scale(1.2);
+  color: #2ed8c1 !important;
+}
+
+.discard_board_name_icon{
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.discard_board_name_icon:hover{
+  transform: scale(1.2);
+  color: tomato !important;
+}
+
+
+
+.board_name {
+  font-size: 20px;
+  margin: 0px;
+}
+
+.edit_board_name_icon{
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+.edit_board_name_icon:hover{
+  transform: scale(1.2);
+  color: #2ed8c1 !important;
+}
+
+.delete_board_icon{
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+.delete_board_icon:hover{
+  transform: scale(1.2);
+  color: tomato !important;
+}
+
+
+/* ========================================================================================= */
 
 .all_users_main_window {
   width: 100%;
@@ -89,7 +180,7 @@
   margin-right: 20px;
 }
 
-.parent_of_input_and_emails{
+.parent_of_input_and_emails {
   width: 100%;
   display: flex;
   flex-direction: column;
@@ -109,7 +200,7 @@
   max-height: 300px;
   border-radius: 5px;
   padding: 10px;
-  border :1px solid green;
+  border: 1px solid green;
 }
 
 .suggested_user {
@@ -144,7 +235,7 @@
   gap: 5px;
 }
 
-.unselect_email{
+.unselect_email {
   cursor: pointer;
   color: tomato;
 }
@@ -180,28 +271,28 @@
   margin-left: 10px;
 }
 
-.boarduser_email{
+.boarduser_email {
   font-size: 15px;
   color: rgb(94, 94, 94);
 }
 
-.select_and_delete_icon{
+.select_and_delete_icon {
   display: flex;
   justify-content: center;
   align-items: center;
   gap: 15px;
 }
 
-.owner_status{
+.owner_status {
   margin-right: 35px;
   font-weight: bold;
 }
 
-.select_status{
+.select_status {
   cursor: pointer;
 }
 
-.delete_user{
+.delete_user {
   width: 20px;
   height: 20px;
 }
@@ -213,14 +304,14 @@
 }
 
 .delete_icon_for_member {
-  cursor:not-allowed;
+  cursor: not-allowed;
   color: rgb(119, 119, 119);
 
 }
 
 /* make this container position fixted and centered  */
-.delete_user_window{
-  width:500px;
+.delete_user_window {
+  width: 500px;
   height: 500px;
   position: fixed;
   transform: translate(-50%, -50%);
@@ -234,7 +325,7 @@
   color: white;
 }
 
-.dark_background_for_delete{
+.dark_background_for_delete {
   width: 100%;
   height: 100%;
   position: fixed;
@@ -255,7 +346,3 @@
   backdrop-filter: blur(10px);
   z-index: -1;
 }
-
-
-
-

@@ -1,5 +1,5 @@
 import '../styles/Sidebar.css';
-import React, {useState } from "react";
+import React, { useState } from "react";
 import { Sidebar, Menu, MenuItem, SubMenu } from 'react-pro-sidebar';
 import { FaCalendarAlt } from "react-icons/fa";
 import { TiPin, TiPinOutline } from "react-icons/ti";
@@ -188,6 +188,7 @@ const SidebarComponent: React.FC<SidebarProps> = ({
                             backgroundColor: `${currentTheme['--background-color']}`,
                             transition: 'all 0.3s',
                             color: selected_board_ID_for_sidebar === board.id ? 'green' : currentTheme['--main-text-coloure'],
+                            textAlign: 'left',
                           }}
                           icon={<FaClipboardList />}
                           onClick={() => handleBoardClick(board)}
@@ -204,7 +205,12 @@ const SidebarComponent: React.FC<SidebarProps> = ({
                       backgroundColor: `${currentTheme['--background-color']}`,
 
                     }} >
-                      <h3 onClick={handleBoardAddClick} style={{ backgroundColor: `${currentTheme['--background-color']}`, color: 'black', margin: '0px' }} >+ New board</h3>
+                      <h3
+                        onClick={handleBoardAddClick}
+                        style={{ backgroundColor: `${currentTheme['--background-color']}`, color: 'black', margin: '0px' }}
+                      >
+                        + New board
+                      </h3>
                     </div>
                   )}
 

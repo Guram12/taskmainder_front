@@ -16,6 +16,7 @@ import { ProfileData } from './utils/interface';
 const App: React.FC = () => {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
   const [profileData, setProfileData] = useState<ProfileData>({
+    id: 0,
     email: '',
     phone_number: '',
     profile_picture: '',
@@ -42,7 +43,7 @@ const App: React.FC = () => {
     owner: '',
     owner_email: '',
     members: [],
-    board_users: []
+    board_users: [],
   });
 
 
@@ -89,7 +90,6 @@ const App: React.FC = () => {
         document.documentElement.style.setProperty(key, value);
       }
       document.body.style.backgroundColor = themeSpecs['--background-color'];
-      document.body.style.scrollbarColor = themeSpecs['--scrollbar-bg-color'] + ' ' + themeSpecs['--scrollbar-thumb-color'];
 
     }
   }, [change_current_theme]);
@@ -201,6 +201,7 @@ const App: React.FC = () => {
             current_user_email={profileData.email}
             profileData={profileData}
             FetchProfileData={FetchProfileData}
+            
           />} />
       </Routes>
     </Router>

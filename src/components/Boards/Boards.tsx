@@ -8,7 +8,7 @@ import List from './Lists';
 import { board } from '../../utils/interface';
 import { isMobile } from 'react-device-detect'; // Install react-device-detect
 import { TouchBackend } from 'react-dnd-touch-backend';
-
+import { ProfileData } from '../../utils/interface';
 
 if (isMobile) {
   console.log('Running on a mobile device');
@@ -20,10 +20,22 @@ export interface BoardsProps {
   setIsLoading: (value: boolean) => void;
   setSelectedBoard: (board: board) => void;
   current_user_email: string;
+  profileData: ProfileData;
+  setBoards: (boards: board[]) => void;
+  boards: board[];
 }
 
-const Boards: React.FC<BoardsProps> = ({ selectedBoard, setSelectedBoard, current_user_email, currentTheme }) => {
-  const [boardData, setBoardData] = useState(selectedBoard);
+const Boards: React.FC<BoardsProps> = ({ selectedBoard, setSelectedBoard, current_user_email, currentTheme, profileData, setBoards, boards }) => {
+  const [boardData, setBoardData] = useState<board>({
+    id: 0,
+    name: '',
+    created_at: '',
+    lists: [],
+    owner: '',
+    owner_email: '',
+    members: [],
+    board_users: [],
+  });
   const [Adding_new_list, setAdding_new_list] = useState<boolean>(false);
   const [ListName, setListName] = useState<string>('');
 
@@ -197,6 +209,49 @@ const Boards: React.FC<BoardsProps> = ({ selectedBoard, setSelectedBoard, curren
             });
             return { ...prevData, lists: updatedLists };
           });
+          break;
+
+
+        case 'update_board_name':
+          console.log('Received update_board_name:', payload);
+
+          // Update boardData
+          setBoardData((prevData: board) => ({
+            ...prevData,
+            name: payload.new_name,
+          }));
+
+          if (typeof payload.new_name === 'string') {
+            const updatedBoard: board = {
+              ...selectedBoard,
+              name: payload.new_name,
+            };
+            setSelectedBoard(updatedBoard);
+          } else {
+            console.error('Invalid board name:', payload.new_name);
+          }
+          break;
+
+
+        case 'delete_board':
+          console.log('Received delete_board:', payload);
+          // Handle board deletion
+          setBoardData((prevData) => ({ ...prevData, lists: [] }));
+          setSelectedBoard({
+            id: 0,
+            name: '',
+            created_at: '',
+            lists: [],
+            owner: '',
+            owner_email: '',
+            members: [],
+            board_users: [],
+          });
+
+          if (payload.board_id) {
+            const updatedBoards = boards.filter((board) => board.id !== payload.board_id);
+            setBoards(updatedBoards);
+          }
           break;
 
 
@@ -408,6 +463,39 @@ const Boards: React.FC<BoardsProps> = ({ selectedBoard, setSelectedBoard, curren
     }
   };
 
+  // ============================================  Board Name Update ===============================================
+
+
+  const update_board_name = (newName: string) => {
+    if (socketRef.current && socketRef.current.readyState === WebSocket.OPEN) {
+      socketRef.current.send(
+        JSON.stringify({
+          action: 'update_board_name',
+          payload: { board_id: selectedBoard.id, new_name: newName },
+        })
+      );
+    }
+  };
+
+
+  // ============================================  Delete Board    ===============================================
+
+  const deleteBoard = () => {
+    console.log('Deleting board:', selectedBoard.id);
+    if (socketRef.current && socketRef.current.readyState === WebSocket.OPEN) {
+      socketRef.current.send(JSON.stringify({
+        action: 'delete_board',
+        payload: {
+          board_id: selectedBoard.id,
+          user_id: profileData.id,
+        }
+      }));
+
+    }
+
+  }
+
+
 
   // =================================================== scroll =========================================================
   useEffect(() => {
@@ -487,7 +575,14 @@ const Boards: React.FC<BoardsProps> = ({ selectedBoard, setSelectedBoard, curren
     >
       <div className='members_container'>
         <div>
-          <Members selectedBoard={selectedBoard} socketRef={socketRef} current_user_email={current_user_email} />
+          <Members
+            selectedBoard={selectedBoard}
+            socketRef={socketRef}
+            current_user_email={current_user_email}
+            currentTheme={currentTheme}
+            update_board_name={update_board_name}
+            deleteBoard={deleteBoard}
+          />
         </div>
         <div className="main_boards_container">
           <div className='lists_container' ref={listsContainerRef}>
