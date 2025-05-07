@@ -12,12 +12,11 @@
 }
 
 .modal-content {
-  background: white;
   padding: 20px;
   border-radius: 8px;
   width: 600px;
   max-width: 90%;
-  min-height: 400px;
+  min-height: 600px;
   text-align: center;
   display: flex;
   flex-direction: column;
@@ -30,4 +29,24 @@
   margin-top: 10px;
   display: flex;
   justify-content: space-between;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
 }
+
+.date-time-inputs {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.date-time-inputs label {
+  display: flex;
+  flex-direction: column;
+  font-size: 14px;
+}
+
+
+

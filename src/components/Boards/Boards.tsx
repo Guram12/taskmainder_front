@@ -17,7 +17,6 @@ if (isMobile) {
 export interface BoardsProps {
   selectedBoard: board;
   currentTheme: ThemeSpecs;
-  setIsLoading: (value: boolean) => void;
   setSelectedBoard: (board: board) => void;
   current_user_email: string;
   profileData: ProfileData;
@@ -47,7 +46,9 @@ const Boards: React.FC<BoardsProps> = ({ selectedBoard, setSelectedBoard, curren
   const scrollRef = useRef<{ direction: 'left' | 'right' | null, speed: number }>({ direction: null, speed: 2 }); // Reduced speed
   const isManualScrollRef = useRef(false);
 
-
+  useEffect(() => {
+    console.log('selectedBoard:', selectedBoard);
+  }, [selectedBoard]);
 
   useEffect(() => {
     setBoardData(selectedBoard);
@@ -336,7 +337,7 @@ const Boards: React.FC<BoardsProps> = ({ selectedBoard, setSelectedBoard, curren
 
   // ================================================== Update task =========================================================
 
-  const updateTask = (taskId: number, updatedTitle: string, due_date: string, description: string, completed: boolean) => {
+  const updateTask = (taskId: number, updatedTitle: string, due_date: string | null, description: string, completed: boolean) => {
 
     console.log('Updating task:', { taskId, updatedTitle, due_date, completed });
 
@@ -357,7 +358,7 @@ const Boards: React.FC<BoardsProps> = ({ selectedBoard, setSelectedBoard, curren
           payload: {
             task_id: taskId,
             title: updatedTitle,
-            due_date: due_date === '' ? null : due_date,
+            due_date: due_date,
             description: description,
             completed: completed,
           },
@@ -567,7 +568,7 @@ const Boards: React.FC<BoardsProps> = ({ selectedBoard, setSelectedBoard, curren
     };
   }, []);
 
-
+  const is_any_board_selected = selectedBoard.name !== '';
 
   return (
     <DndProvider backend={isMobile ? TouchBackend : HTML5Backend}
@@ -575,14 +576,19 @@ const Boards: React.FC<BoardsProps> = ({ selectedBoard, setSelectedBoard, curren
     >
       <div className='members_container'>
         <div>
-          <Members
-            selectedBoard={selectedBoard}
-            socketRef={socketRef}
-            current_user_email={current_user_email}
-            currentTheme={currentTheme}
-            update_board_name={update_board_name}
-            deleteBoard={deleteBoard}
-          />
+          {!is_any_board_selected ? (
+
+            <div>No board selected</div>
+          ) : (
+            <Members
+              selectedBoard={selectedBoard}
+              socketRef={socketRef}
+              current_user_email={current_user_email}
+              currentTheme={currentTheme}
+              update_board_name={update_board_name}
+              deleteBoard={deleteBoard}
+            />
+          )}
         </div>
         <div className="main_boards_container">
           <div className='lists_container' ref={listsContainerRef}>
@@ -600,28 +606,32 @@ const Boards: React.FC<BoardsProps> = ({ selectedBoard, setSelectedBoard, curren
                 updateListName={updateListName}
               />
             ))}
-            <div className='list' >
-              {!Adding_new_list ?
-                (
-                  <button onClick={() => setAdding_new_list(true)} >Add NewList</button>
-                )
-                :
-                (
-                  <div className='add_new_list_cont' >
-                    <input
-                      type="text"
-                      placeholder='List Name'
-                      value={ListName}
-                      onChange={(e) => setListName(e.target.value)}
-                      required
-                    />
-                    <button onClick={() => addList()}  >Add</button>
-                    <button onClick={() => setAdding_new_list(false)}  >Cansel</button>
-                  </div>
-                )
-              }
+            {is_any_board_selected && (
 
-            </div>
+              <div className='list' >
+
+                {!Adding_new_list ?
+                  (
+                    <button onClick={() => setAdding_new_list(true)} >Add NewList</button>
+                  )
+                  :
+                  (
+                    <div className='add_new_list_cont' >
+                      <input
+                        type="text"
+                        placeholder='List Name'
+                        value={ListName}
+                        onChange={(e) => setListName(e.target.value)}
+                        required
+                      />
+                      <button onClick={() => addList()}  >Add</button>
+                      <button onClick={() => setAdding_new_list(false)}  >Cansel</button>
+                    </div>
+                  )
+                }
+
+              </div>
+            )}
           </div>
         </div>
       </div>

@@ -1,16 +1,27 @@
 
 
 .each_task {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: flex-start;
+  
   background-color: #2ed8c1;
   padding: 5px;
   margin-bottom: 5px;
   border-radius: 3px;
   cursor: pointer;
-  display: flex;
   height: auto;
-  align-items: center;
-  justify-content: space-between;
+  min-height: 60px;
 }
+
+.task_content_and_icons_container{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
 
 .conteiner_for_editClick {
   border: 1px solid red;
@@ -24,7 +35,17 @@
   margin: 0px;
   width: 200px;
   white-space: normal; /* Allow text to wrap */
+  text-align: left;
 }
+
+.due_Date_p{
+  font-size: 12px;
+  color: rgb(83, 83, 83);
+  margin: 0px;
+  bottom: 1px;
+  right: 5px;
+}
+
 
 .delete_task_button {
   background-color: transparent;

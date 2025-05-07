@@ -269,6 +269,7 @@ const Members: React.FC<MembersProps> = ({ selectedBoard, socketRef, current_use
               value={newBoardName}
               onChange={(e) => setNewBoardName(e.target.value)}
               className="board_name_input"
+              placeholder="Enter new board name"
             />
             <GrFormCheckmark
               style={{ color: `${currentTheme['--main-text-coloure']}` }}

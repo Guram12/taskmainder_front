@@ -20,7 +20,6 @@ interface MainPageProps {
   setBoards: (boards: board[]) => void;
   setSelectedBoard: (board: board) => void;
   selectedBoard: board;
-  setIsLoading: (value: boolean) => void;
   setSelected_board_ID_for_sidebar?: (id: number | null) => void;
   selected_board_ID_for_sidebar?: number | null;
   current_user_email: string;
@@ -34,7 +33,6 @@ const MainPage: React.FC<MainPageProps> = ({
   setBoards,
   setSelectedBoard,
   selectedBoard,
-  setIsLoading,
   setSelected_board_ID_for_sidebar,
   selected_board_ID_for_sidebar,
   current_user_email,
@@ -79,7 +77,6 @@ const MainPage: React.FC<MainPageProps> = ({
         return (
           <Boards
             currentTheme={currentTheme}
-            setIsLoading={setIsLoading}
             setSelectedBoard={setSelectedBoard}
             selectedBoard={selectedBoard}
             current_user_email={current_user_email}
@@ -92,7 +89,7 @@ const MainPage: React.FC<MainPageProps> = ({
       default:
         return <LearnDrag />;
     }
-  }, [selectedComponent, boards, selectedBoard, currentTheme, setIsLoading]);
+  }, [selectedComponent, boards, selectedBoard, currentTheme]);
 
   const memoizedRenderComponent = useMemo(() => renderComponent(), [renderComponent]);
 
