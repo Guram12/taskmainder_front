@@ -9,6 +9,9 @@ import { ThemeSpecs } from '../../utils/theme';
 import { GrFormCheckmark } from "react-icons/gr";
 import { HiOutlineXMark } from "react-icons/hi2";
 import ConfirmationDialog from './ConfirmationDialog';
+import { ProfileData } from '../../utils/interface';
+
+
 
 interface ListProps {
   currentTheme: ThemeSpecs;
@@ -16,13 +19,14 @@ interface ListProps {
   moveTask: (taskId: number, sourceListId: number, targetListId: number) => void;
   addTask: (listId: number, taskTitle: string) => void;
   deleteTask: (taskId: number, listId: number) => void;
-  updateTask: (taskId: number, updatedTitle: string, due_date: string | null, description: string, completed: boolean) => void;
+  updateTask: (taskId: number, updatedTitle: string, due_date: string | null, description: string, completed: boolean, task_associated_users_id: number[]) => void;
   socketRef: React.RefObject<WebSocket>;
   deleteList: (listId: number) => void;
   updateListName: (listId: number, newName: string) => void;
+  allCurrentBoardUsers: ProfileData[];
 }
 
-const List: React.FC<ListProps> = ({ list, moveTask, addTask, deleteTask, updateTask, socketRef, currentTheme, deleteList, updateListName }) => {
+const List: React.FC<ListProps> = ({ list, moveTask, addTask, deleteTask, updateTask, socketRef, currentTheme, deleteList, updateListName, allCurrentBoardUsers }) => {
 
   const [isListEditing, setIsListEditing] = useState<boolean>(false);
   const [newListName, setNewListName] = useState<string>(list.name);
@@ -172,6 +176,7 @@ const List: React.FC<ListProps> = ({ list, moveTask, addTask, deleteTask, update
           updateTask={updateTask}
           moveTaskWithinList={moveTaskWithinList}
           currentTheme={currentTheme}
+          allCurrentBoardUsers={allCurrentBoardUsers}
         />
       ))}
 

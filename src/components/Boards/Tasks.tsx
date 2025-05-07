@@ -9,20 +9,51 @@ import { BiMoveVertical } from "react-icons/bi"; // Import drag icon
 import { ThemeSpecs } from '../../utils/theme';
 import { ThemeProvider } from '@mui/material/styles';
 import generateCustomTheme from '../../utils/CustomTheme';
+import { ProfileData } from '../../utils/interface';
+
+
 
 
 interface TaskProps {
   task: tasks;
   deleteTask: (taskId: number, listId: number) => void;
-  updateTask: (taskId: number, updatedTitle: string, due_date: string | null, description: string, completed: boolean) => void;
+  updateTask: (taskId: number, updatedTitle: string, due_date: string | null, description: string, completed: boolean, task_associated_users_id: number[]) => void;
   moveTaskWithinList: (draggedTaskId: number, targetTaskId: number, listId: number) => void;
   currentTheme: ThemeSpecs;
+  allCurrentBoardUsers: ProfileData[];
+
 }
 
 
-const Task: React.FC<TaskProps> = ({ task, deleteTask, updateTask, moveTaskWithinList, currentTheme }) => {
+const Task: React.FC<TaskProps> = ({ task, deleteTask, updateTask, moveTaskWithinList, currentTheme, allCurrentBoardUsers }) => {
   const [showDialog, setShowDialog] = useState(false);
   const [showUpdateModal, setShowUpdateModal] = useState(false);
+
+  const [associatedUsers, setAssociatedUsers] = useState<ProfileData[]>([]);
+
+
+  useEffect(() => {
+    console.log(" asociate users ", task.task_associated_users_id);
+  }, [task])
+
+  useEffect(() => {
+    console.log("associatedUsers", associatedUsers);
+  }, [associatedUsers])
+
+
+
+  useEffect(() => {
+    const filterAssociatedUsers = () => {
+      if (Array.isArray(task.task_associated_users_id)) {
+        const filteredUsers = allCurrentBoardUsers.filter((user) =>
+          task.task_associated_users_id.includes(user.id)
+        );
+        setAssociatedUsers(filteredUsers);
+      }
+    };
+
+    filterAssociatedUsers();
+  }, [task.task_associated_users_id, allCurrentBoardUsers]);
 
   const ItemTypes = {
     TASK: 'task',
@@ -54,6 +85,11 @@ const Task: React.FC<TaskProps> = ({ task, deleteTask, updateTask, moveTaskWithi
     }),
   }));
 
+
+
+  // =======================================    delete task functions   ======================================
+
+
   const handleDelete = () => {
     setShowDialog(true);
   };
@@ -77,9 +113,7 @@ const Task: React.FC<TaskProps> = ({ task, deleteTask, updateTask, moveTaskWithi
 
   }
 
-  useEffect(() => {
-    console.log('task due dates :', `${task.id} - ${task.due_date}`);
-  }, [task]);
+
 
   // =======================================  format date ==========================================
 
@@ -104,7 +138,7 @@ const Task: React.FC<TaskProps> = ({ task, deleteTask, updateTask, moveTaskWithi
   // =======================================  set custom theme for MUI inputs   ==========================================
 
 
-const MUI_Theme = generateCustomTheme(currentTheme);
+  const MUI_Theme = generateCustomTheme(currentTheme);
 
 
   return (
@@ -140,22 +174,44 @@ const MUI_Theme = generateCustomTheme(currentTheme);
         </>
       </div>
 
-      {task.due_date ? (
-        <p className='due_Date_p'>Due Date: {formatDate(task.due_date)}</p>
-      ) : (
-        <p className='due_Date_p'>No due date</p>
-      )}
+
+      <div className='task_description_and_due_date_container' >
+        {task.due_date ? (
+          <p className='due_Date_p'>Due Date: {formatDate(task.due_date)}</p>
+        ) : (
+          <p className='due_Date_p'>No due date</p>
+        )}
+
+        <div className='associated_users_imgs_container'>
+          {associatedUsers.length > 0 ? (
+            associatedUsers.map((user) => (
+              <img
+                key={user.id}
+                src={user.profile_picture}
+                alt={user.username}
+                className='associated_user_image'
+                title={user.username} // Tooltip with username
+              />
+            ))
+          ) : (
+            <p className='no_associated_users_p' >No associated users</p> // Fallback if no associated users
+          )}
+        </div>
+
+      </div>
+
 
       {showUpdateModal && (
         <ThemeProvider theme={MUI_Theme}>
           <TaskUpdateModal
             task={task}
-            onUpdate={updateTask}
+            updateTask={updateTask}
             onClose={handle_update_modal_close}
             currentTheme={currentTheme}
+            allCurrentBoardUsers={allCurrentBoardUsers}
+            associatedUsers={associatedUsers} 
           />
         </ThemeProvider>
-
       )}
     </div>
   );

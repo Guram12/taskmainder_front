@@ -8,7 +8,8 @@ import { TimePicker } from '@mui/x-date-pickers/TimePicker';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import dayjs, { Dayjs } from 'dayjs';
 import { renderTimeViewClock } from '@mui/x-date-pickers/timeViewRenderers';
-
+import { ProfileData } from '../../utils/interface';
+import Select from 'react-select'; // Import react-select for the dropdown
 
 
 
@@ -17,34 +18,43 @@ import { renderTimeViewClock } from '@mui/x-date-pickers/timeViewRenderers';
 interface TaskUpdateModalProps {
   task: tasks;
   onClose: () => void;
-  onUpdate: (taskId: number, updatedTitle: string, due_date: string | null, description: string, completed: boolean) => void;
+  updateTask: (taskId: number, updatedTitle: string, due_date: string | null, description: string, completed: boolean, task_associated_users_id: number[]) => void;
   currentTheme: ThemeSpecs;
+  allCurrentBoardUsers: ProfileData[];
+  associatedUsers: ProfileData[];
 }
 
-const TaskUpdateModal: React.FC<TaskUpdateModalProps> = ({ task, onClose, onUpdate, currentTheme }) => {
+const TaskUpdateModal: React.FC<TaskUpdateModalProps> = ({ task, onClose, updateTask, currentTheme, allCurrentBoardUsers, associatedUsers }) => {
   const [updatedTitle, setUpdatedTitle] = useState<string>(task.title);
   const [updatedDescription, setUpdatedDescription] = useState<string>(task.description || '');
-  const [updatedDueDate, setUpdatedDueDate] = useState<Dayjs | null>(
-    task.due_date ? dayjs(task.due_date.split('T')[0]) : null
-  ); // Use Dayjs for date
-  const [updatedDueTime, setUpdatedDueTime] = useState<Dayjs | null>(
-    task.due_date ? dayjs(task.due_date) : null
-  ); // Use Dayjs for time
+  const [updatedDueDate, setUpdatedDueDate] = useState<Dayjs | null>(task.due_date ? dayjs(task.due_date.split('T')[0]) : null); // Use Dayjs for date
+  const [updatedDueTime, setUpdatedDueTime] = useState<Dayjs | null>(task.due_date ? dayjs(task.due_date) : null); // Use Dayjs for time
   const [updatedCompletedStatus, setUpdatedCompletedStatus] = useState<boolean>(task.completed);
+
+  const [selectedUsers, setSelectedUsers] = useState<number[]>([]); // Initialize with existing IDs
+
+
 
   const handleUpdate = () => {
     if (updatedTitle.trim()) {
       const combinedDueDateTime =
         updatedDueDate && updatedDueTime
-          ? dayjs(`${updatedDueDate.format('YYYY-MM-DD')}T${updatedDueTime.format('HH:mm')}`).toISOString() // Combine date and time
+          ? dayjs(`${updatedDueDate.format('YYYY-MM-DD')}T${updatedDueTime.format('HH:mm')}`).toISOString()
           : updatedDueDate
-          ? `${updatedDueDate.format('YYYY-MM-DD')}T00:00:00Z`
-          : null; // Send null if due date is cleared
-      onUpdate(task.id, updatedTitle, combinedDueDateTime, updatedDescription, updatedCompletedStatus);
+            ? `${updatedDueDate.format('YYYY-MM-DD')}T00:00:00Z`
+            : null;
+
+      updateTask(
+        task.id,
+        updatedTitle,
+        combinedDueDateTime,
+        updatedDescription,
+        updatedCompletedStatus,
+        selectedUsers // Pass the selected user IDs
+      );
       onClose();
     }
   };
-
   const handleClearDueDate = () => {
     setUpdatedDueDate(null);
     setUpdatedDueTime(null);
@@ -56,7 +66,8 @@ const TaskUpdateModal: React.FC<TaskUpdateModalProps> = ({ task, onClose, onUpda
 
 
 
-  
+
+
   return (
     <div className="task-update-modal">
       <div className="modal-content" style={{ backgroundColor: currentTheme['--background-color'] }}>
@@ -89,7 +100,7 @@ const TaskUpdateModal: React.FC<TaskUpdateModalProps> = ({ task, onClose, onUpda
               onChange={(newValue) => setUpdatedDueDate(newValue)}
               disablePast
               views={['year', 'month', 'day']}
-              
+
             />
             {/* Time Picker */}
             <TimePicker
@@ -105,10 +116,64 @@ const TaskUpdateModal: React.FC<TaskUpdateModalProps> = ({ task, onClose, onUpda
             />
           </LocalizationProvider>
         </div>
+
+
+        <button onClick={handleClearDueDate} style={{ backgroundColor: 'red', color: 'white' }}>
+          Clear Due Date
+        </button>
+
+
+        {/* Previously asociated users */}
+        {
+          associatedUsers.length > 0 && (
+            <div className="previously-associated-users">
+              <h4 className='prev_as_users_h4' >Previously Associated Users:</h4>
+              <div className="associated-users">
+                {associatedUsers.map((user) => (
+                  <img
+                    key={user.id}
+                    src={user.profile_picture}
+                    alt={user.username}
+                    className="associated-user-image"
+                    title={user.username} // Tooltip with username
+                  />
+                ))}
+              </div>
+            </div>
+          )
+        }
+
+        {/* User Select Input */}
+        <div className="user-select">
+          <label  >Select Associated Users:</label>
+          <Select
+            isMulti
+            options={allCurrentBoardUsers.map((user) => ({
+              value: user.id,
+              label: user.username,
+            }))}
+            value={selectedUsers.map((id) => {
+              const user = allCurrentBoardUsers.find((user) => user.id === id);
+              return user ? { value: user.id, label: user.username } : null;
+            }).filter(Boolean)} // Filter out null values
+            onChange={(selectedOptions) => {
+              if (selectedOptions) {
+                const userIds = selectedOptions
+                  .filter((option): option is { value: number; label: string } => option !== null) // Type guard to filter out null
+                  .map((option) => option.value);
+                setSelectedUsers(userIds);
+              } else {
+                setSelectedUsers([]); // Handle the case where no options are selected
+              }
+            }}
+            placeholder="Select users..."
+          />
+        </div>
+
+
         <div className="modal-actions">
-          <button onClick={handleClearDueDate} style={{ backgroundColor: 'red', color: 'white' }}>
-            Clear Due Date
-          </button>
+
+
           <div>
             <button onClick={handleUpdate}>Save</button>
             <button onClick={handleCancel}>Cancel</button>
