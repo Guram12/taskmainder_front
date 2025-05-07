@@ -2,6 +2,15 @@ import '../../styles/Board Styles/TaskUpdateModal.css';
 import React, { useState } from 'react';
 import { tasks } from '../../utils/interface';
 import { ThemeSpecs } from '../../utils/theme';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { TimePicker } from '@mui/x-date-pickers/TimePicker';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import dayjs, { Dayjs } from 'dayjs';
+import { renderTimeViewClock } from '@mui/x-date-pickers/timeViewRenderers';
+
+
+
 
 
 
@@ -11,29 +20,34 @@ interface TaskUpdateModalProps {
   onUpdate: (taskId: number, updatedTitle: string, due_date: string | null, description: string, completed: boolean) => void;
   currentTheme: ThemeSpecs;
 }
+
 const TaskUpdateModal: React.FC<TaskUpdateModalProps> = ({ task, onClose, onUpdate, currentTheme }) => {
   const [updatedTitle, setUpdatedTitle] = useState<string>(task.title);
   const [updatedDescription, setUpdatedDescription] = useState<string>(task.description || '');
-  const [updatedDueDate, setUpdatedDueDate] = useState<string>(task.due_date ? task.due_date.split('T')[0] : ''); // Extract date
-  const [updatedDueTime, setUpdatedDueTime] = useState<string>(task.due_date ? task.due_date.split('T')[1]?.slice(0, 5) : ''); // Extract time
+  const [updatedDueDate, setUpdatedDueDate] = useState<Dayjs | null>(
+    task.due_date ? dayjs(task.due_date.split('T')[0]) : null
+  ); // Use Dayjs for date
+  const [updatedDueTime, setUpdatedDueTime] = useState<Dayjs | null>(
+    task.due_date ? dayjs(task.due_date) : null
+  ); // Use Dayjs for time
   const [updatedCompletedStatus, setUpdatedCompletedStatus] = useState<boolean>(task.completed);
-
-
-
 
   const handleUpdate = () => {
     if (updatedTitle.trim()) {
-      const combinedDueDateTime = updatedDueDate && updatedDueTime
-        ? new Date(`${updatedDueDate}T${updatedDueTime}`).toISOString() // Convert to ISO string in local timezone
-        : updatedDueDate ? `${updatedDueDate}T00:00:00Z` : null; // Send null if due date is cleared
+      const combinedDueDateTime =
+        updatedDueDate && updatedDueTime
+          ? dayjs(`${updatedDueDate.format('YYYY-MM-DD')}T${updatedDueTime.format('HH:mm')}`).toISOString() // Combine date and time
+          : updatedDueDate
+          ? `${updatedDueDate.format('YYYY-MM-DD')}T00:00:00Z`
+          : null; // Send null if due date is cleared
       onUpdate(task.id, updatedTitle, combinedDueDateTime, updatedDescription, updatedCompletedStatus);
       onClose();
     }
   };
 
   const handleClearDueDate = () => {
-    setUpdatedDueDate('');
-    setUpdatedDueTime('');
+    setUpdatedDueDate(null);
+    setUpdatedDueTime(null);
   };
 
   const handleCancel = () => {
@@ -42,6 +56,7 @@ const TaskUpdateModal: React.FC<TaskUpdateModalProps> = ({ task, onClose, onUpda
 
 
 
+  
   return (
     <div className="task-update-modal">
       <div className="modal-content" style={{ backgroundColor: currentTheme['--background-color'] }}>
@@ -66,29 +81,35 @@ const TaskUpdateModal: React.FC<TaskUpdateModalProps> = ({ task, onClose, onUpda
           />
         </label>
         <div className="date-time-inputs">
-          <label>
-            Due Date:
-            <input
-              type="date"
+          <LocalizationProvider dateAdapter={AdapterDayjs}   >
+            {/* Date Picker */}
+            <DatePicker
+              label="Select Date"
               value={updatedDueDate}
-              onChange={(e) => setUpdatedDueDate(e.target.value)}
+              onChange={(newValue) => setUpdatedDueDate(newValue)}
+              disablePast
+              views={['year', 'month', 'day']}
+              
             />
-          </label>
-          <label>
-            Due Time:
-            <input
-              type="time"
+            {/* Time Picker */}
+            <TimePicker
+              label="Select Time"
               value={updatedDueTime}
-              onChange={(e) => setUpdatedDueTime(e.target.value)}
+              onChange={(newValue) => setUpdatedDueTime(newValue)}
+              views={['hours', 'minutes']}
+              viewRenderers={{
+                hours: renderTimeViewClock,
+                minutes: renderTimeViewClock,
+                seconds: renderTimeViewClock,
+              }}
             />
-          </label>
+          </LocalizationProvider>
         </div>
         <div className="modal-actions">
           <button onClick={handleClearDueDate} style={{ backgroundColor: 'red', color: 'white' }}>
             Clear Due Date
           </button>
           <div>
-
             <button onClick={handleUpdate}>Save</button>
             <button onClick={handleCancel}>Cancel</button>
           </div>
@@ -97,6 +118,5 @@ const TaskUpdateModal: React.FC<TaskUpdateModalProps> = ({ task, onClose, onUpda
     </div>
   );
 };
-
 
 export default TaskUpdateModal;

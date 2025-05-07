@@ -7,13 +7,16 @@ import ConfirmationDialog from './ConfirmationDialog';
 import TaskUpdateModal from './TaskUpdateModal';
 import { BiMoveVertical } from "react-icons/bi"; // Import drag icon
 import { ThemeSpecs } from '../../utils/theme';
+import { ThemeProvider } from '@mui/material/styles';
+import generateCustomTheme from '../../utils/CustomTheme';
+
 
 interface TaskProps {
   task: tasks;
   deleteTask: (taskId: number, listId: number) => void;
   updateTask: (taskId: number, updatedTitle: string, due_date: string | null, description: string, completed: boolean) => void;
   moveTaskWithinList: (draggedTaskId: number, targetTaskId: number, listId: number) => void;
-  currentTheme : ThemeSpecs;
+  currentTheme: ThemeSpecs;
 }
 
 
@@ -83,19 +86,26 @@ const Task: React.FC<TaskProps> = ({ task, deleteTask, updateTask, moveTaskWithi
   const formatDate = (dateString: string | null): string => {
     if (!dateString) return ''; // Return an empty string if no due_date
     const date = new Date(dateString);
-  
+
     // Format the date to exclude the year and include hours and minutes
     const formattedDate = new Intl.DateTimeFormat('en-US', {
       month: 'long',
       day: 'numeric',
     }).format(date);
-  
+
     // Extract hours and minutes
     const hours = date.getHours().toString().padStart(2, '0'); // Ensure 2-digit format
     const minutes = date.getMinutes().toString().padStart(2, '0');
-  
+
     return `${formattedDate}, ${hours}:${minutes}`;
   };
+
+
+  // =======================================  set custom theme for MUI inputs   ==========================================
+
+
+const MUI_Theme = generateCustomTheme(currentTheme);
+
 
   return (
     <div
@@ -137,12 +147,15 @@ const Task: React.FC<TaskProps> = ({ task, deleteTask, updateTask, moveTaskWithi
       )}
 
       {showUpdateModal && (
-        <TaskUpdateModal
-          task={task}
-          onUpdate={updateTask}
-          onClose={handle_update_modal_close}
-          currentTheme={currentTheme}
-        />
+        <ThemeProvider theme={MUI_Theme}>
+          <TaskUpdateModal
+            task={task}
+            onUpdate={updateTask}
+            onClose={handle_update_modal_close}
+            currentTheme={currentTheme}
+          />
+        </ThemeProvider>
+
       )}
     </div>
   );
