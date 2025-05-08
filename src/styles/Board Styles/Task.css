@@ -1,11 +1,9 @@
-
-
 .each_task {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   align-items: flex-start;
-  
+
   background-color: #2ed8c1;
   padding: 5px;
   margin-bottom: 5px;
@@ -15,7 +13,7 @@
   min-height: 60px;
 }
 
-.task_content_and_icons_container{
+.task_content_and_icons_container {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -31,14 +29,26 @@
 .task_title {
   font-size: 15px;
   font-weight: bold;
-  color: white;
+  color: rgb(0, 0, 0);
   margin: 0px;
   width: 200px;
-  white-space: normal; /* Allow text to wrap */
+  white-space: normal;
+  /* Allow text to wrap */
   text-align: left;
 }
 
-.due_Date_p{
+
+/* =============================== due date container ========================== */
+
+.task_description_and_due_date_container {
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+.due_Date_p {
   font-size: 12px;
   color: rgb(83, 83, 83);
   margin: 0px;
@@ -46,19 +56,39 @@
   right: 5px;
 }
 
-
-.delete_task_button {
-  background-color: transparent;
-  border: none;
-  border: 1px solid green;
+.associated_users_imgs_container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
-.delete_icon {
-  color: tomato;
-  font-size: 20px;
+.associated_user_image {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+}
+
+.no_associated_users_p {
+
+  color: rgb(83, 83, 83);
+  font-size: 12px;
+  margin: 0;
+}
+
+/* ============================================================================ */
+
+
+.edit_task_icon{
+  width: 25px;
+  height: 25px;
+  margin-left: 5px;
   cursor: pointer;
+  transition: all 0.3s ease;
 }
-
+.edit_task_icon:hover {
+  color: #2e78d8;
+  transform: scale(1.1);
+}
 
 .drag_handle {
   cursor: grab;
@@ -66,10 +96,17 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  border: 1px solid green;
-  width: 30px;
+  width: 25px;
+  height: 25px;
+  transition:  all 0.3s ease;
 }
 
-.drag_handle:hover {
-  background-color: black;
+.drag_icon{
+  width: 25px;
+  height: 25px;
 }
+
+
+.drag_handle:hover {
+  color: #d82e2e;
+  }

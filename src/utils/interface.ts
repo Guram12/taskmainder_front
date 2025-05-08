@@ -47,4 +47,5 @@ export interface tasks {
   title: string;
   completed: boolean;
   order: number;
+  task_associated_users_id: number[];
 }

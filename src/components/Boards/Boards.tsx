@@ -39,16 +39,38 @@ const Boards: React.FC<BoardsProps> = ({ selectedBoard, setSelectedBoard, curren
   const [ListName, setListName] = useState<string>('');
 
 
-
+  const [allCurrentBoardUsers, setAllCurrentBoardUsers] = useState<ProfileData[]>([]);
 
   const socketRef = useRef<WebSocket | null>(null);
   const listsContainerRef = useRef<HTMLDivElement | null>(null);
   const scrollRef = useRef<{ direction: 'left' | 'right' | null, speed: number }>({ direction: null, speed: 2 }); // Reduced speed
   const isManualScrollRef = useRef(false);
 
+
   useEffect(() => {
-    console.log('selectedBoard:', selectedBoard);
+    console.log('boards-->>', boards);
+  }, [boards]);
+
+
+  useEffect(() => {
+    if (selectedBoard.board_users) {
+      const selectedBoardUsers: ProfileData[] = selectedBoard.board_users.map((user) => ({
+        id: user.id,
+        email: user.email,
+        phone_number: '',
+        profile_picture: user.profile_picture,
+        username: user.username,
+        timezone: '',
+        user_status: user.user_status,
+      }));
+      setAllCurrentBoardUsers(selectedBoardUsers);
+    } else {
+      setAllCurrentBoardUsers([]);
+    }
   }, [selectedBoard]);
+
+  // =========================================   usefect for getting actions for websocket  =========================================
+
 
   useEffect(() => {
     setBoardData(selectedBoard);
@@ -337,15 +359,24 @@ const Boards: React.FC<BoardsProps> = ({ selectedBoard, setSelectedBoard, curren
 
   // ================================================== Update task =========================================================
 
-  const updateTask = (taskId: number, updatedTitle: string, due_date: string | null, description: string, completed: boolean) => {
 
-    console.log('Updating task:', { taskId, updatedTitle, due_date, completed });
+
+  const updateTask = (
+    taskId: number,
+    updatedTitle: string,
+    due_date: string | null,
+    description: string,
+    completed: boolean,
+    task_associated_users_id: number[]
+  ) => {
+
+    console.log('Updating task:', { taskId, updatedTitle, due_date, completed, task_associated_users_id });
 
     setBoardData((prevBoardData) => {
       const updatedLists = prevBoardData.lists.map((list) => ({
         ...list,
         tasks: list.tasks.map((task) =>
-          task.id === taskId ? { ...task, title: updatedTitle, due_date: due_date, completed: completed } : task
+          task.id === taskId ? { ...task, title: updatedTitle, due_date: due_date, completed: completed, task_associated_users_id: task_associated_users_id } : task
         ),
       }));
 
@@ -361,6 +392,7 @@ const Boards: React.FC<BoardsProps> = ({ selectedBoard, setSelectedBoard, curren
             due_date: due_date,
             description: description,
             completed: completed,
+            task_associated_users_id: task_associated_users_id,
           },
         }));
       }
@@ -604,6 +636,7 @@ const Boards: React.FC<BoardsProps> = ({ selectedBoard, setSelectedBoard, curren
                 currentTheme={currentTheme}
                 deleteList={deleteList}
                 updateListName={updateListName}
+                allCurrentBoardUsers={allCurrentBoardUsers}
               />
             ))}
             {is_any_board_selected && (
