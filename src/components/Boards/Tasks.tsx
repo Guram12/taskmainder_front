@@ -2,14 +2,13 @@ import '../../styles/Board Styles/Task.css';
 import React, { useEffect, useState } from 'react';
 import { tasks } from '../../utils/interface';
 import { useDrag, useDrop } from 'react-dnd';
-import { RiDeleteBin2Line } from "react-icons/ri";
-import ConfirmationDialog from './ConfirmationDialog';
 import TaskUpdateModal from './TaskUpdateModal';
 import { BiMoveVertical } from "react-icons/bi"; // Import drag icon
 import { ThemeSpecs } from '../../utils/theme';
 import { ThemeProvider } from '@mui/material/styles';
 import generateCustomTheme from '../../utils/CustomTheme';
 import { ProfileData } from '../../utils/interface';
+import { MdModeEdit } from "react-icons/md";
 
 
 
@@ -26,19 +25,9 @@ interface TaskProps {
 
 
 const Task: React.FC<TaskProps> = ({ task, deleteTask, updateTask, moveTaskWithinList, currentTheme, allCurrentBoardUsers }) => {
-  const [showDialog, setShowDialog] = useState(false);
   const [showUpdateModal, setShowUpdateModal] = useState(false);
-
   const [associatedUsers, setAssociatedUsers] = useState<ProfileData[]>([]);
 
-
-  useEffect(() => {
-    console.log(" asociate users ", task.task_associated_users_id);
-  }, [task])
-
-  useEffect(() => {
-    console.log("associatedUsers", associatedUsers);
-  }, [associatedUsers])
 
 
 
@@ -89,20 +78,6 @@ const Task: React.FC<TaskProps> = ({ task, deleteTask, updateTask, moveTaskWithi
 
   // =======================================    delete task functions   ======================================
 
-
-  const handleDelete = () => {
-    setShowDialog(true);
-  };
-
-  const confirmDelete = () => {
-    deleteTask(task.id, task.list);
-    setShowDialog(false);
-  };
-
-  const cancelDelete = () => {
-    setShowDialog(false);
-  };
-
   const handleTaskClick = () => {
     setShowUpdateModal(true);
     console.log("clicked");
@@ -136,9 +111,9 @@ const Task: React.FC<TaskProps> = ({ task, deleteTask, updateTask, moveTaskWithi
 
 
   // =======================================  set custom theme for MUI inputs   ==========================================
-
-
   const MUI_Theme = generateCustomTheme(currentTheme);
+
+
 
 
   return (
@@ -150,28 +125,21 @@ const Task: React.FC<TaskProps> = ({ task, deleteTask, updateTask, moveTaskWithi
 
     >
       <div className='task_content_and_icons_container' >
-        <div onClick={handleTaskClick} className='conteiner_for_editClick'>
+
+        <div  className='conteiner_for_editClick'>
           <p className='task_title'>
             {task.title}   id-{task.id}
           </p>
-          {showDialog && (
-            <ConfirmationDialog
-              message={`Are you sure you want to delete the task "${task.title}"?`}
-              onConfirm={confirmDelete}
-              onCancel={cancelDelete}
-            />
-          )}
         </div>
 
-        <>
-          <button className='delete_task_button' onClick={handleDelete}>
-            <RiDeleteBin2Line className='delete_icon' />
-          </button>
+        <div onClick={handleTaskClick} >
+          <MdModeEdit className='edit_task_icon' />
+        </div>
 
-          <div ref={dragReorder} className="drag_handle">
-            <BiMoveVertical />
-          </div>
-        </>
+        <div ref={dragReorder} className="drag_handle">
+          <BiMoveVertical  className='drag_icon' />
+        </div>
+
       </div>
 
 
@@ -190,7 +158,7 @@ const Task: React.FC<TaskProps> = ({ task, deleteTask, updateTask, moveTaskWithi
                 src={user.profile_picture}
                 alt={user.username}
                 className='associated_user_image'
-                title={user.username} // Tooltip with username
+                title={user.username} 
               />
             ))
           ) : (
@@ -209,7 +177,9 @@ const Task: React.FC<TaskProps> = ({ task, deleteTask, updateTask, moveTaskWithi
             onClose={handle_update_modal_close}
             currentTheme={currentTheme}
             allCurrentBoardUsers={allCurrentBoardUsers}
-            associatedUsers={associatedUsers} 
+            associatedUsers={associatedUsers}
+            deleteTask={deleteTask}
+
           />
         </ThemeProvider>
       )}

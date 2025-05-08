@@ -90,3 +90,18 @@
 .css-1okebmr-indicatorSeparator {
   display: none;
 }
+
+
+/* ===================================== delete task button styles ===================================== */
+.delete_task_button {
+  background-color: transparent;
+  border: none;
+  border: 1px solid green;
+}
+
+.delete_icon {
+  color: tomato;
+  font-size: 20px;
+  cursor: pointer;
+}
+
