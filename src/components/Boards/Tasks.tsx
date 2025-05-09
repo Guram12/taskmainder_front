@@ -114,7 +114,9 @@ const Task: React.FC<TaskProps> = ({ task, deleteTask, updateTask, moveTaskWithi
   const MUI_Theme = generateCustomTheme(currentTheme);
 
 
-
+useEffect(() => {
+  console.log("MUI_Theme", MUI_Theme);
+}, [MUI_Theme]);
 
   return (
     <div
