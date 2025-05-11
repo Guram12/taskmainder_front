@@ -65,6 +65,7 @@ const TaskUpdateModal: React.FC<TaskUpdateModalProps> = ({ task, onClose, update
   const handleClearDueDate = () => {
     setUpdatedDueDate(null);
     setUpdatedDueTime(null);
+    setSelectedUsers([]); 
   };
 
   const handleCancel = () => {
@@ -72,7 +73,7 @@ const TaskUpdateModal: React.FC<TaskUpdateModalProps> = ({ task, onClose, update
   };
 
 
-  // ========================================= delete taask ========================================
+  // ========================================= delete task ========================================
 
   const handleDelete = () => {
     setShowDialog(true);

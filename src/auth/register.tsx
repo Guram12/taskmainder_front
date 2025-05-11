@@ -49,9 +49,7 @@ const Register: React.FC = () => {
         },
       });
       setMessage('Registration successful!');
-      setTimeout(() => {
-        navigate('/');
-      }, 2000);
+
     } catch (error) {
       setMessage('Registration failed. Please try again.');
     }
@@ -98,7 +96,13 @@ const Register: React.FC = () => {
     );
   }
 
+  const openEmailProvider = () => {
+    const emailDomain = email.split('@')[1];
+    const emailProviderUrl = `https://${emailDomain}`;
+    window.open(emailProviderUrl, '_blank');
+  };
 
+  
   return (
     <div className="register_container">
       <h2 className="register_header">Register</h2>
@@ -175,6 +179,16 @@ const Register: React.FC = () => {
         </div>
         <button type="submit" className="register_button">Register</button>
       </form>
+      {message && (
+        <div>
+          <p className={`register_message ${message.includes('failed') ? 'error' : ''}`}>{message}</p>
+          {message.includes('successful') && (
+            <button onClick={openEmailProvider} className="register_button">
+              Go to Email for Verification
+            </button>
+          )}
+        </div>
+      )}
       <button onClick={handleLogin} className="register_button">Go to login</button>
       {message && <p className={`register_message ${message.includes('failed') ? 'error' : ''}`}>{message}</p>}
     </div>

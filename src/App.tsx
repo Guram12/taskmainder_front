@@ -11,6 +11,12 @@ import { ThemeSpecs } from './utils/theme';
 import { board } from './utils/interface';
 import FinishGoogleSignIn from './auth/FinishGoogleSignIn';
 import { ProfileData } from './utils/interface';
+import PasswordReset from './auth/PasswordReset';
+import PasswordResetConfirm from './auth/PasswordResetConfirm';
+
+
+
+
 
 
 const App: React.FC = () => {
@@ -148,27 +154,26 @@ const App: React.FC = () => {
     return false;
   };
   // --------------------------------------------------------------------------------------------------------
-  useEffect(() => {
-    const checkAuthentication = async () => {
-      const isValid = await validateTokens();
-      if (isValid) {
-        setIsAuthenticated(true);
-        if (window.location.pathname === '/') {
-          window.location.href = '/mainpage';
-        }
-      } else {
-        setIsAuthenticated(false);
-        if (window.location.pathname !== '/') {
-          window.location.href = '/';
-        }
-      }
-    };
+  // useEffect(() => {
+  //   const checkAuthentication = async () => {
+  //     const isValid = await validateTokens();
+  //     if (isValid) {
+  //       setIsAuthenticated(true);
+  //       if (window.location.pathname === '/') {
+  //         window.location.href = '/mainpage';
+  //       }
+  //     } else {
+  //       setIsAuthenticated(false);
+  //       if (window.location.pathname !== '/') {
+  //         window.location.href = '/';
+  //       }
+  //     }
+  //   };
 
-    checkAuthentication();
-  }, []);
+  //   checkAuthentication();
+  // }, []);
 
   // ========================================================================================================
-
 
   return (
     <Router>
@@ -182,6 +187,8 @@ const App: React.FC = () => {
       <Routes>
         <Route path="/" element={<Login setIsAuthenticated={setIsAuthenticated} />} />
         <Route path="/register" element={<Register />} />
+        <Route path="/password-reset" element={<PasswordReset />} />
+        <Route path="/password-reset-confirm/:uid/:token" element={<PasswordResetConfirm />} />
         <Route path="/finish_profile" element={<FinishGoogleSignIn setIsAuthenticated={setIsAuthenticated} />} />
         <Route path="/mainpage"
           element={<MainPage
