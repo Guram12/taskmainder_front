@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import axiosInstance from '../utils/axiosinstance';
 import GoogleSignIn from './GoogleSignIn';
 
+
 interface loginProps {
   setIsAuthenticated: (value: boolean) => void;
 }
@@ -77,6 +78,8 @@ const Login: React.FC<loginProps> = ({ setIsAuthenticated }) => {
       <button className="register-button" onClick={handleRegisterButtonClick}>
         Register
       </button>
+
+      <a href="/password-reset">forgot password?</a>
       {error && <p className="error-message">{error}</p>}
     </div>
   );
