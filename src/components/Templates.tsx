@@ -6,11 +6,12 @@ import axiosInstance from "../utils/axiosinstance";
 
 
 interface TemplatesProps {
-  handleTemplateSelect: (template: Template) => void;
+  handleTemplateSelect: (template: number) => void;
 }
 
 
 const Templates: React.FC<TemplatesProps> = ({ handleTemplateSelect }) => {
+
   const handle_tanmplate_click = async (template: Template) => {
     try {
       const accessToken = localStorage.getItem("access_token");

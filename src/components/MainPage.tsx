@@ -10,7 +10,6 @@ import Templates from "./Templates";
 import LearnDrag from "./LearnDrag";
 import { ProfileData } from "../utils/interface";
 import { StyledEngineProvider } from '@mui/material/styles';
-import { Template } from "../utils/interface";
 import axiosInstance from "../utils/axiosinstance";
 
 interface MainPageProps {
@@ -39,25 +38,6 @@ const MainPage: React.FC<MainPageProps> = ({
   FetchProfileData,
 }) => {
   const [selectedComponent, setSelectedComponent] = useState<string>("Boards");
-
-
-  const [selectedTemplate, setSelectedTemplate] = useState<Template>({
-    id: 0,
-    name: "",
-    board: {
-      name: "",
-      owner: "",
-      owner_email: "",
-    },
-    lists: [
-      {
-        name: "",
-        tasks: [
-          { title: "", description: "", due_date: null },
-        ],
-      },
-    ],
-  } as Template);
 
 
   const accessToken: string | null = localStorage.getItem('access_token');
