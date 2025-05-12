@@ -10,9 +10,8 @@ import Templates from "./Templates";
 import LearnDrag from "./LearnDrag";
 import { ProfileData } from "../utils/interface";
 import { StyledEngineProvider } from '@mui/material/styles';
-
-
-
+import { Template } from "../utils/interface";
+import axiosInstance from "../utils/axiosinstance";
 
 interface MainPageProps {
   currentTheme: ThemeSpecs;
@@ -41,18 +40,43 @@ const MainPage: React.FC<MainPageProps> = ({
 }) => {
   const [selectedComponent, setSelectedComponent] = useState<string>("Boards");
 
+
+  const [selectedTemplate, setSelectedTemplate] = useState<Template>({
+    id: 0,
+    name: "",
+    board: {
+      name: "",
+      owner: "",
+      owner_email: "",
+    },
+    lists: [
+      {
+        name: "",
+        tasks: [
+          { title: "", description: "", due_date: null },
+        ],
+      },
+    ],
+  } as Template);
+
+
   const accessToken: string | null = localStorage.getItem('access_token');
   const refreshToken: string | null = localStorage.getItem('refresh_token');
 
+
+
+
+
+  // --------------------------------------------------------------------------------------------------------------
   // if accesstoken or refreshtoken is null,or incorrect , redirect to login page
   useEffect(() => {
     if (!accessToken || !refreshToken) {
       localStorage.removeItem('access_token');
       localStorage.removeItem('refresh_token');
       window.location.href = '/';
-    } 
+    }
 
-  }, [refreshToken, accessToken])
+  }, [refreshToken, accessToken]);
 
   // ------------------------------ set selected board depenging  previous user board selection ---------------------------
 
@@ -71,6 +95,27 @@ const MainPage: React.FC<MainPageProps> = ({
     }
   }, [boards, selected_board_ID_for_sidebar, setSelected_board_ID_for_sidebar]);
 
+  // ---------------------------------------------------------------------------------------------------------------------
+
+  const handleTemplateSelect = async (boardId: number) => {
+    try {
+      // Fetch the updated boards from the backend
+      const response = await axiosInstance.get("/api/boards/");
+      setBoards(response.data);
+
+      // Set the newly created board as the selected board
+      const newBoard = response.data.find((board: board) => board.id === boardId);
+      if (newBoard) {
+        setSelectedBoard(newBoard);
+        setSelected_board_ID_for_sidebar?.(newBoard.id);
+        setSelectedComponent("Boards"); // Switch to the Boards view
+      }
+    } catch (error) {
+      console.error("Error fetching boards:", error);
+    }
+  };
+
+
   const renderComponent = useCallback(() => {
     switch (selectedComponent) {
       case "Settings":
@@ -82,7 +127,7 @@ const MainPage: React.FC<MainPageProps> = ({
         </StyledEngineProvider>;
 
       case "Templates":
-        return <Templates />;
+        return <Templates handleTemplateSelect={handleTemplateSelect} />;
 
 
       case "Boards":
