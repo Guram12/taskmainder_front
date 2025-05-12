@@ -41,6 +41,18 @@ const MainPage: React.FC<MainPageProps> = ({
 }) => {
   const [selectedComponent, setSelectedComponent] = useState<string>("Boards");
 
+  const accessToken: string | null = localStorage.getItem('access_token');
+  const refreshToken: string | null = localStorage.getItem('refresh_token');
+
+  // if accesstoken or refreshtoken is null,or incorrect , redirect to login page
+  useEffect(() => {
+    if (!accessToken || !refreshToken) {
+      localStorage.removeItem('access_token');
+      localStorage.removeItem('refresh_token');
+      window.location.href = '/';
+    } 
+
+  }, [refreshToken, accessToken])
 
   // ------------------------------ set selected board depenging  previous user board selection ---------------------------
 
