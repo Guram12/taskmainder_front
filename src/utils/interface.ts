@@ -49,3 +49,20 @@ export interface tasks {
   order: number;
   task_associated_users_id: number[];
 }
+
+
+export interface Template {
+  id: number;
+  name: string;
+  board: {
+    name: string;
+  };
+  lists: {
+    name: string;
+    tasks: {
+      title: string;
+      description: string;
+      due_date: string | null;
+    }[];
+  }[];
+}

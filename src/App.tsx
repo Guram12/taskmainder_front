@@ -154,24 +154,23 @@ const App: React.FC = () => {
     return false;
   };
   // --------------------------------------------------------------------------------------------------------
-  // useEffect(() => {
-  //   const checkAuthentication = async () => {
-  //     const isValid = await validateTokens();
-  //     if (isValid) {
-  //       setIsAuthenticated(true);
-  //       if (window.location.pathname === '/') {
-  //         window.location.href = '/mainpage';
-  //       }
-  //     } else {
-  //       setIsAuthenticated(false);
-  //       if (window.location.pathname !== '/') {
-  //         window.location.href = '/';
-  //       }
-  //     }
-  //   };
 
-  //   checkAuthentication();
-  // }, []);
+  useEffect(() => {
+    const checkAuthentication = async () => {
+      const isValid = await validateTokens();
+      if (isValid) {
+        setIsAuthenticated(true);
+        if (window.location.pathname === '/') {
+          window.location.href = '/mainpage'; // Redirect to main page if on login page
+        }
+      } else {
+        setIsAuthenticated(false);
+
+      }
+    };
+  
+    checkAuthentication();
+  }, []);
 
   // ========================================================================================================
 
