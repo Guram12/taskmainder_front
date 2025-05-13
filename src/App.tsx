@@ -60,7 +60,9 @@ const App: React.FC = () => {
   const refreshToken: string | null = localStorage.getItem('refresh_token');
 
 
-
+useEffect(()=> {
+  console.log("boards -->> ", boards)
+} , [boards])
 
   // ========================================== fetch  boards ==================================================
   useEffect(() => {

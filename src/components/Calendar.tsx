@@ -1,6 +1,6 @@
 import '../styles/Calendar.css';
 import React from 'react';
-import { board } from './Boards/Boards';
+import { board } from '../utils/interface';
 import dayjs, { Dayjs } from 'dayjs';
 import { DemoContainer, DemoItem } from '@mui/x-date-pickers/internals/demo';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
@@ -24,6 +24,10 @@ const Calendar: React.FC<CalendarProps> = () => {
           </DemoItem>
         </DemoContainer>
       </LocalizationProvider>
+      <h1>1.გასაკეთებელი დავალებები</h1>
+      <h1>5. Task Prioritization </h1>
+      <h1>2. Notifications System</h1>
+
     </div>
   );
 };

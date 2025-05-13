@@ -20,7 +20,7 @@ import ConfirmationDialog from './ConfirmationDialog';
 interface TaskUpdateModalProps {
   task: tasks;
   onClose: () => void;
-  updateTask: (taskId: number, updatedTitle: string, due_date: string | null, description: string, completed: boolean, task_associated_users_id: number[]) => void;
+  updateTask: (taskId: number, updatedTitle: string, due_date: string | null, description: string, completed: boolean, task_associated_users_id: number[], priority: 'green' | 'orange' | 'red' | null,) => void;
   deleteTask: (taskId: number, listId: number) => void;
   currentTheme: ThemeSpecs;
   allCurrentBoardUsers: ProfileData[];
@@ -34,6 +34,8 @@ const TaskUpdateModal: React.FC<TaskUpdateModalProps> = ({ task, onClose, update
   const [updatedDueDate, setUpdatedDueDate] = useState<Dayjs | null>(task.due_date ? dayjs(task.due_date.split('T')[0]) : null); // Use Dayjs for date
   const [updatedDueTime, setUpdatedDueTime] = useState<Dayjs | null>(task.due_date ? dayjs(task.due_date) : null); // Use Dayjs for time
   const [updatedCompletedStatus, setUpdatedCompletedStatus] = useState<boolean>(task.completed);
+
+  const [updatedPriority, setUpdatedPriority] = useState<'green' | 'orange' | 'red' | null>(task.priority || null);
 
   const [showDialog, setShowDialog] = useState(false);
 
@@ -57,7 +59,8 @@ const TaskUpdateModal: React.FC<TaskUpdateModalProps> = ({ task, onClose, update
         combinedDueDateTime,
         updatedDescription,
         updatedCompletedStatus,
-        selectedUsers // Pass the selected user IDs
+        selectedUsers,
+        updatedPriority,
       );
       onClose();
     }
@@ -65,7 +68,7 @@ const TaskUpdateModal: React.FC<TaskUpdateModalProps> = ({ task, onClose, update
   const handleClearDueDate = () => {
     setUpdatedDueDate(null);
     setUpdatedDueTime(null);
-    setSelectedUsers([]); 
+    setSelectedUsers([]);
   };
 
   const handleCancel = () => {
@@ -113,6 +116,22 @@ const TaskUpdateModal: React.FC<TaskUpdateModalProps> = ({ task, onClose, update
             onChange={(e) => setUpdatedCompletedStatus(e.target.checked)}
           />
         </label>
+
+        {/* Priority Input */}
+        <div className="priority-input">
+          <label>Priority:</label>
+          <select
+            value={updatedPriority || ''}
+            onChange={(e) => setUpdatedPriority(e.target.value as 'green' | 'orange' | 'red' | null)}
+          >
+            <option value="">None</option>
+            <option value="green">Low</option>
+            <option value="orange">Medium</option>
+            <option value="red">High</option>
+          </select>
+        </div>
+
+
         <div className="date-time-inputs">
           <LocalizationProvider dateAdapter={AdapterDayjs}   >
             {/* Date Picker */}
