@@ -103,7 +103,7 @@ const MainPage: React.FC<MainPageProps> = ({
 
       case "Calendar":
         return <StyledEngineProvider injectFirst>
-          <Calendar boards={boards} />
+          <Calendar  />
         </StyledEngineProvider>;
 
       case "Templates":

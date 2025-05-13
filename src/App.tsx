@@ -16,6 +16,9 @@ import PasswordResetConfirm from './auth/PasswordResetConfirm';
 
 
 
+// <h1>1.გასაკეთებელი დავალებები</h1>
+// <h1>5. Task Prioritization </h1>
+// <h1>2. Notifications System</h1>
 
 
 
