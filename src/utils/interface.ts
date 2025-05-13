@@ -38,6 +38,7 @@ export interface lists {
   tasks: tasks[];
 }
 
+
 export interface tasks {
   created_at: string;
   description: string;
@@ -48,6 +49,7 @@ export interface tasks {
   completed: boolean;
   order: number;
   task_associated_users_id: number[];
+  priority: 'green' | 'orange' | 'red' | null;
 }
 
 

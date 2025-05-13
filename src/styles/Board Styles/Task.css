@@ -110,3 +110,13 @@
 .drag_handle:hover {
   color: #d82e2e;
   }
+
+
+  /* ============================= priority color ============================ */
+
+
+  .priority_div{
+    width: 100px;
+    height: 10px;
+    border-radius: 30px;
+  }

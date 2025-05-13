@@ -16,6 +16,9 @@ import PasswordResetConfirm from './auth/PasswordResetConfirm';
 
 
 
+// <h1>1.გასაკეთებელი დავალებები</h1>
+// <h1>5. Task Prioritization </h1>
+// <h1>2. Notifications System</h1>
 
 
 
@@ -60,7 +63,9 @@ const App: React.FC = () => {
   const refreshToken: string | null = localStorage.getItem('refresh_token');
 
 
-
+useEffect(()=> {
+  console.log("boards -->> ", boards)
+} , [boards])
 
   // ========================================== fetch  boards ==================================================
   useEffect(() => {

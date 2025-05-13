@@ -16,7 +16,7 @@ import { MdModeEdit } from "react-icons/md";
 interface TaskProps {
   task: tasks;
   deleteTask: (taskId: number, listId: number) => void;
-  updateTask: (taskId: number, updatedTitle: string, due_date: string | null, description: string, completed: boolean, task_associated_users_id: number[]) => void;
+  updateTask: (taskId: number, updatedTitle: string, due_date: string | null, description: string, completed: boolean, task_associated_users_id: number[], priority: 'green' | 'orange' | 'red' | null,) => void;
   moveTaskWithinList: (draggedTaskId: number, targetTaskId: number, listId: number) => void;
   currentTheme: ThemeSpecs;
   allCurrentBoardUsers: ProfileData[];
@@ -114,7 +114,19 @@ const Task: React.FC<TaskProps> = ({ task, deleteTask, updateTask, moveTaskWithi
   const MUI_Theme = generateCustomTheme(currentTheme);
 
 
-  // =======================================  render task component   ==========================================
+
+  // =======================================  render priority styles   ==========================================
+
+  const priorityStyles = {
+    green: { backgroundColor: '#15cf8a' },
+    orange: { backgroundColor: '#fcc603' },
+    red: { backgroundColor: '#d60000' },
+  };
+
+  const getPriorityStyle = (priority: 'green' | 'orange' | 'red' | null) => {
+    return priority ? priorityStyles[priority] : {};
+  };
+
   return (
     <div
       className={`each_task ${isDragging || isDraggingReorder ? 'dragging' : ''}`}
@@ -125,9 +137,9 @@ const Task: React.FC<TaskProps> = ({ task, deleteTask, updateTask, moveTaskWithi
     >
       <div className='task_content_and_icons_container' >
 
-        <div  className='conteiner_for_editClick'>
+        <div className='conteiner_for_editClick'>
           <p className='task_title'>
-            {task.title}   id-{task.id}
+            {task.title}
           </p>
         </div>
 
@@ -136,12 +148,19 @@ const Task: React.FC<TaskProps> = ({ task, deleteTask, updateTask, moveTaskWithi
         </div>
 
         <div ref={dragReorder} className="drag_handle">
-          <BiMoveVertical  className='drag_icon' />
+          <BiMoveVertical className='drag_icon' />
         </div>
 
       </div>
 
+      <div>
+        {task.priority && (
+          <div className='priority_div' style={getPriorityStyle(task.priority)}>
 
+          </div>
+        )}
+
+      </div>
       <div className='task_description_and_due_date_container' >
         {task.due_date ? (
           <p className='due_Date_p'>Due Date: {formatDate(task.due_date)}</p>
@@ -157,7 +176,7 @@ const Task: React.FC<TaskProps> = ({ task, deleteTask, updateTask, moveTaskWithi
                 src={user.profile_picture}
                 alt={user.username}
                 className='associated_user_image'
-                title={user.username} 
+                title={user.username}
               />
             ))
           ) : (

@@ -2,15 +2,16 @@ import "../styles/Templates.css";
 import React from "react";
 import { Template } from "../utils/interface";
 import axiosInstance from "../utils/axiosinstance";
-
+import { templates } from "../utils/Templates";
 
 
 interface TemplatesProps {
-  handleTemplateSelect: (template: Template) => void;
+  handleTemplateSelect: (template: number) => void;
 }
 
 
 const Templates: React.FC<TemplatesProps> = ({ handleTemplateSelect }) => {
+
   const handle_tanmplate_click = async (template: Template) => {
     try {
       const accessToken = localStorage.getItem("access_token");
@@ -75,7 +76,7 @@ const Templates: React.FC<TemplatesProps> = ({ handleTemplateSelect }) => {
       <h2>Choose a Template</h2>
       <div className="templates-list">
         {templates.map((template) => (
-          <div>
+          <div key={template.id}>
             <div className="template_boardname_button_cont" >
               <h1 className="template_boardname">{template.name}</h1>
               <button onClick={() => handle_tanmplate_click(template)} >select template</button>
@@ -111,100 +112,3 @@ export default Templates;
 
 
 
-
-
-
-
-
-export const templates: Template[] = [
-  {
-    id: 1,
-    name: "Project Management",
-    board: {
-      name: "Project Board",
-    },
-    lists: [
-      {
-        name: "To Do",
-        tasks: [
-          { title: "Task 1", description: "Description 1", due_date: null },
-          { title: "Task 2", description: "Description 2", due_date: null },
-        ],
-      },
-      {
-        name: "In Progress",
-        tasks: [
-          { title: "Task 3", description: "Description 3", due_date: null },
-        ],
-      },
-      {
-        name: "Done",
-        tasks: [],
-      },
-      {
-        name: "To Do1",
-        tasks: [
-          { title: "Task 1", description: "Description 1", due_date: null },
-          { title: "Task 2", description: "Description 2", due_date: null },
-        ],
-      },
-    ],
-  },
-  {
-    id: 2,
-    name: "Personal Goals 0",
-    board: {
-      name: "Goals Board",
-    },
-    lists: [
-      {
-        name: "Short Term Goals",
-        tasks: [
-          { title: "Goal 1", description: "Description 1", due_date: null },
-        ],
-      },
-      {
-        name: "Long Term Goals",
-        tasks: [],
-      },
-    ],
-  },
-  {
-    id: 3,
-    name: "Personal Goals",
-    board: {
-      name: "Goals Board",
-    },
-    lists: [
-      {
-        name: "Short Term Goals 1",
-        tasks: [
-          { title: "Goal 1", description: "Description 1", due_date: null },
-        ],
-      },
-      {
-        name: "Long Term Goals",
-        tasks: [],
-      },
-    ],
-  },
-  {
-    id: 4,
-    name: "Personal Goals 2",
-    board: {
-      name: "Goals Board",
-    },
-    lists: [
-      {
-        name: "Short Term Goals",
-        tasks: [
-          { title: "Goal 1", description: "Description 1", due_date: null },
-        ],
-      },
-      {
-        name: "Long Term Goals",
-        tasks: [],
-      },
-    ],
-  },
-];

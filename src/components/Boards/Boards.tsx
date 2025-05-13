@@ -209,7 +209,9 @@ const Boards: React.FC<BoardsProps> = ({ selectedBoard, setSelectedBoard, curren
                   title: payload.title,
                   description: payload.description,
                   due_date: payload.due_date,
-                  completed: payload.completed
+                  completed: payload.completed,
+                  priority: payload.priority
+                  
                 } : task
               ),
             }));
@@ -367,16 +369,17 @@ const Boards: React.FC<BoardsProps> = ({ selectedBoard, setSelectedBoard, curren
     due_date: string | null,
     description: string,
     completed: boolean,
-    task_associated_users_id: number[]
+    task_associated_users_id: number[],
+    priority: 'green' | 'orange' | 'red' | null,
   ) => {
 
-    console.log('Updating task:', { taskId, updatedTitle, due_date, completed, task_associated_users_id });
+    console.log('Updating task:', { taskId, updatedTitle, due_date, completed, task_associated_users_id, priority });
 
     setBoardData((prevBoardData) => {
       const updatedLists = prevBoardData.lists.map((list) => ({
         ...list,
         tasks: list.tasks.map((task) =>
-          task.id === taskId ? { ...task, title: updatedTitle, due_date: due_date, completed: completed, task_associated_users_id: task_associated_users_id } : task
+          task.id === taskId ? { ...task, title: updatedTitle, due_date: due_date, completed: completed, task_associated_users_id: task_associated_users_id, priority: priority } : task
         ),
       }));
 
@@ -393,6 +396,7 @@ const Boards: React.FC<BoardsProps> = ({ selectedBoard, setSelectedBoard, curren
             description: description,
             completed: completed,
             task_associated_users_id: task_associated_users_id,
+            priority: priority,
           },
         }));
       }

@@ -5,15 +5,65 @@
 }
 
 
-
-.MuiTypography-root{
+.MuiTypography-root {
   color: aliceblue;
 
   font-weight: bold;
 
 }
 
-.MuiButtonBase-root{
+.MuiButtonBase-root {
   color: aliceblue;
-  
+
+}
+
+
+.calendar_container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+  border-radius: 10px;
+}
+
+.MuiDateCalendar-root {
+  width: 600px !important; /* Increase width */
+  height: 700px !important; /* Increase height */
+  background-color: #5291aa; /* White background for the calendar */
+  border: 2px solid #007bff; /* Optional: Add a border */
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Optional: Add shadow */
+}
+
+
+
+
+/* ========================================   calendar div container   ============================== */
+.calendar_container {
+  width: 100%;
+  max-height: calc(100vh - 104px);
+  overflow: hidden;
+}
+
+.al_mounth_container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 10px;
+  overflow-y: auto; /* Enable vertical scrolling */
+  height: calc(100vh - 125px); /* Set a fixed height or max-height */
+}
+.calendar_grid {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  height: auto;
+
+}
+
+.calendar_month {
+  text-align: center;
+  border: 1px solid #ccc;
+  min-height: 400px;
 }
