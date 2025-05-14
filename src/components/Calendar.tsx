@@ -1,9 +1,15 @@
 import '../styles/Calendar.css';
 import React, { useEffect, useState } from 'react';
 import { board } from '../utils/interface';
+import { MdOutlineKeyboardDoubleArrowRight } from "react-icons/md";
+import { MdOutlineKeyboardDoubleArrowLeft } from "react-icons/md";
+import { ThemeSpecs } from '../utils/theme';
+
+
 
 interface CalendarProps {
   boards: board[];
+  currentTheme: ThemeSpecs;
 }
 
 interface TaskInfo {
@@ -12,7 +18,7 @@ interface TaskInfo {
   listName: string;
 }
 
-const Calendar: React.FC<CalendarProps> = ({ boards }) => {
+const Calendar: React.FC<CalendarProps> = ({ boards, currentTheme }) => {
   const months = [
     'January', 'February', 'March', 'April', 'May', 'June',
     'July', 'August', 'September', 'October', 'November', 'December',
@@ -23,6 +29,7 @@ const Calendar: React.FC<CalendarProps> = ({ boards }) => {
   const [highlightedDays, setHighlightedDays] = useState<Record<number, number[]>>({});
   const [selectedDay, setSelectedDay] = useState<string | null>(null);
   const [tasksForSelectedDay, setTasksForSelectedDay] = useState<TaskInfo[]>([]);
+  const [currentYear, setCurrentYear] = useState<number>(new Date().getFullYear()); // Track the current year
 
   // Extract due dates from boards and organize them by month
   useEffect(() => {
@@ -36,12 +43,14 @@ const Calendar: React.FC<CalendarProps> = ({ boards }) => {
             const month = dueDate.getMonth();
             const day = dueDate.getDate();
 
-            if (!dueDates[month]) {
-              dueDates[month] = [];
-            }
+            if (dueDate.getFullYear() === currentYear) { // Only include tasks for the current year
+              if (!dueDates[month]) {
+                dueDates[month] = [];
+              }
 
-            if (!dueDates[month].includes(day)) {
-              dueDates[month].push(day);
+              if (!dueDates[month].includes(day)) {
+                dueDates[month].push(day);
+              }
             }
           }
         });
@@ -49,7 +58,7 @@ const Calendar: React.FC<CalendarProps> = ({ boards }) => {
     });
 
     setHighlightedDays(dueDates);
-  }, [boards]);
+  }, [boards, currentYear]);
 
   const generateDaysInMonth = (year: number, month: number) => {
     const date = new Date(year, month, 1);
@@ -62,7 +71,6 @@ const Calendar: React.FC<CalendarProps> = ({ boards }) => {
   };
 
   const handleDayClick = (monthIndex: number, dayNumber: number) => {
-    const currentYear = new Date().getFullYear();
     const selectedDate = new Date(currentYear, monthIndex, dayNumber);
 
     const tasks: TaskInfo[] = [];
@@ -97,7 +105,6 @@ const Calendar: React.FC<CalendarProps> = ({ boards }) => {
   };
 
   const renderMonth = (monthIndex: number) => {
-    const currentYear = new Date().getFullYear();
     const days = generateDaysInMonth(currentYear, monthIndex);
 
     const firstDayOfWeek = days[0].getDay();
@@ -138,27 +145,55 @@ const Calendar: React.FC<CalendarProps> = ({ boards }) => {
     );
   };
 
+  const handleYearChange = (direction: 'prev' | 'next') => {
+    setCurrentYear((prevYear) => (direction === 'prev' ? prevYear - 1 : prevYear + 1));
+  };
+
   return (
-    <div className="yearly_calendar">
-      {months.map((_, index) => renderMonth(index))}
+    <div className="main_calendar_container">
+      <div className="calendar_year_controls">
+        < MdOutlineKeyboardDoubleArrowLeft onClick={() => handleYearChange('prev')} className='year_change_arrow_icon' />
+        <h2 className='currentyear_h2' >{currentYear}</h2>
+        <MdOutlineKeyboardDoubleArrowRight onClick={() => handleYearChange('next')} className='year_change_arrow_icon' />
+      </div>
+
+      <div className="yearly_calendar">
+        {months.map((_, index) => renderMonth(index))}
+      </div>
 
       {selectedDay && (
         <div className="modal_overlay" onClick={closeModal}>
           <div
             className="selected_day_info"
+            style={{ backgroundColor: `${currentTheme['--list-background-color']}` }}
             onClick={(e) => e.stopPropagation()} // Prevent closing when clicking inside the modal
           >
             <h3>Tasks for {selectedDay}</h3>
             {tasksForSelectedDay.length > 0 ? (
-              <ul>
+
+
+              <div className='selected_day_container_list' >
                 {tasksForSelectedDay.map((task, index) => (
-                  <li key={index}>
-                    <strong>Task:</strong> {task.taskTitle} <br />
-                    <strong>Board:</strong> {task.boardName} <br />
-                    <strong>List:</strong> {task.listName}
-                  </li>
+                  <div key={index} className='selected_day_task_container'>
+                    <div className='selected_day_task_board_container'  style={{ backgroundColor: `${currentTheme['--list-background-color']}` }} >
+                      <p className='selected_day_task_board' >Board: {task.boardName}</p>
+                    </div>
+                    <p className='selected_day_task_list' >List: {task.listName}</p>
+                    <p className='selected_day_task_title' >Task: {task.taskTitle}</p>
+                  </div>
                 ))}
-              </ul>
+              </div>
+
+
+              // <ul>
+              //   {tasksForSelectedDay.map((task, index) => (
+              //     <li key={index}>
+              //       <strong>Task:</strong> {task.taskTitle} <br />
+              //       <strong>Board:</strong> {task.boardName} <br />
+              //       <strong>List:</strong> {task.listName}
+              //     </li>
+              //   ))}
+              // </ul>
             ) : (
               <p>No tasks due on this day.</p>
             )}

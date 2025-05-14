@@ -303,11 +303,11 @@ const SidebarComponent: React.FC<SidebarProps> = ({
             </div>
           </div>
         </Sidebar>
-        <div style={{ padding: '10px' }}>
+        {/* <div style={{ padding: '10px' }}>
           <button onClick={startTour} style={{ cursor: 'pointer' }}>
             Start Tour
           </button>
-        </div>
+        </div> */}
       </div>
     </div>
   );

@@ -26,7 +26,7 @@ const themes = {
   },
   theme1: {
     '--background-color': '#121212',
-    '--main-text-coloure': '#FFFFFF',
+    '--main-text-coloure': '#000000',
     '--border-color': '#f2f3f4',
     '--scrollbar-thumb-color': '#555555',
     '--list-background-color': '#1e3a4a'

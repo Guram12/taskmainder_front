@@ -3,16 +3,46 @@
   justify-content: center;
   align-items: center;
   flex-direction: column;
+  width: 100%;
+  max-height: calc(100vh - 110px);
+}
+
+.calendar_year_controls {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+  width: 100%;
+}
+
+.year_change_arrow_icon {
+  cursor: pointer;
+  font-size: 30px;
+  color: #ffffff;
+  transition: color 0.3s;
+}
+
+.year_change_arrow_icon:hover {
+  color: #069e5f;
+}
+
+.currentyear_h2 {
+  font-size: 30px;
+  font-weight: bold;
+  color: #ffffff;
+  text-align: center;
+  margin: 0px;
 }
 
 .yearly_calendar {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); /* Responsive columns */
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  /* Responsive columns */
   gap: 20px;
   padding: 20px;
   max-height: calc(100vh - 145px);
   overflow-y: auto;
-  width: 100%;
+  width: 99%;
 }
 
 /* .calendar_month {
@@ -61,7 +91,8 @@
 }
 
 .highlighted_day {
-  background-color: #583bffab; /* Highlight color */
+  background-color: #583bffab;
+  /* Highlight color */
   font-weight: bold;
 }
 
@@ -76,7 +107,8 @@
   left: 0;
   width: 100vw;
   height: 100vh;
-  background-color: rgba(0, 0, 0, 0.7); /* Darker background */
+  background-color: rgba(0, 0, 0, 0.7);
+  /* Darker background */
   display: flex;
   justify-content: center;
   align-items: center;
@@ -86,7 +118,6 @@
 
 .selected_day_info {
   position: absolute;
-  background-color: #037474;
   border-radius: 10px;
   padding: 20px;
   width: 400px;
@@ -94,7 +125,36 @@
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   z-index: 1001;
   text-align: left;
+  max-height: 500px;
 }
+
+.selected_day_container_list {
+  width: 100%;
+  height: 100%;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding-top: 15px;
+}
+
+.selected_day_task_container {
+  border: 1px solid rgb(95, 95, 95);
+  padding-left: 5px;
+  border-radius: 25px;
+}
+
+.selected_day_task_board_container{
+  margin-top: -15px;
+  width: max-content;
+}
+
+.selected_day_task_board{
+  margin: 0px;
+  margin-left: 10px;
+  margin-right: 15px;
+}
+
 .selected_day_info button {
   margin-top: 20px;
   padding: 10px 20px;
@@ -108,30 +168,35 @@
 .selected_day_info button:hover {
   background-color: #1565c0;
 }
+
 /* ====================================================================================================================== */
 
 
 /* Media Queries for Responsive Design */
 @media (min-width: 1200px) {
   .yearly_calendar {
-    grid-template-columns: repeat(4, 1fr); /* 4 columns for larger screens */
+    grid-template-columns: repeat(4, 1fr);
+    /* 4 columns for larger screens */
   }
 }
 
 @media (min-width: 1600px) {
   .yearly_calendar {
-    grid-template-columns: repeat(5, 1fr); /* 5 columns for 2K screens */
+    grid-template-columns: repeat(5, 1fr);
+    /* 5 columns for 2K screens */
   }
 }
 
 @media (max-width: 768px) {
   .yearly_calendar {
-    grid-template-columns: repeat(2, 1fr); /* 2 columns for tablets */
+    grid-template-columns: repeat(2, 1fr);
+    /* 2 columns for tablets */
   }
 }
 
 @media (max-width: 480px) {
   .yearly_calendar {
-    grid-template-columns: 1fr; /* 1 column for small screens */
+    grid-template-columns: 1fr;
+    /* 1 column for small screens */
   }
 }

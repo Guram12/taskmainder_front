@@ -3,14 +3,15 @@ import React from "react";
 import { Template } from "../utils/interface";
 import axiosInstance from "../utils/axiosinstance";
 import { templates } from "../utils/Templates";
-
+import { ThemeSpecs } from "../utils/theme";
 
 interface TemplatesProps {
   handleTemplateSelect: (template: number) => void;
+  currentTheme: ThemeSpecs;
 }
 
 
-const Templates: React.FC<TemplatesProps> = ({ handleTemplateSelect }) => {
+const Templates: React.FC<TemplatesProps> = ({ handleTemplateSelect, currentTheme }) => {
 
   const handle_tanmplate_click = async (template: Template) => {
     try {
@@ -71,6 +72,8 @@ const Templates: React.FC<TemplatesProps> = ({ handleTemplateSelect }) => {
       console.error("Error creating template:", error);
     }
   };
+
+  
   return (
     <div className="templates_container">
       <h2>Choose a Template</h2>
@@ -87,12 +90,14 @@ const Templates: React.FC<TemplatesProps> = ({ handleTemplateSelect }) => {
               className="template_card"
             >
               {template.lists.map((list) => (
-                <div className="each_template_board_list" key={list.name}>
-                  {list.name}
+                <div className="each_template_board_list" key={list.name} style={{ backgroundColor: `${currentTheme['--list-background-color']}` }}>
+                  <p className="template_list_name"> {list.name}</p>
+                  
                   {list.tasks.map((task) => (
-                    <li key={task.title} className="task_item">
-                      <strong>{task.title}</strong>: {task.description || "No description"}
-                    </li>
+                    <div key={task.title} className="task_item">
+                      <p className="template_task_p" >{task.title}</p>
+                      <p className='template_due_Date_p'>No due date</p>
+                    </div>
                   ))}
                 </div>
               ))}
