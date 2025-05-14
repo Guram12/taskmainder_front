@@ -10,7 +10,8 @@ import { RiSettings4Fill } from "react-icons/ri";
 import { board } from '../utils/interface';
 import { GoRepoTemplate } from "react-icons/go";
 import axiosInstance from '../utils/axiosinstance';
-
+import Shepherd from 'shepherd.js';
+import 'shepherd.js/dist/css/shepherd.css';
 
 interface SidebarProps {
   currentTheme: ThemeSpecs;
@@ -50,8 +51,64 @@ const SidebarComponent: React.FC<SidebarProps> = ({
 
   // useEffect(() => {
   //   console.log('boards----------', boards);
-  // }, [boards])
+  // }, [boards])\
 
+
+
+  // ======================================== for hilighting the elements in the tour ==========================================
+  const startTour = () => {
+    const tour = new Shepherd.Tour({
+      defaultStepOptions: {
+        cancelIcon: { enabled: true },
+        classes: 'custom-class-name',
+        scrollTo: { behavior: 'smooth', block: 'center' },
+      },
+      useModalOverlay: true, // Enable backdrop to dim the rest of the page
+    });
+  
+    // Step 1: Highlight Dashboard
+    tour.addStep({
+      title: 'Dashboard',
+      text: 'This is the Dashboard section where you can view your main tasks.',
+      attachTo: { element: '.dashboard_icon', on: 'right' },
+      buttons: [
+        {
+          text: 'Next',
+          action: tour.next,
+        },
+      ],
+    });
+  
+    // Step 2: Highlight Boards
+    tour.addStep({
+      title: 'Boards',
+      text: 'Here you can manage your boards. Click on a board to view its details.',
+      attachTo: { element: '#board', on: 'right' },
+      buttons: [
+        {
+          text: 'Next',
+          action: tour.next,
+        },
+      ],
+    });
+  
+    // Step 3: Highlight Templates
+    tour.addStep({
+      title: 'Templates',
+      text: 'This section contains templates for creating new boards.',
+      attachTo: { element: '.sidebar_big_icon', on: 'right' },
+      buttons: [
+        {
+          text: 'Finish',
+          action: tour.complete,
+        },
+      ],
+    });
+  
+    tour.start();
+  };
+
+// ==============================================================================================================
 
 
   // ================================== sidebar pin and unpin ===============================================
@@ -246,7 +303,11 @@ const SidebarComponent: React.FC<SidebarProps> = ({
             </div>
           </div>
         </Sidebar>
-
+        <div style={{ padding: '10px' }}>
+          <button onClick={startTour} style={{ cursor: 'pointer' }}>
+            Start Tour
+          </button>
+        </div>
       </div>
     </div>
   );
