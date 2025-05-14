@@ -1,69 +1,104 @@
-/* Calendar container */
-.calendar_container {
-  border: 1px solid red;
-
-}
-
-
-.MuiTypography-root {
-  color: aliceblue;
-
-  font-weight: bold;
-
-}
-
-.MuiButtonBase-root {
-  color: aliceblue;
-
-}
-
-
-.calendar_container {
+.main_calendar_container {
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 20px;
-  border-radius: 10px;
-}
-
-.MuiDateCalendar-root {
-  width: 600px !important; /* Increase width */
-  height: 700px !important; /* Increase height */
-  background-color: #5291aa; /* White background for the calendar */
-  border: 2px solid #007bff; /* Optional: Add a border */
-  border-radius: 10px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Optional: Add shadow */
-}
-
-
-
-
-/* ========================================   calendar div container   ============================== */
-.calendar_container {
-  width: 100%;
-  max-height: calc(100vh - 104px);
-  overflow: hidden;
-}
-
-.al_mounth_container {
-  display: flex;
   flex-direction: column;
-  justify-content: center;
-  align-items: flex-start;
+}
+
+.yearly_calendar {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); /* Responsive columns */
+  gap: 20px;
+  padding: 20px;
+  max-height: calc(100vh - 145px);
+  overflow-y: auto;
+  width: 100%;
+}
+
+/* .calendar_month {
+  border: 1px solid #707070;
+  border-radius: 10px;
   padding: 10px;
-  overflow-y: auto; /* Enable vertical scrolling */
-  height: calc(100vh - 125px); /* Set a fixed height or max-height */
-}
-.calendar_grid {
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  height: auto;
+  background-color: #187aa871;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  max-width: 320px;
+  min-height: 330px;
+} */
 
-}
-
-.calendar_month {
+.calendar_month h3 {
   text-align: center;
-  border: 1px solid #ccc;
-  min-height: 400px;
+  margin-bottom: 10px;
+}
+
+.calendar_grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 5px;
+}
+
+.calendar_day_header {
+  font-weight: bold;
+  text-align: center;
+  color: #ffffff;
+}
+
+.calendar_empty_day {
+  height: 30px;
+}
+
+.calendar_day {
+  text-align: center;
+  padding: 5px;
+  border-radius: 5px;
+  background-color: #04a381;
+  cursor: pointer;
+
+}
+
+.calendar_day:hover {
+  background-color: #bae7ff;
+}
+
+.highlighted_day {
+  background-color: #ffeb3b; /* Highlight color */
+  font-weight: bold;
+  border: 2px solid #fbc02d;
+}
+
+.highlighted_day:hover {
+  background-color: #fdd835;
+}
+
+.selected_day_info {
+  margin-top: 20px;
+  padding: 10px;
+  background-color: #e3f2fd;
+  border: 1px solid #90caf9;
+  border-radius: 5px;
+  text-align: center;
+}
+
+/* Media Queries for Responsive Design */
+@media (min-width: 1200px) {
+  .yearly_calendar {
+    grid-template-columns: repeat(4, 1fr); /* 4 columns for larger screens */
+  }
+}
+
+@media (min-width: 1600px) {
+  .yearly_calendar {
+    grid-template-columns: repeat(5, 1fr); /* 5 columns for 2K screens */
+  }
+}
+
+@media (max-width: 768px) {
+  .yearly_calendar {
+    grid-template-columns: repeat(2, 1fr); /* 2 columns for tablets */
+  }
+}
+
+@media (max-width: 480px) {
+  .yearly_calendar {
+    grid-template-columns: 1fr; /* 1 column for small screens */
+  }
 }

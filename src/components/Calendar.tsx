@@ -1,173 +1,94 @@
+import React, { useState } from 'react';
 import '../styles/Calendar.css';
-import React, { useState , useEffect } from 'react';
-import dayjs, { Dayjs } from 'dayjs';
-import Badge from '@mui/material/Badge';
-import Dialog from '@mui/material/Dialog';
-import DialogTitle from '@mui/material/DialogTitle';
-import DialogContent from '@mui/material/DialogContent';
-import DialogActions from '@mui/material/DialogActions';
-import Button from '@mui/material/Button';
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { PickersDay, PickersDayProps } from '@mui/x-date-pickers/PickersDay';
-import { DateCalendar } from '@mui/x-date-pickers/DateCalendar';
-import { DayCalendarSkeleton } from '@mui/x-date-pickers/DayCalendarSkeleton';
-
-
-
-
-
-function getRandomNumber(min: number, max: number) {
-  return Math.round(Math.random() * (max - min) + min);
-}
-
-// ======================================= fake fetch function =========================================
-
-function fakeFetch(date: Dayjs, { signal }: { signal: AbortSignal }) {
-  return new Promise<{ daysToHighlight: number[] }>((resolve, reject) => {
-    const timeout = setTimeout(() => {
-      const daysInMonth = date.daysInMonth();
-      const daysToHighlight = [1, 2, 3].map(() => getRandomNumber(1, daysInMonth));
-
-      resolve({ daysToHighlight });
-    }, 500);
-
-    signal.onabort = () => {
-      clearTimeout(timeout);
-      reject(new DOMException('aborted', 'AbortError'));
-    };
-  });
-}
-
-// ==================================  server day component =========================================
-function ServerDay(props: PickersDayProps & { highlightedDays?: number[]; onDayClick?: (day: Dayjs) => void }) {
-  const { highlightedDays = [], day, outsideCurrentMonth, onDayClick, ...other } = props;
-
-  const isSelected = !outsideCurrentMonth && highlightedDays.indexOf(day.date()) >= 0;
-  const isToday = dayjs().isSame(day, 'day'); // Check if the day is today
-
-  return (
-    <Badge
-      key={day.toString()}
-      overlap="circular"
-      badgeContent={isSelected ? '🌟' : undefined} // Add a star or any badge content
-      color={isToday ? 'primary' : 'default'} // Highlight the current day with a badge color
-    >
-      <PickersDay
-        {...other}
-        outsideCurrentMonth={outsideCurrentMonth}
-        day={day}
-        onClick={() => isSelected && onDayClick?.(day)} // Trigger click only for marked days
-        sx={{
-          ...(isToday && {
-            border: '2px solid #1976d2', // Add a border for the current day
-            borderRadius: '50%',
-          }),
-        }}
-      />
-    </Badge>
-  );
-}
-
-
-
-
-// ==================================  calendar component =========================================
-
 
 const Calendar: React.FC = () => {
-  const requestAbortController = React.useRef<AbortController | null>(null);
-  const [isLoading, setIsLoading] = React.useState(false);
-  const [highlightedDays, setHighlightedDays] = React.useState<number[]>([]);
-  // as default i should select current day 
-  const [value, setValue] = React.useState<Dayjs | null>(dayjs());
-  const [selectedDayInfo, setSelectedDayInfo] = useState<Dayjs | null>(null);
-  const [dialogOpen, setDialogOpen] = useState(false);
+  const months = [
+    'January', 'February', 'March', 'April', 'May', 'June',
+    'July', 'August', 'September', 'October', 'November', 'December',
+  ];
 
-  const fetchHighlightedDays = (date: Dayjs) => {
-    const controller = new AbortController();
-    fakeFetch(date, {
-      signal: controller.signal,
-    })
-      .then(({ daysToHighlight }) => {
-        setHighlightedDays(daysToHighlight);
-        setIsLoading(false);
-      })
-      .catch((error) => {
-        if (error.name !== 'AbortError') {
-          throw error;
-        }
-      });
+  const daysOfWeek = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 
-    requestAbortController.current = controller;
+  // Define the type for highlightedDays
+  const highlightedDays: Record<number, number[]> = {
+    0: [1, 15], // Highlight January 1st and 15th
+    1: [14], // Highlight February 14th
+    2: [8, 20], // Highlight March 8th and 20th
+    // Add more months and days as needed
   };
 
- useEffect(() => {
-    fetchHighlightedDays(dayjs());
-    return () => requestAbortController.current?.abort();
-  }, []);
+  const [selectedDay, setSelectedDay] = useState<string | null>(null);
 
-  const handleMonthChange = (date: Dayjs) => {
-    if (requestAbortController.current) {
-      requestAbortController.current.abort();
+  const generateDaysInMonth = (year: number, month: number) => {
+    const date = new Date(year, month, 1);
+    const days = [];
+    while (date.getMonth() === month) {
+      days.push(new Date(date));
+      date.setDate(date.getDate() + 1);
     }
-
-    setIsLoading(true);
-    setHighlightedDays([]);
-    fetchHighlightedDays(date);
+    return days;
   };
 
-  const handleDayClick = (day: Dayjs) => {
-    setSelectedDayInfo(day);
-    setDialogOpen(true);
-  };
+  const renderMonth = (monthIndex: number) => {
+    const currentYear = new Date().getFullYear();
+    const days = generateDaysInMonth(currentYear, monthIndex);
 
-  const handleDialogClose = () => {
-    setDialogOpen(false);
-    setSelectedDayInfo(null);
+    // Get the first day of the month to calculate padding
+    const firstDayOfWeek = days[0].getDay();
+
+    return (
+      <div className="calendar_month" key={monthIndex}>
+        <h3>{months[monthIndex]}</h3>
+        <div className="calendar_grid">
+          {daysOfWeek.map((day) => (
+            <div key={day} className="calendar_day_header">
+              {day}
+            </div>
+          ))}
+
+          {/* Add empty divs for padding */}
+          {Array.from({ length: firstDayOfWeek }).map((_, index) => (
+            <div key={`empty-${index}`} className="calendar_empty_day"></div>
+          ))}
+
+          {/* Render days */}
+          {days.map((day) => {
+            const dayNumber = day.getDate();
+            const isHighlighted =
+              highlightedDays[monthIndex]?.includes(dayNumber);
+
+            return (
+              <div
+                key={day.toISOString()}
+                className={`calendar_day ${
+                  isHighlighted ? 'highlighted_day' : ''
+                }`}
+                onClick={() =>
+                  isHighlighted &&
+                  setSelectedDay(
+                    `${months[monthIndex]} ${dayNumber}, ${currentYear}`
+                  )
+                }
+              >
+                {dayNumber}
+              </div>
+            );
+          })}
+        </div>
+      </div>
+    );
   };
 
   return (
-    <div className="calendar_container">
-      <LocalizationProvider dateAdapter={AdapterDayjs}>
-        <DateCalendar
-          value={value}
-          onChange={(newValue) => setValue(newValue)}
-          loading={isLoading}
-          onMonthChange={handleMonthChange}
-          renderLoading={() => <DayCalendarSkeleton />}
-          slots={{
-            day: ServerDay,
-          }}
-          slotProps={{
-            day: {
-              highlightedDays,
-              onDayClick: handleDayClick, // Pass the click handler
-            } as any,
-          }}
+    <div className="yearly_calendar">
+      {months.map((_, index) => renderMonth(index))}
 
-          
-        />
-      </LocalizationProvider>
-
-      {/* Dialog to display information */}
-      <Dialog open={dialogOpen} onClose={handleDialogClose}>
-        <DialogTitle>Day Information</DialogTitle>
-        <DialogContent>
-          {selectedDayInfo ? (
-            <p>
-              You clicked on: <strong>{selectedDayInfo.format('YYYY-MM-DD')}</strong>
-            </p>
-          ) : (
-            <p>No information available.</p>
-          )}
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleDialogClose} color="primary">
-            Close
-          </Button>
-        </DialogActions>
-      </Dialog>
+      {/* Display selected day information */}
+      {selectedDay && (
+        <div className="selected_day_info">
+          <p>You selected: {selectedDay}</p>
+        </div>
+      )}
     </div>
   );
 };
