@@ -103,11 +103,17 @@ const MainPage: React.FC<MainPageProps> = ({
 
       case "Calendar":
         return <StyledEngineProvider injectFirst>
-          <Calendar  />
+          <Calendar
+            boards={boards}
+            currentTheme={currentTheme}
+          />
         </StyledEngineProvider>;
 
       case "Templates":
-        return <Templates handleTemplateSelect={handleTemplateSelect} />;
+        return <Templates
+          handleTemplateSelect={handleTemplateSelect}
+          currentTheme={currentTheme}
+        />;
 
 
       case "Boards":

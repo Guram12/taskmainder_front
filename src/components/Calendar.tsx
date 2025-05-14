@@ -1,173 +1,206 @@
 import '../styles/Calendar.css';
-import React, { useState , useEffect } from 'react';
-import dayjs, { Dayjs } from 'dayjs';
-import Badge from '@mui/material/Badge';
-import Dialog from '@mui/material/Dialog';
-import DialogTitle from '@mui/material/DialogTitle';
-import DialogContent from '@mui/material/DialogContent';
-import DialogActions from '@mui/material/DialogActions';
-import Button from '@mui/material/Button';
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { PickersDay, PickersDayProps } from '@mui/x-date-pickers/PickersDay';
-import { DateCalendar } from '@mui/x-date-pickers/DateCalendar';
-import { DayCalendarSkeleton } from '@mui/x-date-pickers/DayCalendarSkeleton';
+import React, { useEffect, useState } from 'react';
+import { board } from '../utils/interface';
+import { MdOutlineKeyboardDoubleArrowRight } from "react-icons/md";
+import { MdOutlineKeyboardDoubleArrowLeft } from "react-icons/md";
+import { ThemeSpecs } from '../utils/theme';
 
 
 
-
-
-function getRandomNumber(min: number, max: number) {
-  return Math.round(Math.random() * (max - min) + min);
+interface CalendarProps {
+  boards: board[];
+  currentTheme: ThemeSpecs;
 }
 
-// ======================================= fake fetch function =========================================
-
-function fakeFetch(date: Dayjs, { signal }: { signal: AbortSignal }) {
-  return new Promise<{ daysToHighlight: number[] }>((resolve, reject) => {
-    const timeout = setTimeout(() => {
-      const daysInMonth = date.daysInMonth();
-      const daysToHighlight = [1, 2, 3].map(() => getRandomNumber(1, daysInMonth));
-
-      resolve({ daysToHighlight });
-    }, 500);
-
-    signal.onabort = () => {
-      clearTimeout(timeout);
-      reject(new DOMException('aborted', 'AbortError'));
-    };
-  });
+interface TaskInfo {
+  taskTitle: string;
+  boardName: string;
+  listName: string;
 }
 
-// ==================================  server day component =========================================
-function ServerDay(props: PickersDayProps & { highlightedDays?: number[]; onDayClick?: (day: Dayjs) => void }) {
-  const { highlightedDays = [], day, outsideCurrentMonth, onDayClick, ...other } = props;
+const Calendar: React.FC<CalendarProps> = ({ boards, currentTheme }) => {
+  const months = [
+    'January', 'February', 'March', 'April', 'May', 'June',
+    'July', 'August', 'September', 'October', 'November', 'December',
+  ];
 
-  const isSelected = !outsideCurrentMonth && highlightedDays.indexOf(day.date()) >= 0;
-  const isToday = dayjs().isSame(day, 'day'); // Check if the day is today
+  const daysOfWeek = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 
-  return (
-    <Badge
-      key={day.toString()}
-      overlap="circular"
-      badgeContent={isSelected ? '🌟' : undefined} // Add a star or any badge content
-      color={isToday ? 'primary' : 'default'} // Highlight the current day with a badge color
-    >
-      <PickersDay
-        {...other}
-        outsideCurrentMonth={outsideCurrentMonth}
-        day={day}
-        onClick={() => isSelected && onDayClick?.(day)} // Trigger click only for marked days
-        sx={{
-          ...(isToday && {
-            border: '2px solid #1976d2', // Add a border for the current day
-            borderRadius: '50%',
-          }),
-        }}
-      />
-    </Badge>
-  );
-}
+  const [highlightedDays, setHighlightedDays] = useState<Record<number, number[]>>({});
+  const [selectedDay, setSelectedDay] = useState<string | null>(null);
+  const [tasksForSelectedDay, setTasksForSelectedDay] = useState<TaskInfo[]>([]);
+  const [currentYear, setCurrentYear] = useState<number>(new Date().getFullYear()); // Track the current year
 
+  // Extract due dates from boards and organize them by month
+  useEffect(() => {
+    const dueDates: Record<number, number[]> = {};
 
+    boards.forEach((board) => {
+      board.lists.forEach((list) => {
+        list.tasks.forEach((task) => {
+          if (task.due_date) {
+            const dueDate = new Date(task.due_date);
+            const month = dueDate.getMonth();
+            const day = dueDate.getDate();
 
+            if (dueDate.getFullYear() === currentYear) { // Only include tasks for the current year
+              if (!dueDates[month]) {
+                dueDates[month] = [];
+              }
 
-// ==================================  calendar component =========================================
-
-
-const Calendar: React.FC = () => {
-  const requestAbortController = React.useRef<AbortController | null>(null);
-  const [isLoading, setIsLoading] = React.useState(false);
-  const [highlightedDays, setHighlightedDays] = React.useState<number[]>([]);
-  // as default i should select current day 
-  const [value, setValue] = React.useState<Dayjs | null>(dayjs());
-  const [selectedDayInfo, setSelectedDayInfo] = useState<Dayjs | null>(null);
-  const [dialogOpen, setDialogOpen] = useState(false);
-
-  const fetchHighlightedDays = (date: Dayjs) => {
-    const controller = new AbortController();
-    fakeFetch(date, {
-      signal: controller.signal,
-    })
-      .then(({ daysToHighlight }) => {
-        setHighlightedDays(daysToHighlight);
-        setIsLoading(false);
-      })
-      .catch((error) => {
-        if (error.name !== 'AbortError') {
-          throw error;
-        }
+              if (!dueDates[month].includes(day)) {
+                dueDates[month].push(day);
+              }
+            }
+          }
+        });
       });
+    });
 
-    requestAbortController.current = controller;
-  };
+    setHighlightedDays(dueDates);
+  }, [boards, currentYear]);
 
- useEffect(() => {
-    fetchHighlightedDays(dayjs());
-    return () => requestAbortController.current?.abort();
-  }, []);
-
-  const handleMonthChange = (date: Dayjs) => {
-    if (requestAbortController.current) {
-      requestAbortController.current.abort();
+  const generateDaysInMonth = (year: number, month: number) => {
+    const date = new Date(year, month, 1);
+    const days = [];
+    while (date.getMonth() === month) {
+      days.push(new Date(date));
+      date.setDate(date.getDate() + 1);
     }
-
-    setIsLoading(true);
-    setHighlightedDays([]);
-    fetchHighlightedDays(date);
+    return days;
   };
 
-  const handleDayClick = (day: Dayjs) => {
-    setSelectedDayInfo(day);
-    setDialogOpen(true);
+  const handleDayClick = (monthIndex: number, dayNumber: number) => {
+    const selectedDate = new Date(currentYear, monthIndex, dayNumber);
+
+    const tasks: TaskInfo[] = [];
+    boards.forEach((board) => {
+      board.lists.forEach((list) => {
+        list.tasks.forEach((task) => {
+          if (task.due_date) {
+            const dueDate = new Date(task.due_date);
+            if (
+              dueDate.getFullYear() === selectedDate.getFullYear() &&
+              dueDate.getMonth() === selectedDate.getMonth() &&
+              dueDate.getDate() === selectedDate.getDate()
+            ) {
+              tasks.push({
+                taskTitle: task.title,
+                boardName: board.name,
+                listName: list.name,
+              });
+            }
+          }
+        });
+      });
+    });
+
+    setSelectedDay(`${months[monthIndex]} ${dayNumber}, ${currentYear}`);
+    setTasksForSelectedDay(tasks);
   };
 
-  const handleDialogClose = () => {
-    setDialogOpen(false);
-    setSelectedDayInfo(null);
+  const closeModal = () => {
+    setSelectedDay(null);
+    setTasksForSelectedDay([]);
+  };
+
+  const renderMonth = (monthIndex: number) => {
+    const days = generateDaysInMonth(currentYear, monthIndex);
+
+    const firstDayOfWeek = days[0].getDay();
+
+    return (
+      <div className="calendar_month" key={monthIndex}>
+        <h3>{months[monthIndex]}</h3>
+        <div className="calendar_grid">
+          {daysOfWeek.map((day) => (
+            <div key={day} className="calendar_day_header">
+              {day}
+            </div>
+          ))}
+
+          {Array.from({ length: firstDayOfWeek }).map((_, index) => (
+            <div key={`empty-${index}`} className="calendar_empty_day"></div>
+          ))}
+
+          {days.map((day) => {
+            const dayNumber = day.getDate();
+            const isHighlighted =
+              highlightedDays[monthIndex]?.includes(dayNumber);
+
+            return (
+              <div
+                key={day.toISOString()}
+                className={`calendar_day ${isHighlighted ? 'highlighted_day' : ''}`}
+                onClick={() =>
+                  isHighlighted && handleDayClick(monthIndex, dayNumber)
+                }
+              >
+                {dayNumber}
+              </div>
+            );
+          })}
+        </div>
+      </div>
+    );
+  };
+
+  const handleYearChange = (direction: 'prev' | 'next') => {
+    setCurrentYear((prevYear) => (direction === 'prev' ? prevYear - 1 : prevYear + 1));
   };
 
   return (
-    <div className="calendar_container">
-      <LocalizationProvider dateAdapter={AdapterDayjs}>
-        <DateCalendar
-          value={value}
-          onChange={(newValue) => setValue(newValue)}
-          loading={isLoading}
-          onMonthChange={handleMonthChange}
-          renderLoading={() => <DayCalendarSkeleton />}
-          slots={{
-            day: ServerDay,
-          }}
-          slotProps={{
-            day: {
-              highlightedDays,
-              onDayClick: handleDayClick, // Pass the click handler
-            } as any,
-          }}
+    <div className="main_calendar_container">
+      <div className="calendar_year_controls">
+        < MdOutlineKeyboardDoubleArrowLeft onClick={() => handleYearChange('prev')} className='year_change_arrow_icon' />
+        <h2 className='currentyear_h2' >{currentYear}</h2>
+        <MdOutlineKeyboardDoubleArrowRight onClick={() => handleYearChange('next')} className='year_change_arrow_icon' />
+      </div>
 
-          
-        />
-      </LocalizationProvider>
+      <div className="yearly_calendar">
+        {months.map((_, index) => renderMonth(index))}
+      </div>
 
-      {/* Dialog to display information */}
-      <Dialog open={dialogOpen} onClose={handleDialogClose}>
-        <DialogTitle>Day Information</DialogTitle>
-        <DialogContent>
-          {selectedDayInfo ? (
-            <p>
-              You clicked on: <strong>{selectedDayInfo.format('YYYY-MM-DD')}</strong>
-            </p>
-          ) : (
-            <p>No information available.</p>
-          )}
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleDialogClose} color="primary">
-            Close
-          </Button>
-        </DialogActions>
-      </Dialog>
+      {selectedDay && (
+        <div className="modal_overlay" onClick={closeModal}>
+          <div
+            className="selected_day_info"
+            style={{ backgroundColor: `${currentTheme['--list-background-color']}` }}
+            onClick={(e) => e.stopPropagation()} // Prevent closing when clicking inside the modal
+          >
+            <h3>Tasks for {selectedDay}</h3>
+            {tasksForSelectedDay.length > 0 ? (
+
+
+              <div className='selected_day_container_list' >
+                {tasksForSelectedDay.map((task, index) => (
+                  <div key={index} className='selected_day_task_container'>
+                    <div className='selected_day_task_board_container'  style={{ backgroundColor: `${currentTheme['--list-background-color']}` }} >
+                      <p className='selected_day_task_board' >Board: {task.boardName}</p>
+                    </div>
+                    <p className='selected_day_task_list' >List: {task.listName}</p>
+                    <p className='selected_day_task_title' >Task: {task.taskTitle}</p>
+                  </div>
+                ))}
+              </div>
+
+
+              // <ul>
+              //   {tasksForSelectedDay.map((task, index) => (
+              //     <li key={index}>
+              //       <strong>Task:</strong> {task.taskTitle} <br />
+              //       <strong>Board:</strong> {task.boardName} <br />
+              //       <strong>List:</strong> {task.listName}
+              //     </li>
+              //   ))}
+              // </ul>
+            ) : (
+              <p>No tasks due on this day.</p>
+            )}
+            <button onClick={closeModal}>Close</button>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
