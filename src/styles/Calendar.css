@@ -52,6 +52,7 @@
   border-radius: 5px;
   background-color: #04a381;
   cursor: pointer;
+  min-height: 25px;
 
 }
 
@@ -60,23 +61,55 @@
 }
 
 .highlighted_day {
-  background-color: #ffeb3b; /* Highlight color */
+  background-color: #583bffab; /* Highlight color */
   font-weight: bold;
-  border: 2px solid #fbc02d;
 }
 
 .highlighted_day:hover {
   background-color: #fdd835;
 }
 
-.selected_day_info {
-  margin-top: 20px;
-  padding: 10px;
-  background-color: #e3f2fd;
-  border: 1px solid #90caf9;
-  border-radius: 5px;
-  text-align: center;
+/* =================================== selected day modal on calendar =================================== */
+.modal_overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.7); /* Darker background */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
 }
+
+
+.selected_day_info {
+  position: absolute;
+  background-color: #037474;
+  border-radius: 10px;
+  padding: 20px;
+  width: 400px;
+  max-width: 90%;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  z-index: 1001;
+  text-align: left;
+}
+.selected_day_info button {
+  margin-top: 20px;
+  padding: 10px 20px;
+  background-color: #1976d2;
+  color: #ffffff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.selected_day_info button:hover {
+  background-color: #1565c0;
+}
+/* ====================================================================================================================== */
+
 
 /* Media Queries for Responsive Design */
 @media (min-width: 1200px) {

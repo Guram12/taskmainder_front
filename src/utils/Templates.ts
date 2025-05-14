@@ -1,96 +1,88 @@
 import { Template } from "./interface";
 
-
-
-
 export const templates: Template[] = [
   {
     id: 1,
     name: "Project Management",
     board: {
-      name: "Project Board",
+      name: "Development Sprint Board",
     },
     lists: [
       {
-        name: "To Do",
+        name: "Backlog",
         tasks: [
-          { title: "Task 1", description: "Description 1", due_date: null },
-          { title: "Task 2", description: "Description 2", due_date: null },
+          { title: "Research API integration", description: "Explore third-party APIs for payment processing.", due_date: "2025-05-20" },
+          { title: "Design wireframes", description: "Create wireframes for the user dashboard.", due_date: "2025-05-18" },
         ],
       },
       {
         name: "In Progress",
         tasks: [
-          { title: "Task 3", description: "Description 3", due_date: null },
+          { title: "Implement authentication", description: "Set up user login and registration functionality.", due_date: "2025-05-16" },
+        ],
+      },
+      {
+        name: "Review",
+        tasks: [
+          { title: "Code review for feature X", description: "Review the code for the new feature before merging.", due_date: "2025-05-17" },
         ],
       },
       {
         name: "Done",
-        tasks: [],
-      },
-      {
-        name: "To Do1",
         tasks: [
-          { title: "Task 1", description: "Description 1", due_date: null },
-          { title: "Task 2", description: "Description 2", due_date: null },
+          { title: "Set up project repository", description: "Initialize Git repository and push initial commit.", due_date: "2025-05-10" },
         ],
       },
     ],
   },
   {
     id: 2,
-    name: "Personal Goals 0",
+    name: "Personal Goals",
     board: {
-      name: "Goals Board",
+      name: "Self-Improvement Board",
     },
     lists: [
       {
-        name: "Short Term Goals",
+        name: "Health Goals",
         tasks: [
-          { title: "Goal 1", description: "Description 1", due_date: null },
+          { title: "Morning workout", description: "Do a 30-minute workout every morning.", due_date: "2025-05-15" },
+          { title: "Meal prep", description: "Prepare healthy meals for the week.", due_date: "2025-05-14" },
         ],
       },
       {
-        name: "Long Term Goals",
-        tasks: [],
+        name: "Learning Goals",
+        tasks: [
+          { title: "Complete TypeScript course", description: "Finish the online TypeScript course on Udemy.", due_date: "2025-05-25" },
+          { title: "Read a book", description: "Read 'Atomic Habits' by James Clear.", due_date: "2025-05-30" },
+        ],
       },
     ],
   },
   {
     id: 3,
-    name: "Personal Goals",
+    name: "Event Planning",
     board: {
-      name: "Goals Board",
+      name: "Birthday Party Board",
     },
     lists: [
       {
-        name: "Short Term Goals 1",
+        name: "To Do",
         tasks: [
-          { title: "Goal 1", description: "Description 1", due_date: null },
+          { title: "Book venue", description: "Reserve a venue for the birthday party.", due_date: "2025-05-18" },
+          { title: "Send invitations", description: "Send digital invitations to all guests.", due_date: "2025-05-16" },
         ],
       },
       {
-        name: "Long Term Goals",
-        tasks: [],
-      },
-    ],
-  },
-  {
-    id: 4,
-    name: "Personal Goals 2",
-    board: {
-      name: "Goals Board",
-    },
-    lists: [
-      {
-        name: "Short Term Goals",
+        name: "In Progress",
         tasks: [
-          { title: "Goal 1", description: "Description 1", due_date: null },
+          { title: "Order decorations", description: "Purchase balloons, banners, and tableware.", due_date: "2025-05-15" },
         ],
       },
       {
-        name: "Long Term Goals",
-        tasks: [],
+        name: "Completed",
+        tasks: [
+          { title: "Plan menu", description: "Decide on the food and drinks for the party.", due_date: "2025-05-12" },
+        ],
       },
     ],
   },
