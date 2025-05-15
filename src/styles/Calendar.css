@@ -5,6 +5,9 @@
   flex-direction: column;
   width: 100%;
   max-height: calc(100vh - 110px);
+  
+  margin-left: 20px;
+  margin-right: 20px;
 }
 
 .calendar_year_controls {
@@ -37,12 +40,14 @@
 .yearly_calendar {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  /* Responsive columns */
   gap: 20px;
-  padding: 20px;
   max-height: calc(100vh - 145px);
   overflow-y: auto;
-  width: 99%;
+  width: 100%; /* Ensure it takes the full width of its container */
+  max-width: 100%; 
+  padding-left: 20px;
+  
+  padding-right: 20px;
 }
 
 /* .calendar_month {
@@ -142,17 +147,23 @@
   border: 1px solid rgb(95, 95, 95);
   padding-left: 5px;
   border-radius: 25px;
+  min-height: 130px;
+  height: auto;
 }
 
-.selected_day_task_board_container{
+.selected_day_task_board_container {
   margin-top: -15px;
   width: max-content;
 }
 
-.selected_day_task_board{
+.selected_day_task_board {
   margin: 0px;
   margin-left: 10px;
   margin-right: 15px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 6px;
 }
 
 .selected_day_info button {

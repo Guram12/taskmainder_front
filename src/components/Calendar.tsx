@@ -4,12 +4,15 @@ import { board } from '../utils/interface';
 import { MdOutlineKeyboardDoubleArrowRight } from "react-icons/md";
 import { MdOutlineKeyboardDoubleArrowLeft } from "react-icons/md";
 import { ThemeSpecs } from '../utils/theme';
+import { FaClipboardList } from "react-icons/fa";
+import { IoMdListBox } from "react-icons/io";
 
 
 
 interface CalendarProps {
   boards: board[];
   currentTheme: ThemeSpecs;
+  fetchBoards: () => Promise<void>;
 }
 
 interface TaskInfo {
@@ -18,7 +21,7 @@ interface TaskInfo {
   listName: string;
 }
 
-const Calendar: React.FC<CalendarProps> = ({ boards, currentTheme }) => {
+const Calendar: React.FC<CalendarProps> = ({ boards, currentTheme, fetchBoards }) => {
   const months = [
     'January', 'February', 'March', 'April', 'May', 'June',
     'July', 'August', 'September', 'October', 'November', 'December',
@@ -30,6 +33,17 @@ const Calendar: React.FC<CalendarProps> = ({ boards, currentTheme }) => {
   const [selectedDay, setSelectedDay] = useState<string | null>(null);
   const [tasksForSelectedDay, setTasksForSelectedDay] = useState<TaskInfo[]>([]);
   const [currentYear, setCurrentYear] = useState<number>(new Date().getFullYear()); // Track the current year
+
+
+
+
+  useEffect(() => {
+    const fetchData = async () => {
+      await fetchBoards();
+    };
+    fetchData();
+    console.log('Fetched boards data');
+  }, []);
 
   // Extract due dates from boards and organize them by month
   useEffect(() => {
@@ -175,25 +189,20 @@ const Calendar: React.FC<CalendarProps> = ({ boards, currentTheme }) => {
               <div className='selected_day_container_list' >
                 {tasksForSelectedDay.map((task, index) => (
                   <div key={index} className='selected_day_task_container'>
-                    <div className='selected_day_task_board_container'  style={{ backgroundColor: `${currentTheme['--list-background-color']}` }} >
-                      <p className='selected_day_task_board' >Board: {task.boardName}</p>
+                    <div className='selected_day_task_board_container' style={{ backgroundColor: `${currentTheme['--list-background-color']}` }} >
+                      <p className='selected_day_task_board' >
+                        <FaClipboardList />
+                        {task.boardName}</p>
                     </div>
-                    <p className='selected_day_task_list' >List: {task.listName}</p>
+                    <div className='selected_day_task_list' >
+                      <IoMdListBox />
+                      {task.listName}
+                    </div>
+                    <p className='selected_day_task_list' ></p>
                     <p className='selected_day_task_title' >Task: {task.taskTitle}</p>
                   </div>
                 ))}
               </div>
-
-
-              // <ul>
-              //   {tasksForSelectedDay.map((task, index) => (
-              //     <li key={index}>
-              //       <strong>Task:</strong> {task.taskTitle} <br />
-              //       <strong>Board:</strong> {task.boardName} <br />
-              //       <strong>List:</strong> {task.listName}
-              //     </li>
-              //   ))}
-              // </ul>
             ) : (
               <p>No tasks due on this day.</p>
             )}

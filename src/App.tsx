@@ -65,20 +65,20 @@ const App: React.FC = () => {
 
 
   // ========================================== fetch  boards ==================================================
-  useEffect(() => {
-    const fetchBoards = async () => {
-      try {
-        const response = await axiosInstance.get('api/boards/', {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem('access_token')}`
-          }
-        });
-        setBoards(response.data);
-      } catch (error) {
-        console.error("Error while retrieving boards", error);
-      }
-    };
+  const fetchBoards = async () => {
+    try {
+      const response = await axiosInstance.get('api/boards/', {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('access_token')}`
+        }
+      });
+      setBoards(response.data);
+    } catch (error) {
+      console.error("Error while retrieving boards", error);
+    }
+  };
 
+  useEffect(() => {
     if (isAuthenticated) {
       fetchBoards();
     }
@@ -170,7 +170,7 @@ const App: React.FC = () => {
 
       }
     };
-  
+
     checkAuthentication();
   }, []);
 
@@ -203,7 +203,7 @@ const App: React.FC = () => {
             current_user_email={profileData.email}
             profileData={profileData}
             FetchProfileData={FetchProfileData}
-            
+            fetchBoards={fetchBoards}
           />} />
       </Routes>
     </Router>

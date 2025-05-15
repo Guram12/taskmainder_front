@@ -23,6 +23,7 @@ interface MainPageProps {
   current_user_email: string;
   profileData: ProfileData;
   FetchProfileData: () => Promise<void>;
+  fetchBoards: () => Promise<void>
 }
 
 const MainPage: React.FC<MainPageProps> = ({
@@ -36,6 +37,7 @@ const MainPage: React.FC<MainPageProps> = ({
   current_user_email,
   profileData,
   FetchProfileData,
+  fetchBoards,
 }) => {
   const [selectedComponent, setSelectedComponent] = useState<string>("Boards");
 
@@ -96,7 +98,10 @@ const MainPage: React.FC<MainPageProps> = ({
   };
 
 
+
+
   const renderComponent = useCallback(() => {
+
     switch (selectedComponent) {
       case "Settings":
         return <Settings boards={boards} profileData={profileData} FetchProfileData={FetchProfileData} />;
@@ -106,6 +111,7 @@ const MainPage: React.FC<MainPageProps> = ({
           <Calendar
             boards={boards}
             currentTheme={currentTheme}
+            fetchBoards={fetchBoards}
           />
         </StyledEngineProvider>;
 
