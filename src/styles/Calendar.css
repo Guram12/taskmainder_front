@@ -122,6 +122,7 @@
   z-index: 1001;
   text-align: left;
   max-height: 80%;
+  overflow-y: auto;
 }
 
 .selected_day_container_list {
@@ -205,7 +206,8 @@
   height: auto;
   min-height: 40px;
   width: 80%;
-  ;
+  color: black;
+  font-weight: 500;
 }
 .selected_day_close_button{
   position: absolute;

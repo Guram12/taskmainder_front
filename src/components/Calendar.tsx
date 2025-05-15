@@ -197,11 +197,11 @@ const Calendar: React.FC<CalendarProps> = ({ boards, currentTheme, fetchBoards }
                 {tasksForSelectedDay.map((board, boardIndex) => (
                   <div key={boardIndex} className="selected_day_task_container">
                     <div className="selected_day_task_board_container" style={{ backgroundColor: `${currentTheme['--list-background-color']}` }}>
-                      <p className="selected_day_task_board">
+                      <div className="selected_day_task_board">
                         <FaClipboardList />
                         <h2 className='selected_day_boardname_h2'>{board.boardName}</h2>
 
-                      </p>
+                      </div>
                     </div>
                     {Object.entries(board.lists).map(([listName, tasks], listIndex) => (
                       <div key={listIndex} className="selected_day_task_list" style={{ backgroundColor: `${currentTheme['--list-background-color']}` }}>
@@ -212,7 +212,7 @@ const Calendar: React.FC<CalendarProps> = ({ boards, currentTheme, fetchBoards }
 
                         {tasks.map((task, taskIndex) => (
                           <div key={taskIndex} className="selected_day_each_task">
-                            Task: {task.taskTitle}
+                            {task.taskTitle}
                           </div>
                         ))}
 
