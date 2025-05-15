@@ -190,7 +190,7 @@ const App: React.FC = () => {
         <Route path="/register" element={<Register />} />
         <Route path="/password-reset" element={<PasswordReset />} />
         <Route path="/password-reset-confirm/:uid/:token" element={<PasswordResetConfirm />} />
-        <Route path="/finish_profile" element={<FinishGoogleSignIn setIsAuthenticated={setIsAuthenticated} />} />
+        <Route path="/finish-profile" element={<FinishGoogleSignIn setIsAuthenticated={setIsAuthenticated} />} />
         <Route path="/mainpage"
           element={<MainPage
             selectedBoard={selectedBoard}

@@ -26,7 +26,7 @@ const GoogleSignIn: React.FC<GoogleSignInProps> = ({ setIsAuthenticated }) => {
           'Content-Type': 'application/json',
         }
       });
-      console.log(res.data);
+      console.log('google respoonse ', res.data);
       if (res.data.access && res.data.refresh) {
         localStorage.setItem('access_token', res.data.access);
         localStorage.setItem('refresh_token', res.data.refresh);
@@ -55,6 +55,8 @@ const GoogleSignIn: React.FC<GoogleSignInProps> = ({ setIsAuthenticated }) => {
     console.error('Google login error');
   }
 
+  // Log the redirect URI
+  console.log("Redirect URI:", `${window.location.origin}/finish_profile`);
 
 
   return (
@@ -62,6 +64,9 @@ const GoogleSignIn: React.FC<GoogleSignInProps> = ({ setIsAuthenticated }) => {
       <GoogleLogin
         onSuccess={handleGoogleLoginSuccess}
         onError={handleGoogleLoginFailure}
+        // ux_mode="redirect" 
+        ux_mode="popup" 
+        useOneTap={true}
         theme="filled_black"  // Options: 'outline' or 'filled'
         size="large"     // Options: 'small', 'medium', 'large'
         text="signup_with"    // Options: 'signin_with', 'signup_with', 'continue_with', 'signin'
