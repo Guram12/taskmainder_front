@@ -19,6 +19,8 @@ interface TaskInfo {
   taskTitle: string;
   boardName: string;
   listName: string;
+  dueDate?: string | null;
+  priority: 'green' | 'orange' | 'red' | null;
 }
 
 const Calendar: React.FC<CalendarProps> = ({ boards, currentTheme, fetchBoards }) => {
@@ -110,6 +112,8 @@ const Calendar: React.FC<CalendarProps> = ({ boards, currentTheme, fetchBoards }
                 taskTitle: task.title,
                 boardName: board.name,
                 listName: list.name,
+                dueDate: task.due_date,
+                priority: task.priority,
               });
             }
           }
@@ -171,6 +175,21 @@ const Calendar: React.FC<CalendarProps> = ({ boards, currentTheme, fetchBoards }
     setCurrentYear((prevYear) => (direction === 'prev' ? prevYear - 1 : prevYear + 1));
   };
 
+  // ================================================= render priority styles ==========================================
+
+  const priorityStyles = {
+    green: { backgroundColor: '#15cf8a' },
+    orange: { backgroundColor: '#fcc603' },
+    red: { backgroundColor: '#d60000' },
+  };
+
+  const getPriorityStyle = (priority: 'green' | 'orange' | 'red' | null) => {
+    return priority ? priorityStyles[priority] : {};
+  };
+
+
+  
+
   return (
     <div className="main_calendar_container">
       <div className="calendar_year_controls">
@@ -211,8 +230,16 @@ const Calendar: React.FC<CalendarProps> = ({ boards, currentTheme, fetchBoards }
                         </div>
 
                         {tasks.map((task, taskIndex) => (
-                          <div key={taskIndex} className="selected_day_each_task">
-                            {task.taskTitle}
+                          <div key={taskIndex} className="selected_day_each_task" >
+                            {task.priority && (
+                              <div className='selected_day_each_task_priority' style={getPriorityStyle(task.priority)}>  </div>
+                            )}
+                            <p className='selected_day_each_task_title' >{task.taskTitle}</p>
+                            <p className='selected_day_each_task_due_date' >
+                              Due Date:
+                              {task.dueDate ? new Date(task.dueDate).toLocaleTimeString([],
+                                { hour: '2-digit', minute: '2-digit' }) : ''}
+                            </p>
                           </div>
                         ))}
 
