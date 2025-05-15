@@ -60,6 +60,7 @@ const Templates: React.FC<TemplatesProps> = ({ handleTemplateSelect, currentThem
               description: task.description,
               due_date: task.due_date,
               list: newList.id,
+              priority: task.priority,
             },
             config
           );
@@ -73,7 +74,19 @@ const Templates: React.FC<TemplatesProps> = ({ handleTemplateSelect, currentThem
     }
   };
 
-  
+  // =========================================== set priority styles ==========================================
+
+  const priorityStyles = {
+    green: { backgroundColor: '#15cf8a' },
+    orange: { backgroundColor: '#fcc603' },
+    red: { backgroundColor: '#d60000' },
+  };
+
+  const getPriorityStyle = (priority: 'green' | 'orange' | 'red' | null) => {
+    return priority ? priorityStyles[priority] : {};
+  };
+
+
   return (
     <div className="templates_container">
       <h2>Choose a Template</h2>
@@ -92,9 +105,10 @@ const Templates: React.FC<TemplatesProps> = ({ handleTemplateSelect, currentThem
               {template.lists.map((list) => (
                 <div className="each_template_board_list" key={list.name} style={{ backgroundColor: `${currentTheme['--list-background-color']}` }}>
                   <p className="template_list_name"> {list.name}</p>
-                  
+
                   {list.tasks.map((task) => (
                     <div key={task.title} className="task_item">
+                      <div className="priority" style={getPriorityStyle(task.priority)}></div>
                       <p className="template_task_p" >{task.title}</p>
                       <p className='template_due_Date_p'>No due date</p>
                     </div>
@@ -113,12 +127,4 @@ const Templates: React.FC<TemplatesProps> = ({ handleTemplateSelect, currentThem
 export default Templates;
 
 
-
-
-// so as you see i have marked some days on calendar.
-//  this is for testing, now i am going to crerate new
-//    endpoint in my backend and  for current user  i 
-//    should send task with its due date time  information and
-//     asociated users , and mark days depending on this info .
-//      this info should include all board's tasks that this user has 
 

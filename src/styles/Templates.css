@@ -95,3 +95,10 @@
   bottom: 1px;
   right: 5px;
 }
+
+
+.priority{
+  width: 100px;
+  height: 15px;
+  border-radius: 25px;
+}

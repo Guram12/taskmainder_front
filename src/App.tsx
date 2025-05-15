@@ -65,20 +65,20 @@ const App: React.FC = () => {
 
 
   // ========================================== fetch  boards ==================================================
-  useEffect(() => {
-    const fetchBoards = async () => {
-      try {
-        const response = await axiosInstance.get('api/boards/', {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem('access_token')}`
-          }
-        });
-        setBoards(response.data);
-      } catch (error) {
-        console.error("Error while retrieving boards", error);
-      }
-    };
+  const fetchBoards = async () => {
+    try {
+      const response = await axiosInstance.get('api/boards/', {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('access_token')}`
+        }
+      });
+      setBoards(response.data);
+    } catch (error) {
+      console.error("Error while retrieving boards", error);
+    }
+  };
 
+  useEffect(() => {
     if (isAuthenticated) {
       fetchBoards();
     }
@@ -170,7 +170,7 @@ const App: React.FC = () => {
 
       }
     };
-  
+
     checkAuthentication();
   }, []);
 
@@ -190,7 +190,7 @@ const App: React.FC = () => {
         <Route path="/register" element={<Register />} />
         <Route path="/password-reset" element={<PasswordReset />} />
         <Route path="/password-reset-confirm/:uid/:token" element={<PasswordResetConfirm />} />
-        <Route path="/finish_profile" element={<FinishGoogleSignIn setIsAuthenticated={setIsAuthenticated} />} />
+        <Route path="/finish-profile" element={<FinishGoogleSignIn setIsAuthenticated={setIsAuthenticated} />} />
         <Route path="/mainpage"
           element={<MainPage
             selectedBoard={selectedBoard}
@@ -203,7 +203,7 @@ const App: React.FC = () => {
             current_user_email={profileData.email}
             profileData={profileData}
             FetchProfileData={FetchProfileData}
-            
+            fetchBoards={fetchBoards}
           />} />
       </Routes>
     </Router>

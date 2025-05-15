@@ -9,6 +9,8 @@ import { ThemeProvider } from '@mui/material/styles';
 import generateCustomTheme from '../../utils/CustomTheme';
 import { ProfileData } from '../../utils/interface';
 import { MdModeEdit } from "react-icons/md";
+import { MdRadioButtonChecked } from "react-icons/md";
+import { MdRadioButtonUnchecked } from "react-icons/md";
 
 
 
@@ -127,6 +129,16 @@ const Task: React.FC<TaskProps> = ({ task, deleteTask, updateTask, moveTaskWithi
     return priority ? priorityStyles[priority] : {};
   };
 
+  // =======================================   change task complition   ==========================================
+
+
+  const handleCompletionToggle = (currenttask: tasks) => {
+    updateTask(task.id, currenttask.title, currenttask.due_date, currenttask.description, !currenttask.completed, currenttask.task_associated_users_id, currenttask.priority);
+  };
+
+
+
+
   return (
     <div
       className={`each_task ${isDragging || isDraggingReorder ? 'dragging' : ''}`}
@@ -135,32 +147,34 @@ const Task: React.FC<TaskProps> = ({ task, deleteTask, updateTask, moveTaskWithi
       data-task-id={task.id} // Add this line
 
     >
-      <div className='task_content_and_icons_container' >
-
-        <div className='conteiner_for_editClick'>
-          <p className='task_title'>
-            {task.title}
-          </p>
-        </div>
-
-        <div onClick={handleTaskClick} >
-          <MdModeEdit className='edit_task_icon' />
-        </div>
-
-        <div ref={dragReorder} className="drag_handle">
-          <BiMoveVertical className='drag_icon' />
-        </div>
-
-      </div>
-
-      <div>
+      <div className='task_complition_checkbox_container' >
+        {task.completed ? (
+          <MdRadioButtonChecked className='completed_task_icon' onClick={() => handleCompletionToggle(task)} />
+        ) : (
+          <MdRadioButtonUnchecked className='not_completed_task_icon' onClick={() => handleCompletionToggle(task)} />
+        )}
         {task.priority && (
           <div className='priority_div' style={getPriorityStyle(task.priority)}>
 
           </div>
         )}
 
+
+        <div className='edit_drag_icon_container'>
+          <MdModeEdit className='edit_task_icon' onClick={handleTaskClick} />
+          <div ref={dragReorder} className="drag_handle">
+            <BiMoveVertical className='drag_icon' />
+          </div>
+        </div>
+
+
       </div>
+
+      <div className={`conteiner_for_task_title ${task.completed ? 'task_completed' : ''}`} >
+        <p className='task_title'>{task.title}</p>
+      </div>
+
+
       <div className='task_description_and_due_date_container' >
         {task.due_date ? (
           <p className='due_Date_p'>Due Date: {formatDate(task.due_date)}</p>

@@ -1,4 +1,5 @@
 import '../styles/Sidebar.css';
+import 'shepherd.js/dist/css/shepherd.css';
 import React, { useState } from "react";
 import { Sidebar, Menu, MenuItem, SubMenu } from 'react-pro-sidebar';
 import { FaCalendarAlt } from "react-icons/fa";
@@ -11,7 +12,7 @@ import { board } from '../utils/interface';
 import { GoRepoTemplate } from "react-icons/go";
 import axiosInstance from '../utils/axiosinstance';
 import Shepherd from 'shepherd.js';
-import 'shepherd.js/dist/css/shepherd.css';
+
 
 interface SidebarProps {
   currentTheme: ThemeSpecs;

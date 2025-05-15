@@ -65,6 +65,7 @@ export interface Template {
       title: string;
       description: string;
       due_date: string | null;
+      priority: 'green' | 'orange' | 'red' | null;
     }[];
   }[];
 }
