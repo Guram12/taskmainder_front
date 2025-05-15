@@ -31,9 +31,9 @@ const Calendar: React.FC<CalendarProps> = ({ boards, currentTheme, fetchBoards }
 
   const [highlightedDays, setHighlightedDays] = useState<Record<number, number[]>>({});
   const [selectedDay, setSelectedDay] = useState<string | null>(null);
-  const [tasksForSelectedDay, setTasksForSelectedDay] = useState<TaskInfo[]>([]);
-  const [currentYear, setCurrentYear] = useState<number>(new Date().getFullYear()); // Track the current year
+  const [tasksForSelectedDay, setTasksForSelectedDay] = useState<{ boardName: string; lists: Record<string, TaskInfo[]> }[]>([]);
 
+  const [currentYear, setCurrentYear] = useState<number>(new Date().getFullYear());
 
 
 
@@ -83,11 +83,11 @@ const Calendar: React.FC<CalendarProps> = ({ boards, currentTheme, fetchBoards }
     }
     return days;
   };
-
   const handleDayClick = (monthIndex: number, dayNumber: number) => {
     const selectedDate = new Date(currentYear, monthIndex, dayNumber);
 
-    const tasks: TaskInfo[] = [];
+    const tasksByBoard: Record<string, { boardName: string; lists: Record<string, TaskInfo[]> }> = {};
+
     boards.forEach((board) => {
       board.lists.forEach((list) => {
         list.tasks.forEach((task) => {
@@ -98,7 +98,15 @@ const Calendar: React.FC<CalendarProps> = ({ boards, currentTheme, fetchBoards }
               dueDate.getMonth() === selectedDate.getMonth() &&
               dueDate.getDate() === selectedDate.getDate()
             ) {
-              tasks.push({
+              if (!tasksByBoard[board.name]) {
+                tasksByBoard[board.name] = { boardName: board.name, lists: {} };
+              }
+
+              if (!tasksByBoard[board.name].lists[list.name]) {
+                tasksByBoard[board.name].lists[list.name] = [];
+              }
+
+              tasksByBoard[board.name].lists[list.name].push({
                 taskTitle: task.title,
                 boardName: board.name,
                 listName: list.name,
@@ -110,7 +118,7 @@ const Calendar: React.FC<CalendarProps> = ({ boards, currentTheme, fetchBoards }
     });
 
     setSelectedDay(`${months[monthIndex]} ${dayNumber}, ${currentYear}`);
-    setTasksForSelectedDay(tasks);
+    setTasksForSelectedDay(Object.values(tasksByBoard));
   };
 
   const closeModal = () => {
@@ -183,30 +191,40 @@ const Calendar: React.FC<CalendarProps> = ({ boards, currentTheme, fetchBoards }
             onClick={(e) => e.stopPropagation()} // Prevent closing when clicking inside the modal
           >
             <h3>Tasks for {selectedDay}</h3>
+
             {tasksForSelectedDay.length > 0 ? (
-
-
-              <div className='selected_day_container_list' >
-                {tasksForSelectedDay.map((task, index) => (
-                  <div key={index} className='selected_day_task_container'>
-                    <div className='selected_day_task_board_container' style={{ backgroundColor: `${currentTheme['--list-background-color']}` }} >
-                      <p className='selected_day_task_board' >
+              <div className="selected_day_container_list">
+                {tasksForSelectedDay.map((board, boardIndex) => (
+                  <div key={boardIndex} className="selected_day_task_container">
+                    <div className="selected_day_task_board_container" style={{ backgroundColor: `${currentTheme['--list-background-color']}` }}>
+                      <p className="selected_day_task_board">
                         <FaClipboardList />
-                        {task.boardName}</p>
+                        <h2 className='selected_day_boardname_h2'>{board.boardName}</h2>
+
+                      </p>
                     </div>
-                    <div className='selected_day_task_list' >
-                      <IoMdListBox />
-                      {task.listName}
-                    </div>
-                    <p className='selected_day_task_list' ></p>
-                    <p className='selected_day_task_title' >Task: {task.taskTitle}</p>
+                    {Object.entries(board.lists).map(([listName, tasks], listIndex) => (
+                      <div key={listIndex} className="selected_day_task_list" style={{ backgroundColor: `${currentTheme['--list-background-color']}` }}>
+                        <div className='selected_day_icon_list_h2' style={{ backgroundColor: `${currentTheme['--list-background-color']}` }}>
+                          <IoMdListBox />
+                          <h3 className='selected_day_h2' >{listName}</h3>
+                        </div>
+
+                        {tasks.map((task, taskIndex) => (
+                          <div key={taskIndex} className="selected_day_each_task">
+                            Task: {task.taskTitle}
+                          </div>
+                        ))}
+
+                      </div>
+                    ))}
                   </div>
                 ))}
               </div>
             ) : (
               <p>No tasks due on this day.</p>
             )}
-            <button onClick={closeModal}>Close</button>
+            <button onClick={closeModal} className='selected_day_close_button'>Close</button>
           </div>
         </div>
       )}
