@@ -1,33 +1,91 @@
-.settings-content {
-  padding: 20px;
-  background-color: #f9f9f9;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+.main_settings_container {
+  width: 100%;
+  height: auto;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 15px;
 }
 
 .profil_image_cont {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 20px;
+  margin-bottom: 20px;
+  border: 1px dashed;
+  padding: 10px;
+  position: relative;
+  margin-top: 40px;
+  border-radius: 10px;
+  min-height: 200px;
+}
+
+
+.profile_picture_update_p_cont {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+  position: absolute;
+  width: max-content;
+  top: 0px;
+  margin-top: -16px;
+  padding-left: 10px;
+  padding-right: 10px;
+  transition: background-color 0.3s ease,
+}
+
+.profile_picture_ipdate_p {
+  top: 0px;
+  margin: 0px;
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.profile_image {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  cursor: pointer;
+  object-fit: cover;
+  margin-left: 40px;
+}
+
+.profile_update_arrow_icon {
+  width: 40px;
+  height: 40px;
+}
+
+
+.image_input {
+  margin-top: 10px;
+}
+
+.profile_update_buttons_cont{
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   gap: 20px;
-  margin-bottom: 20px;
-  border: 1px solid grey;
-  padding: 10px;
-  min-width: 300px;
+  margin-top: 20px;
 }
 
-.profile_image {
-  width: 100px;
-  height: 100px;
-  border-radius: 50%;
+
+.custom_file_input_button {
+  background-color: #121212;
+  border: 0px;
   cursor: pointer;
-  object-fit: cover;
+  width: 120px;
+  height: 30px;
+  border-radius: 5px;
+  transition: color 0.3s ease, background-color 0.3s ease;
 }
 
-.image_input {
-  margin-top: 10px;
+.custom_file_input_button:hover {
+  background-color: #1a1a1a;
 }
+
 
 .preview_container {
   margin-top: 10px;
@@ -35,20 +93,49 @@
   padding: 10px;
   border-radius: 8px;
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
+  width: 150px;
+  position: relative;
 }
 
+.close_preview{
+  position: absolute;
+  top: 3px;
+  right: 5px;
+  cursor: pointer;
+}
+
+.file_name_icon_cont {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+}
+.file_name_icon{
+  width: 20px;
+  height: 20px;
+}
+
+.file_name_p{
+  margin: 0px;
+  max-width: 130px;
+  text-wrap: wrap;
+  overflow: hidden;
+}
+
+
 .preview_image {
-  width: 150px;
-  height: 150px;
+  width: 100px;
+  height: 100px;
   border-radius: 8px;
   object-fit: cover;
 }
 
 .upload_button {
   padding: 10px 20px;
-  background-color: #007bff;
   color: white;
   border: none;
   border-radius: 5px;
