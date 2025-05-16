@@ -7,7 +7,6 @@ import Boards from "./Boards/Boards";
 import { ThemeSpecs } from "../utils/theme";
 import { board } from "../utils/interface";
 import Templates from "./Templates";
-import LearnDrag from "./LearnDrag";
 import { ProfileData } from "../utils/interface";
 import { StyledEngineProvider } from '@mui/material/styles';
 import axiosInstance from "../utils/axiosinstance";
@@ -47,7 +46,9 @@ const MainPage: React.FC<MainPageProps> = ({
 
 
 
-
+  useEffect(() => {
+    console.log('from mainpage profiledata updated :', profileData);
+  }, [profileData]);
 
   // --------------------------------------------------------------------------------------------------------------
   // if accesstoken or refreshtoken is null,or incorrect , redirect to login page
@@ -104,7 +105,11 @@ const MainPage: React.FC<MainPageProps> = ({
 
     switch (selectedComponent) {
       case "Settings":
-        return <Settings boards={boards} profileData={profileData} FetchProfileData={FetchProfileData} />;
+        return <Settings
+          profileData={profileData}
+          FetchProfileData={FetchProfileData}
+          currentTheme={currentTheme}
+        />;
 
       case "Calendar":
         return <StyledEngineProvider injectFirst>
@@ -135,8 +140,6 @@ const MainPage: React.FC<MainPageProps> = ({
           />
         );
 
-      default:
-        return <LearnDrag />;
     }
   }, [selectedComponent, boards, selectedBoard, currentTheme]);
 

@@ -9,30 +9,16 @@ export interface ThemeSpecs {
 
 
 const themes = {
-  dark: {
-    '--background-color': '#000000',
-    '--main-text-coloure': '#ffffff',
-    '--border-color': '#f2f3f4',
-    '--scrollbar-thumb-color': '##34ebc6',
-    '--list-background-color': '#24292b'
-  },
-  light: {
-    '--background-color': '#F4D35E',
-    '--main-text-coloure': '#000000',
-    '--border-color': '#000000',
-    '--scrollbar-thumb-color': '#c0c0c0',
-    '--list-background-color': '#ffffff'
-
-  },
-  theme1: {
+  dark_gray: {
     '--background-color': '#121212',
-    '--main-text-coloure': '#000000',
-    '--border-color': '#f2f3f4',
+    '--main-text-coloure': '#ffffff',
+    '--border-color': '#ffffff',
     '--scrollbar-thumb-color': '#555555',
     '--list-background-color': '#1e3a4a'
 
   },
-  theme2: {
+
+  dark_blue: {
     '--background-color': '#2e4053',
     '--main-text-coloure': '#FFFFFF',
     '--border-color': '#d6dbdf',
@@ -40,7 +26,17 @@ const themes = {
     '--list-background-color': '#1e3a4a'
 
   },
-  theme3: {
+
+  yellow: {
+    '--background-color': '#F4D35E',
+    '--main-text-coloure': '#121212',
+    '--border-color': '#000000',
+    '--scrollbar-thumb-color': '#c0c0c0',
+    '--list-background-color': '#BAC700'
+
+  },
+
+  light_green: {
     '--background-color': '#708B75',
     '--main-text-coloure': '#FFFFFF',
     '--border-color': '#000000',
@@ -48,13 +44,7 @@ const themes = {
     '--list-background-color': '#ffffff'
 
   },
-  theme4: {
-    '--background-color': '#005f54',
-    '--main-text-coloure': '#FFFFFF',
-    '--border-color': '#000000',
-    '--scrollbar-thumb-color': '#207f74',
-    '--list-background-color': '#ffffff'
-  }
+
 };
 
 export default themes;

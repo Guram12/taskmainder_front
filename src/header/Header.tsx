@@ -53,6 +53,7 @@ const Header: React.FC<HeaderProps> = ({
     }
     localStorage.setItem('theme', JSON.stringify(themeSpecs));
     document.body.style.backgroundColor = themeSpecs['--background-color'];
+    document.body.style.color = themeSpecs['--main-text-coloure'];
     setChange_current_theme(!change_current_theme);
   }
   // ===========================================================================================
@@ -72,18 +73,15 @@ const Header: React.FC<HeaderProps> = ({
       </div>
 
       <div className='header_coloure_container'>
-        <div className='header_coloure_child_container example1'
-          onClick={() => changeTheme(themes.dark)}></div>
         <div className='header_coloure_child_container example2'
-          onClick={() => changeTheme(themes.theme1)}></div>
+          onClick={() => changeTheme(themes.dark_gray)}></div>
         <div className='header_coloure_child_container example3'
-          onClick={() => changeTheme(themes.theme2)}></div>
+          onClick={() => changeTheme(themes.dark_blue)}></div>
         <div className='header_coloure_child_container example4'
-          onClick={() => changeTheme(themes.light)}></div>
+          onClick={() => changeTheme(themes.yellow)}></div>
         <div className='header_coloure_child_container example5'
-          onClick={() => changeTheme(themes.theme3)}></div>
-        <div className='header_coloure_child_container example6'
-          onClick={() => changeTheme(themes.theme4)}></div>
+          onClick={() => changeTheme(themes.light_green)}></div>
+
       </div>
 
 
