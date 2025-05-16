@@ -7,6 +7,7 @@ import { useState, useEffect } from 'react';
 import { ThemeSpecs } from '../utils/theme';
 import themes from '../utils/theme';
 import { useNavigate } from 'react-router-dom';
+import Avatar from '@mui/material/Avatar'; // Import Avatar from Material-UI
 
 
 
@@ -87,9 +88,19 @@ const Header: React.FC<HeaderProps> = ({
 
 
       <div>
-        <div className='header_profile_container' >
+      <div className="header_profile_container">
           <h3 className="header_profile_username">{profileData.username}</h3>
-          <img src={profileData?.profile_picture} alt="profile" className="header_profile_picture" />
+          {profileData?.profile_picture ? (
+            <img
+              src={profileData.profile_picture}
+              alt="profile"
+              className="header_profile_picture"
+            />
+          ) : (
+            <Avatar>
+              {profileData.username.charAt(0).toUpperCase()}
+            </Avatar>
+          )}
         </div>
       </div>
       <div>

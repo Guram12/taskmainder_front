@@ -30,7 +30,6 @@ const Profile_Info_update: React.FC<Profile_Info_updateProps> = ({ profileData, 
   useEffect(() => {
     setUsername(profileData.username);
     setPhoneNumber(profileData.phone_number);
-    console.log("Profile data update from child ===>>>> :", profileData);
   }, [profileData]);
 
   // ============================= send updated data to backend ======================================

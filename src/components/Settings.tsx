@@ -4,7 +4,6 @@ import { ProfileData } from "../utils/interface";
 import { ThemeSpecs } from "../utils/theme";
 import ProfilePictureUpdate from "./settings/ProfilePictureUpdate";
 import Profile_Info_update from "./settings/Profile_Info_update";
-import { useEffect } from "react";
 
 
 
@@ -23,9 +22,6 @@ interface SettingsProps {
 
 const Settings: React.FC<SettingsProps> = ({ profileData, FetchProfileData, currentTheme }) => {
 
-useEffect(() => {
-  console.log('from settings  profiledata updated :', profileData);
-}, [profileData]);
 
 
 
@@ -51,7 +47,7 @@ export default Settings;
 // new functionality for settings  ==>>>
 
 // profile picture update         +
-// Update Profile Information
+// Update Profile Information     +
 // Custom Avatars ???
 // Change Password
 // Theme Customization

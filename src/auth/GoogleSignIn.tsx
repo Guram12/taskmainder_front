@@ -39,7 +39,7 @@ const GoogleSignIn: React.FC<GoogleSignInProps> = ({ setIsAuthenticated }) => {
         const profileData: ProfileData = profile_info.data;
         if (profileData.phone_number === null) {
           console.log('profileData', profileData);
-          navigate('/finish_profile');
+          navigate('/finish-profile');
         } else {
           setIsAuthenticated(true);
           navigate('/mainpage');

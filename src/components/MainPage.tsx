@@ -45,11 +45,7 @@ const MainPage: React.FC<MainPageProps> = ({
   const refreshToken: string | null = localStorage.getItem('refresh_token');
 
 
-
-  useEffect(() => {
-    console.log('from mainpage profiledata updated :', profileData);
-  }, [profileData]);
-
+  
   // --------------------------------------------------------------------------------------------------------------
   // if accesstoken or refreshtoken is null,or incorrect , redirect to login page
   useEffect(() => {
@@ -141,7 +137,7 @@ const MainPage: React.FC<MainPageProps> = ({
         );
 
     }
-  }, [selectedComponent, boards, selectedBoard, currentTheme]);
+  }, [selectedComponent, boards, selectedBoard, currentTheme, profileData]);
 
   const memoizedRenderComponent = useMemo(() => renderComponent(), [renderComponent]);
 
