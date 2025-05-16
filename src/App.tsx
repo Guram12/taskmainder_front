@@ -16,9 +16,9 @@ import PasswordResetConfirm from './auth/PasswordResetConfirm';
 
 
 
-// <h1>1.გასაკეთებელი დავალებები</h1>
-// <h1>5. Task Prioritization </h1>
-// <h1>2. Notifications System</h1>
+// =====>>>>  .გასაკეთებელი დავალებები
+// ბოოარზე იუზერის დამატებისას იუზერს უნდა  მიუვიდეს ნოტიფიცა რომ დაადასტუროს ბიოარდზე დამატება
+// Notifications System
 
 
 
@@ -34,7 +34,7 @@ const App: React.FC = () => {
   });
 
   const [currentTheme, setCurrentTheme] = useState<ThemeSpecs>({
-    '--background-color': '#f4f7f6',
+    '--background-color': '#4E4E4E',
     '--border-color': '#d9e0e3',
     '--main-text-coloure': '#333',
     '--scrollbar-thumb-color': '#d9e0e3',
@@ -110,6 +110,7 @@ const App: React.FC = () => {
 
   //======================================== fetch profile data ==================================================
   const FetchProfileData = async () => {
+    console.log('from app profile uopdated ==>>>>>')
     if (accessToken) {
       try {
         const response = await axiosInstance.get(`/acc/profile/`, {

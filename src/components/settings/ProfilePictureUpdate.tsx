@@ -84,9 +84,9 @@ const ProfilePictureUpdate: React.FC<ProfilePictureUpdateProps> = ({ profileData
   return (
     <div className="profil_image_cont" style={{ borderColor: currentTheme["--border-color"] }}>
       <div className="profile_picture_update_p_cont" style={{ backgroundColor: currentTheme["--background-color"] }}>
-        <h1 className="profile_picture_ipdate_p" style={{ color: currentTheme["--main-text-coloure"] }}>
+        <p className="profile_picture_ipdate_p" style={{ color: currentTheme["--main-text-coloure"] }}>
           Profile Picture update
-        </h1>
+        </p>
       </div>
 
       <img src={currentProfileImage} alt="Profile" className="profile_image" onClick={() => fileInputRef.current?.click()} />

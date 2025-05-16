@@ -104,7 +104,6 @@ const MainPage: React.FC<MainPageProps> = ({
     switch (selectedComponent) {
       case "Settings":
         return <Settings
-          boards={boards}
           profileData={profileData}
           FetchProfileData={FetchProfileData}
           currentTheme={currentTheme}
