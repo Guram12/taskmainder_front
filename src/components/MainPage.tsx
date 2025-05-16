@@ -46,7 +46,9 @@ const MainPage: React.FC<MainPageProps> = ({
 
 
 
-
+  useEffect(() => {
+    console.log('from mainpage profiledata updated :', profileData);
+  }, [profileData]);
 
   // --------------------------------------------------------------------------------------------------------------
   // if accesstoken or refreshtoken is null,or incorrect , redirect to login page

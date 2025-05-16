@@ -25,6 +25,11 @@ const ProfilePictureUpdate: React.FC<ProfilePictureUpdateProps> = ({ profileData
 
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 
+useEffect(() => {
+  console.log('from profile picture update profiledata updated :', profileData);
+}, [profileData]);
+
+
   //======================= Synchronize currentProfileImage with profileData.profile_picture   ========================
   useEffect(() => {
     setCurrentProfileImage(profileData.profile_picture);

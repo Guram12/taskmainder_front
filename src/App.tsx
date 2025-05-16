@@ -118,7 +118,7 @@ const App: React.FC = () => {
             Authorization: `Bearer ${accessToken}`
           }
         });
-        setProfileData(response.data);
+        setProfileData({ ...response.data }); // Create a new object
       } catch (error) {
         console.error("Error while retrieving profile data", error);
       }

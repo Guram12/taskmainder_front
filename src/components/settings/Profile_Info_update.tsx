@@ -30,8 +30,8 @@ const Profile_Info_update: React.FC<Profile_Info_updateProps> = ({ profileData, 
   useEffect(() => {
     setUsername(profileData.username);
     setPhoneNumber(profileData.phone_number);
-    console.log("Profile data update from child d:", profileData);
-  }, [profileData.username , profileData.phone_number]);
+    console.log("Profile data update from child ===>>>> :", profileData);
+  }, [profileData]);
 
   // ============================= send updated data to backend ======================================
 
@@ -81,7 +81,7 @@ const Profile_Info_update: React.FC<Profile_Info_updateProps> = ({ profileData, 
         <div className='names_with_input_cont' >
           <div className='each_input_cont' >
             <FaUser className="user_icon" style={{ color: currentTheme["--main-text-coloure"] }} />
-            <h1 className='user_username' >{username}</h1>
+            <h1 className='user_username' >{profileData.username}</h1>
             <TbEdit className='user_info_edit_icon' onClick={() => setIsEditing({ ...isEditing, username: true })} />
           </div>
           {isEditing.username && (
