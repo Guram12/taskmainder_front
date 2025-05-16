@@ -110,7 +110,6 @@ const App: React.FC = () => {
 
   //======================================== fetch profile data ==================================================
   const FetchProfileData = async () => {
-    console.log('from app profile uopdated ==>>>>>')
     if (accessToken) {
       try {
         const response = await axiosInstance.get(`/acc/profile/`, {
@@ -128,6 +127,10 @@ const App: React.FC = () => {
   useEffect(() => {
     FetchProfileData();
   }, [isAuthenticated, accessToken, refreshToken]);
+
+  useEffect(() => {
+    console.log("--->>>", profileData);
+  }, [profileData]);
 
 
   // =================================  validate tokens on website load ==================================

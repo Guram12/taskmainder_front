@@ -6,6 +6,7 @@ import { MdOutlineCancel } from "react-icons/md";
 import { ProfileData } from '../../utils/interface';
 import axiosInstance from '../../utils/axiosinstance';
 import { ThemeSpecs } from '../../utils/theme';
+import Avatar from '@mui/material/Avatar'; // Import Avatar from Material-UI
 
 
 interface ProfilePictureUpdateProps {
@@ -25,10 +26,10 @@ const ProfilePictureUpdate: React.FC<ProfilePictureUpdateProps> = ({ profileData
 
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 
-useEffect(() => {
-  console.log('from profile picture update profiledata updated :', profileData);
-}, [profileData]);
+  useEffect(() => {
 
+    console.log("Profile data update from child ===>>>> :", profileData);
+  }, [profileData]);
 
   //======================= Synchronize currentProfileImage with profileData.profile_picture   ========================
   useEffect(() => {
@@ -95,7 +96,9 @@ useEffect(() => {
       </div>
 
       <img src={currentProfileImage} alt="Profile" className="profile_image" onClick={() => fileInputRef.current?.click()} />
-
+      <Avatar>
+        {profileData.username.charAt(0).toUpperCase()}
+      </Avatar>
       {previewImage && (
         <MdKeyboardDoubleArrowRight className="profile_update_arrow_icon"
         />
