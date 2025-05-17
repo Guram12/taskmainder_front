@@ -4,7 +4,7 @@ import { ProfileData } from "../utils/interface";
 import { ThemeSpecs } from "../utils/theme";
 import ProfilePictureUpdate from "./settings/ProfilePictureUpdate";
 import Profile_Info_update from "./settings/Profile_Info_update";
-
+import DeleteAccount from "./settings/DeleteAccount";
 
 
 
@@ -36,6 +36,10 @@ const Settings: React.FC<SettingsProps> = ({ profileData, FetchProfileData, curr
         FetchProfileData={FetchProfileData}
         currentTheme={currentTheme}
       />
+
+      <DeleteAccount
+        currentTheme={currentTheme}
+      />
     </div>
   );
 };
@@ -47,7 +51,7 @@ export default Settings;
 
 // profile picture update         +
 // Update Profile Information     +
-// Custom Avatars ???
+// Custom Avatars                 +
 // Change Password
 // Theme Customization
 // Notification Preferences
