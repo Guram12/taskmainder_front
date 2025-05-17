@@ -13,7 +13,6 @@ import Profile_Info_update from "./settings/Profile_Info_update";
 
 
 
-
 interface SettingsProps {
   profileData: ProfileData;
   FetchProfileData: () => Promise<void>;

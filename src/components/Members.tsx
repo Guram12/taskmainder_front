@@ -2,7 +2,6 @@ import "../styles/Members.css";
 import React, { useEffect, useState, useCallback } from "react";
 import { board } from "../utils/interface";
 import { Board_Users } from "../utils/interface";
-import testimage from "../assets/profile_3.png";
 import { CgCloseR } from "react-icons/cg";
 import axiosInstance from "../utils/axiosinstance";
 import { RiCloseFill } from "react-icons/ri";
@@ -263,7 +262,7 @@ const Members: React.FC<MembersProps> = ({ selectedBoard, socketRef, current_use
         boardUser.profile_picture !== null ? (
           <img
             key={boardUser.id}
-            src={boardUser.profile_picture || testimage}
+            src={boardUser.profile_picture }
             alt="user profile"
             className="user_profile_images"
           />
@@ -398,7 +397,7 @@ const Members: React.FC<MembersProps> = ({ selectedBoard, socketRef, current_use
                     {boardUser.profile_picture !== null ? (
 
                       <img
-                        src={boardUser.profile_picture || testimage}
+                        src={boardUser.profile_picture }
                         alt="user profile"
                         className="board_user_images"
                       />
