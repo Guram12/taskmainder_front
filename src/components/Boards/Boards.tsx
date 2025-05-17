@@ -58,7 +58,7 @@ const Boards: React.FC<BoardsProps> = ({ selectedBoard, setSelectedBoard, curren
         id: user.id,
         email: user.email,
         phone_number: '',
-        profile_picture: user.profile_picture,
+        profile_picture: user.profile_picture || null,
         username: user.username,
         timezone: '',
         user_status: user.user_status,

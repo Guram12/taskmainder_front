@@ -8,7 +8,7 @@ import { ThemeSpecs } from '../utils/theme';
 import themes from '../utils/theme';
 import { useNavigate } from 'react-router-dom';
 import Avatar from '@mui/material/Avatar'; // Import Avatar from Material-UI
-
+import getAvatarStyles from "../utils/SetRandomColor";
 
 
 
@@ -97,9 +97,14 @@ const Header: React.FC<HeaderProps> = ({
               className="header_profile_picture"
             />
           ) : (
-            <Avatar>
-              {profileData.username.charAt(0).toUpperCase()}
-            </Avatar>
+            <Avatar
+            style={{
+              backgroundColor: getAvatarStyles(profileData.username.charAt(0)).backgroundColor,
+              color: getAvatarStyles(profileData.username.charAt(0)).color
+            }}
+          >
+            {profileData.username.charAt(0).toUpperCase()}
+          </Avatar>
           )}
         </div>
       </div>

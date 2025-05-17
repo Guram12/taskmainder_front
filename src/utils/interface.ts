@@ -3,7 +3,7 @@ export interface ProfileData {
   id: number;
   email: string;
   phone_number: string;
-  profile_picture: string;
+  profile_picture: string | null;
   username: string;
   timezone: string;
 }
@@ -14,7 +14,7 @@ export interface ProfileData {
 export interface Board_Users {
   email: string;
   id: number;
-  profile_picture: string;
+  profile_picture: string | null;
   user_status: string;
   username: string;
 }

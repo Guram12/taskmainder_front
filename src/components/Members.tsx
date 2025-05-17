@@ -2,7 +2,6 @@ import "../styles/Members.css";
 import React, { useEffect, useState, useCallback } from "react";
 import { board } from "../utils/interface";
 import { Board_Users } from "../utils/interface";
-import testimage from "../assets/profile_3.png";
 import { CgCloseR } from "react-icons/cg";
 import axiosInstance from "../utils/axiosinstance";
 import { RiCloseFill } from "react-icons/ri";
@@ -15,6 +14,9 @@ import { GrFormCheckmark } from "react-icons/gr";
 import { HiOutlineXMark } from "react-icons/hi2";
 import { MdDeleteForever } from "react-icons/md";
 import ConfirmationDialog from "./Boards/ConfirmationDialog";
+import Avatar from '@mui/material/Avatar';
+import getAvatarStyles from "../utils/SetRandomColor";
+
 
 
 interface MembersProps {
@@ -24,6 +26,7 @@ interface MembersProps {
   currentTheme: ThemeSpecs;
   update_board_name: (new_board_name: string) => void;
   deleteBoard: () => void;
+
 }
 
 const Members: React.FC<MembersProps> = ({ selectedBoard, socketRef, current_user_email, currentTheme, update_board_name, deleteBoard }) => {
@@ -51,6 +54,10 @@ const Members: React.FC<MembersProps> = ({ selectedBoard, socketRef, current_use
   const is_current_user_admin_or_owner = is_current_user_owner || is_current_user_admin
 
 
+
+  useEffect(() => {
+    console.log('current_board_users', current_board_users)
+  }, [current_board_users])
 
   // ============================================  set new statuses for users ============================================
   const handleStatusChange = (userId: number, newStatus: string) => {
@@ -252,12 +259,28 @@ const Members: React.FC<MembersProps> = ({ selectedBoard, socketRef, current_use
       {/* <h3 className="members_h2">User</h3> */}
       <RiUserSettingsFill className="add_user_icon" onClick={() => setIsUsersWindowOpen(true)} />
       {current_board_users.map((boardUser) => (
-        <img
-          key={boardUser.id}
-          src={boardUser.profile_picture || testimage}
-          alt="user profile"
-          className="user_profile_images"
-        />
+        boardUser.profile_picture !== null ? (
+          <img
+            key={boardUser.id}
+            src={boardUser.profile_picture }
+            alt="user profile"
+            className="user_profile_images"
+          />
+        ) : (
+          
+          <Avatar
+            key={boardUser.id}
+            className="user_profile_images"
+            sx={{ width: 30, height: 30 }}
+            alt={boardUser.username}
+            style={{
+              backgroundColor: getAvatarStyles(boardUser.username.charAt(0)).backgroundColor,
+              color: getAvatarStyles(boardUser.username.charAt(0)).color
+            }}
+          >
+            {boardUser.username.charAt(0).toUpperCase()}
+          </Avatar>
+        )
       ))}
 
       <div className="board_name_cont">
@@ -373,11 +396,25 @@ const Members: React.FC<MembersProps> = ({ selectedBoard, socketRef, current_use
                 <div className="each_user" key={boardUser.id}>
 
                   <div className="image_and_name_cont">
-                    <img
-                      src={boardUser.profile_picture || testimage}
-                      alt="user profile"
-                      className="board_user_images"
-                    />
+                    {boardUser.profile_picture !== null ? (
+
+                      <img
+                        src={boardUser.profile_picture }
+                        alt="user profile"
+                        className="board_user_images"
+                      />
+                    ) : (
+                      <Avatar
+                        className="board_user_images"
+                        alt={boardUser.username}
+                        style={{
+                          backgroundColor: getAvatarStyles(boardUser.username.charAt(0)).backgroundColor,
+                          color: getAvatarStyles(boardUser.username.charAt(0)).color
+                        }}
+                      >
+                        {boardUser.username.charAt(0).toUpperCase()}
+                      </Avatar>
+                    )}
                     <p>{boardUser.username}</p>
                     <p className="boarduser_email">{boardUser.email}</p>
                   </div>

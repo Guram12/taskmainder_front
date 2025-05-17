@@ -128,10 +128,6 @@ const App: React.FC = () => {
     FetchProfileData();
   }, [isAuthenticated, accessToken, refreshToken]);
 
-  useEffect(() => {
-    console.log("--->>>", profileData);
-  }, [profileData]);
-
 
   // =================================  validate tokens on website load ==================================
   const validateTokens = async () => {
