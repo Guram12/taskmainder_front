@@ -267,9 +267,11 @@ const Members: React.FC<MembersProps> = ({ selectedBoard, socketRef, current_use
             className="user_profile_images"
           />
         ) : (
+          
           <Avatar
             key={boardUser.id}
             className="user_profile_images"
+            sx={{ width: 30, height: 30 }}
             alt={boardUser.username}
             style={{
               backgroundColor: getAvatarStyles(boardUser.username.charAt(0)).backgroundColor,

@@ -55,13 +55,13 @@ const ProfilePictureUpdate: React.FC<ProfilePictureUpdateProps> = ({ profileData
       try {
         const response = await fetch(avatarUrl); // Fetch the avatar image
         const blob = await response.blob(); // Convert the response to a Blob
-  
+
         // Extract the file extension from the avatar URL
         const extension = avatarUrl.split('.').pop() || 'png'; // Default to 'png' if no extension is found
         const fileName = `${avatarName}.${extension}`; // Append the extension to the file name
-  
+
         const file = new File([blob], fileName, { type: blob.type }); // Create a File object with the correct extension
-  
+
         setPreviewImage(avatarUrl); // Set the preview image to the avatar URL
         setSelectedFileName(fileName); // Set the file name
         setNewProfileImage(file); // Treat the avatar as a file
@@ -251,50 +251,52 @@ const ProfilePictureUpdate: React.FC<ProfilePictureUpdateProps> = ({ profileData
                 color: currentTheme["--main-text-coloure"],
               }}
             >
-              {isUploading ? "Uploading..." : "Upload"}
+              {isUploading ? "Saving..." : "Save"}
             </button>
           )}
         </div>
       </div>
 
-
-      <div className='avatars_container'>
-        <img
-          src={avatar_1}
-          alt="Avatar 1"
-          className="avatar_image"
-          onClick={() => handleImageChange(undefined, avatar_1, "Avatar 1")}
-        />
-        <img
-          src={avatar_2}
-          alt="Avatar 2"
-          className="avatar_image"
-          onClick={() => handleImageChange(undefined, avatar_2, "Avatar 2")}
-        />
-        <img
-          src={avatar_3}
-          alt="Avatar 3"
-          className="avatar_image"
-          onClick={() => handleImageChange(undefined, avatar_3, "Avatar 3")}
-        />
-        <img
-          src={avatar_4}
-          alt="Avatar 4"
-          className="avatar_image"
-          onClick={() => handleImageChange(undefined, avatar_4, "Avatar 4")}
-        />
-        <img
-          src={avatar_5}
-          alt="Avatar 5"
-          className="avatar_image"
-          onClick={() => handleImageChange(undefined, avatar_5, "Avatar 5")}
-        />
-        <img
-          src={avatar_6}
-          alt="Avatar 6"
-          className="avatar_image"
-          onClick={() => handleImageChange(undefined, avatar_6, "Avatar 6")}
-        />
+      <div className='avatar_main_container' style={{color: currentTheme["--main-text-coloure"]}}>
+        <h1 className='select_avatar_h1'>Select Avatar</h1>
+        <div className='avatars_container'>
+          <img
+            src={avatar_1}
+            alt="Avatar 1"
+            className="avatar_image"
+            onClick={() => handleImageChange(undefined, avatar_1, "Avatar 1")}
+          />
+          <img
+            src={avatar_2}
+            alt="Avatar 2"
+            className="avatar_image"
+            onClick={() => handleImageChange(undefined, avatar_2, "Avatar 2")}
+          />
+          <img
+            src={avatar_3}
+            alt="Avatar 3"
+            className="avatar_image"
+            onClick={() => handleImageChange(undefined, avatar_3, "Avatar 3")}
+          />
+          <img
+            src={avatar_4}
+            alt="Avatar 4"
+            className="avatar_image"
+            onClick={() => handleImageChange(undefined, avatar_4, "Avatar 4")}
+          />
+          <img
+            src={avatar_5}
+            alt="Avatar 5"
+            className="avatar_image"
+            onClick={() => handleImageChange(undefined, avatar_5, "Avatar 5")}
+          />
+          <img
+            src={avatar_6}
+            alt="Avatar 6"
+            className="avatar_image"
+            onClick={() => handleImageChange(undefined, avatar_6, "Avatar 6")}
+          />
+        </div>
       </div>
     </div>
   )
