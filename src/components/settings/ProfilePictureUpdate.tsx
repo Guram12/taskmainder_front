@@ -184,7 +184,7 @@ const ProfilePictureUpdate: React.FC<ProfilePictureUpdateProps> = ({ profileData
         </p>
       </div>
 
-      <div className="second_main_container" style={{ backgroundColor: currentTheme["--background-color"] }}>
+      <div className="second_main_container" >
         {profileData?.profile_picture !== null ? (
           <img src={currentProfileImage || undefined} alt="Profile" className="profile_image" onClick={() => fileInputRef.current?.click()} />
         ) : (
@@ -257,7 +257,7 @@ const ProfilePictureUpdate: React.FC<ProfilePictureUpdateProps> = ({ profileData
         </div>
       </div>
 
-      <div className='avatar_main_container' style={{color: currentTheme["--main-text-coloure"]}}>
+      <div className='avatar_main_container' style={{ color: currentTheme["--main-text-coloure"] }}>
         <h1 className='select_avatar_h1'>Select Avatar</h1>
         <div className='avatars_container'>
           <img

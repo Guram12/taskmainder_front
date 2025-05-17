@@ -12,7 +12,6 @@ import DeleteAccount from "./settings/DeleteAccount";
 
 
 
-
 interface SettingsProps {
   profileData: ProfileData;
   FetchProfileData: () => Promise<void>;
@@ -37,6 +36,7 @@ const Settings: React.FC<SettingsProps> = ({ profileData, FetchProfileData, curr
         currentTheme={currentTheme}
       />
 
+
       <DeleteAccount
         currentTheme={currentTheme}
       />
@@ -55,7 +55,7 @@ export default Settings;
 // Change Password
 // Theme Customization
 // Notification Preferences
-// Account Deletion
+// Account Deletion               +
 // Language Preferences
 // Export/Import Data  ???
 // Keyboard Shortcuts  ???
