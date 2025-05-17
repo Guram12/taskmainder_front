@@ -7,6 +7,9 @@ import { ProfileData } from '../../utils/interface';
 import axiosInstance from '../../utils/axiosinstance';
 import { ThemeSpecs } from '../../utils/theme';
 import Avatar from '@mui/material/Avatar'; // Import Avatar from Material-UI
+import getAvatarStyles from '../../utils/SetRandomColor';
+import { MdDeleteForever } from "react-icons/md";
+import ConfirmationDialog from '../Boards/ConfirmationDialog';
 
 
 interface ProfilePictureUpdateProps {
@@ -18,11 +21,13 @@ interface ProfilePictureUpdateProps {
 
 const ProfilePictureUpdate: React.FC<ProfilePictureUpdateProps> = ({ profileData, FetchProfileData, currentTheme }) => {
 
-  const [currentProfileImage, setCurrentProfileImage] = useState<string>(profileData.profile_picture);
+  const [currentProfileImage, setCurrentProfileImage] = useState<string | null>(profileData.profile_picture || null);
   const [newProfileImage, setNewProfileImage] = useState<File | null>(null);
   const [previewImage, setPreviewImage] = useState<string | null>(null); // State for preview
   const [selectedFileName, setSelectedFileName] = useState<string | null>(null); // State for file name
   const [isUploading, setIsUploading] = useState<boolean>(false);
+  const [IsDeletingWindow, setIsDeletingWindow] = useState<boolean>(false);
+
 
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 
@@ -33,7 +38,7 @@ const ProfilePictureUpdate: React.FC<ProfilePictureUpdateProps> = ({ profileData
 
   //======================= Synchronize currentProfileImage with profileData.profile_picture   ========================
   useEffect(() => {
-    setCurrentProfileImage(profileData.profile_picture);
+    setCurrentProfileImage(profileData.profile_picture || null);
   }, [profileData.profile_picture]);
 
   //======================= Handle file input change   ========================
@@ -87,22 +92,79 @@ const ProfilePictureUpdate: React.FC<ProfilePictureUpdateProps> = ({ profileData
     }
   };
 
+
+  // ============================================= delete profile picture ==========================================
+
+
+  const deleteProfilePicture = async () => {
+    try {
+      const token = localStorage.getItem("access_token");
+      const response = await axiosInstance.patch(
+        '/acc/update-profile-picture/', // Replace with your actual endpoint
+        { delete_picture: true },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`, // Pass the JWT token for authentication
+            'Content-Type': 'application/json',
+          },
+        }
+      );
+
+      console.log('Profile picture deleted successfully:', response.data);
+      await FetchProfileData();
+      setCurrentProfileImage(null);
+      setIsDeletingWindow(false);
+      return response.data;
+    } catch (error) {
+      console.error('Error deleting profile picture:', error);
+      throw error;
+    }
+  };
+
+  const handleCancelDelete = () => {
+    setIsDeletingWindow(false);
+  }
+
+  const handleDeleteClick = () => {
+    setIsDeletingWindow(true);
+  }
+
   return (
     <div className="profil_image_cont" style={{ borderColor: currentTheme["--border-color"] }}>
+      <MdDeleteForever className='delete_Prof_picture_icon' onClick={handleDeleteClick} />
+      {IsDeletingWindow && (
+        <ConfirmationDialog
+          message="Are you sure you want to delete your profile picture?"
+          onConfirm={deleteProfilePicture}
+          onCancel={handleCancelDelete} 
+        />
+      )}
       <div className="profile_picture_update_p_cont" style={{ backgroundColor: currentTheme["--background-color"] }}>
         <p className="profile_picture_ipdate_p" style={{ color: currentTheme["--main-text-coloure"] }}>
           Profile Picture update
         </p>
       </div>
-
-      <img src={currentProfileImage} alt="Profile" className="profile_image" onClick={() => fileInputRef.current?.click()} />
-      <Avatar>
-        {profileData.username.charAt(0).toUpperCase()}
-      </Avatar>
-      {previewImage && (
-        <MdKeyboardDoubleArrowRight className="profile_update_arrow_icon"
-        />
+      {profileData?.profile_picture !== null ? (
+        <img src={currentProfileImage || undefined} alt="Profile" className="profile_image" onClick={() => fileInputRef.current?.click()} />
+      ) : (
+        <Avatar
+          sx={{
+            width: 150, // Set the desired width
+            height: 150, // Set the desired height
+            fontSize: "2rem", // Optional: Adjust font size for the initials
+            marginLeft: "40px",
+          }}
+          style={{
+            backgroundColor: getAvatarStyles(profileData.username.charAt(0)).backgroundColor,
+            color: getAvatarStyles(profileData.username.charAt(0)).color
+          }}
+        >
+          {profileData.username.charAt(0).toUpperCase()}
+        </Avatar>
       )}
+
+      {previewImage && (<MdKeyboardDoubleArrowRight className="profile_update_arrow_icon" />)}
+
 
       {previewImage && (
         <div className="preview_container">
@@ -137,6 +199,7 @@ const ProfilePictureUpdate: React.FC<ProfilePictureUpdateProps> = ({ profileData
         >
           Change image
         </button>
+
         {previewImage && (
           <button
             onClick={change_profile_image}

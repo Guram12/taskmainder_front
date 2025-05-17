@@ -14,6 +14,45 @@
 }
 
 
+.delete_Prof_picture_icon {
+  width: 40px;
+  height: 40px;
+  cursor: pointer;
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  color: red;
+  transition: all 0.3s ease;
+}
+
+.delete_Prof_picture_icon:hover {
+  color: #FF0000BE;
+  animation: shake 0.5s ease-in-out;
+
+}
+
+@keyframes shake {
+  0% {
+    transform: rotate(0deg);
+  }
+
+  25% {
+    transform: rotate(-10deg);
+  }
+
+  50% {
+    transform: rotate(10deg);
+  }
+
+  75% {
+    transform: rotate(-10deg);
+  }
+
+  100% {
+    transform: rotate(0deg);
+  }
+}
+
 .profile_picture_update_p_cont {
   display: flex;
   flex-direction: row;
