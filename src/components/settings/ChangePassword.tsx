@@ -74,6 +74,7 @@ const ChangePassword: React.FC<ChangePasswordProps> = ({ currentTheme, profileDa
         setError('');
         setNewPassword('');
         setConfirmPassword('');
+        setIsPasswordValid(false);
         await FetchProfileData();
       }
     } catch (error) {
@@ -127,17 +128,21 @@ const ChangePassword: React.FC<ChangePasswordProps> = ({ currentTheme, profileDa
           </div>
           <div className='password_validations_container'>
             <p className='password_validations' style={{ color: isLongEnough ? 'limegreen' : 'red' }}>
-              * Minimum 8 symbols
+            {!isLongEnough && <span>*</span>} hasUppercase Minimum 8 symbols
             </p>
             <p className='password_validations' style={{ color: hasUppercase ? 'limegreen' : 'red' }}>
-              * At least one uppercase letter
+              {!hasUppercase && <span>*</span>} At least one uppercase letter
             </p>
             <p className='password_validations' style={{ color: hasNumber ? 'limegreen' : 'red' }}>
-              * At least one number
+              {!hasNumber && <span>*</span>} At least one number
             </p>
 
             <p className='password_validations' style={{ color: isPasswordValid ? 'limegreen' : 'red' }}>
-              * Passwords do not match
+              {isPasswordValid ? (
+                <span>Passwords match</span>
+              ) : (
+                <span>* Passwords do not match</span>
+              )}
             </p>
           </div>
         </div>
