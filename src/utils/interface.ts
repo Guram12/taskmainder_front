@@ -6,6 +6,7 @@ export interface ProfileData {
   profile_picture: string | null;
   username: string;
   timezone: string;
+  is_social_account: boolean;
 }
 
 

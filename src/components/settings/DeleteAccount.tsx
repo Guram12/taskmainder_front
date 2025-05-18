@@ -76,7 +76,7 @@ const DeleteAccount: React.FC<DeleteAccountProps> = ({ currentTheme }) => {
           Danger Zone
         </p>
       </div>
-      <h1>Delete Your Account</h1>
+      <h1 className='delete_aqq_h1' >Delete Your Account</h1>
       <button className='main_delete_account_button' onClick={handleDeleteClick}>Delete</button>
 
       {isConfirmationOpen && (

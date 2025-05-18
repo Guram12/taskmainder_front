@@ -5,8 +5,7 @@ import { ThemeSpecs } from "../utils/theme";
 import ProfilePictureUpdate from "./settings/ProfilePictureUpdate";
 import Profile_Info_update from "./settings/Profile_Info_update";
 import DeleteAccount from "./settings/DeleteAccount";
-
-
+import ChangePassword from "./settings/ChangePassword";
 
 
 
@@ -35,7 +34,13 @@ const Settings: React.FC<SettingsProps> = ({ profileData, FetchProfileData, curr
         FetchProfileData={FetchProfileData}
         currentTheme={currentTheme}
       />
-
+      {/* {!profileData.is_social_account && ( */}
+        <ChangePassword
+          profileData={profileData}
+          FetchProfileData={FetchProfileData}
+          currentTheme={currentTheme}
+        />
+      {/* )} */}
 
       <DeleteAccount
         currentTheme={currentTheme}
