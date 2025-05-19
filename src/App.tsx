@@ -31,6 +31,7 @@ const App: React.FC = () => {
     profile_picture: '',
     username: '',
     timezone: '',
+    is_social_account: false,
   });
 
   const [currentTheme, setCurrentTheme] = useState<ThemeSpecs>({
