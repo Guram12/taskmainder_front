@@ -163,29 +163,33 @@ const Members: React.FC<MembersProps> = ({ selectedBoard, socketRef, current_use
 
 
   // -------------------------------------------- add new users to board ------------------------------------------------
+// boards/<int:board_id>/send-invitation/
 
-  const handleAddUsers = async () => {
-    console.log('Adding users:', selected_emails);
-    try {
-      const response = await axiosInstance.post(`/api/boards/${selectedBoard.id}/add_users/`, {
-        emails: selected_emails
-      }, {
+const handleAddUsers = async () => {
+  console.log('Sending invitations to:', selected_emails);
+  try {
+    const response = await axiosInstance.post(
+      `/api/boards/${selectedBoard.id}/send-invitation/`, // Add trailing slash here
+      { email: selected_emails }, // array of emails 
+      {
         headers: {
-          Authorization: `Bearer ${localStorage.getItem('access_token')}`
-        }
-      });
-      console.log("Added users to board:", response.data);
-      if (response.status === 200) {
-        fetch_current_board_users();
+          Authorization: `Bearer ${localStorage.getItem('access_token')}`,
+        },
       }
-      else {
-        console.log('Error adding users to board:', response.data);
-      }
-    } catch (error) {
-      console.error('Error adding users to board:', error);
-    }
-  };
+    );
 
+    if (response.status === 200) {
+      console.log("Invitation sent successfully:", response.data);
+      setSelected_emails([]); // Clear selected emails after sending invitations
+    } else {
+      console.error("Error sending invitation:", response.data);
+      alert("Failed to send the invitation. Please try again.");
+    }
+  } catch (error) {
+    console.error("Error sending invitation:", error);
+    alert("An error occurred while sending the invitation.");
+  }
+};
   // --------------------------------------------- email click --------------------------------------
 
   const handle_email_click = (email: string) => {
@@ -386,7 +390,7 @@ const Members: React.FC<MembersProps> = ({ selectedBoard, socketRef, current_use
                   style={{ cursor: `${selected_emails.length > 0 ? 'pointer' : 'not-allowed'}` }}
                   disabled={selected_emails.length === 0}
                 >
-                  Add Users
+                  Invite
                 </button>
               )}
 

@@ -62,6 +62,7 @@ const Boards: React.FC<BoardsProps> = ({ selectedBoard, setSelectedBoard, curren
         username: user.username,
         timezone: '',
         user_status: user.user_status,
+        is_social_account: false,
       }));
       setAllCurrentBoardUsers(selectedBoardUsers);
     } else {
