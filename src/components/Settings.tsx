@@ -35,11 +35,11 @@ const Settings: React.FC<SettingsProps> = ({ profileData, FetchProfileData, curr
         currentTheme={currentTheme}
       />
       {/* {!profileData.is_social_account && ( */}
-        <ChangePassword
-          profileData={profileData}
-          FetchProfileData={FetchProfileData}
-          currentTheme={currentTheme}
-        />
+      <ChangePassword
+        profileData={profileData}
+        FetchProfileData={FetchProfileData}
+        currentTheme={currentTheme}
+      />
       {/* )} */}
 
       <DeleteAccount
@@ -57,7 +57,7 @@ export default Settings;
 // profile picture update         +
 // Update Profile Information     +
 // Custom Avatars                 +
-// Change Password
+// Change Password                +
 // Theme Customization
 // Notification Preferences
 // Account Deletion               +

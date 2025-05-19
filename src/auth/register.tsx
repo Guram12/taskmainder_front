@@ -17,7 +17,6 @@ const Register: React.FC = () => {
   const [username, setUsername] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const [phoneNumber, setPhoneNumber] = useState<string>('');
-  const [profileImage, setProfileImage] = useState<File | null>(null);
   const [message, setMessage] = useState<string>('');
   const [countryInput, setCountryInput] = useState<string>('');
   const [filteredCountries, setFilteredCountries] = useState<FilteredCountry[]>([]);
@@ -38,9 +37,6 @@ const Register: React.FC = () => {
     formData.append('password', password);
     formData.append('phone_number', phoneNumber);
     formData.append('timezone', selectedTimeZone);
-    if (profileImage) {
-      formData.append('profile_picture', profileImage);
-    }
 
     try {
       await axiosInstance.post('/acc/register/', formData, {
@@ -147,14 +143,7 @@ const Register: React.FC = () => {
             className="register_input"
           />
         </div>
-        <div>
-          <label className="register_label">Profile Image:</label>
-          <input
-            type="file"
-            onChange={(e) => setProfileImage(e.target.files ? e.target.files[0] : null)}
-            className="register_file_input"
-          />
-        </div>
+
         <div className="country_select_inputs_container">
           <label className="register_label">Country:</label>
           <input
