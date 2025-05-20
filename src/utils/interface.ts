@@ -12,13 +12,6 @@ export interface ProfileData {
 
 
 
-export interface Board_Users {
-  email: string;
-  id: number;
-  profile_picture: string | null;
-  user_status: string;
-  username: string;
-}
 
 export interface board {
   id: number;
@@ -29,6 +22,14 @@ export interface board {
   owner_email: string;
   members: string[];
   board_users: Board_Users[];
+}
+
+export interface Board_Users {
+  email: string;
+  id: number;
+  profile_picture: string | null;
+  user_status: string;
+  username: string;
 }
 
 export interface lists {

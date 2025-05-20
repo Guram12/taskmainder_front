@@ -124,21 +124,26 @@ const Boards: React.FC<BoardsProps> = ({ selectedBoard, setSelectedBoard, curren
           break;
 
 
-        case 'set_status':
-          setBoardData((prevData) => {
-            const newBoardData = { ...prevData };
-            const userIndex = newBoardData.board_users.findIndex(user => user.id === payload.user_id);
-            if (userIndex !== -1) {
-              newBoardData.board_users[userIndex].user_status = payload.new_status;
-            }
-            // Remove any duplicate users
-            newBoardData.board_users = newBoardData.board_users.filter((user, index, self) =>
-              index === self.findIndex((u) => u.id === user.id)
-            );
-            return newBoardData;
-          });
-          break;
-
+          case 'set_status':
+            setBoardData((prevData) => {
+              const newBoardData = { ...prevData };
+              const userIndex = newBoardData.board_users.findIndex(user => user.id === payload.user_id);
+              if (userIndex !== -1) {
+                newBoardData.board_users[userIndex].user_status = payload.new_status;
+              }
+              return newBoardData;
+            });
+          
+            const updatedBoard: board = {
+              ...selectedBoard,
+              board_users: selectedBoard.board_users.map((user) =>
+                user.id === payload.user_id ? { ...user, user_status: payload.new_status } : user
+              ),
+            };
+            
+            setSelectedBoard(updatedBoard);
+            
+            break;
 
         case 'create':
         case 'update':
@@ -212,7 +217,7 @@ const Boards: React.FC<BoardsProps> = ({ selectedBoard, setSelectedBoard, curren
                   due_date: payload.due_date,
                   completed: payload.completed,
                   priority: payload.priority
-                  
+
                 } : task
               ),
             }));

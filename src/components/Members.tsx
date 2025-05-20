@@ -64,21 +64,19 @@ const Members: React.FC<MembersProps> = ({ selectedBoard, socketRef, current_use
     console.log(`Changing status for user ${userId} to ${newStatus}`);
     setCurrent_board_users((prevUsers) => {
       const updatedUsers = prevUsers.map((user) =>
-        user.id === userId ? { ...user, status: newStatus } : user
+        user.id === userId ? { ...user, user_status: newStatus } : user
       );
-
-      console.log('Updated users:', updatedUsers);
       return updatedUsers;
     });
-
+  
     if (socketRef.current && socketRef.current.readyState === WebSocket.OPEN) {
       socketRef.current.send(JSON.stringify({
         action: 'set_status',
         payload: {
           user_id: userId,
           new_status: newStatus,
-          board_id: selectedBoard.id
-        }
+          board_id: selectedBoard.id,
+        },
       }));
     }
   };
