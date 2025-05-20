@@ -13,14 +13,32 @@ import FinishGoogleSignIn from './auth/FinishGoogleSignIn';
 import { ProfileData } from './utils/interface';
 import PasswordReset from './auth/PasswordReset';
 import PasswordResetConfirm from './auth/PasswordResetConfirm';
-
+import subscribeToPushNotifications from './utils/notification';
 
 
 // =====>>>>  .გასაკეთებელი დავალებები
 // ბოოარზე იუზერის დამატებისას იუზერს უნდა  მიუვიდეს ნოტიფიცა რომ დაადასტუროს ბიოარდზე დამატება
 // Notifications System
+export const registerServiceWorker = async () => {
+  if ('serviceWorker' in navigator) {
+    try {
+      const registration = await navigator.serviceWorker.register('/service-worker.js');
+      console.log('Service Worker registered with scope:', registration.scope);
+    } catch (error) {
+      console.error('Service Worker registration failed:', error);
+    }
+  }
+};
 
-
+// if ('serviceWorker' in navigator) {
+//   navigator.serviceWorker.register('/service-worker.js')
+//     .then(registration => {
+//       console.log('Service Worker registered:', registration);
+//     })
+//     .catch(error => {
+//       console.error('Service Worker registration failed:', error);
+//     });
+// }
 
 const App: React.FC = () => {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
@@ -62,6 +80,16 @@ const App: React.FC = () => {
 
   const accessToken: string | null = localStorage.getItem('access_token');
   const refreshToken: string | null = localStorage.getItem('refresh_token');
+
+  // ==========================================================  regiester service worker ==========================================
+  useEffect(() => {
+    registerServiceWorker();
+  }, []);
+
+
+  useEffect(() => {
+    subscribeToPushNotifications();
+  }, []);
 
 
 

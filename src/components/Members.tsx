@@ -68,7 +68,7 @@ const Members: React.FC<MembersProps> = ({ selectedBoard, socketRef, current_use
       );
       return updatedUsers;
     });
-  
+
     if (socketRef.current && socketRef.current.readyState === WebSocket.OPEN) {
       socketRef.current.send(JSON.stringify({
         action: 'set_status',
@@ -80,6 +80,7 @@ const Members: React.FC<MembersProps> = ({ selectedBoard, socketRef, current_use
       }));
     }
   };
+
   // ======================================== debaunce function for search input ========================================
   const debounce = (func: Function, delay: number) => {
     let timeoutId: NodeJS.Timeout;
@@ -158,36 +159,58 @@ const Members: React.FC<MembersProps> = ({ selectedBoard, socketRef, current_use
       console.error('Error fetching board users:', error);
     }
   };
-
+  // -------------------------------------------- socket connection for board users ------------------------------------------
+  useEffect(() => {
+    const handleServiceWorkerMessage = (event: MessageEvent) => {
+      if (event.data?.type === 'BOARD_USER_UPDATE') {
+        console.log('Board user update notification received:', event.data);
+  
+        // Check if the current board matches the updated board
+        if (selectedBoard.name === event.data.boardName) {
+          fetch_current_board_users(); // Fetch updated users for the current board
+        }
+      }
+    };
+  
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.addEventListener('message', handleServiceWorkerMessage);
+    }
+  
+    return () => {
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.removeEventListener('message', handleServiceWorkerMessage);
+      }
+    };
+  }, [selectedBoard.name]);
 
   // -------------------------------------------- add new users to board ------------------------------------------------
-// boards/<int:board_id>/send-invitation/
+  // boards/<int:board_id>/send-invitation/
 
-const handleAddUsers = async () => {
-  console.log('Sending invitations to:', selected_emails);
-  try {
-    const response = await axiosInstance.post(
-      `/api/boards/${selectedBoard.id}/send-invitation/`, // Add trailing slash here
-      { email: selected_emails }, // array of emails 
-      {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem('access_token')}`,
-        },
+  const handleAddUsers = async () => {
+    console.log('Sending invitations to:', selected_emails);
+    try {
+      const response = await axiosInstance.post(
+        `/api/boards/${selectedBoard.id}/send-invitation/`, // Add trailing slash here
+        { email: selected_emails }, // array of emails 
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('access_token')}`,
+          },
+        }
+      );
+
+      if (response.status === 200) {
+        console.log("Invitation sent successfully:", response.data);
+        setSelected_emails([]); // Clear selected emails after sending invitations
+      } else {
+        console.error("Error sending invitation:", response.data);
+        alert("Failed to send the invitation. Please try again.");
       }
-    );
-
-    if (response.status === 200) {
-      console.log("Invitation sent successfully:", response.data);
-      setSelected_emails([]); // Clear selected emails after sending invitations
-    } else {
-      console.error("Error sending invitation:", response.data);
-      alert("Failed to send the invitation. Please try again.");
+    } catch (error) {
+      console.error("Error sending invitation:", error);
+      alert("An error occurred while sending the invitation.");
     }
-  } catch (error) {
-    console.error("Error sending invitation:", error);
-    alert("An error occurred while sending the invitation.");
-  }
-};
+  };
   // --------------------------------------------- email click --------------------------------------
 
   const handle_email_click = (email: string) => {
@@ -264,12 +287,12 @@ const handleAddUsers = async () => {
         boardUser.profile_picture !== null ? (
           <img
             key={boardUser.id}
-            src={boardUser.profile_picture }
+            src={boardUser.profile_picture}
             alt="user profile"
             className="user_profile_images"
           />
         ) : (
-          
+
           <Avatar
             key={boardUser.id}
             className="user_profile_images"
@@ -401,7 +424,7 @@ const handleAddUsers = async () => {
                     {boardUser.profile_picture !== null ? (
 
                       <img
-                        src={boardUser.profile_picture }
+                        src={boardUser.profile_picture}
                         alt="user profile"
                         className="board_user_images"
                       />
