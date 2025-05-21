@@ -9,10 +9,15 @@ import { board } from '../../utils/interface';
 import { isMobile } from 'react-device-detect'; // Install react-device-detect
 import { TouchBackend } from 'react-dnd-touch-backend';
 import { ProfileData } from '../../utils/interface';
+import { Board_Users } from '../../utils/interface';
+
 
 if (isMobile) {
   console.log('Running on a mobile device');
 }
+
+
+
 
 export interface BoardsProps {
   selectedBoard: board;
@@ -22,9 +27,23 @@ export interface BoardsProps {
   profileData: ProfileData;
   setBoards: (boards: board[]) => void;
   boards: board[];
+  setCurrent_board_users: (users: Board_Users[]) => void;
+  current_board_users: Board_Users[];
+  fetch_current_board_users: () => Promise<void>;
 }
 
-const Boards: React.FC<BoardsProps> = ({ selectedBoard, setSelectedBoard, current_user_email, currentTheme, profileData, setBoards, boards }) => {
+const Boards: React.FC<BoardsProps> = ({
+  selectedBoard,
+  setSelectedBoard,
+  current_user_email,
+  currentTheme, profileData,
+  setBoards,
+  boards,
+  setCurrent_board_users,
+  current_board_users,
+  fetch_current_board_users
+
+}) => {
   const [boardData, setBoardData] = useState<board>({
     id: 0,
     name: '',
@@ -47,9 +66,6 @@ const Boards: React.FC<BoardsProps> = ({ selectedBoard, setSelectedBoard, curren
   const isManualScrollRef = useRef(false);
 
 
-  useEffect(() => {
-    console.log('boards-->>', boards);
-  }, [boards]);
 
 
   useEffect(() => {
@@ -124,26 +140,26 @@ const Boards: React.FC<BoardsProps> = ({ selectedBoard, setSelectedBoard, curren
           break;
 
 
-          case 'set_status':
-            setBoardData((prevData) => {
-              const newBoardData = { ...prevData };
-              const userIndex = newBoardData.board_users.findIndex(user => user.id === payload.user_id);
-              if (userIndex !== -1) {
-                newBoardData.board_users[userIndex].user_status = payload.new_status;
-              }
-              return newBoardData;
-            });
-          
-            const updatedBoard: board = {
-              ...selectedBoard,
-              board_users: selectedBoard.board_users.map((user) =>
-                user.id === payload.user_id ? { ...user, user_status: payload.new_status } : user
-              ),
-            };
-            
-            setSelectedBoard(updatedBoard);
-            
-            break;
+        case 'set_status':
+          setBoardData((prevData) => {
+            const newBoardData = { ...prevData };
+            const userIndex = newBoardData.board_users.findIndex(user => user.id === payload.user_id);
+            if (userIndex !== -1) {
+              newBoardData.board_users[userIndex].user_status = payload.new_status;
+            }
+            return newBoardData;
+          });
+
+          const updatedBoard: board = {
+            ...selectedBoard,
+            board_users: selectedBoard.board_users.map((user) =>
+              user.id === payload.user_id ? { ...user, user_status: payload.new_status } : user
+            ),
+          };
+
+          setSelectedBoard(updatedBoard);
+
+          break;
 
         case 'create':
         case 'update':
@@ -629,6 +645,9 @@ const Boards: React.FC<BoardsProps> = ({ selectedBoard, setSelectedBoard, curren
               currentTheme={currentTheme}
               update_board_name={update_board_name}
               deleteBoard={deleteBoard}
+              setCurrent_board_users={setCurrent_board_users}
+              current_board_users={current_board_users}
+              fetch_current_board_users={fetch_current_board_users}
             />
           )}
         </div>
