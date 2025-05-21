@@ -13,34 +13,21 @@ import FinishGoogleSignIn from './auth/FinishGoogleSignIn';
 import { ProfileData } from './utils/interface';
 import PasswordReset from './auth/PasswordReset';
 import PasswordResetConfirm from './auth/PasswordResetConfirm';
-import subscribeToPushNotifications from './utils/notification';
+import subscribeToPushNotifications from './utils/supbscription';
+import { Board_Users } from './utils/interface';
 
 
-// =====>>>>  .გასაკეთებელი დავალებები
-// ბოოარზე იუზერის დამატებისას იუზერს უნდა  მიუვიდეს ნოტიფიცა რომ დაადასტუროს ბიოარდზე დამატება
-// Notifications System
-export const registerServiceWorker = async () => {
-  if ('serviceWorker' in navigator) {
-    try {
-      const registration = await navigator.serviceWorker.register('/service-worker.js');
-      console.log('Service Worker registered with scope:', registration.scope);
-    } catch (error) {
-      console.error('Service Worker registration failed:', error);
-    }
-  }
-};
 
-// if ('serviceWorker' in navigator) {
-//   navigator.serviceWorker.register('/service-worker.js')
-//     .then(registration => {
-//       console.log('Service Worker registered:', registration);
-//     })
-//     .catch(error => {
-//       console.error('Service Worker registration failed:', error);
-//     });
-// }
+
+
+
+
+
+
+
 
 const App: React.FC = () => {
+
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
   const [profileData, setProfileData] = useState<ProfileData>({
     id: 0,
@@ -72,23 +59,65 @@ const App: React.FC = () => {
     members: [],
     board_users: [],
   });
+  const [current_board_users, setCurrent_board_users] = useState<Board_Users[]>([]);
+  const [notificationData, setNotificationData] = useState<any>(null); // State to store notification data
 
 
-
+  
   const [selected_board_ID_for_sidebar, setSelected_board_ID_for_sidebar] = useState<number | null>(null);
-
-
+  
+  
   const accessToken: string | null = localStorage.getItem('access_token');
   const refreshToken: string | null = localStorage.getItem('refresh_token');
-
+  
   // ==========================================================  regiester service worker ==========================================
-  useEffect(() => {
-    registerServiceWorker();
-  }, []);
-
-
+  
+  
   useEffect(() => {
     subscribeToPushNotifications();
+  }, []);
+  
+  // -------------------------------------------- socket connection for board users ------------------------------------------
+  const fetch_current_board_users = async () => {
+    try {
+      console.log("selected board users are fetching because of notification ");
+      const response = await axiosInstance.get(`/api/boards/${selectedBoard.id}/users/`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('access_token')}`
+        }
+      });
+      // console.log("fetched board users ", response.data);
+      setCurrent_board_users(response.data);
+    } catch (error) {
+      console.error('Error fetching board users:', error);
+    }
+  };
+
+
+
+  useEffect(() => {
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.addEventListener('message', (event) => {
+        if (event.data && event.data.type === 'BOARD_USER_UPDATE') {
+          console.log('Message received from service worker:', event.data);
+          setNotificationData(event.data); // Update state with notification data
+        }
+      });
+    }
+  }, []);
+
+  useEffect(() => {
+    if (notificationData) {
+      console.log('Notification data updated:', notificationData);
+      // Perform actions based on the notification data
+      fetch_current_board_users(); // Example: Fetch updated board users
+    }
+  }, [notificationData]);
+
+
+
+  useEffect(() => {
+    // this useeffect should trigger wheh i get push notigication and after i will do some functionality here
   }, []);
 
 
@@ -233,6 +262,9 @@ const App: React.FC = () => {
             profileData={profileData}
             FetchProfileData={FetchProfileData}
             fetchBoards={fetchBoards}
+            setCurrent_board_users={setCurrent_board_users}
+            current_board_users={current_board_users}
+            fetch_current_board_users={fetch_current_board_users}
           />} />
       </Routes>
     </Router>

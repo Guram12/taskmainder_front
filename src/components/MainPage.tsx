@@ -10,6 +10,10 @@ import Templates from "./Templates";
 import { ProfileData } from "../utils/interface";
 import { StyledEngineProvider } from '@mui/material/styles';
 import axiosInstance from "../utils/axiosinstance";
+import { Board_Users } from "../utils/interface";
+
+
+
 
 interface MainPageProps {
   currentTheme: ThemeSpecs;
@@ -22,7 +26,10 @@ interface MainPageProps {
   current_user_email: string;
   profileData: ProfileData;
   FetchProfileData: () => Promise<void>;
-  fetchBoards: () => Promise<void>
+  fetchBoards: () => Promise<void>;
+  setCurrent_board_users : (users: Board_Users[]) => void;
+  current_board_users : Board_Users[];
+  fetch_current_board_users: () => Promise<void>;
 }
 
 const MainPage: React.FC<MainPageProps> = ({
@@ -37,6 +44,9 @@ const MainPage: React.FC<MainPageProps> = ({
   profileData,
   FetchProfileData,
   fetchBoards,
+  setCurrent_board_users,
+  current_board_users,
+  fetch_current_board_users,
 }) => {
   const [selectedComponent, setSelectedComponent] = useState<string>("Boards");
 
@@ -133,11 +143,14 @@ const MainPage: React.FC<MainPageProps> = ({
             profileData={profileData}
             setBoards={setBoards}
             boards={boards}
+            current_board_users={current_board_users}
+            setCurrent_board_users={setCurrent_board_users}
+            fetch_current_board_users={fetch_current_board_users}
           />
         );
 
     }
-  }, [selectedComponent, boards, selectedBoard, currentTheme, profileData]);
+  }, [selectedComponent, boards, selectedBoard, currentTheme, profileData, current_board_users]);
 
   const memoizedRenderComponent = useMemo(() => renderComponent(), [renderComponent]);
 

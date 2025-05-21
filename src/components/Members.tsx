@@ -18,6 +18,9 @@ import Avatar from '@mui/material/Avatar';
 import getAvatarStyles from "../utils/SetRandomColor";
 
 
+// setCurrent_board_users={setCurrent_board_users}
+// current_board_users={current_board_users}
+
 
 interface MembersProps {
   selectedBoard: board;
@@ -26,11 +29,24 @@ interface MembersProps {
   currentTheme: ThemeSpecs;
   update_board_name: (new_board_name: string) => void;
   deleteBoard: () => void;
+  setCurrent_board_users: (users: Board_Users[]) => void;
+  current_board_users: Board_Users[];
+  fetch_current_board_users: () => Promise<void>;
 
 }
 
-const Members: React.FC<MembersProps> = ({ selectedBoard, socketRef, current_user_email, currentTheme, update_board_name, deleteBoard }) => {
-  const [current_board_users, setCurrent_board_users] = useState<Board_Users[]>([]);
+const Members: React.FC<MembersProps> = ({
+  selectedBoard,
+  socketRef,
+  current_user_email,
+  currentTheme,
+  update_board_name,
+  deleteBoard,
+  setCurrent_board_users,
+  current_board_users,
+  fetch_current_board_users,
+}) => {
+
   const [isUsersWindowOpen, setIsUsersWindowOpen] = useState<boolean>(false);
   const [searchInput, setSearchInput] = useState<string>("");
   const [suggestedUsers, setSuggestedUsers] = useState<{ email: string }[]>([]);
@@ -55,20 +71,19 @@ const Members: React.FC<MembersProps> = ({ selectedBoard, socketRef, current_use
 
 
 
-  useEffect(() => {
-    console.log('current_board_users', current_board_users)
-  }, [current_board_users])
+  // useEffect(() => {
+  //   console.log('current_board_users', current_board_users)
+  // }, [current_board_users])
 
   // ============================================  set new statuses for users ============================================
   const handleStatusChange = (userId: number, newStatus: string) => {
     console.log(`Changing status for user ${userId} to ${newStatus}`);
-    setCurrent_board_users((prevUsers) => {
-      const updatedUsers = prevUsers.map((user) =>
-        user.id === userId ? { ...user, user_status: newStatus } : user
-      );
-      return updatedUsers;
-    });
 
+    const updatedUsers: Board_Users[] = current_board_users.map((user) =>
+      user.id === userId ? { ...user, user_status: newStatus } : user
+    );
+    setCurrent_board_users(updatedUsers);
+  
     if (socketRef.current && socketRef.current.readyState === WebSocket.OPEN) {
       socketRef.current.send(JSON.stringify({
         action: 'set_status',
@@ -80,7 +95,6 @@ const Members: React.FC<MembersProps> = ({ selectedBoard, socketRef, current_use
       }));
     }
   };
-
   // ======================================== debaunce function for search input ========================================
   const debounce = (func: Function, delay: number) => {
     let timeoutId: NodeJS.Timeout;
@@ -146,42 +160,6 @@ const Members: React.FC<MembersProps> = ({ selectedBoard, socketRef, current_use
     }
   }, [selectedBoard]);
   // -------------------------------------------- fetch current board users ------------------------------------------------
-  const fetch_current_board_users = async () => {
-    try {
-      const response = await axiosInstance.get(`/api/boards/${selectedBoard.id}/users/`, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem('access_token')}`
-        }
-      });
-      // console.log("fetched board users ", response.data);
-      setCurrent_board_users(response.data);
-    } catch (error) {
-      console.error('Error fetching board users:', error);
-    }
-  };
-  // -------------------------------------------- socket connection for board users ------------------------------------------
-  useEffect(() => {
-    const handleServiceWorkerMessage = (event: MessageEvent) => {
-      if (event.data?.type === 'BOARD_USER_UPDATE') {
-        console.log('Board user update notification received:', event.data);
-  
-        // Check if the current board matches the updated board
-        if (selectedBoard.name === event.data.boardName) {
-          fetch_current_board_users(); // Fetch updated users for the current board
-        }
-      }
-    };
-  
-    if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.addEventListener('message', handleServiceWorkerMessage);
-    }
-  
-    return () => {
-      if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.removeEventListener('message', handleServiceWorkerMessage);
-      }
-    };
-  }, [selectedBoard.name]);
 
   // -------------------------------------------- add new users to board ------------------------------------------------
   // boards/<int:board_id>/send-invitation/

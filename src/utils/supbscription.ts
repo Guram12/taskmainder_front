@@ -5,7 +5,7 @@ const subscribeToPushNotifications = async () => {
     try {
       // Register the service worker
       const registration = await navigator.serviceWorker.register('/service-worker.js');
-      console.log('Service Worker registered:', registration);
+      // console.log('Service Worker registered:', registration);
 
       // Subscribe to push notifications
       const subscription = await registration.pushManager.subscribe({
@@ -15,7 +15,7 @@ const subscribeToPushNotifications = async () => {
         ),
       });
 
-      console.log('Push subscription:', subscription);
+      // console.log('Push subscription:', subscription);
 
       // Send the subscription to your backend
       await axiosInstance.post('api/save-subscription/', subscription, {
