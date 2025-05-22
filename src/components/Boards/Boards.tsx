@@ -12,7 +12,7 @@ import { ProfileData } from '../../utils/interface';
 import { Board_Users } from '../../utils/interface';
 import SkeletonLoader from './SkeletonLoader';
 import SkeletonMember from './SkeletonMember';
-
+import NoBoards from '../NoBoards';
 
 
 if (isMobile) {
@@ -640,9 +640,11 @@ const Boards: React.FC<BoardsProps> = ({
       <div className='members_container'>
         <div>
           {!isBoardsLoaded ? (
-            <SkeletonMember currentTheme={currentTheme} />
-          ) : (
+            <div className='skeleton_in_board' >
 
+              <SkeletonMember currentTheme={currentTheme} />
+            </div>
+          ) : (
             <Members
               selectedBoard={selectedBoard}
               socketRef={socketRef}
@@ -653,16 +655,23 @@ const Boards: React.FC<BoardsProps> = ({
               setCurrent_board_users={setCurrent_board_users}
               current_board_users={current_board_users}
               fetch_current_board_users={fetch_current_board_users}
-
+              boardData={boardData}
+              isBoardsLoaded={isBoardsLoaded}
             />
 
           )}
         </div>
 
+
+        {isBoardsLoaded && boardData.lists && boardData.lists.length === 0 && (
+          <NoBoards   currentTheme={currentTheme}    />
+        )}
+
         <div className="main_boards_container">
           {!isBoardsLoaded ? (
             <SkeletonLoader currentTheme={currentTheme} />
           ) : (
+
 
             <div className='lists_container' ref={listsContainerRef}>
               {boardData.lists.map((list) => (

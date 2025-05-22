@@ -32,7 +32,8 @@ interface MembersProps {
   setCurrent_board_users: (users: Board_Users[]) => void;
   current_board_users: Board_Users[];
   fetch_current_board_users: () => Promise<void>;
-
+  boardData: board;
+  isBoardsLoaded: boolean;
 }
 
 const Members: React.FC<MembersProps> = ({
@@ -45,6 +46,9 @@ const Members: React.FC<MembersProps> = ({
   setCurrent_board_users,
   current_board_users,
   fetch_current_board_users,
+  boardData,
+  isBoardsLoaded,
+
 }) => {
 
   const [isUsersWindowOpen, setIsUsersWindowOpen] = useState<boolean>(false);
@@ -83,7 +87,7 @@ const Members: React.FC<MembersProps> = ({
       user.id === userId ? { ...user, user_status: newStatus } : user
     );
     setCurrent_board_users(updatedUsers);
-  
+
     if (socketRef.current && socketRef.current.readyState === WebSocket.OPEN) {
       socketRef.current.send(JSON.stringify({
         action: 'set_status',
@@ -259,8 +263,10 @@ const Members: React.FC<MembersProps> = ({
 
   return (
     <div className="main_members_container">
+      {boardData.lists.length > 0 && isBoardsLoaded && (
+        <RiUserSettingsFill className="add_user_icon" onClick={() => setIsUsersWindowOpen(true)} />
+      )}
       {/* <h3 className="members_h2">User</h3> */}
-      <RiUserSettingsFill className="add_user_icon" onClick={() => setIsUsersWindowOpen(true)} />
       {current_board_users.map((boardUser) => (
         boardUser.profile_picture !== null ? (
           <img
@@ -287,7 +293,10 @@ const Members: React.FC<MembersProps> = ({
       ))}
 
       <div className="board_name_cont">
-        <FaClipboardList className='board_icon' style={{ fill: `${currentTheme['--main-text-coloure']}` }} />
+        {boardData.lists.length > 0  && isBoardsLoaded && (
+          <FaClipboardList className='board_icon' style={{ fill: `${currentTheme['--main-text-coloure']}` }} />
+        )}
+
         {isBoardEditing ? (
           <div className="board_name_inp_cont" >
             <input

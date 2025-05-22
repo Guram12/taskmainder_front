@@ -14,7 +14,6 @@ import { Board_Users } from "../utils/interface";
 
 
 
-
 interface MainPageProps {
   currentTheme: ThemeSpecs;
   boards: board[];
@@ -27,8 +26,8 @@ interface MainPageProps {
   profileData: ProfileData;
   FetchProfileData: () => Promise<void>;
   fetchBoards: () => Promise<void>;
-  setCurrent_board_users : (users: Board_Users[]) => void;
-  current_board_users : Board_Users[];
+  setCurrent_board_users: (users: Board_Users[]) => void;
+  current_board_users: Board_Users[];
   fetch_current_board_users: () => Promise<void>;
   isBoardsLoaded: boolean;
 }
@@ -57,7 +56,7 @@ const MainPage: React.FC<MainPageProps> = ({
   const refreshToken: string | null = localStorage.getItem('refresh_token');
 
 
-  
+
   // --------------------------------------------------------------------------------------------------------------
   // if accesstoken or refreshtoken is null,or incorrect , redirect to login page
   useEffect(() => {
