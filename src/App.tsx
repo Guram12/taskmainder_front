@@ -59,24 +59,29 @@ const App: React.FC = () => {
     members: [],
     board_users: [],
   });
+
+
+  const [isBoardsLoaded, setIsBoardsLoaded] = useState<boolean>(false);
+
+
   const [current_board_users, setCurrent_board_users] = useState<Board_Users[]>([]);
   const [notificationData, setNotificationData] = useState<any>(null); // State to store notification data
 
 
-  
+
   const [selected_board_ID_for_sidebar, setSelected_board_ID_for_sidebar] = useState<number | null>(null);
-  
-  
+
+
   const accessToken: string | null = localStorage.getItem('access_token');
   const refreshToken: string | null = localStorage.getItem('refresh_token');
-  
+
   // ==========================================================  regiester service worker ==========================================
-  
-  
+
+
   useEffect(() => {
     subscribeToPushNotifications();
   }, []);
-  
+
   // -------------------------------------------- socket connection for board users ------------------------------------------
   const fetch_current_board_users = async () => {
     try {
@@ -131,6 +136,7 @@ const App: React.FC = () => {
         }
       });
       setBoards(response.data);
+      setIsBoardsLoaded(true);
     } catch (error) {
       console.error("Error while retrieving boards", error);
     }
@@ -265,6 +271,7 @@ const App: React.FC = () => {
             setCurrent_board_users={setCurrent_board_users}
             current_board_users={current_board_users}
             fetch_current_board_users={fetch_current_board_users}
+            isBoardsLoaded={isBoardsLoaded}
           />} />
       </Routes>
     </Router>

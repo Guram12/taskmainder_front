@@ -30,6 +30,7 @@ interface MainPageProps {
   setCurrent_board_users : (users: Board_Users[]) => void;
   current_board_users : Board_Users[];
   fetch_current_board_users: () => Promise<void>;
+  isBoardsLoaded: boolean;
 }
 
 const MainPage: React.FC<MainPageProps> = ({
@@ -47,6 +48,7 @@ const MainPage: React.FC<MainPageProps> = ({
   setCurrent_board_users,
   current_board_users,
   fetch_current_board_users,
+  isBoardsLoaded,
 }) => {
   const [selectedComponent, setSelectedComponent] = useState<string>("Boards");
 
@@ -146,6 +148,7 @@ const MainPage: React.FC<MainPageProps> = ({
             current_board_users={current_board_users}
             setCurrent_board_users={setCurrent_board_users}
             fetch_current_board_users={fetch_current_board_users}
+            isBoardsLoaded={isBoardsLoaded}
           />
         );
 
