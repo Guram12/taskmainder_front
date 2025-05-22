@@ -1,9 +1,13 @@
 import "../styles/Templates.css";
 import React from "react";
+import { useState } from "react";
 import { Template } from "../utils/interface";
 import axiosInstance from "../utils/axiosinstance";
 import { templates } from "../utils/Templates";
 import { ThemeSpecs } from "../utils/theme";
+import GridLoader from "react-spinners/GridLoader";
+
+
 
 interface TemplatesProps {
   handleTemplateSelect: (template: number) => void;
@@ -12,8 +16,15 @@ interface TemplatesProps {
 
 
 const Templates: React.FC<TemplatesProps> = ({ handleTemplateSelect, currentTheme }) => {
+  const [isTemplateSaved, setIsTemplateSaved] = useState<boolean>(false);
+
+
+
+
 
   const handle_tanmplate_click = async (template: Template) => {
+    setIsTemplateSaved(true);
+
     try {
       const accessToken = localStorage.getItem("access_token");
       if (!accessToken) {
@@ -71,6 +82,8 @@ const Templates: React.FC<TemplatesProps> = ({ handleTemplateSelect, currentThem
       handleTemplateSelect(newBoard.id);
     } catch (error) {
       console.error("Error creating template:", error);
+    } finally {
+      setIsTemplateSaved(false);
     }
   };
 
@@ -89,6 +102,12 @@ const Templates: React.FC<TemplatesProps> = ({ handleTemplateSelect, currentThem
 
   return (
     <div className="templates_container">
+      {isTemplateSaved && (
+        <div className="template_loader_container" >
+          <GridLoader color={`${currentTheme['--main-text-coloure']}`} size={20} className="gridloader" />
+        </div>
+      )}
+
       <h2>Choose a Template</h2>
       <div className="templates-list">
         {templates.map((template) => (

@@ -1,0 +1,22 @@
+/* filepath: /home/guram/Desktop/task_management_app/task_front/taskmainder/src/styles/Board Styles/SkeletonLoader.css */
+.skeleton-container {
+  display: flex;
+  gap: 20px;
+  padding: 10px;
+  overflow-x: auto;
+}
+
+.skeleton-list {
+  padding: 10px;
+  border-radius: 5px;
+  width: 300px;
+  height: min-content;
+  transition: background-color 0.3s;
+  display: inline-block;
+  min-width: 300px;
+  margin-left: 20px;
+  max-height: 95%;
+  overflow-y: auto;
+  padding-top: 0px;
+  transition: background-color 0.3s;
+}

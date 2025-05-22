@@ -10,6 +10,9 @@ import { isMobile } from 'react-device-detect'; // Install react-device-detect
 import { TouchBackend } from 'react-dnd-touch-backend';
 import { ProfileData } from '../../utils/interface';
 import { Board_Users } from '../../utils/interface';
+import SkeletonLoader from './SkeletonLoader';
+import SkeletonMember from './SkeletonMember';
+import NoBoards from '../NoBoards';
 
 
 if (isMobile) {
@@ -30,6 +33,7 @@ export interface BoardsProps {
   setCurrent_board_users: (users: Board_Users[]) => void;
   current_board_users: Board_Users[];
   fetch_current_board_users: () => Promise<void>;
+  isBoardsLoaded: boolean;
 }
 
 const Boards: React.FC<BoardsProps> = ({
@@ -41,7 +45,8 @@ const Boards: React.FC<BoardsProps> = ({
   boards,
   setCurrent_board_users,
   current_board_users,
-  fetch_current_board_users
+  fetch_current_board_users,
+  isBoardsLoaded
 
 }) => {
   const [boardData, setBoardData] = useState<board>({
@@ -634,9 +639,11 @@ const Boards: React.FC<BoardsProps> = ({
     >
       <div className='members_container'>
         <div>
-          {!is_any_board_selected ? (
+          {!isBoardsLoaded ? (
+            <div className='skeleton_in_board' >
 
-            <div>No board selected</div>
+              <SkeletonMember currentTheme={currentTheme} />
+            </div>
           ) : (
             <Members
               selectedBoard={selectedBoard}
@@ -648,54 +655,70 @@ const Boards: React.FC<BoardsProps> = ({
               setCurrent_board_users={setCurrent_board_users}
               current_board_users={current_board_users}
               fetch_current_board_users={fetch_current_board_users}
+              boardData={boardData}
+              isBoardsLoaded={isBoardsLoaded}
             />
+
           )}
         </div>
+
+
+        {isBoardsLoaded && boardData.lists && boardData.lists.length === 0 && (
+          <NoBoards   currentTheme={currentTheme}    />
+        )}
+
         <div className="main_boards_container">
-          <div className='lists_container' ref={listsContainerRef}>
-            {boardData.lists.map((list) => (
-              <List
-                key={list.id}
-                list={list}
-                moveTask={moveTask}
-                addTask={addTask}
-                deleteTask={deleteTask}
-                updateTask={updateTask}
-                socketRef={socketRef}
-                currentTheme={currentTheme}
-                deleteList={deleteList}
-                updateListName={updateListName}
-                allCurrentBoardUsers={allCurrentBoardUsers}
-              />
-            ))}
-            {is_any_board_selected && (
+          {!isBoardsLoaded ? (
+            <SkeletonLoader currentTheme={currentTheme} />
+          ) : (
 
-              <div className='list' >
 
-                {!Adding_new_list ?
-                  (
-                    <button onClick={() => setAdding_new_list(true)} >Add NewList</button>
-                  )
-                  :
-                  (
-                    <div className='add_new_list_cont' >
-                      <input
-                        type="text"
-                        placeholder='List Name'
-                        value={ListName}
-                        onChange={(e) => setListName(e.target.value)}
-                        required
-                      />
-                      <button onClick={() => addList()}  >Add</button>
-                      <button onClick={() => setAdding_new_list(false)}  >Cansel</button>
-                    </div>
-                  )
-                }
+            <div className='lists_container' ref={listsContainerRef}>
+              {boardData.lists.map((list) => (
+                <List
+                  key={list.id}
+                  list={list}
+                  moveTask={moveTask}
+                  addTask={addTask}
+                  deleteTask={deleteTask}
+                  updateTask={updateTask}
+                  socketRef={socketRef}
+                  currentTheme={currentTheme}
+                  deleteList={deleteList}
+                  updateListName={updateListName}
+                  allCurrentBoardUsers={allCurrentBoardUsers}
+                />
+              ))}
 
-              </div>
-            )}
-          </div>
+
+              {is_any_board_selected && (
+                <div className='list' >
+                  {!Adding_new_list ?
+                    (
+                      <button onClick={() => setAdding_new_list(true)} >Add NewList</button>
+                    )
+                    :
+                    (
+                      <div className='add_new_list_cont' >
+                        <input
+                          type="text"
+                          placeholder='List Name'
+                          value={ListName}
+                          onChange={(e) => setListName(e.target.value)}
+                          required
+                        />
+                        <button onClick={() => addList()}  >Add</button>
+                        <button onClick={() => setAdding_new_list(false)}  >Cansel</button>
+                      </div>
+                    )
+                  }
+
+                </div>
+              )}
+            </div>
+          )}
         </div>
+
       </div>
     </DndProvider>
   );
