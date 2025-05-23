@@ -11,7 +11,8 @@ import { ProfileData } from "../utils/interface";
 import { StyledEngineProvider } from '@mui/material/styles';
 import axiosInstance from "../utils/axiosinstance";
 import { Board_Users } from "../utils/interface";
-
+import Notification from "./Notification";
+import GridLoader from "react-spinners/GridLoader";
 
 
 interface MainPageProps {
@@ -30,6 +31,8 @@ interface MainPageProps {
   current_board_users: Board_Users[];
   fetch_current_board_users: () => Promise<void>;
   isBoardsLoaded: boolean;
+  setIsLoading: (isLoading: boolean) => void;
+  isLoading: boolean;
 }
 
 const MainPage: React.FC<MainPageProps> = ({
@@ -48,6 +51,8 @@ const MainPage: React.FC<MainPageProps> = ({
   current_board_users,
   fetch_current_board_users,
   isBoardsLoaded,
+  setIsLoading,
+  isLoading,
 }) => {
   const [selectedComponent, setSelectedComponent] = useState<string>("Boards");
 
@@ -131,6 +136,7 @@ const MainPage: React.FC<MainPageProps> = ({
         return <Templates
           handleTemplateSelect={handleTemplateSelect}
           currentTheme={currentTheme}
+          setIsLoading={setIsLoading}
         />;
 
 
@@ -148,16 +154,32 @@ const MainPage: React.FC<MainPageProps> = ({
             setCurrent_board_users={setCurrent_board_users}
             fetch_current_board_users={fetch_current_board_users}
             isBoardsLoaded={isBoardsLoaded}
+            setIsLoading={setIsLoading}
+
           />
         );
+      case "Notification":
+        return <Notification
+          currentTheme={currentTheme}
+          setIsLoading={setIsLoading}
+        />;
 
     }
-  }, [selectedComponent, boards, selectedBoard, currentTheme, profileData, current_board_users]);
+  }, [selectedComponent, boards, selectedBoard, currentTheme, profileData, current_board_users, isLoading, setIsLoading]);
 
   const memoizedRenderComponent = useMemo(() => renderComponent(), [renderComponent]);
 
+useEffect(() => {
+  console.log('trigered loading state', isLoading);
+}, [isLoading]);
+
   return (
     <div className="mainpage_component">
+      {isLoading && (
+        <div className="main_loader_container" >
+          <GridLoader color={`${currentTheme['--main-text-coloure']}`} size={20} className="gridloader" />
+        </div>
+      )}
       <SidebarComponent
         currentTheme={currentTheme}
         boards={boards}

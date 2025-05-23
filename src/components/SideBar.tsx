@@ -12,6 +12,10 @@ import { board } from '../utils/interface';
 import { GoRepoTemplate } from "react-icons/go";
 import axiosInstance from '../utils/axiosinstance';
 import Shepherd from 'shepherd.js';
+import { MdNotificationsActive } from "react-icons/md";
+
+
+
 
 
 interface SidebarProps {
@@ -57,58 +61,60 @@ const SidebarComponent: React.FC<SidebarProps> = ({
 
 
   // ======================================== for hilighting the elements in the tour ==========================================
-  const startTour = () => {
-    const tour = new Shepherd.Tour({
-      defaultStepOptions: {
-        cancelIcon: { enabled: true },
-        classes: 'custom-class-name',
-        scrollTo: { behavior: 'smooth', block: 'center' },
-      },
-      useModalOverlay: true, // Enable backdrop to dim the rest of the page
-    });
+  // const startTour = () => {
+  //   const tour = new Shepherd.Tour({
+  //     defaultStepOptions: {
+  //       cancelIcon: { enabled: true },
+  //       classes: 'custom-class-name',
+  //       scrollTo: { behavior: 'smooth', block: 'center' },
+  //     },
+  //     useModalOverlay: true, // Enable backdrop to dim the rest of the page
+  //   });
   
-    // Step 1: Highlight Dashboard
-    tour.addStep({
-      title: 'Dashboard',
-      text: 'This is the Dashboard section where you can view your main tasks.',
-      attachTo: { element: '.dashboard_icon', on: 'right' },
-      buttons: [
-        {
-          text: 'Next',
-          action: tour.next,
-        },
-      ],
-    });
+  //   // Step 1: Highlight Dashboard
+  //   tour.addStep({
+  //     title: 'Dashboard',
+  //     text: 'This is the Dashboard section where you can view your main tasks.',
+  //     attachTo: { element: '.dashboard_icon', on: 'right' },
+  //     buttons: [
+  //       {
+  //         text: 'Next',
+  //         action: tour.next,
+  //       },
+  //     ],
+  //   });
   
-    // Step 2: Highlight Boards
-    tour.addStep({
-      title: 'Boards',
-      text: 'Here you can manage your boards. Click on a board to view its details.',
-      attachTo: { element: '#board', on: 'right' },
-      buttons: [
-        {
-          text: 'Next',
-          action: tour.next,
-        },
-      ],
-    });
+  //   // Step 2: Highlight Boards
+  //   tour.addStep({
+  //     title: 'Boards',
+  //     text: 'Here you can manage your boards. Click on a board to view its details.',
+  //     attachTo: { element: '#board', on: 'right' },
+  //     buttons: [
+  //       {
+  //         text: 'Next',
+  //         action: tour.next,
+  //       },
+  //     ],
+  //   });
   
-    // Step 3: Highlight Templates
-    tour.addStep({
-      title: 'Templates',
-      text: 'This section contains templates for creating new boards.',
-      attachTo: { element: '.sidebar_big_icon', on: 'right' },
-      buttons: [
-        {
-          text: 'Finish',
-          action: tour.complete,
-        },
-      ],
-    });
+  //   // Step 3: Highlight Templates
+  //   tour.addStep({
+  //     title: 'Templates',
+  //     text: 'This section contains templates for creating new boards.',
+  //     attachTo: { element: '.sidebar_big_icon', on: 'right' },
+  //     buttons: [
+  //       {
+  //         text: 'Finish',
+  //         action: tour.complete,
+  //       },
+  //     ],
+  //   });
   
-    tour.start();
-  };
+  //   tour.start();
+  // };
 
+
+  
 // ==============================================================================================================
 
 
@@ -292,6 +298,10 @@ const SidebarComponent: React.FC<SidebarProps> = ({
                   icon={<FaCalendarAlt className='sidebar_big_icon' />}
                   onClick={() => handel_sidebar_page_click("Calendar")}
                 >Calendar</MenuItem>
+                <MenuItem
+                  icon={<MdNotificationsActive className='sidebar_big_icon' />}
+                  onClick={() => handel_sidebar_page_click("Notification")}
+                >Notification</MenuItem>
               </Menu>
             </div>
             <div >

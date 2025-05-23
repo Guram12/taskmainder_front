@@ -25,10 +25,12 @@ import { Board_Users } from './utils/interface';
 
 
 
-
 const App: React.FC = () => {
 
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
+
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+
   const [profileData, setProfileData] = useState<ProfileData>({
     id: 0,
     email: '',
@@ -100,30 +102,104 @@ const App: React.FC = () => {
 
 
 
+  // useEffect(() => {
+  //   if ('serviceWorker' in navigator) {
+  //     navigator.serviceWorker.addEventListener('message', (event) => {
+  //       if (event.data && event.data.type === 'BOARD_USER_UPDATE') {
+  //         console.log('Message received from service worker:', event.data);
+  //         setNotificationData(event.data); // Update state with notification data
+  //       }
+  //     });
+  //   }
+  // }, []);
+
+
+
   useEffect(() => {
     if ('serviceWorker' in navigator) {
       navigator.serviceWorker.addEventListener('message', (event) => {
-        if (event.data && event.data.type === 'BOARD_USER_UPDATE') {
-          console.log('Message received from service worker:', event.data);
-          setNotificationData(event.data); // Update state with notification data
+        if (event.data) {
+          const { type, ...payload } = event.data;
+          // Log different messages based on the notification type
+          console.log('======== type ===========>>>>>> ', type);
+          switch (type) {
+            case 'BOARD_USER_UPDATE':
+              console.log(`BOARD_USER_UPDATE type ==>> Board Name: ${payload.boardName}`);
+              break;
+
+            case 'TASK_DUE_REMINDER':
+              console.log(
+                `TASK_DUE_REMINDER type ==>> Task Name: ${payload.taskName}, Due Date: ${payload.dueDate}, Priority: ${payload.priority}`
+              );
+              break;
+
+            case 'USER_REMOVED_FROM_BOARD':
+              setNotificationData(event.data); // Update state with notification data
+
+              console.log(
+                `USER_REMOVED_FROM_BOARD type ==>> Board Name: ${payload.boardName}, Removed User Email: ${payload.removedUserEmail}`
+              );
+              break;
+
+            case 'BOARD_INVITATION_ACCEPTED':
+              console.log(
+                `BOARD_INVITATION_ACCEPTED type ==>> Board Name: ${payload.boardName}, Invited User Email: ${payload.invitedUserEmail}, Invited User Name: ${payload.invitedUserName}`
+              );
+              break;
+
+            default:
+              console.log('Unknown notification type received:', type, payload);
+          }
         }
       });
     }
   }, []);
 
+
+
+
+
+
+
+
+  // ===========================================================================================================================
   useEffect(() => {
     if (notificationData) {
       console.log('Notification data updated:', notificationData);
-      // Perform actions based on the notification data
-      fetch_current_board_users(); // Example: Fetch updated board users
+
+      if (notificationData.type === 'BOARD_DELETED') {
+        const deletedBoardId = notificationData.board_id;
+
+        // Remove the deleted board from the boards list
+        setBoards((prevBoards) => prevBoards.filter((board) => board.id !== deletedBoardId));
+
+        // Reset the selected board if it was the deleted one
+        if (selectedBoard.id === deletedBoardId) {
+          setSelectedBoard({
+            id: 0,
+            name: '',
+            created_at: '',
+            lists: [],
+            owner: '',
+            owner_email: '',
+            members: [],
+            board_users: [],
+          });
+
+          setSelected_board_ID_for_sidebar(null);
+        }
+      }
+
+      // Fetch updated data if necessary
+      fetch_current_board_users();
+      fetchBoards();
     }
   }, [notificationData]);
 
 
-
   useEffect(() => {
-    // this useeffect should trigger wheh i get push notigication and after i will do some functionality here
-  }, []);
+    console.log("isLoading changed:", isLoading);
+  }, [isLoading]);
 
 
 
@@ -272,6 +348,8 @@ const App: React.FC = () => {
             current_board_users={current_board_users}
             fetch_current_board_users={fetch_current_board_users}
             isBoardsLoaded={isBoardsLoaded}
+            setIsLoading={setIsLoading}
+            isLoading={isLoading}
           />} />
       </Routes>
     </Router>

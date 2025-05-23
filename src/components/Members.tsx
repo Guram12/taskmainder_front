@@ -292,61 +292,63 @@ const Members: React.FC<MembersProps> = ({
         )
       ))}
 
-      <div className="board_name_cont">
-        {boardData.lists.length > 0  && isBoardsLoaded && (
+      {boardData.lists.length > 0 && isBoardsLoaded && (
+        <>
           <FaClipboardList className='board_icon' style={{ fill: `${currentTheme['--main-text-coloure']}` }} />
-        )}
+          <div className="board_name_cont">
 
-        {isBoardEditing ? (
-          <div className="board_name_inp_cont" >
-            <input
-              type="text"
-              value={newBoardName}
-              onChange={(e) => setNewBoardName(e.target.value)}
-              className="board_name_input"
-              placeholder="Enter new board name"
-            />
-            <GrFormCheckmark
-              style={{ color: `${currentTheme['--main-text-coloure']}` }}
-              className="save_board_name_icon"
-              onClick={() => { handleBoardNameUpdate() }}
-            />
-            <HiOutlineXMark
-              style={{ color: `${currentTheme['--main-text-coloure']}` }}
-              className="discard_board_name_icon"
-              onClick={() => setIsBoardEditing(false)}
-            />
+            {isBoardEditing ? (
+              <div className="board_name_inp_cont" >
+                <input
+                  type="text"
+                  value={newBoardName}
+                  onChange={(e) => setNewBoardName(e.target.value)}
+                  className="board_name_input"
+                  placeholder="Enter new board name"
+                />
+                <GrFormCheckmark
+                  style={{ color: `${currentTheme['--main-text-coloure']}` }}
+                  className="save_board_name_icon"
+                  onClick={() => { handleBoardNameUpdate() }}
+                />
+                <HiOutlineXMark
+                  style={{ color: `${currentTheme['--main-text-coloure']}` }}
+                  className="discard_board_name_icon"
+                  onClick={() => setIsBoardEditing(false)}
+                />
+              </div>
+            ) : (
+              <>
+                <h3 className="board_name" style={{ color: `${currentTheme['--main-text-coloure']}` }} >{selectedBoard.name}</h3>
+                {is_current_user_admin_or_owner && (
+
+                  <MdModeEdit
+                    className="edit_board_name_icon"
+                    style={{ fill: `${currentTheme['--main-text-coloure']}` }}
+                    onClick={() => handle_edit_board_click()}
+                  />
+                )}
+                {is_current_user_owner && (
+
+                  <MdDeleteForever
+                    className="delete_board_icon"
+                    style={{ fill: `${currentTheme['--main-text-coloure']}` }}
+                    onClick={() => handle_delete_board_icon_click()}
+                  />
+                )}
+                {isBoardDeleting && (
+                  <ConfirmationDialog
+                    message={`Are you sure you want to delete the board "${selectedBoard.name}"?`}
+                    onConfirm={delete_board}
+                    onCancel={canselBoardDelete}
+                  />
+                )}
+              </>
+            )}
           </div>
-        ) : (
-          <>
-            <h3 className="board_name" style={{ color: `${currentTheme['--main-text-coloure']}` }} >{selectedBoard.name}</h3>
-            {is_current_user_admin_or_owner && (
+        </>
 
-              <MdModeEdit
-                className="edit_board_name_icon"
-                style={{ fill: `${currentTheme['--main-text-coloure']}` }}
-                onClick={() => handle_edit_board_click()}
-              />
-            )}
-            {is_current_user_owner && (
-
-              <MdDeleteForever
-                className="delete_board_icon"
-                style={{ fill: `${currentTheme['--main-text-coloure']}` }}
-                onClick={() => handle_delete_board_icon_click()}
-              />
-            )}
-            {isBoardDeleting && (
-              <ConfirmationDialog
-                message={`Are you sure you want to delete the board "${selectedBoard.name}"?`}
-                onConfirm={delete_board}
-                onCancel={canselBoardDelete}
-              />
-            )}
-          </>
-        )}
-
-      </div>
+      )}
 
       <div>
         {isUsersWindowOpen && (
