@@ -154,6 +154,8 @@ const MainPage: React.FC<MainPageProps> = ({
             setCurrent_board_users={setCurrent_board_users}
             fetch_current_board_users={fetch_current_board_users}
             isBoardsLoaded={isBoardsLoaded}
+            setIsLoading={setIsLoading}
+
           />
         );
       case "Notification":

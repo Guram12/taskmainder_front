@@ -34,6 +34,8 @@ export interface BoardsProps {
   current_board_users: Board_Users[];
   fetch_current_board_users: () => Promise<void>;
   isBoardsLoaded: boolean;
+  setIsLoading: (isLoading: boolean) => void;
+
 }
 
 const Boards: React.FC<BoardsProps> = ({
@@ -46,7 +48,8 @@ const Boards: React.FC<BoardsProps> = ({
   setCurrent_board_users,
   current_board_users,
   fetch_current_board_users,
-  isBoardsLoaded
+  isBoardsLoaded,
+  setIsLoading,
 
 }) => {
   const [boardData, setBoardData] = useState<board>({
@@ -559,6 +562,10 @@ const Boards: React.FC<BoardsProps> = ({
 
   const deleteBoard = () => {
     console.log('Deleting board:', selectedBoard.id);
+
+    // Start loading
+    setIsLoading(true);
+
     if (socketRef.current && socketRef.current.readyState === WebSocket.OPEN) {
       socketRef.current.send(JSON.stringify({
         action: 'delete_board',
@@ -568,11 +575,15 @@ const Boards: React.FC<BoardsProps> = ({
         }
       }));
 
+      // Simulate a delay to finish loading after the board is deleted
+      setTimeout(() => {
+        setIsLoading(false); // End loading
+      }, 1000); // Adjust the delay as needed
+    } else {
+      console.error('WebSocket is not open. Cannot delete board.');
+      setIsLoading(false); // End loading in case of an error
     }
-
-  }
-
-
+  };
 
   // =================================================== scroll =========================================================
   useEffect(() => {
