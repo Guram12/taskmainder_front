@@ -71,3 +71,12 @@ export interface Template {
     }[];
   }[];
 }
+
+
+export interface NotificationData {
+  id: number;
+  body: string;
+  created_at: string;
+  is_read: boolean;
+  title: string;
+}

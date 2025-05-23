@@ -11,7 +11,7 @@ import { ProfileData } from "../utils/interface";
 import { StyledEngineProvider } from '@mui/material/styles';
 import axiosInstance from "../utils/axiosinstance";
 import { Board_Users } from "../utils/interface";
-
+import Notification from "./Notification";
 
 
 interface MainPageProps {
@@ -150,6 +150,8 @@ const MainPage: React.FC<MainPageProps> = ({
             isBoardsLoaded={isBoardsLoaded}
           />
         );
+      case "Notification":
+        return <Notification currentTheme={currentTheme} />;
 
     }
   }, [selectedComponent, boards, selectedBoard, currentTheme, profileData, current_board_users]);

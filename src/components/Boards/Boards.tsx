@@ -95,9 +95,22 @@ const Boards: React.FC<BoardsProps> = ({
 
 
   useEffect(() => {
-    setBoardData(selectedBoard);
+    if (selectedBoard.id === 0) {
+      // Reset boardData when no board is selected
+      setBoardData({
+        id: 0,
+        name: '',
+        created_at: '',
+        lists: [],
+        owner: '',
+        owner_email: '',
+        members: [],
+        board_users: [],
+      });
+    } else {
+      setBoardData(selectedBoard);
+    }
   }, [selectedBoard]);
-
   useEffect(() => {
     if (!selectedBoard.id) return;
 
@@ -664,7 +677,7 @@ const Boards: React.FC<BoardsProps> = ({
 
 
         {isBoardsLoaded && boardData.lists && boardData.lists.length === 0 && (
-          <NoBoards   currentTheme={currentTheme}    />
+          <NoBoards currentTheme={currentTheme} />
         )}
 
         <div className="main_boards_container">

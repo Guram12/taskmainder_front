@@ -158,7 +158,9 @@ const ProfilePictureUpdate: React.FC<ProfilePictureUpdateProps> = ({ profileData
   }
 
   const handleDeleteClick = () => {
-    setIsDeletingWindow(true);
+    if (profileData?.profile_picture) {
+      setIsDeletingWindow(true);
+    }
   }
 
   // ==========================================   example avatar images  ==========================================

@@ -11,7 +11,8 @@ import { ProfileData } from '../../utils/interface';
 import { MdModeEdit } from "react-icons/md";
 import { MdRadioButtonChecked } from "react-icons/md";
 import { MdRadioButtonUnchecked } from "react-icons/md";
-
+import Avatar from '@mui/material/Avatar'; // Import Avatar from Material-UI
+import getAvatarStyles from '../../utils/SetRandomColor';
 
 
 
@@ -185,13 +186,35 @@ const Task: React.FC<TaskProps> = ({ task, deleteTask, updateTask, moveTaskWithi
         <div className='associated_users_imgs_container'>
           {associatedUsers.length > 0 ? (
             associatedUsers.map((user) => (
-              <img
-                key={user.id}
-                src={user.profile_picture}
-                alt={user.username}
-                className='associated_user_image'
-                title={user.username}
-              />
+              <div key={user.id} className='associated_user_img_container'>
+                {user.profile_picture ? (
+
+                  <img
+                    key={user.id}
+                    src={user.profile_picture}
+                    alt={user.username}
+                    className='associated_user_image'
+                    title={user.username}
+                  />
+
+
+                ) : (
+                  <Avatar
+                    key={user.id}
+                    sx={{
+                      width: 20,
+                      height: 20,
+                      fontSize: '0.75rem',
+                      backgroundColor: getAvatarStyles(user.username.charAt(0)).backgroundColor,
+                      color: getAvatarStyles(user.username.charAt(0)).color,
+                    }}
+                    className='associated_user_image'
+                    title={user.username}
+                  >
+                    {user.username.charAt(0).toUpperCase()}
+                  </Avatar>
+                )}
+              </div>
             ))
           ) : (
             <p className='no_associated_users_p' >No associated users</p> // Fallback if no associated users

@@ -1,0 +1,91 @@
+.main_notification_container {
+  display: flex;
+  flex-direction: column;
+
+  width: 100%;
+  height: calc(100vh - 152px);
+  gap: 20px;
+  padding: 20px;
+  padding-left: 30px;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+.delete_all_buttion_container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+}
+
+.delete_all_notification {
+  width: 200px;
+  height: 40px;
+  background-color: red;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.delete_all_notification:hover {
+  background-color: #FF000073;
+}
+
+.imported_all_skeletons_cont{
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+
+.notification_card {
+  border: 1px solid lime;
+  width: 85%;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  cursor: pointer;
+  align-items: flex-start;
+  padding: 15px;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+}
+
+
+.delete_notif_icon {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  cursor: pointer;
+  width: 25px;
+  height: 25px;
+  transition: all 0.3s ease;
+}
+
+.delete_notif_icon:hover {
+  fill: red;
+  border-radius: 50%;
+}
+
+.notification_title {
+  margin: 0px;
+  margin-top: 10px;
+  font-size: 20px;
+}
+
+.notification_body_text{
+  margin: 0px;
+  margin-top: 10px;
+  font-size: 16px;
+}
+
+.notification_date {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  color: #868686;
+  padding: 5px;
+  font-size: 12px;
+
+}

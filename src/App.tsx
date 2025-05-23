@@ -25,7 +25,6 @@ import { Board_Users } from './utils/interface';
 
 
 
-
 const App: React.FC = () => {
 
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
@@ -111,14 +110,40 @@ const App: React.FC = () => {
     }
   }, []);
 
-  useEffect(() => {
-    if (notificationData) {
-      console.log('Notification data updated:', notificationData);
-      // Perform actions based on the notification data
-      fetch_current_board_users(); // Example: Fetch updated board users
-    }
-  }, [notificationData]);
+  
+// filepath: /home/guram/Desktop/task_management_app/task_front/taskmainder/src/App.tsx
+useEffect(() => {
+  if (notificationData) {
+    console.log('Notification data updated:', notificationData);
 
+    if (notificationData.type === 'BOARD_DELETED') {
+      const deletedBoardId = notificationData.board_id;
+
+      // Remove the deleted board from the boards list
+      setBoards((prevBoards) => prevBoards.filter((board) => board.id !== deletedBoardId));
+
+      // Reset the selected board if it was the deleted one
+      if (selectedBoard.id === deletedBoardId) {
+        setSelectedBoard({
+          id: 0,
+          name: '',
+          created_at: '',
+          lists: [],
+          owner: '',
+          owner_email: '',
+          members: [],
+          board_users: [],
+        });
+
+        setSelected_board_ID_for_sidebar(null);
+      }
+    }
+
+    // Fetch updated data if necessary
+    fetch_current_board_users();
+    fetchBoards();
+  }
+}, [notificationData]);
 
 
   useEffect(() => {

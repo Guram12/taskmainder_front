@@ -119,6 +119,13 @@
   align-items: center;
 }
 
+.associated_user_img_container{
+  max-width: 100px;
+  display: flex;
+  flex-direction: row;
+  overflow: hidden;
+}
+
 .associated_user_image {
   width: 20px;
   height: 20px;
