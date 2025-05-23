@@ -28,6 +28,9 @@ import { Board_Users } from './utils/interface';
 const App: React.FC = () => {
 
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
+
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+
   const [profileData, setProfileData] = useState<ProfileData>({
     id: 0,
     email: '',
@@ -110,45 +113,44 @@ const App: React.FC = () => {
     }
   }, []);
 
-  
-// filepath: /home/guram/Desktop/task_management_app/task_front/taskmainder/src/App.tsx
-useEffect(() => {
-  if (notificationData) {
-    console.log('Notification data updated:', notificationData);
 
-    if (notificationData.type === 'BOARD_DELETED') {
-      const deletedBoardId = notificationData.board_id;
+  useEffect(() => {
+    if (notificationData) {
+      console.log('Notification data updated:', notificationData);
 
-      // Remove the deleted board from the boards list
-      setBoards((prevBoards) => prevBoards.filter((board) => board.id !== deletedBoardId));
+      if (notificationData.type === 'BOARD_DELETED') {
+        const deletedBoardId = notificationData.board_id;
 
-      // Reset the selected board if it was the deleted one
-      if (selectedBoard.id === deletedBoardId) {
-        setSelectedBoard({
-          id: 0,
-          name: '',
-          created_at: '',
-          lists: [],
-          owner: '',
-          owner_email: '',
-          members: [],
-          board_users: [],
-        });
+        // Remove the deleted board from the boards list
+        setBoards((prevBoards) => prevBoards.filter((board) => board.id !== deletedBoardId));
 
-        setSelected_board_ID_for_sidebar(null);
+        // Reset the selected board if it was the deleted one
+        if (selectedBoard.id === deletedBoardId) {
+          setSelectedBoard({
+            id: 0,
+            name: '',
+            created_at: '',
+            lists: [],
+            owner: '',
+            owner_email: '',
+            members: [],
+            board_users: [],
+          });
+
+          setSelected_board_ID_for_sidebar(null);
+        }
       }
-    }
 
-    // Fetch updated data if necessary
-    fetch_current_board_users();
-    fetchBoards();
-  }
-}, [notificationData]);
+      // Fetch updated data if necessary
+      fetch_current_board_users();
+      fetchBoards();
+    }
+  }, [notificationData]);
 
 
   useEffect(() => {
-    // this useeffect should trigger wheh i get push notigication and after i will do some functionality here
-  }, []);
+    console.log("isLoading changed:", isLoading);
+  }, [isLoading]);
 
 
 
@@ -297,6 +299,8 @@ useEffect(() => {
             current_board_users={current_board_users}
             fetch_current_board_users={fetch_current_board_users}
             isBoardsLoaded={isBoardsLoaded}
+            setIsLoading={setIsLoading}
+            isLoading={isLoading}
           />} />
       </Routes>
     </Router>

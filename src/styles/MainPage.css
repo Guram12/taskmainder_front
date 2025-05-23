@@ -1,5 +1,4 @@
-
-.mainpage_component{
+.mainpage_component {
     display: flex;
     justify-content: flex-start;
     align-items: flex-start;
@@ -7,31 +6,22 @@
 }
 
 
+.main_loader_container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: fixed;
+    /* Make it cover the entire screen */
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    /* Full screen height */
+    background-color: rgba(0, 0, 0, 0.5);
+    /* Dark background */
+    z-index: 11111111111;
+}
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+.gridloader {
+    position: relative;
+}

@@ -10,9 +10,10 @@ import no_notification_image from "../assets/no_notification.png";
 
 interface NotificationProps {
   currentTheme: ThemeSpecs;
+  setIsLoading: (isLoading: boolean) => void;
 }
 
-const Notification: React.FC<NotificationProps> = ({ currentTheme }) => {
+const Notification: React.FC<NotificationProps> = ({ currentTheme, setIsLoading }) => {
   const [notifications, setNotifications] = useState<NotificationData[]>([]);
   const [isFetching, setIsFetching] = useState<boolean>(true); // New state to track fetching
 
@@ -39,7 +40,7 @@ const Notification: React.FC<NotificationProps> = ({ currentTheme }) => {
       } catch (error) {
         console.error("Error fetching notifications:", error);
       } finally {
-        setIsFetching(false); 
+        setIsFetching(false);
       }
     };
 
@@ -73,9 +74,10 @@ const Notification: React.FC<NotificationProps> = ({ currentTheme }) => {
     }
   };
 
-  // ========================================= delete notification function ==========================================
+  // ========================================= delete specific notification  ==========================================
 
   const handleDeleteNotification = async (id: number) => {
+    setIsLoading(true);
     try {
       await axiosInstance.delete(`api/notifications/${id}/delete/`, {
         headers: {
@@ -88,10 +90,15 @@ const Notification: React.FC<NotificationProps> = ({ currentTheme }) => {
       );
     } catch (error) {
       console.error("Error deleting notification:", error);
+    } finally {
+      setIsLoading(false); // End loading state
     }
   };
 
+  // ========================================= delete all notifications  ==========================================
+
   const handleDeleteAllNotifications = async () => {
+    setIsLoading(true);
     try {
       // Send API request to delete all notifications
       await axiosInstance.delete("api/notifications/delete-all/", {
@@ -104,15 +111,22 @@ const Notification: React.FC<NotificationProps> = ({ currentTheme }) => {
       setNotifications([]);
     } catch (error) {
       console.error("Error deleting all notifications:", error);
+    } finally {
+      setIsLoading(false);
     }
   };
+
+  // ========================================= show delete button  ==========================================
+  const showDeleteAllButton = notifications.length > 0;
 
   return (
     <div className="main_notification_container">
       <div className="delete_all_buttion_container">
-        <button className="delete_all_notification" onClick={handleDeleteAllNotifications}>
-          Delete All
-        </button>
+        {showDeleteAllButton &&
+          <button className="delete_all_notification" onClick={handleDeleteAllNotifications}>
+            Delete All
+          </button>
+        }
       </div>
 
       {isFetching ? (
