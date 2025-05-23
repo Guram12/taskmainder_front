@@ -73,7 +73,50 @@ export interface Template {
 }
 
 
-export interface NotificationData {
+
+// boardName
+// : 
+// "Birthday Party Board"
+// body
+// : 
+// "krazana has joined your board \"Birthday Party Board\"."
+// invitedUserEmail
+// invitedUserName
+// : 
+// "krazana"
+// title
+// : 
+// "Board Invitation Accepted"
+// type
+// : 
+// "BOARD_INVITATION_ACCEPTED"
+
+
+export interface NotificationPayload {
+  type: 'USER_REMOVED_FROM_BOARD' | 'BOARD_INVITATION_ACCEPTED' | 'TASK_DUE_REMINDER' | 'BOARD_USER_UPDATE';
+  title: string;
+  body: string;
+  notification_id: number;
+  is_read: boolean;
+
+  // Fields specific to USER_REMOVED_FROM_BOARD
+  boardName?: string;
+  removedUserEmail?: string;
+
+  // Fields specific to BOARD_INVITATION_ACCEPTED
+  invitedUserEmail?: string;
+  invitedUserName?: string;
+
+  // Fields specific to TASK_DUE_REMINDER
+  taskName?: string;
+  dueDate?: string;
+  priority?: 'green' | 'orange' | 'red' | null;
+
+
+}
+
+
+export interface FetchedNotificationData {
   id: number;
   body: string;
   created_at: string;

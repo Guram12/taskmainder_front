@@ -102,18 +102,67 @@ const App: React.FC = () => {
 
 
 
+  // useEffect(() => {
+  //   if ('serviceWorker' in navigator) {
+  //     navigator.serviceWorker.addEventListener('message', (event) => {
+  //       if (event.data && event.data.type === 'BOARD_USER_UPDATE') {
+  //         console.log('Message received from service worker:', event.data);
+  //         setNotificationData(event.data); // Update state with notification data
+  //       }
+  //     });
+  //   }
+  // }, []);
+
+
+
   useEffect(() => {
     if ('serviceWorker' in navigator) {
       navigator.serviceWorker.addEventListener('message', (event) => {
-        if (event.data && event.data.type === 'BOARD_USER_UPDATE') {
-          console.log('Message received from service worker:', event.data);
-          setNotificationData(event.data); // Update state with notification data
+        if (event.data) {
+          const { type, ...payload } = event.data;
+          // Log different messages based on the notification type
+          console.log('======== type ===========>>>>>> ', type);
+          switch (type) {
+            case 'BOARD_USER_UPDATE':
+              console.log(`BOARD_USER_UPDATE type ==>> Board Name: ${payload.boardName}`);
+              break;
+
+            case 'TASK_DUE_REMINDER':
+              console.log(
+                `TASK_DUE_REMINDER type ==>> Task Name: ${payload.taskName}, Due Date: ${payload.dueDate}, Priority: ${payload.priority}`
+              );
+              break;
+
+            case 'USER_REMOVED_FROM_BOARD':
+              setNotificationData(event.data); // Update state with notification data
+
+              console.log(
+                `USER_REMOVED_FROM_BOARD type ==>> Board Name: ${payload.boardName}, Removed User Email: ${payload.removedUserEmail}`
+              );
+              break;
+
+            case 'BOARD_INVITATION_ACCEPTED':
+              console.log(
+                `BOARD_INVITATION_ACCEPTED type ==>> Board Name: ${payload.boardName}, Invited User Email: ${payload.invitedUserEmail}, Invited User Name: ${payload.invitedUserName}`
+              );
+              break;
+
+            default:
+              console.log('Unknown notification type received:', type, payload);
+          }
         }
       });
     }
   }, []);
 
 
+
+
+
+
+
+
+  // ===========================================================================================================================
   useEffect(() => {
     if (notificationData) {
       console.log('Notification data updated:', notificationData);

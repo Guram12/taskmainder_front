@@ -2,11 +2,13 @@ import "../styles/Notification.css";
 import React from "react";
 import { useEffect, useState } from "react";
 import axiosInstance from "../utils/axiosinstance";
-import { NotificationData } from "../utils/interface";
 import { RiDeleteBin4Fill } from "react-icons/ri";
 import { ThemeSpecs } from "../utils/theme";
 import SkeletonNotification from "./Boards/SkeletonNotification";
 import no_notification_image from "../assets/no_notification.png";
+import { NotificationPayload } from "../utils/interface";
+import { FetchedNotificationData } from "../utils/interface";
+
 
 interface NotificationProps {
   currentTheme: ThemeSpecs;
@@ -14,7 +16,7 @@ interface NotificationProps {
 }
 
 const Notification: React.FC<NotificationProps> = ({ currentTheme, setIsLoading }) => {
-  const [notifications, setNotifications] = useState<NotificationData[]>([]);
+  const [notifications, setNotifications] = useState<FetchedNotificationData[]>([]);
   const [isFetching, setIsFetching] = useState<boolean>(true); // New state to track fetching
 
   useEffect(() => {
@@ -31,11 +33,11 @@ const Notification: React.FC<NotificationProps> = ({ currentTheme, setIsLoading 
 
         // Mark all unread notifications as read
         const unreadNotifications = response.data.filter(
-          (notification: NotificationData) => !notification.is_read
+          (notification: NotificationPayload) => !notification.is_read
         );
 
         if (unreadNotifications.length > 0) {
-          await markAllAsRead(unreadNotifications.map((n: any) => n.id));
+          await markAllAsRead(unreadNotifications.map((n: FetchedNotificationData) => n.id));
         }
       } catch (error) {
         console.error("Error fetching notifications:", error);
