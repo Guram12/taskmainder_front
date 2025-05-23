@@ -6,6 +6,7 @@ import { NotificationData } from "../utils/interface";
 import { RiDeleteBin4Fill } from "react-icons/ri";
 import { ThemeSpecs } from "../utils/theme";
 import SkeletonNotification from "./Boards/SkeletonNotification";
+import no_notification_image from "../assets/no_notification.png";
 
 interface NotificationProps {
   currentTheme: ThemeSpecs;
@@ -13,11 +14,11 @@ interface NotificationProps {
 
 const Notification: React.FC<NotificationProps> = ({ currentTheme }) => {
   const [notifications, setNotifications] = useState<NotificationData[]>([]);
-  const [isNotificationLoaded, setIsNotificationLoaded] = useState<boolean>(false);
+  const [isFetching, setIsFetching] = useState<boolean>(true); // New state to track fetching
 
   useEffect(() => {
     const fetchNotifications = async () => {
-      setIsNotificationLoaded(true); // Start loading
+      setIsFetching(true); // Start fetching
       try {
         const response = await axiosInstance.get("api/notifications", {
           headers: {
@@ -38,8 +39,7 @@ const Notification: React.FC<NotificationProps> = ({ currentTheme }) => {
       } catch (error) {
         console.error("Error fetching notifications:", error);
       } finally {
-        // Ensure loading state is set to false after fetching is complete
-        setIsNotificationLoaded(false);
+        setIsFetching(false); 
       }
     };
 
@@ -91,7 +91,6 @@ const Notification: React.FC<NotificationProps> = ({ currentTheme }) => {
     }
   };
 
-
   const handleDeleteAllNotifications = async () => {
     try {
       // Send API request to delete all notifications
@@ -100,7 +99,7 @@ const Notification: React.FC<NotificationProps> = ({ currentTheme }) => {
           Authorization: `Bearer ${localStorage.getItem("access_token")}`,
         },
       });
-  
+
       // Update local state to clear all notifications
       setNotifications([]);
     } catch (error) {
@@ -111,16 +110,22 @@ const Notification: React.FC<NotificationProps> = ({ currentTheme }) => {
   return (
     <div className="main_notification_container">
       <div className="delete_all_buttion_container">
-        <button className="delete_all_notification" onClick={handleDeleteAllNotifications}>Delete All</button>
+        <button className="delete_all_notification" onClick={handleDeleteAllNotifications}>
+          Delete All
+        </button>
       </div>
-      {isNotificationLoaded ? (
-        <div  className="imported_all_skeletons_cont">
-          <SkeletonNotification currentTheme={currentTheme} />
-          <SkeletonNotification currentTheme={currentTheme} />
-          <SkeletonNotification currentTheme={currentTheme} />
-          <SkeletonNotification currentTheme={currentTheme} />
 
-          
+      {isFetching ? (
+        <div className="imported_all_skeletons_cont">
+          <SkeletonNotification currentTheme={currentTheme} />
+          <SkeletonNotification currentTheme={currentTheme} />
+          <SkeletonNotification currentTheme={currentTheme} />
+          <SkeletonNotification currentTheme={currentTheme} />
+        </div>
+      ) : notifications.length === 0 ? (
+        <div className="no_notification_container">
+          <img src={no_notification_image} alt="No Notifications" className="no_notification_image" />
+          <h3 className="no_notification_text">No Notifications</h3>
         </div>
       ) : (
         <>
