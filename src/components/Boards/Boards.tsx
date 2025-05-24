@@ -114,6 +114,9 @@ const Boards: React.FC<BoardsProps> = ({
       setBoardData(selectedBoard);
     }
   }, [selectedBoard]);
+
+
+  
   useEffect(() => {
     if (!selectedBoard.id) return;
 

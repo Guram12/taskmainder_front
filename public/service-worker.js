@@ -19,12 +19,6 @@ self.addEventListener('push', function(event) {
       console.log('Notification type received:', data.type); // Log the type field
 
       switch (data.type) {
-        // case 'BOARD_USER_UPDATE':
-        //   client.postMessage({
-        //     type: 'BOARD_USER_UPDATE',
-        //     boardName: data.boardName,
-        //   });
-        //   break;
 
         case 'TASK_DUE_REMINDER':
           client.postMessage({

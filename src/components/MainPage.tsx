@@ -33,6 +33,7 @@ interface MainPageProps {
   isBoardsLoaded: boolean;
   setIsLoading: (isLoading: boolean) => void;
   isLoading: boolean;
+  notificationData: any;
 }
 
 const MainPage: React.FC<MainPageProps> = ({
@@ -53,6 +54,7 @@ const MainPage: React.FC<MainPageProps> = ({
   isBoardsLoaded,
   setIsLoading,
   isLoading,
+  notificationData,
 }) => {
   const [selectedComponent, setSelectedComponent] = useState<string>("Boards");
 
@@ -143,6 +145,7 @@ const MainPage: React.FC<MainPageProps> = ({
       case "Boards":
         return (
           <Boards
+            key={selectedBoard.id} // Force re-render when selectedBoard changes
             currentTheme={currentTheme}
             setSelectedBoard={setSelectedBoard}
             selectedBoard={selectedBoard}
@@ -165,13 +168,9 @@ const MainPage: React.FC<MainPageProps> = ({
         />;
 
     }
-  }, [selectedComponent, boards, selectedBoard, currentTheme, profileData, current_board_users, isLoading, setIsLoading]);
+  }, [selectedComponent, boards, selectedBoard, currentTheme, profileData, current_board_users, isLoading, setIsLoading, notificationData]);
 
   const memoizedRenderComponent = useMemo(() => renderComponent(), [renderComponent]);
-
-useEffect(() => {
-  console.log('trigered loading state', isLoading);
-}, [isLoading]);
 
   return (
     <div className="mainpage_component">
