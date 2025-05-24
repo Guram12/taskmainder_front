@@ -15,7 +15,7 @@ import PasswordReset from './auth/PasswordReset';
 import PasswordResetConfirm from './auth/PasswordResetConfirm';
 import subscribeToPushNotifications from './utils/supbscription';
 import { Board_Users } from './utils/interface';
-
+import { NotificationPayload } from './utils/interface';
 
 
 
@@ -67,7 +67,21 @@ const App: React.FC = () => {
 
 
   const [current_board_users, setCurrent_board_users] = useState<Board_Users[]>([]);
-  const [notificationData, setNotificationData] = useState<any>(null); // State to store notification data
+
+
+  // type: 'USER_REMOVED_FROM_BOARD' | 'BOARD_INVITATION_ACCEPTED' | 'TASK_DUE_REMINDER' | 'BOARD_USER_UPDATE';
+  // title: string;
+  // body: string;
+  // notification_id: number;
+  // is_read: boolean;
+
+  const [notificationData, setNotificationData] = useState<NotificationPayload>({
+    type: "USER_REMOVED_FROM_BOARD",
+    title: '',
+    body: '',
+    notification_id: 0,
+    is_read: false,
+  });
 
 
 
@@ -123,9 +137,6 @@ const App: React.FC = () => {
           // Log different messages based on the notification type
           console.log('======== type ===========>>>>>> ', type);
           switch (type) {
-            case 'BOARD_USER_UPDATE':
-              console.log(`BOARD_USER_UPDATE type ==>> Board Name: ${payload.boardName}`);
-              break;
 
             case 'TASK_DUE_REMINDER':
               console.log(
@@ -134,11 +145,37 @@ const App: React.FC = () => {
               break;
 
             case 'USER_REMOVED_FROM_BOARD':
-              setNotificationData(event.data); // Update state with notification data
-
               console.log(
                 `USER_REMOVED_FROM_BOARD type ==>> Board Name: ${payload.boardName}, Removed User Email: ${payload.removedUserEmail}`
               );
+
+              setNotificationData(event.data); // Update state with notification data
+
+              // Check if the current user is removed from the selected board
+              if (selectedBoard.id && selectedBoard.name === payload.boardName) {
+                console.log('Current user removed from the selected board. Resetting selected board.');
+
+                // Reset the selected board
+                setSelectedBoard({
+                  id: 0,
+                  name: '',
+                  created_at: '',
+                  lists: [],
+                  owner: '',
+                  owner_email: '',
+                  members: [],
+                  board_users: [],
+                });
+
+                // Optionally reset the sidebar selection
+                setSelected_board_ID_for_sidebar(null);
+              }
+
+              // Update the boards list to remove the board
+              setBoards((prevBoards) =>
+                prevBoards.filter((board) => board.name !== payload.boardName)
+              );
+
               break;
 
             case 'BOARD_INVITATION_ACCEPTED':
@@ -163,45 +200,6 @@ const App: React.FC = () => {
 
 
   // ===========================================================================================================================
-  useEffect(() => {
-    if (notificationData) {
-      console.log('Notification data updated:', notificationData);
-
-      if (notificationData.type === 'BOARD_DELETED') {
-        const deletedBoardId = notificationData.board_id;
-
-        // Remove the deleted board from the boards list
-        setBoards((prevBoards) => prevBoards.filter((board) => board.id !== deletedBoardId));
-
-        // Reset the selected board if it was the deleted one
-        if (selectedBoard.id === deletedBoardId) {
-          setSelectedBoard({
-            id: 0,
-            name: '',
-            created_at: '',
-            lists: [],
-            owner: '',
-            owner_email: '',
-            members: [],
-            board_users: [],
-          });
-
-          setSelected_board_ID_for_sidebar(null);
-        }
-      }
-
-      // Fetch updated data if necessary
-      fetch_current_board_users();
-      fetchBoards();
-    }
-  }, [notificationData]);
-
-
-  useEffect(() => {
-    console.log("isLoading changed:", isLoading);
-  }, [isLoading]);
-
-
 
   // ========================================== fetch  boards ==================================================
   const fetchBoards = async () => {
@@ -350,6 +348,7 @@ const App: React.FC = () => {
             isBoardsLoaded={isBoardsLoaded}
             setIsLoading={setIsLoading}
             isLoading={isLoading}
+            notificationData={notificationData}
           />} />
       </Routes>
     </Router>
