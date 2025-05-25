@@ -51,12 +51,12 @@ const App: React.FC = () => {
 
   const [change_current_theme, setChange_current_theme] = useState(false);
   const [boards, setBoards] = useState<board[]>([]);
-  const [selectedBoard, setSelectedBoard] = useState<board>({
+  const [selectedBoard, setSelectedBoard] = useState<board | null>({
     id: 0,
     name: '',
     created_at: '',
     lists: [],
-    owner: '',
+    owner: '',    
     owner_email: '',
     members: [],
     board_users: [],
@@ -69,12 +69,6 @@ const App: React.FC = () => {
   const [current_board_users, setCurrent_board_users] = useState<Board_Users[]>([]);
 
 
-  // type: 'USER_REMOVED_FROM_BOARD' | 'BOARD_INVITATION_ACCEPTED' | 'TASK_DUE_REMINDER' | 'BOARD_USER_UPDATE';
-  // title: string;
-  // body: string;
-  // notification_id: number;
-  // is_read: boolean;
-
   const [notificationData, setNotificationData] = useState<NotificationPayload>({
     type: "USER_REMOVED_FROM_BOARD",
     title: '',
@@ -85,7 +79,6 @@ const App: React.FC = () => {
 
 
 
-  const [selected_board_ID_for_sidebar, setSelected_board_ID_for_sidebar] = useState<number | null>(null);
 
 
   const accessToken: string | null = localStorage.getItem('access_token');
@@ -101,8 +94,8 @@ const App: React.FC = () => {
   // -------------------------------------------- socket connection for board users ------------------------------------------
   const fetch_current_board_users = async () => {
     try {
-      console.log("selected board users are fetching because of notification ");
-      const response = await axiosInstance.get(`/api/boards/${selectedBoard.id}/users/`, {
+      console.log("selected board users are fetching");
+      const response = await axiosInstance.get(`/api/boards/${selectedBoard?.id}/users/`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem('access_token')}`
         }
@@ -152,7 +145,7 @@ const App: React.FC = () => {
               setNotificationData(event.data); // Update state with notification data
 
               // Check if the current user is removed from the selected board
-              if (selectedBoard.id && selectedBoard.name === payload.boardName) {
+              if (selectedBoard?.id && selectedBoard.name === payload.boardName) {
                 console.log('Current user removed from the selected board. Resetting selected board.');
 
                 // Reset the selected board
@@ -167,8 +160,6 @@ const App: React.FC = () => {
                   board_users: [],
                 });
 
-                // Optionally reset the sidebar selection
-                setSelected_board_ID_for_sidebar(null);
               }
 
               // Update the boards list to remove the board
@@ -198,8 +189,6 @@ const App: React.FC = () => {
 
 
 
-
-  // ===========================================================================================================================
 
   // ========================================== fetch  boards ==================================================
   const fetchBoards = async () => {
@@ -336,8 +325,6 @@ const App: React.FC = () => {
             currentTheme={currentTheme}
             boards={boards}
             setBoards={setBoards}
-            setSelected_board_ID_for_sidebar={setSelected_board_ID_for_sidebar}
-            selected_board_ID_for_sidebar={selected_board_ID_for_sidebar}
             current_user_email={profileData.email}
             profileData={profileData}
             FetchProfileData={FetchProfileData}
@@ -346,6 +333,7 @@ const App: React.FC = () => {
             current_board_users={current_board_users}
             fetch_current_board_users={fetch_current_board_users}
             isBoardsLoaded={isBoardsLoaded}
+            setIsBoardsLoaded={setIsBoardsLoaded}
             setIsLoading={setIsLoading}
             isLoading={isLoading}
             notificationData={notificationData}

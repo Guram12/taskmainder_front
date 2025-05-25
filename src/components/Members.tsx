@@ -23,7 +23,7 @@ import getAvatarStyles from "../utils/SetRandomColor";
 
 
 interface MembersProps {
-  selectedBoard: board;
+  selectedBoard: board | null;
   socketRef: React.MutableRefObject<WebSocket | null>;
   current_user_email: string;
   currentTheme: ThemeSpecs;
@@ -94,7 +94,7 @@ const Members: React.FC<MembersProps> = ({
         payload: {
           user_id: userId,
           new_status: newStatus,
-          board_id: selectedBoard.id,
+          board_id: selectedBoard?.id,
         },
       }));
     }
@@ -159,7 +159,7 @@ const Members: React.FC<MembersProps> = ({
   // ======================================== fetch current  board useers ==================================================
 
   useEffect(() => {
-    if (selectedBoard.id) {
+    if (selectedBoard?.id) {
       fetch_current_board_users();
     }
   }, [selectedBoard]);
@@ -172,7 +172,7 @@ const Members: React.FC<MembersProps> = ({
     console.log('Sending invitations to:', selected_emails);
     try {
       const response = await axiosInstance.post(
-        `/api/boards/${selectedBoard.id}/send-invitation/`, // Add trailing slash here
+        `/api/boards/${selectedBoard?.id}/send-invitation/`, // Add trailing slash here
         { email: selected_emails }, // array of emails 
         {
           headers: {
@@ -209,7 +209,7 @@ const Members: React.FC<MembersProps> = ({
   // ========================================== delete user from members ==================================================
   const handleDeleteUser = async (userId: number) => {
     console.log('Deleting user:', userId);
-    const response = await axiosInstance.delete(`/api/boards/${selectedBoard.id}/users/${userId}/delete/`, {
+    const response = await axiosInstance.delete(`/api/boards/${selectedBoard?.id}/users/${userId}/delete/`, {
       headers: {
         Authorization: `Bearer ${localStorage.getItem('access_token')}`
       }
@@ -250,7 +250,7 @@ const Members: React.FC<MembersProps> = ({
   }
 
   const delete_board = () => {
-    console.log('Deleting board:', selectedBoard.id);
+    console.log('Deleting board:', selectedBoard?.id);
     deleteBoard();
     setIsBoardDeleting(false);
   }
@@ -319,7 +319,7 @@ const Members: React.FC<MembersProps> = ({
               </div>
             ) : (
               <>
-                <h3 className="board_name" style={{ color: `${currentTheme['--main-text-coloure']}` }} >{selectedBoard.name}</h3>
+                <h3 className="board_name" style={{ color: `${currentTheme['--main-text-coloure']}` }} >{selectedBoard?.name}</h3>
                 {is_current_user_admin_or_owner && (
 
                   <MdModeEdit
@@ -338,7 +338,7 @@ const Members: React.FC<MembersProps> = ({
                 )}
                 {isBoardDeleting && (
                   <ConfirmationDialog
-                    message={`Are you sure you want to delete the board "${selectedBoard.name}"?`}
+                    message={`Are you sure you want to delete the board "${selectedBoard?.name}"?`}
                     onConfirm={delete_board}
                     onCancel={canselBoardDelete}
                   />

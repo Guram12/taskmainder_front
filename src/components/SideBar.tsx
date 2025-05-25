@@ -11,7 +11,7 @@ import { RiSettings4Fill } from "react-icons/ri";
 import { board } from '../utils/interface';
 import { GoRepoTemplate } from "react-icons/go";
 import axiosInstance from '../utils/axiosinstance';
-import Shepherd from 'shepherd.js';
+// import Shepherd from 'shepherd.js';
 import { MdNotificationsActive } from "react-icons/md";
 
 
@@ -22,10 +22,10 @@ interface SidebarProps {
   currentTheme: ThemeSpecs;
   boards: board[];
   setBoards?: (boards: board[]) => void;
-  setSelectedBoard: (board: board) => void;
+  selectedBoard: board | null;
+  setSelectedBoard: (board: board | null) => void;
   setSelectedComponent: (component: string) => void;
-  setSelected_board_ID_for_sidebar?: (id: number | null) => void;
-  selected_board_ID_for_sidebar?: number | null;
+  setIsBoardsLoaded?: (isLoaded: boolean) => void;
 }
 
 
@@ -39,10 +39,11 @@ const SidebarComponent: React.FC<SidebarProps> = ({
   currentTheme,
   boards,
   setBoards,
+  selectedBoard,
   setSelectedBoard,
   setSelectedComponent,
-  selected_board_ID_for_sidebar,
-  setSelected_board_ID_for_sidebar
+
+  setIsBoardsLoaded,
 }) => {
 
   const [isOpen, setIsOpen] = useState(true);
@@ -70,7 +71,7 @@ const SidebarComponent: React.FC<SidebarProps> = ({
   //     },
   //     useModalOverlay: true, // Enable backdrop to dim the rest of the page
   //   });
-  
+
   //   // Step 1: Highlight Dashboard
   //   tour.addStep({
   //     title: 'Dashboard',
@@ -83,7 +84,7 @@ const SidebarComponent: React.FC<SidebarProps> = ({
   //       },
   //     ],
   //   });
-  
+
   //   // Step 2: Highlight Boards
   //   tour.addStep({
   //     title: 'Boards',
@@ -96,7 +97,7 @@ const SidebarComponent: React.FC<SidebarProps> = ({
   //       },
   //     ],
   //   });
-  
+
   //   // Step 3: Highlight Templates
   //   tour.addStep({
   //     title: 'Templates',
@@ -109,13 +110,13 @@ const SidebarComponent: React.FC<SidebarProps> = ({
   //       },
   //     ],
   //   });
-  
+
   //   tour.start();
   // };
 
 
-  
-// ==============================================================================================================
+
+  // ==============================================================================================================
 
 
   // ================================== sidebar pin and unpin ===============================================
@@ -141,32 +142,61 @@ const SidebarComponent: React.FC<SidebarProps> = ({
   };
 
   // =========================================================================================================
-
-
-  const handleBoardClick = (board: board) => {
+  const handleBoardClick = async (board: board) => {
     console.log('Selected board:', board);
-    setSelectedBoard(board);
     setSelectedComponent("Boards");
-    if (setSelected_board_ID_for_sidebar) {
-      setSelected_board_ID_for_sidebar(board.id);
+    // Update the sidebar selection
+
+    if (board.id === selectedBoard?.id) {
+      console.log('This board is already selected. No need to fetch data.');
+      return; // Exit early if the board is already selected
+    }
+    try {
+      if (setIsBoardsLoaded) {
+        setIsBoardsLoaded(false); // Show skeleton loader
+      }
+
+      // Fetch the selected board data
+      const response = await axiosInstance.get(`/api/boards/${board.id}/`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('access_token')}`,
+        },
+      });
+
+      const updatedBoard = response.data;
+
+      // Update the selected board
+      setSelectedBoard(updatedBoard);
+
+      // Update only the specific board in the boards state
+      if (setBoards) {
+        const updatedBoards = boards.map((b) =>
+          b.id === updatedBoard.id ? updatedBoard : b
+        );
+        setBoards(updatedBoards); // Set the updated boards array
+      }
+
+      if (setIsBoardsLoaded) {
+        setIsBoardsLoaded(true); // Mark as loaded
+      }
+
+
+
+    } catch (error) {
+      console.error('Error selecting board:', error);
+      if (setIsBoardsLoaded) {
+        setIsBoardsLoaded(true); // Stop loading even if there's an error
+      }
     }
   };
 
+
+  // =========================================  sidebar pager click   ================================================
+
   const handel_sidebar_page_click = (component_name: string) => {
     setSelectedComponent(component_name);
-    setSelectedBoard({
-      id: 0,
-      name: '',
-      created_at: '',
-      lists: [],
-      owner: '',
-      owner_email: '',
-      members: [],
-      board_users: []
-    });
-    if (setSelected_board_ID_for_sidebar) {
-      setSelected_board_ID_for_sidebar(null);
-    }
+    setSelectedBoard(null);
+
   }
 
   // ========================================== add new board =================================================
@@ -251,7 +281,7 @@ const SidebarComponent: React.FC<SidebarProps> = ({
                           rootStyles={{
                             backgroundColor: `${currentTheme['--background-color']}`,
                             transition: 'all 0.3s',
-                            color: selected_board_ID_for_sidebar === board.id ? 'green' : currentTheme['--main-text-coloure'],
+                            color: selectedBoard?.id === board.id ? 'green' : currentTheme['--main-text-coloure'],
                             textAlign: 'left',
                           }}
                           icon={<FaClipboardList />}
