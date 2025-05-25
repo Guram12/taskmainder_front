@@ -691,8 +691,8 @@ const Boards: React.FC<BoardsProps> = ({
               setCurrent_board_users={setCurrent_board_users}
               current_board_users={current_board_users}
               fetch_current_board_users={fetch_current_board_users}
-              boardData={boardData}
-              isBoardsLoaded={isBoardsLoaded}
+              setBoards={setBoards}
+              boards={boards}
             />
 
           )}
