@@ -17,13 +17,12 @@ import ConfirmationDialog from "./Boards/ConfirmationDialog";
 import Avatar from '@mui/material/Avatar';
 import getAvatarStyles from "../utils/SetRandomColor";
 
-
 // setCurrent_board_users={setCurrent_board_users}
 // current_board_users={current_board_users}
 
 
 interface MembersProps {
-  selectedBoard: board;
+  selectedBoard: board | null;
   socketRef: React.MutableRefObject<WebSocket | null>;
   current_user_email: string;
   currentTheme: ThemeSpecs;
@@ -32,8 +31,8 @@ interface MembersProps {
   setCurrent_board_users: (users: Board_Users[]) => void;
   current_board_users: Board_Users[];
   fetch_current_board_users: () => Promise<void>;
-  boardData: board;
-  isBoardsLoaded: boolean;
+  setBoards: (boards: board[]) => void;
+  boards: board[];
 }
 
 const Members: React.FC<MembersProps> = ({
@@ -46,8 +45,8 @@ const Members: React.FC<MembersProps> = ({
   setCurrent_board_users,
   current_board_users,
   fetch_current_board_users,
-  boardData,
-  isBoardsLoaded,
+  setBoards,
+  boards,
 
 }) => {
 
@@ -94,7 +93,7 @@ const Members: React.FC<MembersProps> = ({
         payload: {
           user_id: userId,
           new_status: newStatus,
-          board_id: selectedBoard.id,
+          board_id: selectedBoard?.id,
         },
       }));
     }
@@ -159,7 +158,7 @@ const Members: React.FC<MembersProps> = ({
   // ======================================== fetch current  board useers ==================================================
 
   useEffect(() => {
-    if (selectedBoard.id) {
+    if (selectedBoard?.id) {
       fetch_current_board_users();
     }
   }, [selectedBoard]);
@@ -172,7 +171,7 @@ const Members: React.FC<MembersProps> = ({
     console.log('Sending invitations to:', selected_emails);
     try {
       const response = await axiosInstance.post(
-        `/api/boards/${selectedBoard.id}/send-invitation/`, // Add trailing slash here
+        `/api/boards/${selectedBoard?.id}/send-invitation/`, // Add trailing slash here
         { email: selected_emails }, // array of emails 
         {
           headers: {
@@ -209,7 +208,7 @@ const Members: React.FC<MembersProps> = ({
   // ========================================== delete user from members ==================================================
   const handleDeleteUser = async (userId: number) => {
     console.log('Deleting user:', userId);
-    const response = await axiosInstance.delete(`/api/boards/${selectedBoard.id}/users/${userId}/delete/`, {
+    const response = await axiosInstance.delete(`/api/boards/${selectedBoard?.id}/users/${userId}/delete/`, {
       headers: {
         Authorization: `Bearer ${localStorage.getItem('access_token')}`
       }
@@ -237,9 +236,20 @@ const Members: React.FC<MembersProps> = ({
 
   const handleBoardNameUpdate = () => {
     console.log('Updating board name:', newBoardName);
+
+    // Create the updated boards array
+    const updatedBoards = boards.map((board: board) =>
+      board.id === selectedBoard?.id ? { ...board, name: newBoardName } : board
+    );
+
+    // Update the board name in the sidebar
+    setBoards(updatedBoards);
+
+    // Send the update to the server
     update_board_name(newBoardName);
+
     setIsBoardEditing(false);
-  }
+  };
 
   // =============================================   Delete Board   ========================================================
 
@@ -250,7 +260,7 @@ const Members: React.FC<MembersProps> = ({
   }
 
   const delete_board = () => {
-    console.log('Deleting board:', selectedBoard.id);
+    console.log('Deleting board:', selectedBoard?.id);
     deleteBoard();
     setIsBoardDeleting(false);
   }
@@ -263,9 +273,7 @@ const Members: React.FC<MembersProps> = ({
 
   return (
     <div className="main_members_container">
-      {boardData.lists.length > 0 && isBoardsLoaded && (
-        <RiUserSettingsFill className="add_user_icon" onClick={() => setIsUsersWindowOpen(true)} />
-      )}
+      <RiUserSettingsFill className="add_user_icon" onClick={() => setIsUsersWindowOpen(true)} />
       {/* <h3 className="members_h2">User</h3> */}
       {current_board_users.map((boardUser) => (
         boardUser.profile_picture !== null ? (
@@ -292,63 +300,62 @@ const Members: React.FC<MembersProps> = ({
         )
       ))}
 
-      {boardData.lists.length > 0 && isBoardsLoaded && (
-        <>
-          <FaClipboardList className='board_icon' style={{ fill: `${currentTheme['--main-text-coloure']}` }} />
-          <div className="board_name_cont">
+      <>
+        <FaClipboardList className='board_icon' style={{ fill: `${currentTheme['--main-text-coloure']}` }} />
+        <div className="board_name_cont">
 
-            {isBoardEditing ? (
-              <div className="board_name_inp_cont" >
-                <input
-                  type="text"
-                  value={newBoardName}
-                  onChange={(e) => setNewBoardName(e.target.value)}
-                  className="board_name_input"
-                  placeholder="Enter new board name"
+          {isBoardEditing ? (
+            <div className="board_name_inp_cont" >
+              <input
+                type="text"
+                value={newBoardName}
+                onChange={(e) => setNewBoardName(e.target.value)}
+                className="board_name_input"
+                placeholder="Enter new board name"
+              />
+              <GrFormCheckmark
+                style={{ color: `${currentTheme['--main-text-coloure']}` }}
+                className="save_board_name_icon"
+                onClick={() => { handleBoardNameUpdate() }}
+              />
+              <HiOutlineXMark
+                style={{ color: `${currentTheme['--main-text-coloure']}` }}
+                className="discard_board_name_icon"
+                onClick={() => setIsBoardEditing(false)}
+              />
+            </div>
+          ) : (
+            <>
+              <h3 className="board_name" style={{ color: `${currentTheme['--main-text-coloure']}` }} >{selectedBoard?.name}</h3>
+              {is_current_user_admin_or_owner && (
+
+                <MdModeEdit
+                  className="edit_board_name_icon"
+                  style={{ fill: `${currentTheme['--main-text-coloure']}` }}
+                  onClick={() => handle_edit_board_click()}
                 />
-                <GrFormCheckmark
-                  style={{ color: `${currentTheme['--main-text-coloure']}` }}
-                  className="save_board_name_icon"
-                  onClick={() => { handleBoardNameUpdate() }}
+              )}
+              {is_current_user_owner && (
+
+                <MdDeleteForever
+                  className="delete_board_icon"
+                  style={{ fill: `${currentTheme['--main-text-coloure']}` }}
+                  onClick={() => handle_delete_board_icon_click()}
                 />
-                <HiOutlineXMark
-                  style={{ color: `${currentTheme['--main-text-coloure']}` }}
-                  className="discard_board_name_icon"
-                  onClick={() => setIsBoardEditing(false)}
+              )}
+              {isBoardDeleting && (
+                <ConfirmationDialog
+                  message={`Are you sure you want to delete the board "${selectedBoard?.name}"?`}
+                  onConfirm={delete_board}
+                  onCancel={canselBoardDelete}
                 />
-              </div>
-            ) : (
-              <>
-                <h3 className="board_name" style={{ color: `${currentTheme['--main-text-coloure']}` }} >{selectedBoard.name}</h3>
-                {is_current_user_admin_or_owner && (
+              )}
+            </>
+          )}
+        </div>
+      </>
 
-                  <MdModeEdit
-                    className="edit_board_name_icon"
-                    style={{ fill: `${currentTheme['--main-text-coloure']}` }}
-                    onClick={() => handle_edit_board_click()}
-                  />
-                )}
-                {is_current_user_owner && (
 
-                  <MdDeleteForever
-                    className="delete_board_icon"
-                    style={{ fill: `${currentTheme['--main-text-coloure']}` }}
-                    onClick={() => handle_delete_board_icon_click()}
-                  />
-                )}
-                {isBoardDeleting && (
-                  <ConfirmationDialog
-                    message={`Are you sure you want to delete the board "${selectedBoard.name}"?`}
-                    onConfirm={delete_board}
-                    onCancel={canselBoardDelete}
-                  />
-                )}
-              </>
-            )}
-          </div>
-        </>
-
-      )}
 
       <div>
         {isUsersWindowOpen && (

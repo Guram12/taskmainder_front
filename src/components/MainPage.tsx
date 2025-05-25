@@ -19,8 +19,8 @@ interface MainPageProps {
   currentTheme: ThemeSpecs;
   boards: board[];
   setBoards: (boards: board[]) => void;
-  setSelectedBoard: (board: board) => void;
-  selectedBoard: board;
+  setSelectedBoard: (board: board | null) => void;
+  selectedBoard: board | null;
   setSelected_board_ID_for_sidebar?: (id: number | null) => void;
   selected_board_ID_for_sidebar?: number | null;
   current_user_email: string;
@@ -31,9 +31,11 @@ interface MainPageProps {
   current_board_users: Board_Users[];
   fetch_current_board_users: () => Promise<void>;
   isBoardsLoaded: boolean;
+  setIsBoardsLoaded: (isLoaded: boolean) => void;
   setIsLoading: (isLoading: boolean) => void;
   isLoading: boolean;
   notificationData: any;
+  fetchBoardById?: (boardId: number) => Promise<void>;
 }
 
 const MainPage: React.FC<MainPageProps> = ({
@@ -52,6 +54,7 @@ const MainPage: React.FC<MainPageProps> = ({
   current_board_users,
   fetch_current_board_users,
   isBoardsLoaded,
+  setIsBoardsLoaded,
   setIsLoading,
   isLoading,
   notificationData,
@@ -79,7 +82,7 @@ const MainPage: React.FC<MainPageProps> = ({
 
 
   useEffect(() => {
-    if (boards.length > 0 && selectedBoard.id === 0) {
+    if (boards.length > 0 && selectedBoard?.id === 0) {
       setSelectedBoard(boards[0]);
     }
   }, [boards, selectedBoard, setSelectedBoard]);
@@ -115,6 +118,7 @@ const MainPage: React.FC<MainPageProps> = ({
 
 
 
+
   const renderComponent = useCallback(() => {
 
     switch (selectedComponent) {
@@ -145,7 +149,6 @@ const MainPage: React.FC<MainPageProps> = ({
       case "Boards":
         return (
           <Boards
-            key={selectedBoard.id} // Force re-render when selectedBoard changes
             currentTheme={currentTheme}
             setSelectedBoard={setSelectedBoard}
             selectedBoard={selectedBoard}
@@ -168,7 +171,7 @@ const MainPage: React.FC<MainPageProps> = ({
         />;
 
     }
-  }, [selectedComponent, boards, selectedBoard, currentTheme, profileData, current_board_users, isLoading, setIsLoading, notificationData]);
+  }, [selectedComponent, boards, selectedBoard, currentTheme, profileData, current_board_users, isLoading, setIsLoading, notificationData, isBoardsLoaded]);
 
   const memoizedRenderComponent = useMemo(() => renderComponent(), [renderComponent]);
 
@@ -185,9 +188,9 @@ const MainPage: React.FC<MainPageProps> = ({
         setBoards={setBoards}
         setSelectedBoard={setSelectedBoard}
         setSelectedComponent={setSelectedComponent}
-        setSelected_board_ID_for_sidebar={setSelected_board_ID_for_sidebar}
-        selected_board_ID_for_sidebar={selected_board_ID_for_sidebar}
-
+     
+        setIsBoardsLoaded={setIsBoardsLoaded}
+        selectedBoard={selectedBoard}
       />
       {memoizedRenderComponent}
     </div>

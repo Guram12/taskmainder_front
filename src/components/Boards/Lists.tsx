@@ -26,7 +26,20 @@ interface ListProps {
   allCurrentBoardUsers: ProfileData[];
 }
 
-const List: React.FC<ListProps> = ({ list, moveTask, addTask, deleteTask, updateTask, socketRef, currentTheme, deleteList, updateListName, allCurrentBoardUsers }) => {
+const List: React.FC<ListProps> = ({
+  list,
+  moveTask,
+  addTask,
+  deleteTask,
+  updateTask,
+  socketRef,
+  currentTheme,
+  deleteList,
+  updateListName,
+  allCurrentBoardUsers,
+
+
+}) => {
 
   const [isListEditing, setIsListEditing] = useState<boolean>(false);
   const [newListName, setNewListName] = useState<string>(list.name);

@@ -23,9 +23,9 @@ if (isMobile) {
 
 
 export interface BoardsProps {
-  selectedBoard: board;
+  selectedBoard: board | null;
   currentTheme: ThemeSpecs;
-  setSelectedBoard: (board: board) => void;
+  setSelectedBoard: (board: board | null) => void;
   current_user_email: string;
   profileData: ProfileData;
   setBoards: (boards: board[]) => void;
@@ -77,7 +77,7 @@ const Boards: React.FC<BoardsProps> = ({
 
 
   useEffect(() => {
-    if (selectedBoard.board_users) {
+    if (selectedBoard?.board_users) {
       const selectedBoardUsers: ProfileData[] = selectedBoard.board_users.map((user) => ({
         id: user.id,
         email: user.email,
@@ -98,7 +98,7 @@ const Boards: React.FC<BoardsProps> = ({
 
 
   useEffect(() => {
-    if (selectedBoard.id === 0) {
+    if (selectedBoard?.id === 0) {
       // Reset boardData when no board is selected
       setBoardData({
         id: 0,
@@ -111,37 +111,47 @@ const Boards: React.FC<BoardsProps> = ({
         board_users: [],
       });
     } else {
+      if (!selectedBoard) return;
       setBoardData(selectedBoard);
     }
   }, [selectedBoard]);
 
 
-  
+
+  // ======================================   Main useEffect for websocket connection  =========================================
+
+
   useEffect(() => {
-    if (!selectedBoard.id) return;
+    if (!selectedBoard?.id) return;
 
     if (socketRef.current) {
       socketRef.current.close();
     }
 
-
     const token = localStorage.getItem('access_token');
     const newSocket = new WebSocket(`ws://${window.location.hostname}:8000/ws/boards/${selectedBoard.id}/?token=${token}`);
     socketRef.current = newSocket;
 
+
     newSocket.onopen = () => {
       console.log('WebSocket connection established');
     };
+
 
     newSocket.onmessage = (event) => {
       const data = JSON.parse(event.data);
       const { action, payload } = data;
 
       switch (action) {
-        case 'full_board_state':
-          // console.log('Received full board state:', payload);
-          setBoardData(payload); // Update the board data with the full state
-          break;
+        // case 'full_board_state':
+        //   console.log('Received full board state:', payload);
+        //   setBoardData(payload); // Update the board data with the full state
+        //   setSelectedBoard(payload); // Update the selected board with the full state
+        //   setIsBoardsLoaded(true);
+        //   console.log('board loader after receiving full_board_state ==>>', isBoardsLoaded);
+
+        //   break;
+
 
         case 'move_task':
           const { task_id, source_list_id, target_list_id } = payload;
@@ -344,7 +354,7 @@ const Boards: React.FC<BoardsProps> = ({
         newSocket.close();
       }
     };
-  }, [selectedBoard.id]);
+  }, [selectedBoard?.id]);
 
 
 
@@ -506,7 +516,7 @@ const Boards: React.FC<BoardsProps> = ({
         id: Date.now(), // Temporary ID, replace with server-generated ID
         name: ListName,
         created_at: new Date().toISOString(),
-        board: selectedBoard.id,
+        board: selectedBoard?.id,
         tasks: [],
       };
 
@@ -554,7 +564,7 @@ const Boards: React.FC<BoardsProps> = ({
       socketRef.current.send(
         JSON.stringify({
           action: 'update_board_name',
-          payload: { board_id: selectedBoard.id, new_name: newName },
+          payload: { board_id: selectedBoard?.id, new_name: newName },
         })
       );
     }
@@ -564,7 +574,7 @@ const Boards: React.FC<BoardsProps> = ({
   // ============================================  Delete Board    ===============================================
 
   const deleteBoard = () => {
-    console.log('Deleting board:', selectedBoard.id);
+    console.log('Deleting board:', selectedBoard?.id);
 
     // Start loading
     setIsLoading(true);
@@ -573,7 +583,7 @@ const Boards: React.FC<BoardsProps> = ({
       socketRef.current.send(JSON.stringify({
         action: 'delete_board',
         payload: {
-          board_id: selectedBoard.id,
+          board_id: selectedBoard?.id,
           user_id: profileData.id,
         }
       }));
@@ -658,7 +668,7 @@ const Boards: React.FC<BoardsProps> = ({
     };
   }, []);
 
-  const is_any_board_selected = selectedBoard.name !== '';
+  const is_any_board_selected = selectedBoard?.name !== '';
 
   return (
     <DndProvider backend={isMobile ? TouchBackend : HTML5Backend}
@@ -668,7 +678,6 @@ const Boards: React.FC<BoardsProps> = ({
         <div>
           {!isBoardsLoaded ? (
             <div className='skeleton_in_board' >
-
               <SkeletonMember currentTheme={currentTheme} />
             </div>
           ) : (
@@ -682,8 +691,8 @@ const Boards: React.FC<BoardsProps> = ({
               setCurrent_board_users={setCurrent_board_users}
               current_board_users={current_board_users}
               fetch_current_board_users={fetch_current_board_users}
-              boardData={boardData}
-              isBoardsLoaded={isBoardsLoaded}
+              setBoards={setBoards}
+              boards={boards}
             />
 
           )}
@@ -691,7 +700,11 @@ const Boards: React.FC<BoardsProps> = ({
 
 
         {isBoardsLoaded && boardData.lists && boardData.lists.length === 0 && (
-          <NoBoards currentTheme={currentTheme} />
+          <div>
+            {boards.length === 0 && (
+              <NoBoards currentTheme={currentTheme} />
+            )}
+          </div>
         )}
 
         <div className="main_boards_container">
@@ -699,8 +712,7 @@ const Boards: React.FC<BoardsProps> = ({
             <SkeletonLoader currentTheme={currentTheme} />
           ) : (
 
-
-            <div className='lists_container' ref={listsContainerRef}>
+            < div className='lists_container' ref={listsContainerRef}>
               {boardData.lists.map((list) => (
                 <List
                   key={list.id}
@@ -747,7 +759,7 @@ const Boards: React.FC<BoardsProps> = ({
         </div>
 
       </div>
-    </DndProvider>
+    </DndProvider >
   );
 };
 
