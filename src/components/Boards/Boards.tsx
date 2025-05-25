@@ -116,7 +116,7 @@ const Boards: React.FC<BoardsProps> = ({
   }, [selectedBoard]);
 
 
-  
+
   useEffect(() => {
     if (!selectedBoard.id) return;
 
@@ -668,7 +668,6 @@ const Boards: React.FC<BoardsProps> = ({
         <div>
           {!isBoardsLoaded ? (
             <div className='skeleton_in_board' >
-
               <SkeletonMember currentTheme={currentTheme} />
             </div>
           ) : (
@@ -685,48 +684,39 @@ const Boards: React.FC<BoardsProps> = ({
               boardData={boardData}
               isBoardsLoaded={isBoardsLoaded}
             />
-
           )}
         </div>
 
-
-        {isBoardsLoaded && boardData.lists && boardData.lists.length === 0 && (
+        {isBoardsLoaded && boardData.lists && boardData.lists.length === 0 ? (
           <NoBoards currentTheme={currentTheme} />
-        )}
+        ) : (
+          <div className="main_boards_container">
+            {!isBoardsLoaded ? (
+              <SkeletonLoader currentTheme={currentTheme} />
+            ) : (
+              <div className='lists_container' ref={listsContainerRef}>
+                {boardData.lists.map((list) => (
+                  <List
+                    key={list.id}
+                    list={list}
+                    moveTask={moveTask}
+                    addTask={addTask}
+                    deleteTask={deleteTask}
+                    updateTask={updateTask}
+                    socketRef={socketRef}
+                    currentTheme={currentTheme}
+                    deleteList={deleteList}
+                    updateListName={updateListName}
+                    allCurrentBoardUsers={allCurrentBoardUsers}
+                  />
+                ))}
 
-        <div className="main_boards_container">
-          {!isBoardsLoaded ? (
-            <SkeletonLoader currentTheme={currentTheme} />
-          ) : (
-
-
-            <div className='lists_container' ref={listsContainerRef}>
-              {boardData.lists.map((list) => (
-                <List
-                  key={list.id}
-                  list={list}
-                  moveTask={moveTask}
-                  addTask={addTask}
-                  deleteTask={deleteTask}
-                  updateTask={updateTask}
-                  socketRef={socketRef}
-                  currentTheme={currentTheme}
-                  deleteList={deleteList}
-                  updateListName={updateListName}
-                  allCurrentBoardUsers={allCurrentBoardUsers}
-                />
-              ))}
-
-
-              {is_any_board_selected && (
-                <div className='list' >
-                  {!Adding_new_list ?
-                    (
-                      <button onClick={() => setAdding_new_list(true)} >Add NewList</button>
-                    )
-                    :
-                    (
-                      <div className='add_new_list_cont' >
+                {is_any_board_selected && (
+                  <div className='list'>
+                    {!Adding_new_list ? (
+                      <button onClick={() => setAdding_new_list(true)}>Add NewList</button>
+                    ) : (
+                      <div className='add_new_list_cont'>
                         <input
                           type="text"
                           placeholder='List Name'
@@ -734,18 +724,16 @@ const Boards: React.FC<BoardsProps> = ({
                           onChange={(e) => setListName(e.target.value)}
                           required
                         />
-                        <button onClick={() => addList()}  >Add</button>
-                        <button onClick={() => setAdding_new_list(false)}  >Cansel</button>
+                        <button onClick={() => addList()}>Add</button>
+                        <button onClick={() => setAdding_new_list(false)}>Cancel</button>
                       </div>
-                    )
-                  }
-
-                </div>
-              )}
-            </div>
-          )}
-        </div>
-
+                    )}
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
+        )}
       </div>
     </DndProvider>
   );

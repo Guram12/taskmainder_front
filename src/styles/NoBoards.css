@@ -1,16 +1,31 @@
 .no_boards_container {
-
-
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: flex-start;
   margin-top: 70px;
-  width: 100%;
   padding: 20px;
+  overflow: hidden;
 }
 
-.nothing_selected_img{
+.nothing_selected_img {
   width: 300px;
   height: 300px;
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -17,6 +17,7 @@
   height: calc(100vh - 152px);
   overflow-x: auto; /* Allow horizontal overflow */
   overflow-y: hidden; /* Prevent vertical overflow */
+  
 }
 
 .lists_container {
