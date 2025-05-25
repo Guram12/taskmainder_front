@@ -219,18 +219,28 @@ const SidebarComponent: React.FC<SidebarProps> = ({
         headers: {
           Authorization: `Bearer ${localStorage.getItem('access_token')}`
         }
+      });
 
-      })
-      console.log('response', response);
       if (response.status === 201 && setBoards) {
-        setBoards([...boards, response.data]);
+        const newBoard = response.data;
+
+        // Add the new board to the boards list
+        setBoards([...boards, newBoard]);
+
+        // Set the newly created board as the selected board
+        setSelectedBoard(newBoard);
+
+        // Optionally, switch to the "Boards" view
+        setSelectedComponent("Boards");
+
+        // Reset the input and state
         setAddingNewBoard(false);
         setNewBoardName('');
       }
     } catch (error) {
-
+      console.error("Error creating new board:", error);
     }
-  }
+  };
 
 
   // =========================================================================================================
