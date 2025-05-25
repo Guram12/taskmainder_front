@@ -23,7 +23,7 @@ if (isMobile) {
 
 
 export interface BoardsProps {
-  selectedBoard: board| null;
+  selectedBoard: board | null;
   currentTheme: ThemeSpecs;
   setSelectedBoard: (board: board | null) => void;
   current_user_email: string;
