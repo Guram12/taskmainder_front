@@ -148,14 +148,12 @@ const Task: React.FC<TaskProps> = ({ task, deleteTask, updateTask, moveTaskWithi
         opacity: isDragging || isDraggingReorder ? 0.5 : 1,
         backgroundColor: currentTheme['--task-background-color'],
         color: currentTheme['--main-text-coloure'],
-
       }}
-      data-task-id={task.id} // Add this line
-
+      data-task-id={task.id}
     >
       <div
         className='task_complition_checkbox_container'
-        style={{ borderColor: currentTheme['--main-text-coloure'] }}
+        style={{ borderColor: currentTheme['--border-color'] }}
       >
         {task.completed ? (
           <MdRadioButtonChecked className='completed_task_icon' onClick={() => handleCompletionToggle(task)} />

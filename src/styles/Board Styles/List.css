@@ -2,7 +2,6 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  border: 1px solid red;
   margin-bottom: 5px;
   position: absolute;
   width: 290px;
@@ -79,7 +78,6 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  border: 1px solid red;
   margin-top: 5px;
   padding: 5px;
   
