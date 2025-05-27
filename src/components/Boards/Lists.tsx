@@ -71,6 +71,8 @@ const List: React.FC<ListProps> = ({
     }),
   }));
 
+
+  // ==========================================  add task inside list ==========================================
   const handleAddTask = () => {
     if (newTaskTitle.trim()) {
       addTask(list.id, newTaskTitle);
@@ -84,26 +86,26 @@ const List: React.FC<ListProps> = ({
   const moveTaskWithinList = (draggedTaskId: number, targetTaskId: number, listId: number) => {
     const draggedTaskIndex = list.tasks.findIndex((task) => task.id === draggedTaskId);
     const targetTaskIndex = list.tasks.findIndex((task) => task.id === targetTaskId);
-  
+
     if (draggedTaskIndex !== -1 && targetTaskIndex !== -1) {
       // Optimistically update the UI
       const updatedTasks = [...list.tasks];
       const [draggedTask] = updatedTasks.splice(draggedTaskIndex, 1);
       updatedTasks.splice(targetTaskIndex, 0, draggedTask);
-  
+
       // Create the updated board data
-      const updatedBoardData : board = {
+      const updatedBoardData: board = {
         ...boardData, // Spread the current board data
         lists: boardData.lists.map((listItem) => {
           if (listItem.id === listId) {
-            return { ...listItem, tasks: updatedTasks }; 
+            return { ...listItem, tasks: updatedTasks };
           }
           return listItem; // Keep other lists unchanged
         }),
       };
-  
+
       setBoardData(updatedBoardData);
-  
+
       // Send the updated task order to the backend via WebSocket
       const taskOrder = updatedTasks.map((task) => task.id);
       if (socketRef.current && socketRef.current.readyState === WebSocket.OPEN) {
@@ -156,9 +158,18 @@ const List: React.FC<ListProps> = ({
 
 
   return (
-    <div ref={drop} className={`list ${isOver ? 'hover' : ''}`} style={{ backgroundColor: `${currentTheme['--list-background-color']}` }} >
+    <div
+      className={`list ${isOver ? 'hover' : ''}`}
+      ref={drop}
+      style={{
+        backgroundColor: isOver
+          ? `green` 
+          : `${currentTheme['--list-background-color']}`,
+        transition: 'background-color 0.3s ease',
+      }}    >
+
       {/* <SkeletonEachTask currentTheme={currentTheme} /> */}
-      <div className='list_title_and_buttons' style={{ backgroundColor: `${currentTheme['--list-background-color']}` }} >
+      <div className='list_title_and_buttons'  >
         {isListEditing ? (
           <input
             type="text"
