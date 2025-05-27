@@ -757,7 +757,8 @@ const Boards: React.FC<BoardsProps> = ({
                   updateListName={updateListName}
                   allCurrentBoardUsers={allCurrentBoardUsers}
                   isLoading={loadingLists[list.id] || false}
-
+                  setBoardData ={setBoardData}
+                  boardData={boardData}
                 />
               ))}
 
