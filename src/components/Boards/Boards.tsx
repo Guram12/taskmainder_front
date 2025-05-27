@@ -32,6 +32,7 @@ export interface BoardsProps {
   boards: board[];
   setCurrent_board_users: (users: Board_Users[]) => void;
   current_board_users: Board_Users[];
+  is_cur_Board_users_fetched: boolean;
   fetch_current_board_users: () => Promise<void>;
   isBoardsLoaded: boolean;
   setIsLoading: (isLoading: boolean) => void;
@@ -46,6 +47,7 @@ const Boards: React.FC<BoardsProps> = ({
   setBoards,
   boards,
   setCurrent_board_users,
+  is_cur_Board_users_fetched,
   current_board_users,
   fetch_current_board_users,
   isBoardsLoaded,
@@ -67,6 +69,9 @@ const Boards: React.FC<BoardsProps> = ({
 
 
   const [allCurrentBoardUsers, setAllCurrentBoardUsers] = useState<ProfileData[]>([]);
+
+  
+
 
   const socketRef = useRef<WebSocket | null>(null);
   const listsContainerRef = useRef<HTMLDivElement | null>(null);
@@ -690,6 +695,7 @@ const Boards: React.FC<BoardsProps> = ({
               deleteBoard={deleteBoard}
               setCurrent_board_users={setCurrent_board_users}
               current_board_users={current_board_users}
+              is_cur_Board_users_fetched={is_cur_Board_users_fetched}
               fetch_current_board_users={fetch_current_board_users}
               setBoards={setBoards}
               boards={boards}

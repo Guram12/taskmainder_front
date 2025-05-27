@@ -56,7 +56,7 @@ const App: React.FC = () => {
     name: '',
     created_at: '',
     lists: [],
-    owner: '',    
+    owner: '',
     owner_email: '',
     members: [],
     board_users: [],
@@ -67,6 +67,8 @@ const App: React.FC = () => {
 
 
   const [current_board_users, setCurrent_board_users] = useState<Board_Users[]>([]);
+  const [is_cur_Board_users_fetched, setIs_cur_Board_users_fetched] = useState<boolean>(false);
+
 
 
   const [notificationData, setNotificationData] = useState<NotificationPayload>({
@@ -93,6 +95,7 @@ const App: React.FC = () => {
 
   // -------------------------------------------- socket connection for board users ------------------------------------------
   const fetch_current_board_users = async () => {
+    setIs_cur_Board_users_fetched(false);
     try {
       console.log("selected board users are fetching");
       const response = await axiosInstance.get(`/api/boards/${selectedBoard?.id}/users/`, {
@@ -102,8 +105,10 @@ const App: React.FC = () => {
       });
       // console.log("fetched board users ", response.data);
       setCurrent_board_users(response.data);
+      setIs_cur_Board_users_fetched(true);
     } catch (error) {
       console.error('Error fetching board users:', error);
+      setIs_cur_Board_users_fetched(false);
     }
   };
 
@@ -331,12 +336,14 @@ const App: React.FC = () => {
             fetchBoards={fetchBoards}
             setCurrent_board_users={setCurrent_board_users}
             current_board_users={current_board_users}
+            is_cur_Board_users_fetched={is_cur_Board_users_fetched}
             fetch_current_board_users={fetch_current_board_users}
             isBoardsLoaded={isBoardsLoaded}
             setIsBoardsLoaded={setIsBoardsLoaded}
             setIsLoading={setIsLoading}
             isLoading={isLoading}
             notificationData={notificationData}
+            
           />} />
       </Routes>
     </Router>
