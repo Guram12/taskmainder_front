@@ -71,6 +71,7 @@ const Boards: React.FC<BoardsProps> = ({
   const [allCurrentBoardUsers, setAllCurrentBoardUsers] = useState<ProfileData[]>([]);
 
 
+  const [loadingLists, setLoadingLists] = useState<{ [listId: number]: boolean }>({});
 
 
   const socketRef = useRef<WebSocket | null>(null);
@@ -244,6 +245,7 @@ const Boards: React.FC<BoardsProps> = ({
 
             return { ...prevData, lists: updatedLists };
           });
+          setLoadingLists((prev) => ({ ...prev, [payload.list]: false }));
           break;
 
         case 'delete_task':
@@ -368,6 +370,10 @@ const Boards: React.FC<BoardsProps> = ({
 
   const addTask = (listId: number, taskTitle: string) => {
     console.log('Adding task:', { listId, taskTitle });
+
+    setLoadingLists((prev) => ({ ...prev, [listId]: true }));
+
+
     if (socketRef.current && socketRef.current.readyState === WebSocket.OPEN) {
       const newTask = {
         id: Date.now(), // Temporary ID, replace with server-generated ID
@@ -388,6 +394,8 @@ const Boards: React.FC<BoardsProps> = ({
 
     } else {
       console.error('WebSocket is not open. Cannot send add_task message.');
+      setLoadingLists((prev) => ({ ...prev, [listId]: false })); 
+
     }
   };
 
@@ -740,6 +748,8 @@ const Boards: React.FC<BoardsProps> = ({
                   deleteList={deleteList}
                   updateListName={updateListName}
                   allCurrentBoardUsers={allCurrentBoardUsers}
+                  isLoading={loadingLists[list.id] || false} // Pass the loader state for the specific list
+
                 />
               ))}
 

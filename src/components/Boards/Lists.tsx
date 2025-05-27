@@ -10,7 +10,7 @@ import { GrFormCheckmark } from "react-icons/gr";
 import { HiOutlineXMark } from "react-icons/hi2";
 import ConfirmationDialog from './ConfirmationDialog';
 import { ProfileData } from '../../utils/interface';
-
+import SkeletonEachTask from './SkeletonEachTask';
 
 
 interface ListProps {
@@ -24,6 +24,7 @@ interface ListProps {
   deleteList: (listId: number) => void;
   updateListName: (listId: number, newName: string) => void;
   allCurrentBoardUsers: ProfileData[];
+  isLoading: boolean;
 }
 
 const List: React.FC<ListProps> = ({
@@ -37,7 +38,7 @@ const List: React.FC<ListProps> = ({
   deleteList,
   updateListName,
   allCurrentBoardUsers,
-
+  isLoading,
 
 }) => {
 
@@ -47,7 +48,6 @@ const List: React.FC<ListProps> = ({
 
   const [newTaskTitle, setNewTaskTitle] = useState<string>('');
   const [isAddingTask, setIsAddingTask] = useState<boolean>(false);
-
 
 
 
@@ -142,7 +142,7 @@ const List: React.FC<ListProps> = ({
 
   return (
     <div ref={drop} className={`list ${isOver ? 'hover' : ''}`} style={{ backgroundColor: `${currentTheme['--list-background-color']}` }} >
-
+      {/* <SkeletonEachTask currentTheme={currentTheme} /> */}
       <div className='list_title_and_buttons' style={{ backgroundColor: `${currentTheme['--list-background-color']}` }} >
         {isListEditing ? (
           <input
@@ -193,9 +193,12 @@ const List: React.FC<ListProps> = ({
         />
       ))}
 
-      <div className='add_task_cont' >
+      <div className='add_task_cont'>
+        {isLoading && <SkeletonEachTask currentTheme={currentTheme} />}
         {!isAddingTask ? (
-          <button onClick={() => setIsAddingTask(true)}>Add Task</button>
+          <>
+            {!isLoading && <button onClick={() => setIsAddingTask(true)}>Add Task</button>}
+          </>
         ) : (
           <div className='each_task'>
             <input
@@ -203,6 +206,7 @@ const List: React.FC<ListProps> = ({
               placeholder="Task Title"
               value={newTaskTitle}
               onChange={(e) => setNewTaskTitle(e.target.value)}
+              disabled={isLoading} // Disable input while loading
             />
             <button onClick={handleAddTask}>Add</button>
             <button onClick={() => setIsAddingTask(false)}>Cancel</button>

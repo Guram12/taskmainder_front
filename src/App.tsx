@@ -47,6 +47,7 @@ const App: React.FC = () => {
     '--main-text-coloure': '#333',
     '--scrollbar-thumb-color': '#d9e0e3',
     '--list-background-color': '#ffffff',
+    '--task-background-color': '#f0f0f0',
   });
 
   const [change_current_theme, setChange_current_theme] = useState(false);
