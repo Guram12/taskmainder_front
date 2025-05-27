@@ -80,6 +80,8 @@ const App: React.FC = () => {
   });
 
 
+  const [is_new_notification_received, setIs_new_notification_received] = useState<boolean>(false);
+
 
 
 
@@ -134,6 +136,7 @@ const App: React.FC = () => {
           const { type, ...payload } = event.data;
           // Log different messages based on the notification type
           console.log('======== type ===========>>>>>> ', type);
+          setIs_new_notification_received(true);
           switch (type) {
 
             case 'TASK_DUE_REMINDER':
@@ -343,7 +346,8 @@ const App: React.FC = () => {
             setIsLoading={setIsLoading}
             isLoading={isLoading}
             notificationData={notificationData}
-            
+            setIs_new_notification_received={setIs_new_notification_received}
+            is_new_notification_received={is_new_notification_received}
           />} />
       </Routes>
     </Router>
