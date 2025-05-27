@@ -23,7 +23,7 @@ const themes = {
   dark_blue: {
     '--background-color': '#2e4053',
     '--main-text-coloure': '#FFFFFF',
-    '--border-color': '#d6dbdf',
+    '--border-color': '#9BA1A7',
     '--scrollbar-thumb-color': '#4e5e73',
     '--list-background-color': '#1e3a4a',
     '--task-background-color': '#152935'

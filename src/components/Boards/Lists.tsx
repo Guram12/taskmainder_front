@@ -11,7 +11,7 @@ import { HiOutlineXMark } from "react-icons/hi2";
 import ConfirmationDialog from './ConfirmationDialog';
 import { ProfileData } from '../../utils/interface';
 import SkeletonEachTask from './SkeletonEachTask';
-
+import { board } from '../../utils/interface';
 
 interface ListProps {
   currentTheme: ThemeSpecs;
@@ -25,6 +25,8 @@ interface ListProps {
   updateListName: (listId: number, newName: string) => void;
   allCurrentBoardUsers: ProfileData[];
   isLoading: boolean;
+  setBoardData: (boardData: board) => void;
+  boardData: board;
 }
 
 const List: React.FC<ListProps> = ({
@@ -39,7 +41,8 @@ const List: React.FC<ListProps> = ({
   updateListName,
   allCurrentBoardUsers,
   isLoading,
-
+  setBoardData,
+  boardData,
 }) => {
 
   const [isListEditing, setIsListEditing] = useState<boolean>(false);
@@ -68,6 +71,8 @@ const List: React.FC<ListProps> = ({
     }),
   }));
 
+
+  // ==========================================  add task inside list ==========================================
   const handleAddTask = () => {
     if (newTaskTitle.trim()) {
       addTask(list.id, newTaskTitle);
@@ -76,18 +81,32 @@ const List: React.FC<ListProps> = ({
     }
   };
 
-  // ==========================================  move task inside list ==========================================
+  // // ==========================================  move task inside list ==========================================
 
   const moveTaskWithinList = (draggedTaskId: number, targetTaskId: number, listId: number) => {
     const draggedTaskIndex = list.tasks.findIndex((task) => task.id === draggedTaskId);
     const targetTaskIndex = list.tasks.findIndex((task) => task.id === targetTaskId);
 
     if (draggedTaskIndex !== -1 && targetTaskIndex !== -1) {
+      // Optimistically update the UI
       const updatedTasks = [...list.tasks];
       const [draggedTask] = updatedTasks.splice(draggedTaskIndex, 1);
       updatedTasks.splice(targetTaskIndex, 0, draggedTask);
 
-      // Update the task order in the backend
+      // Create the updated board data
+      const updatedBoardData: board = {
+        ...boardData, // Spread the current board data
+        lists: boardData.lists.map((listItem) => {
+          if (listItem.id === listId) {
+            return { ...listItem, tasks: updatedTasks };
+          }
+          return listItem; // Keep other lists unchanged
+        }),
+      };
+
+      setBoardData(updatedBoardData);
+
+      // Send the updated task order to the backend via WebSocket
       const taskOrder = updatedTasks.map((task) => task.id);
       if (socketRef.current && socketRef.current.readyState === WebSocket.OPEN) {
         socketRef.current.send(
@@ -99,8 +118,6 @@ const List: React.FC<ListProps> = ({
       }
     }
   };
-
-
 
   // ================================================ delete list ==========================================
   const handle_delete_list_click = () => {
@@ -141,9 +158,18 @@ const List: React.FC<ListProps> = ({
 
 
   return (
-    <div ref={drop} className={`list ${isOver ? 'hover' : ''}`} style={{ backgroundColor: `${currentTheme['--list-background-color']}` }} >
+    <div
+      className={`list ${isOver ? 'hover' : ''}`}
+      ref={drop}
+      style={{
+        backgroundColor: isOver
+          ? `green` 
+          : `${currentTheme['--list-background-color']}`,
+        transition: 'background-color 0.3s ease',
+      }}    >
+
       {/* <SkeletonEachTask currentTheme={currentTheme} /> */}
-      <div className='list_title_and_buttons' style={{ backgroundColor: `${currentTheme['--list-background-color']}` }} >
+      <div className='list_title_and_buttons'  >
         {isListEditing ? (
           <input
             type="text"

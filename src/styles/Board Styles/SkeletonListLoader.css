@@ -1,0 +1,14 @@
+.skeleton_list_loader_cont {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-around;
+  width: 280px;
+  height: auto;
+  min-width: 280px;
+  padding: 10px;
+}
+
+.skeleton_list_icon_cont{
+ height: 20px;
+}

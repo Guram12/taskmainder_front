@@ -1,3 +1,4 @@
+/* Smooth transition for task movement */
 .each_task {
   display: flex;
   flex-direction: column;
@@ -10,8 +11,26 @@
   cursor: pointer;
   height: auto;
   min-height: 60px;
+
+  transition: margin 0.3s ease, transform 0.3s ease;
 }
 
+.drop-placeholder {
+  height: 10px; 
+  background-color: rgba(46, 216, 193, 0.2);
+  border: 2px dashed #2ed8c1;
+  margin: 5px 0;
+  /* Smooth animation for appearance */
+  transition: height 0.3s ease, margin 0.3s ease, opacity 0.3s ease;
+  opacity: 1; /* Fully visible */
+}
+
+/* Hidden state for drop-placeholder */
+.drop-placeholder.hidden {
+  opacity: 0; 
+  height: 0; 
+  margin: 0; 
+}
 
 .task_complition_checkbox_container {
   width: 100%;
@@ -116,7 +135,7 @@
   align-items: center;
 }
 
-.associated_user_img_container{
+.associated_user_img_container {
   max-width: 100px;
   display: flex;
   flex-direction: row;

@@ -13,7 +13,7 @@ import { Board_Users } from '../../utils/interface';
 import SkeletonLoader from './SkeletonLoader';
 import SkeletonMember from './SkeletonMember';
 import NoBoards from '../NoBoards';
-
+import SkeletonListLoader from './SkeletonListLoader';
 
 if (isMobile) {
   console.log('Running on a mobile device');
@@ -64,6 +64,8 @@ const Boards: React.FC<BoardsProps> = ({
     members: [],
     board_users: [],
   });
+
+  const [isAddingList, setIsAddingList] = useState<boolean>(false);
   const [Adding_new_list, setAdding_new_list] = useState<boolean>(false);
   const [ListName, setListName] = useState<string>('');
 
@@ -214,6 +216,8 @@ const Boards: React.FC<BoardsProps> = ({
             ...prevData,
             lists: [...prevData.lists, payload],
           }));
+          setIsAddingList(false); // Clear loading state when adding list
+
           break;
 
         case 'edit_list_name':
@@ -227,6 +231,7 @@ const Boards: React.FC<BoardsProps> = ({
           break;
 
         case 'delete_list':
+          setIsLoading(false);
           setBoardData((prevData) => ({
             ...prevData,
             lists: prevData.lists.filter((list) => list.id !== payload.list_id),
@@ -394,7 +399,7 @@ const Boards: React.FC<BoardsProps> = ({
 
     } else {
       console.error('WebSocket is not open. Cannot send add_task message.');
-      setLoadingLists((prev) => ({ ...prev, [listId]: false })); 
+      setLoadingLists((prev) => ({ ...prev, [listId]: false }));
 
     }
   };
@@ -525,6 +530,8 @@ const Boards: React.FC<BoardsProps> = ({
 
   const addList = () => {
     if (socketRef.current && socketRef.current.readyState === WebSocket.OPEN) {
+      setIsAddingList(true); //loading state for list adding 
+
       const newList = {
         id: Date.now(), // Temporary ID, replace with server-generated ID
         name: ListName,
@@ -559,6 +566,7 @@ const Boards: React.FC<BoardsProps> = ({
   // ====================================================  delete list ==========================================
 
   const deleteList = (listId: number) => {
+    setIsLoading(true);
     if (socketRef.current && socketRef.current.readyState === WebSocket.OPEN) {
       socketRef.current.send(
         JSON.stringify({
@@ -748,17 +756,23 @@ const Boards: React.FC<BoardsProps> = ({
                   deleteList={deleteList}
                   updateListName={updateListName}
                   allCurrentBoardUsers={allCurrentBoardUsers}
-                  isLoading={loadingLists[list.id] || false} // Pass the loader state for the specific list
-
+                  isLoading={loadingLists[list.id] || false}
+                  setBoardData ={setBoardData}
+                  boardData={boardData}
                 />
               ))}
 
+              {isAddingList && (
+                <SkeletonListLoader currentTheme={currentTheme} />
+              )}
 
               {is_any_board_selected && (
-                <div className='list' >
+                <div className='list'
+                  style={{ backgroundColor: `${currentTheme['--list-background-color']}` }}
+                >
                   {!Adding_new_list ?
                     (
-                      <button onClick={() => setAdding_new_list(true)} >Add NewList</button>
+                      <button onClick={() => setAdding_new_list(true)} >Create List</button>
                     )
                     :
                     (
