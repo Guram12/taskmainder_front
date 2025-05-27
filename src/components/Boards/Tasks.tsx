@@ -60,16 +60,19 @@ const Task: React.FC<TaskProps> = ({ task, deleteTask, updateTask, moveTaskWithi
     }),
   }));
 
-  const [, drop] = useDrop({
+  const [{ isOver }, drop] = useDrop({
     accept: ItemTypes.REORDER,
     drop: (draggedTask: { id: number; listId: number }) => {
       if (draggedTask.id !== task.id) {
         moveTaskWithinList(draggedTask.id, task.id, task.list);
       }
     },
+    collect: (monitor) => ({
+      isOver: !!monitor.isOver(),
+    }),
   });
 
-  const [{ isDraggingReorder }, dragReorder] = useDrag(() => ({
+  const [, dragReorder] = useDrag(() => ({
     type: ItemTypes.REORDER,
     item: { id: task.id, listId: task.list },
     collect: (monitor) => ({
@@ -77,6 +80,18 @@ const Task: React.FC<TaskProps> = ({ task, deleteTask, updateTask, moveTaskWithi
     }),
   }));
 
+
+// ============================================= show drop zone when dragging =========================================
+
+  const [isDropZoneVisible, setIsDropZoneVisible] = useState(false);
+
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      setIsDropZoneVisible(isOver);
+    }, 100); // Add a 100ms debounce delay
+
+    return () => clearTimeout(timeout);
+  }, [isOver]);
 
 
   // =======================================    delete task functions   ======================================
@@ -141,110 +156,118 @@ const Task: React.FC<TaskProps> = ({ task, deleteTask, updateTask, moveTaskWithi
 
 
   return (
-    <div
-      className={`each_task ${isDragging || isDraggingReorder ? 'dragging' : ''}`}
-      ref={(node) => drag(drop(node))}
-      style={{
-        opacity: isDragging || isDraggingReorder ? 0.5 : 1,
-        backgroundColor: currentTheme['--task-background-color'],
-        color: currentTheme['--main-text-coloure'],
-      }}
-      data-task-id={task.id}
-    >
+    <>
       <div
-        className='task_complition_checkbox_container'
-        style={{ borderColor: currentTheme['--border-color'] }}
+        className={`drop-placeholder ${isDropZoneVisible ? '' : 'hidden'}`}
+        key={`drop-placeholder-${task.id}`} 
+      ></div>
+
+      <div
+        className={`each_task ${isDragging ? 'dragging' : ''}`}
+        ref={(node) => drag(drop(node))}
+        style={{
+          opacity: isDragging ? 0.5 : 1,
+          backgroundColor: currentTheme['--task-background-color'],
+          color: currentTheme['--main-text-coloure'],
+        }}
+        data-task-id={task.id}
       >
-        {task.completed ? (
-          <MdRadioButtonChecked className='completed_task_icon' onClick={() => handleCompletionToggle(task)} />
-        ) : (
-          <MdRadioButtonUnchecked className='not_completed_task_icon' onClick={() => handleCompletionToggle(task)} />
-        )}
-        {task.priority && (
-          <div className='priority_div' style={getPriorityStyle(task.priority)}>
-
-          </div>
-        )}
-
-
-        <div className='edit_drag_icon_container'>
-          <MdModeEdit className='edit_task_icon' onClick={handleTaskClick} />
-          <div ref={dragReorder} className="drag_handle">
-            <BiMoveVertical className='drag_icon' />
-          </div>
-        </div>
-
-
-      </div>
-
-      <div className={`conteiner_for_task_title ${task.completed ? 'task_completed' : ''}`} >
-        <p className='task_title'>{task.title}</p>
-      </div>
-
-
-      <div className='task_description_and_due_date_container' >
-        {task.due_date ? (
-          <p className='due_Date_p'>Due Date: {formatDate(task.due_date)}</p>
-        ) : (
-          <p className='due_Date_p'>No due date</p>
-        )}
-
-        <div className='associated_users_imgs_container'>
-          {associatedUsers.length > 0 ? (
-            associatedUsers.map((user) => (
-              <div key={user.id} className='associated_user_img_container'>
-                {user.profile_picture ? (
-
-                  <img
-                    key={user.id}
-                    src={user.profile_picture}
-                    alt={user.username}
-                    className='associated_user_image'
-                    title={user.username}
-                  />
-
-
-                ) : (
-                  <Avatar
-                    key={user.id}
-                    sx={{
-                      width: 20,
-                      height: 20,
-                      fontSize: '0.75rem',
-                      backgroundColor: getAvatarStyles(user.username.charAt(0)).backgroundColor,
-                      color: getAvatarStyles(user.username.charAt(0)).color,
-                    }}
-                    className='associated_user_image'
-                    title={user.username}
-                  >
-                    {user.username.charAt(0).toUpperCase()}
-                  </Avatar>
-                )}
-              </div>
-            ))
+        <div
+          className='task_complition_checkbox_container'
+          style={{ borderColor: currentTheme['--border-color'] }}
+        >
+          {task.completed ? (
+            <MdRadioButtonChecked className='completed_task_icon' onClick={() => handleCompletionToggle(task)} />
           ) : (
-            <p className='no_associated_users_p' >No associated users</p> // Fallback if no associated users
+            <MdRadioButtonUnchecked className='not_completed_task_icon' onClick={() => handleCompletionToggle(task)} />
           )}
+          {task.priority && (
+            <div className='priority_div' style={getPriorityStyle(task.priority)}>
+
+            </div>
+          )}
+
+
+          <div className='edit_drag_icon_container'>
+            <MdModeEdit className='edit_task_icon' onClick={handleTaskClick} />
+            <div ref={dragReorder} className="drag_handle">
+              <BiMoveVertical className='drag_icon' />
+            </div>
+          </div>
+
+
         </div>
 
+        <div className={`conteiner_for_task_title ${task.completed ? 'task_completed' : ''}`} >
+          <p className='task_title'>{task.title}</p>
+        </div>
+
+
+        <div className='task_description_and_due_date_container' >
+          {task.due_date ? (
+            <p className='due_Date_p'>Due Date: {formatDate(task.due_date)}</p>
+          ) : (
+            <p className='due_Date_p'>No due date</p>
+          )}
+
+          <div className='associated_users_imgs_container'>
+            {associatedUsers.length > 0 ? (
+              associatedUsers.map((user) => (
+                <div key={user.id} className='associated_user_img_container'>
+                  {user.profile_picture ? (
+
+                    <img
+                      key={user.id}
+                      src={user.profile_picture}
+                      alt={user.username}
+                      className='associated_user_image'
+                      title={user.username}
+                    />
+
+
+                  ) : (
+                    <Avatar
+                      key={user.id}
+                      sx={{
+                        width: 20,
+                        height: 20,
+                        fontSize: '0.75rem',
+                        backgroundColor: getAvatarStyles(user.username.charAt(0)).backgroundColor,
+                        color: getAvatarStyles(user.username.charAt(0)).color,
+                      }}
+                      className='associated_user_image'
+                      title={user.username}
+                    >
+                      {user.username.charAt(0).toUpperCase()}
+                    </Avatar>
+                  )}
+                </div>
+              ))
+            ) : (
+              <p className='no_associated_users_p' >No associated users</p> // Fallback if no associated users
+            )}
+          </div>
+
+        </div>
+
+
+        {showUpdateModal && (
+          <ThemeProvider theme={MUI_Theme}>
+            <TaskUpdateModal
+              task={task}
+              updateTask={updateTask}
+              onClose={handle_update_modal_close}
+              currentTheme={currentTheme}
+              allCurrentBoardUsers={allCurrentBoardUsers}
+              associatedUsers={associatedUsers}
+              deleteTask={deleteTask}
+
+            />
+          </ThemeProvider>
+        )}
       </div>
+    </>
 
-
-      {showUpdateModal && (
-        <ThemeProvider theme={MUI_Theme}>
-          <TaskUpdateModal
-            task={task}
-            updateTask={updateTask}
-            onClose={handle_update_modal_close}
-            currentTheme={currentTheme}
-            allCurrentBoardUsers={allCurrentBoardUsers}
-            associatedUsers={associatedUsers}
-            deleteTask={deleteTask}
-
-          />
-        </ThemeProvider>
-      )}
-    </div>
   );
 };
 
