@@ -737,7 +737,7 @@ const Boards: React.FC<BoardsProps> = ({
           </div>
         )}
 
-        <div className="main_boards_container">
+        <div className={`main_boards_container ${boards.length === 0 ? 'remove_height' : 'add_height'}`}  >
           {!isBoardsLoaded ? (
             <SkeletonLoader currentTheme={currentTheme} />
           ) : (
@@ -757,7 +757,7 @@ const Boards: React.FC<BoardsProps> = ({
                   updateListName={updateListName}
                   allCurrentBoardUsers={allCurrentBoardUsers}
                   isLoading={loadingLists[list.id] || false}
-                  setBoardData ={setBoardData}
+                  setBoardData={setBoardData}
                   boardData={boardData}
                 />
               ))}
