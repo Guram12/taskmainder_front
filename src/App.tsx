@@ -105,7 +105,6 @@ const App: React.FC = () => {
           Authorization: `Bearer ${localStorage.getItem('access_token')}`
         }
       });
-      // console.log("fetched board users ", response.data);
       setCurrent_board_users(response.data);
       setIs_cur_Board_users_fetched(true);
     } catch (error) {
@@ -116,29 +115,15 @@ const App: React.FC = () => {
 
 
 
-  // useEffect(() => {
-  //   if ('serviceWorker' in navigator) {
-  //     navigator.serviceWorker.addEventListener('message', (event) => {
-  //       if (event.data && event.data.type === 'BOARD_USER_UPDATE') {
-  //         console.log('Message received from service worker:', event.data);
-  //         setNotificationData(event.data); // Update state with notification data
-  //       }
-  //     });
-  //   }
-  // }, []);
-
-
 
   useEffect(() => {
     if ('serviceWorker' in navigator) {
       navigator.serviceWorker.addEventListener('message', (event) => {
         if (event.data) {
           const { type, ...payload } = event.data;
-          // Log different messages based on the notification type
-          console.log('======== type ===========>>>>>> ', type);
+
           setIs_new_notification_received(true);
           switch (type) {
-
             case 'TASK_DUE_REMINDER':
               console.log(
                 `TASK_DUE_REMINDER type ==>> Task Name: ${payload.taskName}, Due Date: ${payload.dueDate}, Priority: ${payload.priority}`
@@ -175,12 +160,39 @@ const App: React.FC = () => {
                 prevBoards.filter((board) => board.name !== payload.boardName)
               );
 
+              fetch_current_board_users();
+
               break;
 
             case 'BOARD_INVITATION_ACCEPTED':
-              console.log(
-                `BOARD_INVITATION_ACCEPTED type ==>> Board Name: ${payload.boardName}, Invited User Email: ${payload.invitedUserEmail}, Invited User Name: ${payload.invitedUserName}`
+              console.log('Board invitation accepted. Fetching current board users...');
+              setNotificationData(event.data); // Update state with notification data
+
+              // Check if the current user is removed from the selected board
+              if (selectedBoard?.id && selectedBoard.name === payload.boardName) {
+                console.log('Current user removed from the selected board. Resetting selected board.');
+
+                // Reset the selected board
+                setSelectedBoard({
+                  id: 0,
+                  name: '',
+                  created_at: '',
+                  lists: [],
+                  owner: '',
+                  owner_email: '',
+                  members: [],
+                  board_users: [],
+                });
+
+              }
+
+              // Update the boards list to remove the board
+              setBoards((prevBoards) =>
+                prevBoards.filter((board) => board.name !== payload.boardName)
               );
+
+
+              fetch_current_board_users();
               break;
 
             default:

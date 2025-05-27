@@ -166,7 +166,7 @@ const Members: React.FC<MembersProps> = ({
     if (selectedBoard?.id) {
       fetch_current_board_users();
     }
-  }, [selectedBoard]);
+  }, [selectedBoard?.id]);
   // -------------------------------------------- fetch current board users ------------------------------------------------
 
   // -------------------------------------------- add new users to board ------------------------------------------------
@@ -274,7 +274,9 @@ const Members: React.FC<MembersProps> = ({
     setIsBoardDeleting(false);
   }
 
-
+  useEffect(() => {
+    console.log("cur members ===>>>>", current_board_users)
+  }, [current_board_users]);
 
   return (
     <div className="main_members_container">

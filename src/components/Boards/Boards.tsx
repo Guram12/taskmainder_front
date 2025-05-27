@@ -70,7 +70,7 @@ const Boards: React.FC<BoardsProps> = ({
 
   const [allCurrentBoardUsers, setAllCurrentBoardUsers] = useState<ProfileData[]>([]);
 
-  
+
 
 
   const socketRef = useRef<WebSocket | null>(null);
@@ -675,34 +675,42 @@ const Boards: React.FC<BoardsProps> = ({
 
   const is_any_board_selected = selectedBoard?.name !== '';
 
+  // ================================  render boards  ========================================
+
+
+
+
+
   return (
     <DndProvider backend={isMobile ? TouchBackend : HTML5Backend}
       options={isMobile ? { enableMouseEvents: true } : undefined}
     >
       <div className='members_container'>
-        <div>
-          {!isBoardsLoaded ? (
-            <div className='skeleton_in_board' >
-              <SkeletonMember currentTheme={currentTheme} />
-            </div>
-          ) : (
-            <Members
-              selectedBoard={selectedBoard}
-              socketRef={socketRef}
-              current_user_email={current_user_email}
-              currentTheme={currentTheme}
-              update_board_name={update_board_name}
-              deleteBoard={deleteBoard}
-              setCurrent_board_users={setCurrent_board_users}
-              current_board_users={current_board_users}
-              is_cur_Board_users_fetched={is_cur_Board_users_fetched}
-              fetch_current_board_users={fetch_current_board_users}
-              setBoards={setBoards}
-              boards={boards}
-            />
+        {boards.length > 0 && (
+          <div>
+            {!isBoardsLoaded ? (
+              <div className='skeleton_in_board' >
+                <SkeletonMember currentTheme={currentTheme} />
+              </div>
+            ) : (
+              <Members
+                selectedBoard={selectedBoard}
+                socketRef={socketRef}
+                current_user_email={current_user_email}
+                currentTheme={currentTheme}
+                update_board_name={update_board_name}
+                deleteBoard={deleteBoard}
+                setCurrent_board_users={setCurrent_board_users}
+                current_board_users={current_board_users}
+                is_cur_Board_users_fetched={is_cur_Board_users_fetched}
+                fetch_current_board_users={fetch_current_board_users}
+                setBoards={setBoards}
+                boards={boards}
+              />
 
-          )}
-        </div>
+            )}
+          </div>
+        )}
 
 
         {isBoardsLoaded && boardData.lists && boardData.lists.length === 0 && (

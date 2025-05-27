@@ -182,7 +182,7 @@ const MainPage: React.FC<MainPageProps> = ({
   }, [selectedComponent, boards, selectedBoard,
     currentTheme, profileData, current_board_users,
     is_cur_Board_users_fetched, isLoading, setIsLoading,
-    notificationData, isBoardsLoaded
+    notificationData, isBoardsLoaded, setCurrent_board_users
   ]);
 
 // ===========================================================================================================
