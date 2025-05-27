@@ -26,6 +26,8 @@ interface SidebarProps {
   setSelectedBoard: (board: board | null) => void;
   setSelectedComponent: (component: string) => void;
   setIsBoardsLoaded?: (isLoaded: boolean) => void;
+  setIs_new_notification_received: (is_new_notification_received: boolean) => void;
+  is_new_notification_received: boolean;
 }
 
 
@@ -42,8 +44,9 @@ const SidebarComponent: React.FC<SidebarProps> = ({
   selectedBoard,
   setSelectedBoard,
   setSelectedComponent,
-
   setIsBoardsLoaded,
+  setIs_new_notification_received,
+  is_new_notification_received,
 }) => {
 
   const [isOpen, setIsOpen] = useState(true);
@@ -199,6 +202,12 @@ const SidebarComponent: React.FC<SidebarProps> = ({
 
   }
 
+  const handle_nnotification_page_click = () => {
+    setSelectedComponent("Notification");
+    setIs_new_notification_received(false);
+  }
+
+
   // ========================================== add new board =================================================
   const handleBoardAddClick = () => {
     setAddingNewBoard(true);
@@ -339,9 +348,29 @@ const SidebarComponent: React.FC<SidebarProps> = ({
                   onClick={() => handel_sidebar_page_click("Calendar")}
                 >Calendar</MenuItem>
                 <MenuItem
-                  icon={<MdNotificationsActive className='sidebar_big_icon' />}
-                  onClick={() => handel_sidebar_page_click("Notification")}
-                >Notification</MenuItem>
+                  icon={
+                    <div style={{ position: 'relative' }}>
+                      <MdNotificationsActive className="sidebar_big_icon" />
+                      {is_new_notification_received && (
+                        <span
+                          style={{
+                            position: 'absolute',
+                            top: '-5px',
+                            right: '-5px',
+                            width: '10px',
+                            height: '10px',
+                            backgroundColor: 'red',
+                            borderRadius: '50%',
+                            border: '2px solid white',
+                          }}
+                        ></span>
+                      )}
+                    </div>
+                  }
+                  onClick={() => handle_nnotification_page_click()}
+                >
+                  Notification
+                </MenuItem>
               </Menu>
             </div>
             <div >

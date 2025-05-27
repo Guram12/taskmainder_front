@@ -9,7 +9,7 @@ interface SkeletonLoaderProps {
 }
 
 const SkeletonLoader: React.FC<SkeletonLoaderProps> = ({ currentTheme }) => {
-  const taskCounts = [2, 3,1];
+  const taskCounts = [2, 3, 1];
   return (
     <div className="skeleton-container">
       {taskCounts.map((taskCount, listIndex) => (
@@ -28,8 +28,8 @@ const SkeletonLoader: React.FC<SkeletonLoaderProps> = ({ currentTheme }) => {
               height={40}
               width={'100%'}
               style={{ marginBottom: '15px' }}
-            baseColor={currentTheme['--list-background-color']}
-            highlightColor="#e0e0e0"
+              baseColor={currentTheme['--list-background-color']}
+              highlightColor="#e0e0e0"
             />
           ))}
         </div>

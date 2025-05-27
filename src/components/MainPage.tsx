@@ -29,6 +29,7 @@ interface MainPageProps {
   fetchBoards: () => Promise<void>;
   setCurrent_board_users: (users: Board_Users[]) => void;
   current_board_users: Board_Users[];
+  is_cur_Board_users_fetched: boolean;
   fetch_current_board_users: () => Promise<void>;
   isBoardsLoaded: boolean;
   setIsBoardsLoaded: (isLoaded: boolean) => void;
@@ -36,6 +37,8 @@ interface MainPageProps {
   isLoading: boolean;
   notificationData: any;
   fetchBoardById?: (boardId: number) => Promise<void>;
+  setIs_new_notification_received: (is_new_notification_received: boolean) => void;
+  is_new_notification_received: boolean;
 }
 
 const MainPage: React.FC<MainPageProps> = ({
@@ -52,12 +55,16 @@ const MainPage: React.FC<MainPageProps> = ({
   fetchBoards,
   setCurrent_board_users,
   current_board_users,
+  is_cur_Board_users_fetched,
   fetch_current_board_users,
   isBoardsLoaded,
   setIsBoardsLoaded,
   setIsLoading,
   isLoading,
   notificationData,
+  setIs_new_notification_received,
+  is_new_notification_received,
+
 }) => {
   const [selectedComponent, setSelectedComponent] = useState<string>("Boards");
 
@@ -157,6 +164,7 @@ const MainPage: React.FC<MainPageProps> = ({
             setBoards={setBoards}
             boards={boards}
             current_board_users={current_board_users}
+            is_cur_Board_users_fetched={is_cur_Board_users_fetched}
             setCurrent_board_users={setCurrent_board_users}
             fetch_current_board_users={fetch_current_board_users}
             isBoardsLoaded={isBoardsLoaded}
@@ -171,7 +179,13 @@ const MainPage: React.FC<MainPageProps> = ({
         />;
 
     }
-  }, [selectedComponent, boards, selectedBoard, currentTheme, profileData, current_board_users, isLoading, setIsLoading, notificationData, isBoardsLoaded]);
+  }, [selectedComponent, boards, selectedBoard,
+    currentTheme, profileData, current_board_users,
+    is_cur_Board_users_fetched, isLoading, setIsLoading,
+    notificationData, isBoardsLoaded, setCurrent_board_users
+  ]);
+
+// ===========================================================================================================
 
   const memoizedRenderComponent = useMemo(() => renderComponent(), [renderComponent]);
 
@@ -188,7 +202,8 @@ const MainPage: React.FC<MainPageProps> = ({
         setBoards={setBoards}
         setSelectedBoard={setSelectedBoard}
         setSelectedComponent={setSelectedComponent}
-     
+        setIs_new_notification_received={setIs_new_notification_received}
+        is_new_notification_received={is_new_notification_received}
         setIsBoardsLoaded={setIsBoardsLoaded}
         selectedBoard={selectedBoard}
       />

@@ -9,14 +9,14 @@
   max-height: 50px;
 }
 
+.user_avatar_skeleton_cont {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: row;
+  margin-left: -25px;
+}
 
-/* 
-.members_h2 {
-  color: white;
-  font-size: 20px;
-  margin-left: 20px;
-  margin-right: 20px;
-} */
 
 
 .user_profile_images {
@@ -54,14 +54,14 @@
   color: white;
 }
 
-.board_name_inp_cont{
+.board_name_inp_cont {
   display: flex;
   justify-content: center;
   align-items: center;
   gap: 10px;
 }
 
-.board_name_input{
+.board_name_input {
   width: min-content;
   height: 30px;
   border-radius: 5px;
@@ -70,26 +70,26 @@
   outline: none;
 }
 
-.save_board_name_icon{
+.save_board_name_icon {
   width: 20px;
   height: 20px;
   cursor: pointer;
   transition: all 0.3s ease;
 }
 
-.save_board_name_icon:hover{
+.save_board_name_icon:hover {
   transform: scale(1.2);
   color: #2ed8c1 !important;
 }
 
-.discard_board_name_icon{
+.discard_board_name_icon {
   width: 20px;
   height: 20px;
   cursor: pointer;
   transition: all 0.3s ease;
 }
 
-.discard_board_name_icon:hover{
+.discard_board_name_icon:hover {
   transform: scale(1.2);
   color: tomato !important;
 }
@@ -101,24 +101,26 @@
   margin: 0px;
 }
 
-.edit_board_name_icon{
+.edit_board_name_icon {
   width: 20px;
   height: 20px;
   cursor: pointer;
   transition: all 0.3s ease;
 }
-.edit_board_name_icon:hover{
+
+.edit_board_name_icon:hover {
   transform: scale(1.2);
   color: #2ed8c1 !important;
 }
 
-.delete_board_icon{
+.delete_board_icon {
   width: 20px;
   height: 20px;
   cursor: pointer;
   transition: all 0.3s ease;
 }
-.delete_board_icon:hover{
+
+.delete_board_icon:hover {
   transform: scale(1.2);
   color: tomato !important;
 }

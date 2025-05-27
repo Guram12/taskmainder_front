@@ -32,6 +32,7 @@ export interface BoardsProps {
   boards: board[];
   setCurrent_board_users: (users: Board_Users[]) => void;
   current_board_users: Board_Users[];
+  is_cur_Board_users_fetched: boolean;
   fetch_current_board_users: () => Promise<void>;
   isBoardsLoaded: boolean;
   setIsLoading: (isLoading: boolean) => void;
@@ -46,6 +47,7 @@ const Boards: React.FC<BoardsProps> = ({
   setBoards,
   boards,
   setCurrent_board_users,
+  is_cur_Board_users_fetched,
   current_board_users,
   fetch_current_board_users,
   isBoardsLoaded,
@@ -67,6 +69,10 @@ const Boards: React.FC<BoardsProps> = ({
 
 
   const [allCurrentBoardUsers, setAllCurrentBoardUsers] = useState<ProfileData[]>([]);
+
+
+  const [loadingLists, setLoadingLists] = useState<{ [listId: number]: boolean }>({});
+
 
   const socketRef = useRef<WebSocket | null>(null);
   const listsContainerRef = useRef<HTMLDivElement | null>(null);
@@ -239,6 +245,7 @@ const Boards: React.FC<BoardsProps> = ({
 
             return { ...prevData, lists: updatedLists };
           });
+          setLoadingLists((prev) => ({ ...prev, [payload.list]: false }));
           break;
 
         case 'delete_task':
@@ -363,6 +370,10 @@ const Boards: React.FC<BoardsProps> = ({
 
   const addTask = (listId: number, taskTitle: string) => {
     console.log('Adding task:', { listId, taskTitle });
+
+    setLoadingLists((prev) => ({ ...prev, [listId]: true }));
+
+
     if (socketRef.current && socketRef.current.readyState === WebSocket.OPEN) {
       const newTask = {
         id: Date.now(), // Temporary ID, replace with server-generated ID
@@ -383,6 +394,8 @@ const Boards: React.FC<BoardsProps> = ({
 
     } else {
       console.error('WebSocket is not open. Cannot send add_task message.');
+      setLoadingLists((prev) => ({ ...prev, [listId]: false })); 
+
     }
   };
 
@@ -670,33 +683,42 @@ const Boards: React.FC<BoardsProps> = ({
 
   const is_any_board_selected = selectedBoard?.name !== '';
 
+  // ================================  render boards  ========================================
+
+
+
+
+
   return (
     <DndProvider backend={isMobile ? TouchBackend : HTML5Backend}
       options={isMobile ? { enableMouseEvents: true } : undefined}
     >
       <div className='members_container'>
-        <div>
-          {!isBoardsLoaded ? (
-            <div className='skeleton_in_board' >
-              <SkeletonMember currentTheme={currentTheme} />
-            </div>
-          ) : (
-            <Members
-              selectedBoard={selectedBoard}
-              socketRef={socketRef}
-              current_user_email={current_user_email}
-              currentTheme={currentTheme}
-              update_board_name={update_board_name}
-              deleteBoard={deleteBoard}
-              setCurrent_board_users={setCurrent_board_users}
-              current_board_users={current_board_users}
-              fetch_current_board_users={fetch_current_board_users}
-              setBoards={setBoards}
-              boards={boards}
-            />
+        {boards.length > 0 && (
+          <div>
+            {!isBoardsLoaded ? (
+              <div className='skeleton_in_board' >
+                <SkeletonMember currentTheme={currentTheme} />
+              </div>
+            ) : (
+              <Members
+                selectedBoard={selectedBoard}
+                socketRef={socketRef}
+                current_user_email={current_user_email}
+                currentTheme={currentTheme}
+                update_board_name={update_board_name}
+                deleteBoard={deleteBoard}
+                setCurrent_board_users={setCurrent_board_users}
+                current_board_users={current_board_users}
+                is_cur_Board_users_fetched={is_cur_Board_users_fetched}
+                fetch_current_board_users={fetch_current_board_users}
+                setBoards={setBoards}
+                boards={boards}
+              />
 
-          )}
-        </div>
+            )}
+          </div>
+        )}
 
 
         {isBoardsLoaded && boardData.lists && boardData.lists.length === 0 && (
@@ -726,6 +748,8 @@ const Boards: React.FC<BoardsProps> = ({
                   deleteList={deleteList}
                   updateListName={updateListName}
                   allCurrentBoardUsers={allCurrentBoardUsers}
+                  isLoading={loadingLists[list.id] || false} // Pass the loader state for the specific list
+
                 />
               ))}
 

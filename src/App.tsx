@@ -47,6 +47,7 @@ const App: React.FC = () => {
     '--main-text-coloure': '#333',
     '--scrollbar-thumb-color': '#d9e0e3',
     '--list-background-color': '#ffffff',
+    '--task-background-color': '#f0f0f0',
   });
 
   const [change_current_theme, setChange_current_theme] = useState(false);
@@ -56,7 +57,7 @@ const App: React.FC = () => {
     name: '',
     created_at: '',
     lists: [],
-    owner: '',    
+    owner: '',
     owner_email: '',
     members: [],
     board_users: [],
@@ -67,6 +68,8 @@ const App: React.FC = () => {
 
 
   const [current_board_users, setCurrent_board_users] = useState<Board_Users[]>([]);
+  const [is_cur_Board_users_fetched, setIs_cur_Board_users_fetched] = useState<boolean>(false);
+
 
 
   const [notificationData, setNotificationData] = useState<NotificationPayload>({
@@ -77,6 +80,8 @@ const App: React.FC = () => {
     is_read: false,
   });
 
+
+  const [is_new_notification_received, setIs_new_notification_received] = useState<boolean>(false);
 
 
 
@@ -93,6 +98,7 @@ const App: React.FC = () => {
 
   // -------------------------------------------- socket connection for board users ------------------------------------------
   const fetch_current_board_users = async () => {
+    setIs_cur_Board_users_fetched(false);
     try {
       console.log("selected board users are fetching");
       const response = await axiosInstance.get(`/api/boards/${selectedBoard?.id}/users/`, {
@@ -100,25 +106,14 @@ const App: React.FC = () => {
           Authorization: `Bearer ${localStorage.getItem('access_token')}`
         }
       });
-      // console.log("fetched board users ", response.data);
       setCurrent_board_users(response.data);
+      setIs_cur_Board_users_fetched(true);
     } catch (error) {
       console.error('Error fetching board users:', error);
+      setIs_cur_Board_users_fetched(false);
     }
   };
 
-
-
-  // useEffect(() => {
-  //   if ('serviceWorker' in navigator) {
-  //     navigator.serviceWorker.addEventListener('message', (event) => {
-  //       if (event.data && event.data.type === 'BOARD_USER_UPDATE') {
-  //         console.log('Message received from service worker:', event.data);
-  //         setNotificationData(event.data); // Update state with notification data
-  //       }
-  //     });
-  //   }
-  // }, []);
 
 
 
@@ -127,10 +122,9 @@ const App: React.FC = () => {
       navigator.serviceWorker.addEventListener('message', (event) => {
         if (event.data) {
           const { type, ...payload } = event.data;
-          // Log different messages based on the notification type
-          console.log('======== type ===========>>>>>> ', type);
-          switch (type) {
 
+          setIs_new_notification_received(true);
+          switch (type) {
             case 'TASK_DUE_REMINDER':
               console.log(
                 `TASK_DUE_REMINDER type ==>> Task Name: ${payload.taskName}, Due Date: ${payload.dueDate}, Priority: ${payload.priority}`
@@ -167,12 +161,39 @@ const App: React.FC = () => {
                 prevBoards.filter((board) => board.name !== payload.boardName)
               );
 
+              fetch_current_board_users();
+
               break;
 
             case 'BOARD_INVITATION_ACCEPTED':
-              console.log(
-                `BOARD_INVITATION_ACCEPTED type ==>> Board Name: ${payload.boardName}, Invited User Email: ${payload.invitedUserEmail}, Invited User Name: ${payload.invitedUserName}`
+              console.log('Board invitation accepted. Fetching current board users...');
+              setNotificationData(event.data); // Update state with notification data
+
+              // Check if the current user is removed from the selected board
+              if (selectedBoard?.id && selectedBoard.name === payload.boardName) {
+                console.log('Current user removed from the selected board. Resetting selected board.');
+
+                // Reset the selected board
+                setSelectedBoard({
+                  id: 0,
+                  name: '',
+                  created_at: '',
+                  lists: [],
+                  owner: '',
+                  owner_email: '',
+                  members: [],
+                  board_users: [],
+                });
+
+              }
+
+              // Update the boards list to remove the board
+              setBoards((prevBoards) =>
+                prevBoards.filter((board) => board.name !== payload.boardName)
               );
+
+
+              fetch_current_board_users();
               break;
 
             default:
@@ -331,12 +352,15 @@ const App: React.FC = () => {
             fetchBoards={fetchBoards}
             setCurrent_board_users={setCurrent_board_users}
             current_board_users={current_board_users}
+            is_cur_Board_users_fetched={is_cur_Board_users_fetched}
             fetch_current_board_users={fetch_current_board_users}
             isBoardsLoaded={isBoardsLoaded}
             setIsBoardsLoaded={setIsBoardsLoaded}
             setIsLoading={setIsLoading}
             isLoading={isLoading}
             notificationData={notificationData}
+            setIs_new_notification_received={setIs_new_notification_received}
+            is_new_notification_received={is_new_notification_received}
           />} />
       </Routes>
     </Router>

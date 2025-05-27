@@ -70,7 +70,7 @@
 }
 
 .list.hover {
-  background-color: #2d5479;
+  background-color: #0F1214;
   /* Change this to your desired hover color */
 }
 
@@ -82,4 +82,5 @@
   border: 1px solid red;
   margin-top: 5px;
   padding: 5px;
+  
 }

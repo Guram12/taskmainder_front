@@ -16,6 +16,7 @@ import { MdDeleteForever } from "react-icons/md";
 import ConfirmationDialog from "./Boards/ConfirmationDialog";
 import Avatar from '@mui/material/Avatar';
 import getAvatarStyles from "../utils/SetRandomColor";
+import Skeleton from 'react-loading-skeleton';
 
 // setCurrent_board_users={setCurrent_board_users}
 // current_board_users={current_board_users}
@@ -30,6 +31,7 @@ interface MembersProps {
   deleteBoard: () => void;
   setCurrent_board_users: (users: Board_Users[]) => void;
   current_board_users: Board_Users[];
+  is_cur_Board_users_fetched: boolean;
   fetch_current_board_users: () => Promise<void>;
   setBoards: (boards: board[]) => void;
   boards: board[];
@@ -44,6 +46,7 @@ const Members: React.FC<MembersProps> = ({
   deleteBoard,
   setCurrent_board_users,
   current_board_users,
+  is_cur_Board_users_fetched,
   fetch_current_board_users,
   setBoards,
   boards,
@@ -64,7 +67,9 @@ const Members: React.FC<MembersProps> = ({
   const [newBoardName, setNewBoardName] = useState<string>('');
 
 
-
+  useEffect(() => {
+    console.log("is_cur_Board_users_fetched", is_cur_Board_users_fetched);
+  }, [is_cur_Board_users_fetched]);
 
 
   const is_current_user_owner = current_board_users.find(user => user.email === current_user_email)?.user_status === 'owner'
@@ -161,7 +166,7 @@ const Members: React.FC<MembersProps> = ({
     if (selectedBoard?.id) {
       fetch_current_board_users();
     }
-  }, [selectedBoard]);
+  }, [selectedBoard?.id]);
   // -------------------------------------------- fetch current board users ------------------------------------------------
 
   // -------------------------------------------- add new users to board ------------------------------------------------
@@ -269,37 +274,76 @@ const Members: React.FC<MembersProps> = ({
     setIsBoardDeleting(false);
   }
 
-
+  useEffect(() => {
+    console.log("cur members ===>>>>", current_board_users)
+  }, [current_board_users]);
 
   return (
     <div className="main_members_container">
       <RiUserSettingsFill className="add_user_icon" onClick={() => setIsUsersWindowOpen(true)} />
-      {/* <h3 className="members_h2">User</h3> */}
-      {current_board_users.map((boardUser) => (
-        boardUser.profile_picture !== null ? (
-          <img
-            key={boardUser.id}
-            src={boardUser.profile_picture}
-            alt="user profile"
-            className="user_profile_images"
+
+      {/* skeleton loader  befire fetching current board users, and after fetching current board users,
+       it will be replaced with actual user avatars */}
+      {!is_cur_Board_users_fetched ? (
+        <div className="user_avatar_skeleton_cont" >
+          <Skeleton
+            circle
+            height={30}
+            width={30}
+            style={{ marginLeft: '-10px' }}
+            baseColor={currentTheme['--list-background-color']}
+            highlightColor="#e0e0e0"
           />
-        ) : (
+          <Skeleton
+            circle
+            height={30}
+            width={30}
+            style={{ marginLeft: '-10px' }}
+            baseColor={currentTheme['--list-background-color']}
+            highlightColor="#e0e0e0"
+          />
+          <Skeleton
+            circle
+            height={30}
+            width={30}
+            style={{ marginLeft: '-10px' }}
+            baseColor={currentTheme['--list-background-color']}
+            highlightColor="#e0e0e0"
+          />
+        </div>
+      )
+        :
+        (
+          <>
+            {current_board_users.map((boardUser) => (
+              boardUser.profile_picture !== null ? (
+                <img
+                  key={boardUser.id}
+                  src={boardUser.profile_picture}
+                  alt="user profile"
+                  className="user_profile_images"
+                />
+              ) : (
 
-          <Avatar
-            key={boardUser.id}
-            className="user_profile_images"
-            sx={{ width: 30, height: 30 }}
-            alt={boardUser.username}
-            style={{
-              backgroundColor: getAvatarStyles(boardUser.username.charAt(0)).backgroundColor,
-              color: getAvatarStyles(boardUser.username.charAt(0)).color
-            }}
-          >
-            {boardUser.username.charAt(0).toUpperCase()}
-          </Avatar>
-        )
-      ))}
+                <Avatar
+                  key={boardUser.id}
+                  className="user_profile_images"
+                  sx={{ width: 30, height: 30 }}
+                  alt={boardUser.username}
+                  style={{
+                    backgroundColor: getAvatarStyles(boardUser.username.charAt(0)).backgroundColor,
+                    color: getAvatarStyles(boardUser.username.charAt(0)).color
+                  }}
+                >
+                  {boardUser.username.charAt(0).toUpperCase()}
+                </Avatar>
+              )
+            ))}
+          </>
+        )}
 
+
+      {/* board name and icons for editing and deleting board, and board name */}
       <>
         <FaClipboardList className='board_icon' style={{ fill: `${currentTheme['--main-text-coloure']}` }} />
         <div className="board_name_cont">
@@ -356,7 +400,7 @@ const Members: React.FC<MembersProps> = ({
       </>
 
 
-
+      {/* current board users list and their permission in window */}
       <div>
         {isUsersWindowOpen && (
           <div className="all_users_main_window">
@@ -366,7 +410,7 @@ const Members: React.FC<MembersProps> = ({
                 <CgCloseR className="close_icon" onClick={() => setIsUsersWindowOpen(false)} />
               </div>
 
-              {/* search input for searchjing users  */}
+              {/* search input for searching users  */}
               {is_current_user_admin_or_owner && (
                 <div className="parent_of_input_and_emails" >
 

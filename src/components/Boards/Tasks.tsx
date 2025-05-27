@@ -144,11 +144,19 @@ const Task: React.FC<TaskProps> = ({ task, deleteTask, updateTask, moveTaskWithi
     <div
       className={`each_task ${isDragging || isDraggingReorder ? 'dragging' : ''}`}
       ref={(node) => drag(drop(node))}
-      style={{ opacity: isDragging || isDraggingReorder ? 0.5 : 1 }}
+      style={{
+        opacity: isDragging || isDraggingReorder ? 0.5 : 1,
+        backgroundColor: currentTheme['--task-background-color'],
+        color: currentTheme['--main-text-coloure'],
+
+      }}
       data-task-id={task.id} // Add this line
 
     >
-      <div className='task_complition_checkbox_container' >
+      <div
+        className='task_complition_checkbox_container'
+        style={{ borderColor: currentTheme['--main-text-coloure'] }}
+      >
         {task.completed ? (
           <MdRadioButtonChecked className='completed_task_icon' onClick={() => handleCompletionToggle(task)} />
         ) : (
