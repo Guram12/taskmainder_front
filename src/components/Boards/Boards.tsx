@@ -694,7 +694,18 @@ const Boards: React.FC<BoardsProps> = ({
   // ================================  render boards  ========================================
 
 
+  useEffect(() => {
+    console.log(
+      {
+        "isBoardsLoaded:": isBoardsLoaded,
+        "boardData.lists": boardData.lists,
+        'boards.length': boards.length,
+      }
 
+    );
+
+
+  }, [isBoardsLoaded, boards.length]);
 
 
   return (
@@ -729,15 +740,11 @@ const Boards: React.FC<BoardsProps> = ({
         )}
 
 
-        {isBoardsLoaded && boardData.lists && boardData.lists.length === 0 && (
-          <div>
-            {boards.length === 0 && (
-              <NoBoards currentTheme={currentTheme} />
-            )}
-          </div>
+        {isBoardsLoaded && boards.length === 0 && (
+          <NoBoards currentTheme={currentTheme} />
         )}
 
-        <div className="main_boards_container">
+        <div className={`main_boards_container ${boards.length === 0 && isBoardsLoaded ? 'remove_height' : 'add_height'}`}  >
           {!isBoardsLoaded ? (
             <SkeletonLoader currentTheme={currentTheme} />
           ) : (
@@ -757,7 +764,7 @@ const Boards: React.FC<BoardsProps> = ({
                   updateListName={updateListName}
                   allCurrentBoardUsers={allCurrentBoardUsers}
                   isLoading={loadingLists[list.id] || false}
-                  setBoardData ={setBoardData}
+                  setBoardData={setBoardData}
                   boardData={boardData}
                 />
               ))}

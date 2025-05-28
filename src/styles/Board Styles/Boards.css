@@ -14,10 +14,18 @@
   display: flex;
   gap: 20px;
   color: black;
-  height: calc(100vh - 152px);
   overflow-x: auto; /* Allow horizontal overflow */
   overflow-y: hidden; /* Prevent vertical overflow */
   
+}
+
+.remove_height {
+  height: 0px !important;
+}
+
+.add_height{
+  height: calc(100vh - 152px);
+
 }
 
 .lists_container {

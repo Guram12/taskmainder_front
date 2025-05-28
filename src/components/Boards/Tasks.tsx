@@ -60,18 +60,23 @@ const Task: React.FC<TaskProps> = ({ task, deleteTask, updateTask, moveTaskWithi
     }),
   }));
 
-  const [{ isOver }, drop] = useDrop({
+  const [{ isOver, canDrop }, drop] = useDrop({
     accept: ItemTypes.REORDER,
     drop: (draggedTask: { id: number; listId: number }) => {
-      if (draggedTask.id !== task.id) {
+      if (draggedTask.id !== task.id && draggedTask.listId === task.list) {
         moveTaskWithinList(draggedTask.id, task.id, task.list);
       }
     },
     collect: (monitor) => ({
       isOver: !!monitor.isOver(),
+      canDrop: monitor.canDrop(),
     }),
+    canDrop: (draggedTask: { id: number; listId: number }) => {
+      // Only allow drop if the dragged task is from the same list
+      return draggedTask.listId === task.list;
+    },
   });
-
+  
   const [, dragReorder] = useDrag(() => ({
     type: ItemTypes.REORDER,
     item: { id: task.id, listId: task.list },
@@ -87,11 +92,11 @@ const Task: React.FC<TaskProps> = ({ task, deleteTask, updateTask, moveTaskWithi
 
   useEffect(() => {
     const timeout = setTimeout(() => {
-      setIsDropZoneVisible(isOver);
+      setIsDropZoneVisible(isOver && canDrop); // Show drop zone only if canDrop is true
     }, 100); // Add a 100ms debounce delay
-
+  
     return () => clearTimeout(timeout);
-  }, [isOver]);
+  }, [isOver, canDrop]);
 
 
   // =======================================    delete task functions   ======================================
