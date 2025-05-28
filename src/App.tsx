@@ -116,6 +116,7 @@ const App: React.FC = () => {
 
 
 
+  // =========================================  handle push notification tyles for updates ===============================================
 
   useEffect(() => {
     if ('serviceWorker' in navigator) {
@@ -131,12 +132,13 @@ const App: React.FC = () => {
               );
               break;
 
+
             case 'USER_REMOVED_FROM_BOARD':
               console.log(
                 `USER_REMOVED_FROM_BOARD type ==>> Board Name: ${payload.boardName}, Removed User Email: ${payload.removedUserEmail}`
               );
 
-              setNotificationData(event.data); // Update state with notification data
+              setNotificationData(event.data); 
 
               // Check if the current user is removed from the selected board
               if (selectedBoard?.id && selectedBoard.name === payload.boardName) {
@@ -153,13 +155,22 @@ const App: React.FC = () => {
                   members: [],
                   board_users: [],
                 });
-
               }
 
               // Update the boards list to remove the board
-              setBoards((prevBoards) =>
-                prevBoards.filter((board) => board.name !== payload.boardName)
-              );
+              setBoards((prevBoards) => {
+                const updatedBoards = prevBoards.filter((board) => board.name !== payload.boardName);
+                if (updatedBoards.length === 0) {
+                  setIsBoardsLoaded(true);
+                  setSelectedBoard(null); 
+                }
+                return updatedBoards;
+              });
+
+              // Reset boardData if no boards are left
+              if (boards.length === 1 && boards[0].name === payload.boardName) {
+                setSelectedBoard(null);
+              }
 
               fetch_current_board_users();
 
