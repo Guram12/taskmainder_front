@@ -6,7 +6,7 @@ import ProfilePictureUpdate from "./settings/ProfilePictureUpdate";
 import Profile_Info_update from "./settings/Profile_Info_update";
 import DeleteAccount from "./settings/DeleteAccount";
 import ChangePassword from "./settings/ChangePassword";
-
+import CustomTheme from "./settings/CustomTheme";
 
 
 
@@ -24,7 +24,7 @@ const Settings: React.FC<SettingsProps> = ({ profileData, FetchProfileData, curr
 
   return (
     <div className="main_settings_container">
-      <ProfilePictureUpdate
+      {/* <ProfilePictureUpdate
         profileData={profileData}
         FetchProfileData={FetchProfileData}
         currentTheme={currentTheme}
@@ -34,17 +34,18 @@ const Settings: React.FC<SettingsProps> = ({ profileData, FetchProfileData, curr
         FetchProfileData={FetchProfileData}
         currentTheme={currentTheme}
       />
-      {/* {!profileData.is_social_account && ( */}
       <ChangePassword
         profileData={profileData}
         FetchProfileData={FetchProfileData}
         currentTheme={currentTheme}
-      />
-      {/* )} */}
-
-      <DeleteAccount
+      /> */}
+      <CustomTheme
+        profileData={profileData}
         currentTheme={currentTheme}
       />
+      {/* <DeleteAccount
+        currentTheme={currentTheme}
+      /> */}
     </div>
   );
 };
@@ -59,7 +60,7 @@ export default Settings;
 // Custom Avatars                 +
 // Change Password                +
 // Theme Customization
-// Notification Preferences
+// Notification Preferences 
 // Account Deletion               +
 // Language Preferences
 // Export/Import Data  ???

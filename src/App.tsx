@@ -36,7 +36,12 @@ const App: React.FC = () => {
     username: '',
     timezone: '',
     is_social_account: false,
+    background_image: '',
   });
+
+useEffect(() => {
+  console.log('profileData:', profileData);
+}, [profileData]);
 
   const [currentTheme, setCurrentTheme] = useState<ThemeSpecs>({
     '--background-color': '#4E4E4E',
@@ -59,7 +64,6 @@ const App: React.FC = () => {
     members: [],
     board_users: [],
   });
-
 
   const [isBoardsLoaded, setIsBoardsLoaded] = useState<boolean>(false);
 
