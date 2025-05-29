@@ -1,0 +1,29 @@
+.skeleton_user_container {
+  width: 600px;
+  height: 50px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+  padding: 5px;
+  border-radius: 5px;
+  max-height: 50px;
+}
+
+.skeleton_user_info {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 20px;
+}
+
+.skeleton_user_details {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+
+  gap: 10px;
+}

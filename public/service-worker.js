@@ -37,9 +37,13 @@ self.addEventListener('push', function (event) {
           });
           break;
 
+
         case 'BOARD_INVITATION_ACCEPTED':
           client.postMessage({
             type: 'BOARD_INVITATION_ACCEPTED',
+            title: data.title,  
+            body: data.body,
+            board_id: data.board_id,
             boardName: data.boardName,
             invitedUserEmail: data.invitedUserEmail,
             invitedUserName: data.invitedUserName,

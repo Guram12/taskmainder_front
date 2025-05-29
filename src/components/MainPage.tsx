@@ -37,6 +37,7 @@ interface MainPageProps {
   fetchBoardById?: (boardId: number) => Promise<void>;
   setIs_new_notification_received: (is_new_notification_received: boolean) => void;
   is_new_notification_received: boolean;
+  is_members_refreshing: boolean;
 }
 
 const MainPage: React.FC<MainPageProps> = ({
@@ -60,13 +61,15 @@ const MainPage: React.FC<MainPageProps> = ({
   notificationData,
   setIs_new_notification_received,
   is_new_notification_received,
-
+  is_members_refreshing,
 }) => {
   const [selectedComponent, setSelectedComponent] = useState<string>("Boards");
 
 
   const accessToken: string | null = localStorage.getItem('access_token');
   const refreshToken: string | null = localStorage.getItem('refresh_token');
+
+
 
 
 
@@ -158,7 +161,7 @@ const MainPage: React.FC<MainPageProps> = ({
             fetch_current_board_users={fetch_current_board_users}
             isBoardsLoaded={isBoardsLoaded}
             setIsLoading={setIsLoading}
-
+            is_members_refreshing={is_members_refreshing}
           />
         );
       case "Notification":

@@ -24,13 +24,10 @@ import { NotificationPayload } from './utils/interface';
 
 
 
-
 const App: React.FC = () => {
 
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
-
   const [isLoading, setIsLoading] = useState<boolean>(false);
-
   const [profileData, setProfileData] = useState<ProfileData>({
     id: 0,
     email: '',
@@ -96,9 +93,13 @@ const App: React.FC = () => {
     subscribeToPushNotifications();
   }, []);
 
+
   // -------------------------------------------- socket connection for board users ------------------------------------------
+  const [is_members_refreshing, setIs_members_refreshing] = useState<boolean>(false);
+
   const fetch_current_board_users = async () => {
     setIs_cur_Board_users_fetched(false);
+    setIs_members_refreshing(true);
     try {
       console.log("selected board users are fetching");
       const response = await axiosInstance.get(`/api/boards/${selectedBoard?.id}/users/`, {
@@ -108,28 +109,15 @@ const App: React.FC = () => {
       });
       setCurrent_board_users(response.data);
       setIs_cur_Board_users_fetched(true);
+      setIs_members_refreshing(false);
     } catch (error) {
       console.error('Error fetching board users:', error);
       setIs_cur_Board_users_fetched(false);
+      setIs_members_refreshing(false);
     }
   };
-  // ======================== fetch users if only selected  board is same as in payload ========
-
-  useEffect(() => {
-    console.log('selected board ----->>>   :', selectedBoard);
-  }, [selectedBoard]);
 
 
-  const fetch_Users_If_SelectedBoard_Matches = async (payload: NotificationPayload) => {
-    const tringi_payload = JSON.stringify(payload);
-    console.log(`payload boardid: ${tringi_payload} ==? selectedboard.id ${selectedBoard?.id}`);
-    if (selectedBoard?.id === payload.board_id) {
-
-      await fetch_current_board_users();
-    } else {
-      console.log("Selected board does not match the payload board ID. No action taken.");
-    }
-  };
 
   // =========================================  handle push notification types for updates ===============================================
 
@@ -138,8 +126,9 @@ const App: React.FC = () => {
       navigator.serviceWorker.addEventListener('message', (event) => {
         if (event.data) {
           const { type, ...payload } = event.data;
-
           setIs_new_notification_received(true);
+
+
           switch (type) {
             case 'TASK_DUE_REMINDER':
               console.log(
@@ -150,7 +139,6 @@ const App: React.FC = () => {
 
             case 'USER_REMOVED_FROM_BOARD':
               console.log(`USER_REMOVED_FROM_BOARD type ==>> Board Name: ${payload.boardName}, Removed User Email: ${payload.removedUserEmail}`);
-
               setNotificationData(event.data);
 
               // Update the boards list to remove the board
@@ -173,19 +161,14 @@ const App: React.FC = () => {
               break;
 
             case 'BOARD_INVITATION_ACCEPTED':
-              console.log('Board invitation accepted. Fetching current board users...');
+              console.log('BOARD_INVITATION_ACCEPTED type ==>> Board Name:', payload.boardName);
               setNotificationData(event.data);
-              setSelectedBoard(selectedBoard)
-              fetch_Users_If_SelectedBoard_Matches(payload);
-              break;
 
+              break;
 
             case 'USER_LEFT_BOARD':
               console.log(`USER_LEFT_BOARD type ==>> Board Name: ${payload.boardName}, Left User Email: ${payload.leftUserEmail}, Left User Name: ${payload.leftUserName}`);
-              setNotificationData(event.data); // Update state with notification data
-
-
-              fetch_current_board_users();
+              setNotificationData(event.data);
               break;
 
 
@@ -212,6 +195,7 @@ const App: React.FC = () => {
           Authorization: `Bearer ${localStorage.getItem('access_token')}`
         }
       });
+      console.log('boards fetched successfully!!!!!!;');
       setBoards(response.data);
       setIsBoardsLoaded(true);
     } catch (error) {
@@ -355,6 +339,7 @@ const App: React.FC = () => {
             notificationData={notificationData}
             setIs_new_notification_received={setIs_new_notification_received}
             is_new_notification_received={is_new_notification_received}
+            is_members_refreshing={is_members_refreshing}
           />} />
       </Routes>
     </Router>

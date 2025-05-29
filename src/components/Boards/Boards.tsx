@@ -36,6 +36,7 @@ export interface BoardsProps {
   fetch_current_board_users: () => Promise<void>;
   isBoardsLoaded: boolean;
   setIsLoading: (isLoading: boolean) => void;
+  is_members_refreshing: boolean;
 
 }
 
@@ -52,6 +53,7 @@ const Boards: React.FC<BoardsProps> = ({
   fetch_current_board_users,
   isBoardsLoaded,
   setIsLoading,
+  is_members_refreshing,
 
 }) => {
   const [boardData, setBoardData] = useState<board>({
@@ -705,6 +707,7 @@ const Boards: React.FC<BoardsProps> = ({
                 fetch_current_board_users={fetch_current_board_users}
                 setBoards={setBoards}
                 boards={boards}
+                is_members_refreshing={is_members_refreshing}
               />
 
             )}
