@@ -24,13 +24,10 @@ import { NotificationPayload } from './utils/interface';
 
 
 
-
 const App: React.FC = () => {
 
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
-
   const [isLoading, setIsLoading] = useState<boolean>(false);
-
   const [profileData, setProfileData] = useState<ProfileData>({
     id: 0,
     email: '',
@@ -96,9 +93,13 @@ const App: React.FC = () => {
     subscribeToPushNotifications();
   }, []);
 
+
   // -------------------------------------------- socket connection for board users ------------------------------------------
+  const [is_members_refreshing, setIs_members_refreshing] = useState<boolean>(false);
+
   const fetch_current_board_users = async () => {
     setIs_cur_Board_users_fetched(false);
+    setIs_members_refreshing(true);
     try {
       console.log("selected board users are fetching");
       const response = await axiosInstance.get(`/api/boards/${selectedBoard?.id}/users/`, {
@@ -108,23 +109,26 @@ const App: React.FC = () => {
       });
       setCurrent_board_users(response.data);
       setIs_cur_Board_users_fetched(true);
+      setIs_members_refreshing(false);
     } catch (error) {
       console.error('Error fetching board users:', error);
       setIs_cur_Board_users_fetched(false);
+      setIs_members_refreshing(false);
     }
   };
 
 
 
-  // =========================================  handle push notification tyles for updates ===============================================
+  // =========================================  handle push notification types for updates ===============================================
 
   useEffect(() => {
     if ('serviceWorker' in navigator) {
       navigator.serviceWorker.addEventListener('message', (event) => {
         if (event.data) {
           const { type, ...payload } = event.data;
-
           setIs_new_notification_received(true);
+
+
           switch (type) {
             case 'TASK_DUE_REMINDER':
               console.log(
@@ -134,35 +138,15 @@ const App: React.FC = () => {
 
 
             case 'USER_REMOVED_FROM_BOARD':
-              console.log(
-                `USER_REMOVED_FROM_BOARD type ==>> Board Name: ${payload.boardName}, Removed User Email: ${payload.removedUserEmail}`
-              );
-
-              setNotificationData(event.data); 
-
-              // Check if the current user is removed from the selected board
-              if (selectedBoard?.id && selectedBoard.name === payload.boardName) {
-                console.log('Current user removed from the selected board. Resetting selected board.');
-
-                // Reset the selected board
-                setSelectedBoard({
-                  id: 0,
-                  name: '',
-                  created_at: '',
-                  lists: [],
-                  owner: '',
-                  owner_email: '',
-                  members: [],
-                  board_users: [],
-                });
-              }
+              console.log(`USER_REMOVED_FROM_BOARD type ==>> Board Name: ${payload.boardName}, Removed User Email: ${payload.removedUserEmail}`);
+              setNotificationData(event.data);
 
               // Update the boards list to remove the board
               setBoards((prevBoards) => {
                 const updatedBoards = prevBoards.filter((board) => board.name !== payload.boardName);
                 if (updatedBoards.length === 0) {
                   setIsBoardsLoaded(true);
-                  setSelectedBoard(null); 
+                  setSelectedBoard(null);
                 }
                 return updatedBoards;
               });
@@ -177,35 +161,16 @@ const App: React.FC = () => {
               break;
 
             case 'BOARD_INVITATION_ACCEPTED':
-              console.log('Board invitation accepted. Fetching current board users...');
-              setNotificationData(event.data); // Update state with notification data
+              console.log('BOARD_INVITATION_ACCEPTED type ==>> Board Name:', payload.boardName);
+              setNotificationData(event.data);
 
-              // Check if the current user is removed from the selected board
-              if (selectedBoard?.id && selectedBoard.name === payload.boardName) {
-                console.log('Current user removed from the selected board. Resetting selected board.');
-
-                // Reset the selected board
-                setSelectedBoard({
-                  id: 0,
-                  name: '',
-                  created_at: '',
-                  lists: [],
-                  owner: '',
-                  owner_email: '',
-                  members: [],
-                  board_users: [],
-                });
-
-              }
-
-              // Update the boards list to remove the board
-              setBoards((prevBoards) =>
-                prevBoards.filter((board) => board.name !== payload.boardName)
-              );
-
-
-              fetch_current_board_users();
               break;
+
+            case 'USER_LEFT_BOARD':
+              console.log(`USER_LEFT_BOARD type ==>> Board Name: ${payload.boardName}, Left User Email: ${payload.leftUserEmail}, Left User Name: ${payload.leftUserName}`);
+              setNotificationData(event.data);
+              break;
+
 
             default:
               console.log('Unknown notification type received:', type, payload);
@@ -230,6 +195,7 @@ const App: React.FC = () => {
           Authorization: `Bearer ${localStorage.getItem('access_token')}`
         }
       });
+      console.log('boards fetched successfully!!!!!!;');
       setBoards(response.data);
       setIsBoardsLoaded(true);
     } catch (error) {
@@ -333,6 +299,7 @@ const App: React.FC = () => {
     checkAuthentication();
   }, []);
 
+
   // ========================================================================================================
 
   return (
@@ -372,6 +339,7 @@ const App: React.FC = () => {
             notificationData={notificationData}
             setIs_new_notification_received={setIs_new_notification_received}
             is_new_notification_received={is_new_notification_received}
+            is_members_refreshing={is_members_refreshing}
           />} />
       </Routes>
     </Router>

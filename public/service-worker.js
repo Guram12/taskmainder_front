@@ -1,4 +1,4 @@
-self.addEventListener('push', function(event) {
+self.addEventListener('push', function (event) {
   const data = event.data.json();
   console.log('Push received:', data); // Log the entire payload
 
@@ -37,12 +37,34 @@ self.addEventListener('push', function(event) {
           });
           break;
 
+
         case 'BOARD_INVITATION_ACCEPTED':
           client.postMessage({
             type: 'BOARD_INVITATION_ACCEPTED',
+            title: data.title,  
+            body: data.body,
+            board_id: data.board_id,
             boardName: data.boardName,
             invitedUserEmail: data.invitedUserEmail,
             invitedUserName: data.invitedUserName,
+          });
+          break;
+
+
+        // 'type': 'USER_LEFT_BOARD',
+        // 'title': notification_title,
+        // 'body': notification_body,
+        // 'boardName': board.name,
+        // 'leftUserEmail': user.email,
+        // 'leftUserName': user.username,
+
+        case 'USER_LEFT_BOARD':
+          client.postMessage({
+            type: 'USER_LEFT_BOARD',
+            boardName: data.boardName,
+            leftUserEmail: data.leftUserEmail,
+            leftUserName: data.leftUserName,
+            body: data.body,
           });
           break;
 

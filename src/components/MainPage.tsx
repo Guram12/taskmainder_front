@@ -21,8 +21,6 @@ interface MainPageProps {
   setBoards: (boards: board[]) => void;
   setSelectedBoard: (board: board | null) => void;
   selectedBoard: board | null;
-  setSelected_board_ID_for_sidebar?: (id: number | null) => void;
-  selected_board_ID_for_sidebar?: number | null;
   current_user_email: string;
   profileData: ProfileData;
   FetchProfileData: () => Promise<void>;
@@ -39,6 +37,7 @@ interface MainPageProps {
   fetchBoardById?: (boardId: number) => Promise<void>;
   setIs_new_notification_received: (is_new_notification_received: boolean) => void;
   is_new_notification_received: boolean;
+  is_members_refreshing: boolean;
 }
 
 const MainPage: React.FC<MainPageProps> = ({
@@ -47,8 +46,6 @@ const MainPage: React.FC<MainPageProps> = ({
   setBoards,
   setSelectedBoard,
   selectedBoard,
-  setSelected_board_ID_for_sidebar,
-  selected_board_ID_for_sidebar,
   current_user_email,
   profileData,
   FetchProfileData,
@@ -64,13 +61,15 @@ const MainPage: React.FC<MainPageProps> = ({
   notificationData,
   setIs_new_notification_received,
   is_new_notification_received,
-
+  is_members_refreshing,
 }) => {
   const [selectedComponent, setSelectedComponent] = useState<string>("Boards");
 
 
   const accessToken: string | null = localStorage.getItem('access_token');
   const refreshToken: string | null = localStorage.getItem('refresh_token');
+
+
 
 
 
@@ -95,12 +94,6 @@ const MainPage: React.FC<MainPageProps> = ({
   }, [boards, selectedBoard, setSelectedBoard]);
 
 
-  // ---------------------------------------------------------------------------------------------------------------------
-  useEffect(() => {
-    if (boards.length > 0 && selected_board_ID_for_sidebar === null) {
-      setSelected_board_ID_for_sidebar?.(boards[0].id);
-    }
-  }, [boards, selected_board_ID_for_sidebar, setSelected_board_ID_for_sidebar]);
 
   // ---------------------------------------------------------------------------------------------------------------------
 
@@ -114,7 +107,6 @@ const MainPage: React.FC<MainPageProps> = ({
       const newBoard = response.data.find((board: board) => board.id === boardId);
       if (newBoard) {
         setSelectedBoard(newBoard);
-        setSelected_board_ID_for_sidebar?.(newBoard.id);
         setSelectedComponent("Boards"); // Switch to the Boards view
       }
     } catch (error) {
@@ -169,7 +161,7 @@ const MainPage: React.FC<MainPageProps> = ({
             fetch_current_board_users={fetch_current_board_users}
             isBoardsLoaded={isBoardsLoaded}
             setIsLoading={setIsLoading}
-
+            is_members_refreshing={is_members_refreshing}
           />
         );
       case "Notification":
@@ -184,6 +176,8 @@ const MainPage: React.FC<MainPageProps> = ({
     is_cur_Board_users_fetched, isLoading, setIsLoading,
     notificationData, isBoardsLoaded, setCurrent_board_users
   ]);
+
+
 
 // ===========================================================================================================
 

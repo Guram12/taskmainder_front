@@ -205,6 +205,8 @@ const SidebarComponent: React.FC<SidebarProps> = ({
   const handle_nnotification_page_click = () => {
     setSelectedComponent("Notification");
     setIs_new_notification_received(false);
+    setSelectedBoard(null);
+
   }
 
 

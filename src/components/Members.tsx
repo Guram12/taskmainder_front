@@ -17,9 +17,11 @@ import ConfirmationDialog from "./Boards/ConfirmationDialog";
 import Avatar from '@mui/material/Avatar';
 import getAvatarStyles from "../utils/SetRandomColor";
 import Skeleton from 'react-loading-skeleton';
+import { TbRefresh } from "react-icons/tb";
+import SkeletonEachUser from "./Boards/SkeletonEachUser";
 
-// setCurrent_board_users={setCurrent_board_users}
-// current_board_users={current_board_users}
+
+
 
 
 interface MembersProps {
@@ -35,6 +37,7 @@ interface MembersProps {
   fetch_current_board_users: () => Promise<void>;
   setBoards: (boards: board[]) => void;
   boards: board[];
+  is_members_refreshing: boolean;
 }
 
 const Members: React.FC<MembersProps> = ({
@@ -50,6 +53,7 @@ const Members: React.FC<MembersProps> = ({
   fetch_current_board_users,
   setBoards,
   boards,
+  is_members_refreshing,
 
 }) => {
 
@@ -58,12 +62,14 @@ const Members: React.FC<MembersProps> = ({
   const [suggestedUsers, setSuggestedUsers] = useState<{ email: string }[]>([]);
 
 
+
   const [isDeletingSelectedUser, setIsDeletingSelectedUser] = useState<boolean>(false);
   const [current_board_user_to_delete, setCurrent_board_user_to_delete] = useState({} as Board_Users);
   const [selected_emails, setSelected_emails] = useState<string[]>([]);
 
   const [isBoardEditing, setIsBoardEditing] = useState<boolean>(false);
   const [isBoardDeleting, setIsBoardDeleting] = useState<boolean>(false);
+
   const [newBoardName, setNewBoardName] = useState<string>('');
 
 
@@ -79,9 +85,6 @@ const Members: React.FC<MembersProps> = ({
 
 
 
-  // useEffect(() => {
-  //   console.log('current_board_users', current_board_users)
-  // }, [current_board_users])
 
   // ============================================  set new statuses for users ============================================
   const handleStatusChange = (userId: number, newStatus: string) => {
@@ -275,8 +278,44 @@ const Members: React.FC<MembersProps> = ({
   }
 
   useEffect(() => {
-    console.log("cur members ===>>>>", current_board_users)
+    console.log("Updated current board users:", current_board_users);
   }, [current_board_users]);
+
+
+  // ============================================== Leav board ========================================================
+
+
+  const [is_leaving_board, setIs_leaving_board] = useState<boolean>(false);
+
+  const handleLeaveBoardClick = () => {
+    setIs_leaving_board(true);
+  }
+
+  const handleLeaveBoard = async () => {
+    try {
+      const response = await axiosInstance.delete(`/api/boards/${selectedBoard?.id}/self-delete/`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('access_token')}`
+        }
+      })
+      if (response.status === 200) {
+        console.log("Successfully left the board:", response.data);
+        // Optionally, you can update the UI or redirect the user
+        // For example, you might want to remove the board from the list of boards
+        const updatedBoards = boards.filter(board => board.id !== selectedBoard?.id);
+        setBoards(updatedBoards);
+
+
+
+      } else {
+        console.error("Failed to leave the board:", response.data);
+      }
+    } catch (error) {
+
+    }
+  }
+
+  // =====================================================================================================================
 
   return (
     <div className="main_members_container">
@@ -407,9 +446,13 @@ const Members: React.FC<MembersProps> = ({
             <div className="bloored_ackgrownd"></div>
             <div className="each_user_container">
               <div className="close_icon_cont">
+                {!is_members_refreshing && (
+                  <TbRefresh className="refresh_users_icon" onClick={fetch_current_board_users} />
+                )}
                 <CgCloseR className="close_icon" onClick={() => setIsUsersWindowOpen(false)} />
-              </div>
 
+              </div>
+              <p>guram</p>
               {/* search input for searching users  */}
               {is_current_user_admin_or_owner && (
                 <div className="parent_of_input_and_emails" >
@@ -455,61 +498,97 @@ const Members: React.FC<MembersProps> = ({
                 </button>
               )}
 
+              <div className="each_user_child_container">
+                {is_members_refreshing ? (
+                  <div className="users_skeleton_container" >
+                    <SkeletonEachUser currentTheme={currentTheme} />
+                    <SkeletonEachUser currentTheme={currentTheme} />
+                    <SkeletonEachUser currentTheme={currentTheme} />
+                  </div>
 
-              {/* Rendering each user */}
-              {current_board_users.map(boardUser => (
-                <div className="each_user" key={boardUser.id}>
+                ) : (
 
-                  <div className="image_and_name_cont">
-                    {boardUser.profile_picture !== null ? (
-
-                      <img
-                        src={boardUser.profile_picture}
-                        alt="user profile"
-                        className="board_user_images"
-                      />
-                    ) : (
-                      <Avatar
-                        className="board_user_images"
-                        alt={boardUser.username}
+                  <>
+                    {/* Rendering each user */}
+                    {current_board_users.map(boardUser => (
+                      <div
+                        className="each_user"
+                        key={boardUser.id}
                         style={{
-                          backgroundColor: getAvatarStyles(boardUser.username.charAt(0)).backgroundColor,
-                          color: getAvatarStyles(boardUser.username.charAt(0)).color
+                          backgroundColor: `${currentTheme['--task-background-color']}`,
+                          color: `${currentTheme['--main-text-coloure']}`
+
                         }}
                       >
-                        {boardUser.username.charAt(0).toUpperCase()}
-                      </Avatar>
-                    )}
-                    <p>{boardUser.username}</p>
-                    <p className="boarduser_email">{boardUser.email}</p>
-                  </div>
 
-                  <div className="select_and_delete_icon">
-                    {is_current_user_admin_or_owner ? (
-                      boardUser.user_status === 'owner' ? (
-                        <p className="owner_status" >{boardUser.user_status}</p> // Owner cannot change their status
-                      ) : (
-                        <select
-                          className="select_status"
-                          value={boardUser.user_status}
-                          onChange={(e) => handleStatusChange(boardUser.id, e.target.value)}
-                        >
-                          <option value="admin">admin</option>
-                          <option value="member">member</option>
-                        </select>
-                      )
-                    ) : (
-                      <p >{boardUser.user_status}</p>
-                    )}
-                    {boardUser.user_status !== 'owner' && (
-                      <RiDeleteBinLine
-                        className={`delete_user ${is_current_user_admin_or_owner ? "delete_icon_for_admin" : "delete_icon_for_member"}`}
-                        onClick={() => handle_delete_icon_click(boardUser)}
+                        <div className="image_and_name_cont">
+                          {boardUser.profile_picture !== null ? (
+
+                            <img
+                              src={boardUser.profile_picture}
+                              alt="user profile"
+                              className="board_user_images"
+                            />
+                          ) : (
+                            <Avatar
+                              className="board_user_images"
+                              alt={boardUser.username}
+                              style={{
+                                backgroundColor: getAvatarStyles(boardUser.username.charAt(0)).backgroundColor,
+                                color: getAvatarStyles(boardUser.username.charAt(0)).color
+                              }}
+                            >
+                              {boardUser.username.charAt(0).toUpperCase()}
+                            </Avatar>
+                          )}
+                          <p>{boardUser.username}</p>
+                          <p className="boarduser_email">{boardUser.email}</p>
+                        </div>
+
+                        <div className="select_and_delete_icon">
+                          {is_current_user_admin_or_owner ? (
+                            boardUser.user_status === 'owner' ? (
+                              <p className="owner_status" >{boardUser.user_status}</p> // Owner cannot change their status
+                            ) : (
+                              <select
+                                className="select_status"
+                                value={boardUser.user_status}
+                                onChange={(e) => handleStatusChange(boardUser.id, e.target.value)}
+                              >
+                                <option value="admin">admin</option>
+                                <option value="member">member</option>
+                              </select>
+                            )
+                          ) : (
+                            <p >{boardUser.user_status}</p>
+                          )}
+                          {boardUser.user_status !== 'owner' && (
+                            <RiDeleteBinLine
+                              className={`delete_user ${is_current_user_admin_or_owner ? "delete_icon_for_admin" : "delete_icon_for_member"}`}
+                              onClick={() => handle_delete_icon_click(boardUser)}
+                            />
+                          )}
+                        </div>
+                      </div>
+                    ))}
+                  </>
+                )}
+
+
+
+                {!is_current_user_owner && (
+                  <div>
+                    <button onClick={handleLeaveBoardClick} className="leave_board_button" >Leave board</button>
+                    {is_leaving_board && (
+                      <ConfirmationDialog
+                        message={`Are you sure you want to leav the board "${selectedBoard?.name}"?`}
+                        onConfirm={handleLeaveBoard}
+                        onCancel={() => setIs_leaving_board(false)}
                       />
                     )}
                   </div>
-                </div>
-              ))}
+                )}
+              </div>
 
               {isDeletingSelectedUser && (
                 <div className="delete_user_window">

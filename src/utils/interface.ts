@@ -106,7 +106,8 @@ export interface NotificationPayload {
   // Fields specific to BOARD_INVITATION_ACCEPTED
   invitedUserEmail?: string;
   invitedUserName?: string;
-
+  board_id?: number;
+  
   // Fields specific to TASK_DUE_REMINDER
   taskName?: string;
   dueDate?: string;

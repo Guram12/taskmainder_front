@@ -36,6 +36,7 @@ export interface BoardsProps {
   fetch_current_board_users: () => Promise<void>;
   isBoardsLoaded: boolean;
   setIsLoading: (isLoading: boolean) => void;
+  is_members_refreshing: boolean;
 
 }
 
@@ -52,6 +53,7 @@ const Boards: React.FC<BoardsProps> = ({
   fetch_current_board_users,
   isBoardsLoaded,
   setIsLoading,
+  is_members_refreshing,
 
 }) => {
   const [boardData, setBoardData] = useState<board>({
@@ -106,22 +108,8 @@ const Boards: React.FC<BoardsProps> = ({
 
 
   useEffect(() => {
-    if (selectedBoard?.id === 0) {
-      // Reset boardData when no board is selected
-      setBoardData({
-        id: 0,
-        name: '',
-        created_at: '',
-        lists: [],
-        owner: '',
-        owner_email: '',
-        members: [],
-        board_users: [],
-      });
-    } else {
-      if (!selectedBoard) return;
-      setBoardData(selectedBoard);
-    }
+    if (!selectedBoard) return;
+    setBoardData(selectedBoard);
   }, [selectedBoard]);
 
 
@@ -694,20 +682,6 @@ const Boards: React.FC<BoardsProps> = ({
   // ================================  render boards  ========================================
 
 
-  useEffect(() => {
-    console.log(
-      {
-        "isBoardsLoaded:": isBoardsLoaded,
-        "boardData.lists": boardData.lists,
-        'boards.length': boards.length,
-      }
-
-    );
-
-
-  }, [isBoardsLoaded, boards.length]);
-
-
   return (
     <DndProvider backend={isMobile ? TouchBackend : HTML5Backend}
       options={isMobile ? { enableMouseEvents: true } : undefined}
@@ -733,6 +707,7 @@ const Boards: React.FC<BoardsProps> = ({
                 fetch_current_board_users={fetch_current_board_users}
                 setBoards={setBoards}
                 boards={boards}
+                is_members_refreshing={is_members_refreshing}
               />
 
             )}
