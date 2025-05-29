@@ -170,26 +170,23 @@ const Boards: React.FC<BoardsProps> = ({
           break;
 
 
-        case 'set_status':
-          setBoardData((prevData) => {
-            const newBoardData = { ...prevData };
-            const userIndex = newBoardData.board_users.findIndex(user => user.id === payload.user_id);
-            if (userIndex !== -1) {
-              newBoardData.board_users[userIndex].user_status = payload.new_status;
-            }
-            return newBoardData;
-          });
-
-          const updatedBoard: board = {
-            ...selectedBoard,
-            board_users: selectedBoard.board_users.map((user) =>
+          case 'set_status':
+            console.log('Received set_status:', payload);
+            setBoardData((prevData) => {
+              const newBoardData = { ...prevData };
+              const userIndex = newBoardData.board_users.findIndex(user => user.id === payload.user_id);
+              if (userIndex !== -1) {
+                newBoardData.board_users[userIndex].user_status = payload.new_status;
+              }
+              return newBoardData;
+            });
+          
+            const updatedBoardUsers = selectedBoard?.board_users.map((user) =>
               user.id === payload.user_id ? { ...user, user_status: payload.new_status } : user
-            ),
-          };
-
-          setSelectedBoard(updatedBoard);
-
-          break;
+            );
+          
+            setCurrent_board_users(updatedBoardUsers || []);
+            break;
 
         case 'create':
         case 'update':

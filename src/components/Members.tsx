@@ -230,6 +230,7 @@ const Members: React.FC<MembersProps> = ({
 
 
   const handle_delete_icon_click = (boardUser: Board_Users) => {
+    if (!is_current_user_admin_or_owner) return;
     setIsDeletingSelectedUser(true);
     setCurrent_board_user_to_delete(boardUser);
   }
@@ -546,6 +547,12 @@ const Members: React.FC<MembersProps> = ({
                         </div>
 
                         <div className="select_and_delete_icon">
+                          {boardUser.user_status !== 'owner' && boardUser.email !== current_user_email && (
+                            <RiDeleteBinLine
+                              className={`delete_user ${is_current_user_admin_or_owner ? "delete_icon_for_admin" : "delete_icon_for_member"}`}
+                              onClick={() => handle_delete_icon_click(boardUser)}
+                            />
+                          )}
                           {is_current_user_admin_or_owner ? (
                             boardUser.user_status === 'owner' ? (
                               <p className="owner_status" >{boardUser.user_status}</p> // Owner cannot change their status
@@ -561,12 +568,6 @@ const Members: React.FC<MembersProps> = ({
                             )
                           ) : (
                             <p >{boardUser.user_status}</p>
-                          )}
-                          {boardUser.user_status !== 'owner' && (
-                            <RiDeleteBinLine
-                              className={`delete_user ${is_current_user_admin_or_owner ? "delete_icon_for_admin" : "delete_icon_for_member"}`}
-                              onClick={() => handle_delete_icon_click(boardUser)}
-                            />
                           )}
                         </div>
                       </div>
