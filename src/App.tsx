@@ -113,10 +113,25 @@ const App: React.FC = () => {
       setIs_cur_Board_users_fetched(false);
     }
   };
+  // ======================== fetch users if only selected  board is same as in payload ========
+
+  useEffect(() => {
+    console.log('selected board ----->>>   :', selectedBoard);
+  }, [selectedBoard]);
 
 
+  const fetch_Users_If_SelectedBoard_Matches = async (payload: NotificationPayload) => {
+    const tringi_payload = JSON.stringify(payload);
+    console.log(`payload boardid: ${tringi_payload} ==? selectedboard.id ${selectedBoard?.id}`);
+    if (selectedBoard?.id === payload.board_id) {
 
-  // =========================================  handle push notification tyles for updates ===============================================
+      await fetch_current_board_users();
+    } else {
+      console.log("Selected board does not match the payload board ID. No action taken.");
+    }
+  };
+
+  // =========================================  handle push notification types for updates ===============================================
 
   useEffect(() => {
     if ('serviceWorker' in navigator) {
@@ -134,35 +149,16 @@ const App: React.FC = () => {
 
 
             case 'USER_REMOVED_FROM_BOARD':
-              console.log(
-                `USER_REMOVED_FROM_BOARD type ==>> Board Name: ${payload.boardName}, Removed User Email: ${payload.removedUserEmail}`
-              );
+              console.log(`USER_REMOVED_FROM_BOARD type ==>> Board Name: ${payload.boardName}, Removed User Email: ${payload.removedUserEmail}`);
 
-              setNotificationData(event.data); 
-
-              // Check if the current user is removed from the selected board
-              if (selectedBoard?.id && selectedBoard.name === payload.boardName) {
-                console.log('Current user removed from the selected board. Resetting selected board.');
-
-                // Reset the selected board
-                setSelectedBoard({
-                  id: 0,
-                  name: '',
-                  created_at: '',
-                  lists: [],
-                  owner: '',
-                  owner_email: '',
-                  members: [],
-                  board_users: [],
-                });
-              }
+              setNotificationData(event.data);
 
               // Update the boards list to remove the board
               setBoards((prevBoards) => {
                 const updatedBoards = prevBoards.filter((board) => board.name !== payload.boardName);
                 if (updatedBoards.length === 0) {
                   setIsBoardsLoaded(true);
-                  setSelectedBoard(null); 
+                  setSelectedBoard(null);
                 }
                 return updatedBoards;
               });
@@ -178,34 +174,20 @@ const App: React.FC = () => {
 
             case 'BOARD_INVITATION_ACCEPTED':
               console.log('Board invitation accepted. Fetching current board users...');
+              setNotificationData(event.data);
+              setSelectedBoard(selectedBoard)
+              fetch_Users_If_SelectedBoard_Matches(payload);
+              break;
+
+
+            case 'USER_LEFT_BOARD':
+              console.log(`USER_LEFT_BOARD type ==>> Board Name: ${payload.boardName}, Left User Email: ${payload.leftUserEmail}, Left User Name: ${payload.leftUserName}`);
               setNotificationData(event.data); // Update state with notification data
-
-              // Check if the current user is removed from the selected board
-              if (selectedBoard?.id && selectedBoard.name === payload.boardName) {
-                console.log('Current user removed from the selected board. Resetting selected board.');
-
-                // Reset the selected board
-                setSelectedBoard({
-                  id: 0,
-                  name: '',
-                  created_at: '',
-                  lists: [],
-                  owner: '',
-                  owner_email: '',
-                  members: [],
-                  board_users: [],
-                });
-
-              }
-
-              // Update the boards list to remove the board
-              setBoards((prevBoards) =>
-                prevBoards.filter((board) => board.name !== payload.boardName)
-              );
 
 
               fetch_current_board_users();
               break;
+
 
             default:
               console.log('Unknown notification type received:', type, payload);
@@ -332,6 +314,7 @@ const App: React.FC = () => {
 
     checkAuthentication();
   }, []);
+
 
   // ========================================================================================================
 

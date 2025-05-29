@@ -153,15 +153,23 @@
 }
 
 .each_user_container {
+
+  border: 1px solid red;
+}
+
+
+
+.each_user_child_container {
   display: flex;
   justify-content: flex-start;
   flex-direction: column;
   align-items: center;
-  border: 1px solid red;
+  border: 1px solid lime;
   width: 700px;
   height: 80%;
   gap: 20px;
   max-height: 700px;
+  min-height: 500px;
 }
 
 .close_icon_cont {
@@ -296,6 +304,17 @@
 .delete_user {
   width: 20px;
   height: 20px;
+}
+
+.leave_board_button{
+  width: 130px;
+  height: 30px;
+  border-radius: 5px;
+  background-color: rgb(255, 0, 0);
+  color: white;
+  border: none;
+  outline: none;
+  cursor: pointer;
 }
 
 .delete_icon_for_admin {
