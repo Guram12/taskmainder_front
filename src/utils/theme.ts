@@ -53,3 +53,12 @@ const themes = {
 };
 
 export default themes;
+
+
+
+    // style={{
+    //   backgroundImage: `url(${profileData.background_image})`, // Set background image dynamically
+    //   backgroundSize: 'cover', // Ensure the image covers the container
+    //   backgroundRepeat: 'no-repeat', // Prevent image repetition
+    //   backgroundPosition: 'center', // Center the image
+    // }}

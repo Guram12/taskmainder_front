@@ -39,9 +39,34 @@ const App: React.FC = () => {
     background_image: '',
   });
 
-useEffect(() => {
-  console.log('profileData:', profileData);
-}, [profileData]);
+  useEffect(() => {
+    console.log('profileData:', profileData);
+  }, [profileData]);
+
+  const default_is_custom_theme_selected = localStorage.getItem('isCustomThemeSelected') === null ? false : localStorage.getItem('isCustomThemeSelected') === 'true';
+
+  const [isCustomThemeSelected, setIsCustomThemeSelected] = useState<boolean>(default_is_custom_theme_selected);
+
+  const background_color = localStorage.getItem('background_color') || '#4E4E4E';
+  const border_color = localStorage.getItem('border_color') || '#d9e0e3';
+  const main_text_coloure = localStorage.getItem('main_text_coloure') || '#333';
+  const scrollbar_thumb_color = localStorage.getItem('scrollbar_thumb_color') || '#d9e0e3';
+  const list_background_color = localStorage.getItem('list_background_color') || '#ffffff';
+  const task_background_color = localStorage.getItem('task_background_color') || '#f0f0f0';
+
+
+
+
+
+
+  const [saved_custom_theme, setSaved_custom_theme] = useState({
+    '--background-color': background_color,
+    '--border-color': border_color,
+    '--main-text-coloure': main_text_coloure,
+    '--scrollbar-thumb-color': scrollbar_thumb_color,
+    '--list-background-color': list_background_color,
+    '--task-background-color': task_background_color,
+  });
 
   const [currentTheme, setCurrentTheme] = useState<ThemeSpecs>({
     '--background-color': '#4E4E4E',
@@ -314,6 +339,10 @@ useEffect(() => {
         setIsAuthenticated={setIsAuthenticated}
         setChange_current_theme={setChange_current_theme}
         change_current_theme={change_current_theme}
+        currentTheme={currentTheme}
+        isCustomThemeSelected={isCustomThemeSelected}
+        saved_custom_theme={saved_custom_theme}
+        setCurrentTheme={setCurrentTheme}
       />
       <Routes>
         <Route path="/" element={<Login setIsAuthenticated={setIsAuthenticated} />} />
@@ -344,6 +373,9 @@ useEffect(() => {
             setIs_new_notification_received={setIs_new_notification_received}
             is_new_notification_received={is_new_notification_received}
             is_members_refreshing={is_members_refreshing}
+            setCurrentTheme={setCurrentTheme}
+            setIsCustomThemeSelected={setIsCustomThemeSelected}
+            setSaved_custom_theme={setSaved_custom_theme}
           />} />
       </Routes>
     </Router>

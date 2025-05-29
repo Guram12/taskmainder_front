@@ -15,9 +15,19 @@ interface SettingsProps {
   profileData: ProfileData;
   FetchProfileData: () => Promise<void>;
   currentTheme: ThemeSpecs;
+  setCurrentTheme: (theme: ThemeSpecs) => void;
+  setIsCustomThemeSelected: (isCustomThemeSelected: boolean) => void;
+  setSaved_custom_theme: (theme: ThemeSpecs) => void;
 }
 
-const Settings: React.FC<SettingsProps> = ({ profileData, FetchProfileData, currentTheme }) => {
+const Settings: React.FC<SettingsProps> = ({
+  profileData,
+  FetchProfileData,
+  currentTheme,
+  setCurrentTheme,
+  setIsCustomThemeSelected,
+  setSaved_custom_theme
+}) => {
 
 
 
@@ -42,6 +52,9 @@ const Settings: React.FC<SettingsProps> = ({ profileData, FetchProfileData, curr
       <CustomTheme
         profileData={profileData}
         currentTheme={currentTheme}
+        setCurrentTheme={setCurrentTheme}
+        setIsCustomThemeSelected={setIsCustomThemeSelected}
+        setSaved_custom_theme={setSaved_custom_theme}
       />
       {/* <DeleteAccount
         currentTheme={currentTheme}
