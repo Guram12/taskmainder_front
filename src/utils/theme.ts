@@ -42,7 +42,7 @@ const themes = {
 
   light_green: {
     '--background-color': '#708B75',
-    '--main-text-coloure': '#FFFFFF',
+    '--main-text-coloure': '#000000',
     '--border-color': '#000000',
     '--scrollbar-thumb-color': '#90ab95',
     '--list-background-color': '#ffffff',

@@ -7,7 +7,6 @@ export interface ProfileData {
   username: string;
   timezone: string;
   is_social_account: boolean;
-  background_image: string | null;
 }
 
 
@@ -23,6 +22,7 @@ export interface board {
   owner_email: string;
   members: string[];
   board_users: Board_Users[];
+  background_image: string | null;
 }
 
 export interface Board_Users {

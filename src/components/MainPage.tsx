@@ -135,6 +135,8 @@ const MainPage: React.FC<MainPageProps> = ({
           setCurrentTheme={setCurrentTheme}
           setIsCustomThemeSelected={setIsCustomThemeSelected} 
           setSaved_custom_theme={setSaved_custom_theme}
+          boards={boards}
+          setBoards={setBoards}
           />;
 
       case "Calendar":

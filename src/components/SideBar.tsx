@@ -257,8 +257,18 @@ const SidebarComponent: React.FC<SidebarProps> = ({
   // =========================================================================================================
 
 
+
   return (
-    <div className={`sidebar_main_container ${isOpen ? 'open' : 'closed'}`}>
+    <div
+      onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}
+      className={`sidebar_main_container ${isOpen ? 'open' : 'closed'}`}
+      style={{
+
+        backdropFilter: 'blur(10px)', // Apply blur effect to the background
+        WebkitBackdropFilter: 'blur(10px)', // Safari support
+        backgroundColor: 'transparent', // Fully transparent background
+      }}
+    >
       <div className="sidebar_container">
         <Sidebar
           collapsed={!isOpen}
@@ -276,12 +286,18 @@ const SidebarComponent: React.FC<SidebarProps> = ({
             flexDirection: 'column',
             height: '100%',
             justifyContent: 'space-between',
-            backgroundColor: `${currentTheme['--background-color']}`,
+            backgroundColor: 'transparent',
             transition: 'all 0.3s',
           }} >
 
             <div>
-              <Menu>
+              <Menu
+                menuItemStyles={{
+                  subMenuContent: {
+                    backgroundColor: 'transparent',
+                  },
+                }}
+              >
                 {/* dashboard  */}
                 <MenuItem icon={<MdSpaceDashboard className="dashboard_icon" />}>
                   <div className="for_dashboard_child_container">
@@ -293,14 +309,15 @@ const SidebarComponent: React.FC<SidebarProps> = ({
                 </MenuItem>
 
                 {/* other menu items  */}
-                <SubMenu label="Boards" id="board" icon={<GrTasks className="sidebar_big_icon" />} defaultOpen={true}>
+                <SubMenu label="Boards" id="board" icon={<GrTasks className="sidebar_big_icon" />} defaultOpen={true}
+
+                >
                   {isOpen && (
                     <div >
                       {boards.map((board: board) => (
                         <MenuItem
                           key={board.id}
                           rootStyles={{
-                            backgroundColor: `${currentTheme['--background-color']}`,
                             transition: 'all 0.3s',
                             color: selectedBoard?.id === board.id ? 'green' : currentTheme['--main-text-coloure'],
                             textAlign: 'left',
@@ -317,7 +334,6 @@ const SidebarComponent: React.FC<SidebarProps> = ({
 
                   {!addingNewBoard && (
                     <div style={{
-                      backgroundColor: `${currentTheme['--background-color']}`,
 
                     }} >
                       <h3

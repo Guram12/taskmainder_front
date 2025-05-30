@@ -73,9 +73,9 @@ const Members: React.FC<MembersProps> = ({
   const [newBoardName, setNewBoardName] = useState<string>('');
 
 
-  useEffect(() => {
-    console.log("is_cur_Board_users_fetched", is_cur_Board_users_fetched);
-  }, [is_cur_Board_users_fetched]);
+  // useEffect(() => {
+  //   console.log("is_cur_Board_users_fetched", is_cur_Board_users_fetched);
+  // }, [is_cur_Board_users_fetched]);
 
 
   const is_current_user_owner = current_board_users.find(user => user.email === current_user_email)?.user_status === 'owner'
@@ -277,10 +277,6 @@ const Members: React.FC<MembersProps> = ({
   const canselBoardDelete = () => {
     setIsBoardDeleting(false);
   }
-
-  useEffect(() => {
-    console.log("Updated current board users:", current_board_users);
-  }, [current_board_users]);
 
 
   // ============================================== Leav board ========================================================

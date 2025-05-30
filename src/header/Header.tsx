@@ -102,7 +102,11 @@ const Header: React.FC<HeaderProps> = ({
   // ==============================================================================================
   return (
     <div className={`main_Header_container ${!isAuthenticated ? "hide_container" : ''}  ${!showHeader ? 'hide_header' : ""} `}
-      style={{ backgroundColor: currentTheme['--background-color'] }}
+      style={{ 
+        backdropFilter: 'blur(10px)', // Apply blur effect to the background
+        WebkitBackdropFilter: 'blur(10px)', // Safari support
+        backgroundColor: 'transparent',
+      }}
     >
       <div className='header_logo_container' >
         <LogoComponent />

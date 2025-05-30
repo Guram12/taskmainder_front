@@ -36,12 +36,11 @@ const App: React.FC = () => {
     username: '',
     timezone: '',
     is_social_account: false,
-    background_image: '',
   });
 
-  useEffect(() => {
-    console.log('profileData:', profileData);
-  }, [profileData]);
+
+
+
 
   const default_is_custom_theme_selected = localStorage.getItem('isCustomThemeSelected') === null ? false : localStorage.getItem('isCustomThemeSelected') === 'true';
 
@@ -88,6 +87,7 @@ const App: React.FC = () => {
     owner_email: '',
     members: [],
     board_users: [],
+    background_image: null,
   });
 
   const [isBoardsLoaded, setIsBoardsLoaded] = useState<boolean>(false);
@@ -95,6 +95,10 @@ const App: React.FC = () => {
 
   const [current_board_users, setCurrent_board_users] = useState<Board_Users[]>([]);
   const [is_cur_Board_users_fetched, setIs_cur_Board_users_fetched] = useState<boolean>(false);
+
+  useEffect(() => {
+    console.log('boards==>>:', boards);
+  }, [boards]);
 
 
 
@@ -114,6 +118,19 @@ const App: React.FC = () => {
 
   const accessToken: string | null = localStorage.getItem('access_token');
   const refreshToken: string | null = localStorage.getItem('refresh_token');
+
+
+  useEffect(() => {
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme) {
+      const themeSpecs: ThemeSpecs = JSON.parse(savedTheme);
+      for (const [key, value] of Object.entries(themeSpecs)) {
+        document.documentElement.style.setProperty(key, value);
+      }
+      document.body.style.backgroundColor = themeSpecs['--background-color'];
+    }
+
+  }, [change_current_theme]);
 
   // ==========================================================  regiester service worker ==========================================
 

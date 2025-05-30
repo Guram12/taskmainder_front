@@ -1,32 +1,65 @@
 import '../../styles/settings/CustomTheme.css';
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { ThemeSpecs } from '../../utils/theme';
-import { ProfileData } from '../../utils/interface';
 import { FaRegImages } from "react-icons/fa";
 import axiosInstance from '../../utils/axiosinstance';
 import { ColorPicker, Space } from 'antd'; // Import Ant Design ColorPicker
+import { board } from '../../utils/interface';
+import no_boards_image from '../../assets/no_boards_img.png';
+import GridLoader from "react-spinners/GridLoader";
+import { MdDeleteForever } from "react-icons/md";
 
+// setNew_image_for_board={setNew_image_for_board}
+// new_image_for_board={new_image_for_board}
+// setLoading_image={setLoading_image}
+// loading_image={loading_image}
 
 
 interface CustomThemeProps {
   currentTheme: ThemeSpecs;
-  profileData: ProfileData;
   setCurrentTheme: (theme: ThemeSpecs) => void;
   setIsCustomThemeSelected: (isCustomThemeSelected: boolean) => void;
   setSaved_custom_theme: (theme: ThemeSpecs) => void;
+  boards: board[];
+  setBoards: (boards: board[]) => void;
+  new_image_for_board: { boardId: number, NewImage: File };
+  setNew_image_for_board: ({ boardId, NewImage }: { boardId: number, NewImage: File }) => void;
+  loading_image: { boardId: number, isLoading: boolean };
+  setLoading_image: ({ boardId, isLoading }: { boardId: number, isLoading: boolean }) => void;
+  setIsImageDeleting: (isImageDeleting: boolean) => void;
 }
 
-const CustomTheme: React.FC<CustomThemeProps> = ({ currentTheme, profileData, setCurrentTheme, setIsCustomThemeSelected, setSaved_custom_theme }) => {
-  const [current_backgrownd_image, setCurrent_backgrownd_image] = useState<string>(profileData.background_image || '');
-  const [updatedBackgrowndImage, setUpdatedBackgrowndImage] = useState<File | null>(null);
+const CustomTheme: React.FC<CustomThemeProps> = ({
+  currentTheme,
+  setCurrentTheme,
+  setIsCustomThemeSelected,
+  setSaved_custom_theme,
+  boards,
+  setBoards,
+  new_image_for_board,
+  setNew_image_for_board,
+  loading_image,
+  setLoading_image,
+  setIsImageDeleting,
+  
 
-
+}) => {
   const [backgroundColor, setBackgroundColor] = useState<string>(currentTheme['--background-color']);
   const [borderColor, setBorderColor] = useState<string>(currentTheme['--border-color']);
   const [mainTextColor, setMainTextColor] = useState<string>(currentTheme['--main-text-coloure']);
   const [scrollbarThumbColor, setScrollbarThumbColor] = useState<string>(currentTheme['--scrollbar-thumb-color']);
   const [listBackgroundColor, setListBackgroundColor] = useState<string>(currentTheme['--list-background-color']);
   const [taskBackgroundColor, setTaskBackgroundColor] = useState<string>(currentTheme['--task-background-color']);
+
+
+
+
+  const fileInputRefs = boards.reduce((acc, board) => {
+    acc[board.id] = React.createRef<HTMLInputElement>();
+    return acc;
+  }, {} as Record<number, React.RefObject<HTMLInputElement>>);
+
+
 
   useEffect(() => {
     setBackgroundColor(currentTheme['--background-color']);
@@ -44,37 +77,81 @@ const CustomTheme: React.FC<CustomThemeProps> = ({ currentTheme, profileData, se
   }, [backgroundColor]);
 
   // ============================================== Reference for the file input   ================================================
-  const fileInputRef = useRef<HTMLInputElement | null>(null);
 
-  const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (file) {
-      setUpdatedBackgrowndImage(file);
-      const fileURL = URL.createObjectURL(file); // Create a preview URL for the image
-      setCurrent_backgrownd_image(fileURL); // Update the preview image
-    }
-
-  };
 
   // ===========================================  save the image ==========================================================
-  const handleSaveImage = async () => {
-    try {
-      const formData = new FormData();
-      if (updatedBackgrowndImage) {
-        formData.append('background_image', updatedBackgrowndImage);
-      }
 
-      const response = await axiosInstance.patch('/acc/update-background-image/', formData, {
+  const handleSaveImage = async (boardId: number) => {
+    const formData = new FormData();
+    formData.append('background_image', new_image_for_board.NewImage);
+
+    try {
+      const response = await axiosInstance.patch(`/api/boards/${boardId}/update-background-image/`, formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
+          Authorization: `Bearer ${localStorage.getItem('access')}`,
         },
+
       });
-      console.log("Background image saved successfully:", response.data);
+
+      if (response.status === 200) {
+        console.log('Image saved successfully:', response.data);
+        setNew_image_for_board({
+          boardId: 0,
+          NewImage: new File([], "")
+        });
+        // Optionally, you can update the boards state to reflect the new background image
+
+        const updatedBoards = boards.map(board => {
+          if (board.id === boardId) {
+            return {
+              ...board,
+              background_image: URL.createObjectURL(new_image_for_board.NewImage) // Update the background image
+            };
+          }
+          return board;
+        });
+        // Update the boards state with the new background image
+        setBoards(updatedBoards);
+
+      } else {
+        console.error('Failed to save image:', response.statusText);
+      }
     } catch (error) {
-      console.error("Error saving background image:", error);
+      console.error('Error saving image:', error);
+    } finally {
+      // Reset the new_image_for_board state after saving
+      setNew_image_for_board({
+        boardId: 0,
+        NewImage: new File([], "")
+      });
+      setLoading_image({ boardId: 0, isLoading: false });
     }
+  }
+
+  // ===========================================  delet current image icon click ==========================================================
+  const handleDeleteImageClick = (boardId: number) => {
+    setNew_image_for_board({ boardId, NewImage: new File([], "") });
+    setIsImageDeleting(true);
   };
 
+
+
+
+  // ============================================   save and cancel click function  ======================================================
+
+
+  const handleSaveImageClick = (boardId: number) => {
+    setLoading_image({ boardId, isLoading: true });
+    handleSaveImage(boardId);
+  }
+
+  const handleCancelClick = () => {
+    setNew_image_for_board({
+      boardId: 0,
+      NewImage: new File([], "")
+    });
+  };
   // ===========================================  save the colors  ==========================================================
 
   const handleColoresSavce = async () => {
@@ -115,43 +192,133 @@ const CustomTheme: React.FC<CustomThemeProps> = ({ currentTheme, profileData, se
 
   // =======================================================================================================
   return (
-    <div className="custom_theme_container">
+    <div className="custom_theme_container"
+      style={{
+        backdropFilter: 'blur(13px)',
+        WebkitBackdropFilter: 'blur(10px)',
+        backgroundColor: 'transparent',
+      }}
+    >
+
       <div className="customtheme_container" style={{ backgroundColor: currentTheme["--background-color"] }}>
         <p className="customtheme_p" style={{ color: currentTheme["--main-text-coloure"] }}> Create Custom Theme </p>
       </div>
 
-      <div className='backgrownd_image_main_cont' >
 
-        <div className="backgrownd_img_cont">
-          <div className='no_backgr_img_container'>
-            {current_backgrownd_image ? (
-              <img src={current_backgrownd_image} alt="Preview" className="preview_img" />
-            ) : (
-              <FaRegImages style={{ color: currentTheme['--main-text-coloure'] }} className='no_backgr_img_icon' />
+      {boards.length !== 0 && (
+        <h1 className='background_image_set_h1'>Click image to select new background</h1>
+      )}
+      <div className='boards_and_background_images_container' >
+        {boards.length === 0 && (
+          <div className='no_boards_container_customtheme'>
+            <img src={no_boards_image} alt="No Boards" className='no_boards_image_customtheme' />
+            <p className='no_boards_text'>No boards available. Please create a board first.</p>
+          </div>
+        )}
+
+        {boards.map((boardItem) => (
+          <div key={boardItem.id} className='each_board_container' >
+
+            <div className='board_name_container' >
+              <p className='board_name_p' >{boardItem.name}</p>
+              <MdDeleteForever className='delete_backg_img_icon' onClick={() => handleDeleteImageClick(boardItem.id)} />
+
+            </div>
+            <div className='board_image_container' >
+              {boardItem.background_image ? (
+                <>
+                  {loading_image.isLoading && loading_image.boardId === boardItem.id ? (
+                    <div className='loading_image_container'>
+                      <GridLoader color={`${currentTheme['--border-color']}`} size={20} className="gridloader" />
+                    </div>
+                  ) : (
+                    <>
+                      <img
+                        src={boardItem.id === new_image_for_board.boardId ? URL.createObjectURL(new_image_for_board.NewImage) : boardItem.background_image}
+                        alt="Board Background"
+                        className='board_background_image'
+                        onClick={() => {
+                          const fileInputRef = fileInputRefs[boardItem.id];
+                          if (fileInputRef.current) {
+                            fileInputRef.current.click();
+                          }
+                        }}
+                      />
+                      <input
+                        type="file"
+                        accept="image/*"
+                        style={{ display: 'none' }}
+                        ref={fileInputRefs[boardItem.id]}
+                        onChange={(e) => {
+                          const file = e.target.files?.[0];
+                          if (file) {
+                            setNew_image_for_board({
+                              boardId: boardItem.id,
+                              NewImage: file
+                            });
+                          }
+                        }}
+                      />
+                    </>
+                  )}
+
+                </>
+              ) : (
+                <div
+                  className="no_image_container"
+                  onClick={() => {
+                    const fileInputRef = fileInputRefs[boardItem.id];
+                    if (fileInputRef && fileInputRef.current) {
+                      fileInputRef.current.click(); // Trigger the file input click
+                    } else {
+                      console.error(`File input ref not found for board ID: ${boardItem.id}`);
+                    }
+                  }}
+                >
+                  {boardItem.id === new_image_for_board.boardId ? (
+                    <img
+                      src={URL.createObjectURL(new_image_for_board.NewImage)}
+                      alt="Board Background"
+                      className='board_background_image'
+                      onClick={() => {
+                        const fileInputRef = fileInputRefs[boardItem.id];
+                        if (fileInputRef.current) {
+                          fileInputRef.current.click();
+                        }
+                      }}
+                    />
+                  ) : (
+                    <FaRegImages className="no_image_icon" />
+
+                  )}
+
+                  <input
+                    type="file"
+                    accept="image/*"
+                    style={{ display: 'none' }}
+                    ref={fileInputRefs[boardItem.id]}
+                    onChange={(e) => {
+                      const file = e.target.files?.[0];
+                      if (file) {
+                        setNew_image_for_board({
+                          boardId: boardItem.id,
+                          NewImage: file
+                        });
+                      }
+                    }}
+                  />
+                </div>
+              )}
+            </div>
+            {boardItem.id === new_image_for_board.boardId && new_image_for_board.NewImage && (
+              <div className='save_image_btn_container' >
+                <button onClick={() => handleSaveImageClick(boardItem.id)} className='save_backg_img' >Save Image</button>
+                <button onClick={handleCancelClick} className='cansel_backg_img' >Cancel</button>
+
+              </div>
             )}
           </div>
-
-          <button
-            onClick={() => fileInputRef.current?.click()}
-            className="change_backg_img_btn"
-            style={{
-              color: currentTheme["--main-text-coloure"],
-            }}
-          >
-            {current_backgrownd_image ? 'Change Background Image' : 'Set Background Image'}
-          </button>
-
-          {/* Hidden file input */}
-          <input
-            type="file"
-            accept="image/*"
-            ref={fileInputRef}
-            style={{ display: 'none' }}
-            onChange={handleImageChange}
-          />
-        </div>
-
-        <button className='save_backgr_image_btn' onClick={handleSaveImage}>Save</button>
+        ))}
 
       </div>
 
@@ -251,7 +418,7 @@ const CustomTheme: React.FC<CustomThemeProps> = ({ currentTheme, profileData, se
 
         {/*6  taskBackgroundColor color selection  */}
         <div className='each_color_property' >
-          <h2 className='property_h2' > List Background Color</h2>
+          <h2 className='property_h2' > Task Background Color</h2>
           <Space direction="vertical">
             <ColorPicker
               value={taskBackgroundColor}
@@ -278,4 +445,4 @@ const CustomTheme: React.FC<CustomThemeProps> = ({ currentTheme, profileData, se
   );
 };
 
-export default CustomTheme;
+export default CustomTheme; 
