@@ -88,7 +88,17 @@
   cursor: pointer;
 }
 
-
+.custom_theme_container_in_header{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 120px;
+  height: 20px;
+  gap: 30px;
+  border: 1px solid;
+  border-radius: 30px;
+  font-size: 13px;
+}
 /* ======================================= vheader profile conmtainer styles ================================== */
 
 .header_profile_container {
@@ -97,8 +107,6 @@
   align-items: center;
   margin-right: 20px;
   gap: 10px;
-  border: var(--border-color);
-  background-color: var(--background-color);
   transition: background-color 0.3s ease, border-color 0.3s ease;
 
 }

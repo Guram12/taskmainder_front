@@ -38,6 +38,35 @@ const App: React.FC = () => {
     is_social_account: false,
   });
 
+
+
+
+
+  const default_is_custom_theme_selected = localStorage.getItem('isCustomThemeSelected') === null ? false : localStorage.getItem('isCustomThemeSelected') === 'true';
+
+  const [isCustomThemeSelected, setIsCustomThemeSelected] = useState<boolean>(default_is_custom_theme_selected);
+
+  const background_color = localStorage.getItem('background_color') || '#4E4E4E';
+  const border_color = localStorage.getItem('border_color') || '#d9e0e3';
+  const main_text_coloure = localStorage.getItem('main_text_coloure') || '#333';
+  const scrollbar_thumb_color = localStorage.getItem('scrollbar_thumb_color') || '#d9e0e3';
+  const list_background_color = localStorage.getItem('list_background_color') || '#ffffff';
+  const task_background_color = localStorage.getItem('task_background_color') || '#f0f0f0';
+
+
+
+
+
+
+  const [saved_custom_theme, setSaved_custom_theme] = useState({
+    '--background-color': background_color,
+    '--border-color': border_color,
+    '--main-text-coloure': main_text_coloure,
+    '--scrollbar-thumb-color': scrollbar_thumb_color,
+    '--list-background-color': list_background_color,
+    '--task-background-color': task_background_color,
+  });
+
   const [currentTheme, setCurrentTheme] = useState<ThemeSpecs>({
     '--background-color': '#4E4E4E',
     '--border-color': '#d9e0e3',
@@ -58,14 +87,18 @@ const App: React.FC = () => {
     owner_email: '',
     members: [],
     board_users: [],
+    background_image: null,
   });
-
 
   const [isBoardsLoaded, setIsBoardsLoaded] = useState<boolean>(false);
 
 
   const [current_board_users, setCurrent_board_users] = useState<Board_Users[]>([]);
   const [is_cur_Board_users_fetched, setIs_cur_Board_users_fetched] = useState<boolean>(false);
+
+  useEffect(() => {
+    console.log('boards==>>:', boards);
+  }, [boards]);
 
 
 
@@ -85,6 +118,19 @@ const App: React.FC = () => {
 
   const accessToken: string | null = localStorage.getItem('access_token');
   const refreshToken: string | null = localStorage.getItem('refresh_token');
+
+
+  useEffect(() => {
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme) {
+      const themeSpecs: ThemeSpecs = JSON.parse(savedTheme);
+      for (const [key, value] of Object.entries(themeSpecs)) {
+        document.documentElement.style.setProperty(key, value);
+      }
+      document.body.style.backgroundColor = themeSpecs['--background-color'];
+    }
+
+  }, [change_current_theme]);
 
   // ==========================================================  regiester service worker ==========================================
 
@@ -310,6 +356,10 @@ const App: React.FC = () => {
         setIsAuthenticated={setIsAuthenticated}
         setChange_current_theme={setChange_current_theme}
         change_current_theme={change_current_theme}
+        currentTheme={currentTheme}
+        isCustomThemeSelected={isCustomThemeSelected}
+        saved_custom_theme={saved_custom_theme}
+        setCurrentTheme={setCurrentTheme}
       />
       <Routes>
         <Route path="/" element={<Login setIsAuthenticated={setIsAuthenticated} />} />
@@ -340,6 +390,9 @@ const App: React.FC = () => {
             setIs_new_notification_received={setIs_new_notification_received}
             is_new_notification_received={is_new_notification_received}
             is_members_refreshing={is_members_refreshing}
+            setCurrentTheme={setCurrentTheme}
+            setIsCustomThemeSelected={setIsCustomThemeSelected}
+            setSaved_custom_theme={setSaved_custom_theme}
           />} />
       </Routes>
     </Router>

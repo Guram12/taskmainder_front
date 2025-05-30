@@ -3,6 +3,9 @@
 .sidebar_main_container {
   display: flex;
   flex-direction: column;
+  backdrop-filter: blur(10px); /* Apply blur effect to the background */
+  -webkit-backdrop-filter: blur(10px); /* For Safari support */
+  background-color: transparent; /* Fully transparent background */
 }
 
 .sidebar_container {
@@ -12,6 +15,13 @@
   flex-direction: column;
 }
 
+.submenu .menu-item {
+  color: transparent !important;
+}
+
+.submenu .menu-item.selected {
+  color: green !important;
+}
 
 .for_dashboard_child_container {
   display: flex;

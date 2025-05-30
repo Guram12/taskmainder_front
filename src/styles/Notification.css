@@ -94,7 +94,10 @@
 .notification_body_text{
   margin: 0px;
   margin-top: 10px;
+  margin-bottom: 17px;
   font-size: 16px;
+  text-align: left;
+
 }
 
 .notification_date {
@@ -104,5 +107,4 @@
   color: #868686;
   padding: 5px;
   font-size: 12px;
-
 }

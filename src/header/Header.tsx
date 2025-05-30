@@ -18,6 +18,10 @@ interface HeaderProps {
   setIsAuthenticated: (value: boolean) => void;
   setChange_current_theme: (change_current_theme: boolean) => void;
   change_current_theme: boolean;
+  currentTheme: ThemeSpecs;
+  setCurrentTheme: (currentTheme: ThemeSpecs) => void;
+  isCustomThemeSelected: boolean;
+  saved_custom_theme: ThemeSpecs;
 }
 
 
@@ -28,6 +32,10 @@ const Header: React.FC<HeaderProps> = ({
   setIsAuthenticated,
   setChange_current_theme,
   change_current_theme,
+  currentTheme,
+  setCurrentTheme,
+  // isCustomThemeSelected,
+  saved_custom_theme
 }) => {
 
   const [showHeader, setShowHeader] = useState<boolean>(true);
@@ -67,8 +75,39 @@ const Header: React.FC<HeaderProps> = ({
   }
 
   // ==============================================================================================
+  // '--background-color': background_color,
+  // '--border-color': border_color,
+  // '--main-text-coloure': main_text_coloure,
+  // '--scrollbar-thumb-color': scrollbar_thumb_color,
+  // '--list-background-color': list_background_color,
+  // '--task-background-color': task_background_color,
+
+
+  const handle_return_to_custom_theme = () => {
+    // Apply the saved custom theme to the document
+    for (const [key, value] of Object.entries(saved_custom_theme)) {
+      document.documentElement.style.setProperty(key, value);
+    }
+  
+    // Update the body styles
+    document.body.style.backgroundColor = saved_custom_theme['--background-color'];
+    document.body.style.color = saved_custom_theme['--main-text-coloure'];
+  
+    // Update the current theme state
+    setCurrentTheme(saved_custom_theme);
+  
+    // Optionally, update the localStorage to reflect the custom theme selection
+    localStorage.setItem('isCustomThemeSelected', 'true');
+  };
+  // ==============================================================================================
   return (
-    <div className={`main_Header_container ${!isAuthenticated ? "hide_container" : ''}  ${!showHeader ? 'hide_header' : ""} `}>
+    <div className={`main_Header_container ${!isAuthenticated ? "hide_container" : ''}  ${!showHeader ? 'hide_header' : ""} `}
+      style={{ 
+        backdropFilter: 'blur(10px)', // Apply blur effect to the background
+        WebkitBackdropFilter: 'blur(10px)', // Safari support
+        backgroundColor: 'transparent',
+      }}
+    >
       <div className='header_logo_container' >
         <LogoComponent />
       </div>
@@ -83,12 +122,24 @@ const Header: React.FC<HeaderProps> = ({
         <div className='header_coloure_child_container example5'
           onClick={() => changeTheme(themes.light_green)}></div>
 
+        <div className='custom_theme_container_in_header'
+          style={{
+            backgroundColor: saved_custom_theme['--background-color'],
+            borderColor: saved_custom_theme['--border-color']
+          }}
+          onClick={handle_return_to_custom_theme} 
+
+        >
+          Custom Theme
+        </div>
+
+
       </div>
 
 
 
       <div>
-      <div className="header_profile_container">
+        <div className="header_profile_container">
           <h3 className="header_profile_username">{profileData.username}</h3>
           {profileData?.profile_picture ? (
             <img
@@ -98,13 +149,13 @@ const Header: React.FC<HeaderProps> = ({
             />
           ) : (
             <Avatar
-            style={{
-              backgroundColor: getAvatarStyles(profileData.username.charAt(0)).backgroundColor,
-              color: getAvatarStyles(profileData.username.charAt(0)).color
-            }}
-          >
-            {profileData.username.charAt(0).toUpperCase()}
-          </Avatar>
+              style={{
+                backgroundColor: getAvatarStyles(profileData.username.charAt(0)).backgroundColor,
+                color: getAvatarStyles(profileData.username.charAt(0)).color
+              }}
+            >
+              {profileData.username.charAt(0).toUpperCase()}
+            </Avatar>
           )}
         </div>
       </div>

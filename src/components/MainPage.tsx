@@ -38,6 +38,9 @@ interface MainPageProps {
   setIs_new_notification_received: (is_new_notification_received: boolean) => void;
   is_new_notification_received: boolean;
   is_members_refreshing: boolean;
+  setCurrentTheme: (theme: ThemeSpecs) => void;
+  setIsCustomThemeSelected: (isCustomThemeSelected: boolean) => void;
+  setSaved_custom_theme: (theme: ThemeSpecs) => void;
 }
 
 const MainPage: React.FC<MainPageProps> = ({
@@ -62,6 +65,9 @@ const MainPage: React.FC<MainPageProps> = ({
   setIs_new_notification_received,
   is_new_notification_received,
   is_members_refreshing,
+  setCurrentTheme,
+  setIsCustomThemeSelected,
+  setSaved_custom_theme,
 }) => {
   const [selectedComponent, setSelectedComponent] = useState<string>("Boards");
 
@@ -126,7 +132,12 @@ const MainPage: React.FC<MainPageProps> = ({
           profileData={profileData}
           FetchProfileData={FetchProfileData}
           currentTheme={currentTheme}
-        />;
+          setCurrentTheme={setCurrentTheme}
+          setIsCustomThemeSelected={setIsCustomThemeSelected} 
+          setSaved_custom_theme={setSaved_custom_theme}
+          boards={boards}
+          setBoards={setBoards}
+          />;
 
       case "Calendar":
         return <StyledEngineProvider injectFirst>
@@ -168,13 +179,15 @@ const MainPage: React.FC<MainPageProps> = ({
         return <Notification
           currentTheme={currentTheme}
           setIsLoading={setIsLoading}
+          
         />;
 
     }
   }, [selectedComponent, boards, selectedBoard,
     currentTheme, profileData, current_board_users,
     is_cur_Board_users_fetched, isLoading, setIsLoading,
-    notificationData, isBoardsLoaded, setCurrent_board_users
+    notificationData, isBoardsLoaded, setCurrent_board_users, setCurrentTheme,
+    
   ]);
 
 
@@ -184,7 +197,9 @@ const MainPage: React.FC<MainPageProps> = ({
   const memoizedRenderComponent = useMemo(() => renderComponent(), [renderComponent]);
 
   return (
-    <div className="mainpage_component">
+    <div className="mainpage_component"
+
+    >
       {isLoading && (
         <div className="main_loader_container" >
           <GridLoader color={`${currentTheme['--main-text-coloure']}`} size={20} className="gridloader" />
