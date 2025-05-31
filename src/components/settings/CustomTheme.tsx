@@ -3,11 +3,12 @@ import React, { useState, useEffect } from 'react';
 import { ThemeSpecs } from '../../utils/theme';
 import { FaRegImages } from "react-icons/fa";
 import axiosInstance from '../../utils/axiosinstance';
-import { ColorPicker, Space } from 'antd'; // Import Ant Design ColorPicker
+import { ColorPicker } from 'antd';
 import { board } from '../../utils/interface';
 import no_boards_image from '../../assets/no_boards_img.png';
 import GridLoader from "react-spinners/GridLoader";
 import { MdDeleteForever } from "react-icons/md";
+import { ConfigProvider } from 'antd';
 
 // setNew_image_for_board={setNew_image_for_board}
 // new_image_for_board={new_image_for_board}
@@ -221,7 +222,9 @@ const CustomTheme: React.FC<CustomThemeProps> = ({
 
             <div className='board_name_container' >
               <p className='board_name_p' >{boardItem.name}</p>
-              <MdDeleteForever className='delete_backg_img_icon' onClick={() => handleDeleteImageClick(boardItem.id)} />
+              {boardItem.background_image &&(
+                <MdDeleteForever className='delete_backg_img_icon' onClick={() => handleDeleteImageClick(boardItem.id)} />
+              )}
 
             </div>
             <div className='board_image_container' >
@@ -337,109 +340,159 @@ const CustomTheme: React.FC<CustomThemeProps> = ({
       <div className='color_selection_container' >
         {/*1  background color selection  */}
         <div className='each_color_property' >
-          <h2 className='property_h2' >Background Color</h2>
 
-          <Space direction="vertical">
+
+          <ConfigProvider
+            theme={{
+              token: {
+                colorBgBase: currentTheme['--list-background-color'],
+                colorTextBase: currentTheme['--main-text-coloure'],
+                lineWidth: 1,
+              },
+            }}
+          >
             <ColorPicker
               value={backgroundColor}
               allowClear
-              showText
               mode="single"
               onChangeComplete={(color) => {
                 setBackgroundColor(color.toCssString());
               }}
               size='large'
+              showText={(color) => <span>Background Color {color.toHexString()}</span>}
+              className="large-color-picker"
+
 
             />
-          </Space>
+          </ConfigProvider>
         </div>
 
         {/*2  borderColor color selection  */}
         <div className='each_color_property' >
-          <h2 className='property_h2' >Border Color</h2>
-          <Space direction="vertical">
+          <ConfigProvider
+            theme={{
+              token: {
+                colorBgBase: currentTheme['--list-background-color'],
+                colorTextBase: currentTheme['--main-text-coloure'],
+                lineWidth: 1,
+                // colorBgContainer: currentTheme['--background-color'],
+              },
+            }}
+          >
             <ColorPicker
               value={borderColor}
               allowClear
-              showText
+              showText={(color) => <span>Border Color {color.toHexString()}</span>}
+              className="large-color-picker"
               mode="single"
               onChangeComplete={(color) => {
                 setBorderColor(color.toCssString());
               }}
               size='large'
-
             />
-          </Space>
+          </ConfigProvider>
         </div>
 
 
         {/*3  mainTextColor color selection  */}
         <div className='each_color_property' >
-          <h2 className='property_h2' >Main Text Color</h2>
-          <Space direction="vertical">
+          <ConfigProvider
+            theme={{
+              token: {
+                colorBgBase: currentTheme['--list-background-color'],
+                colorTextBase: currentTheme['--main-text-coloure'],
+                lineWidth: 1,
+              },
+            }}
+          >
             <ColorPicker
               value={mainTextColor}
               allowClear
-              showText
+              showText={(color) => <span>Text Color {color.toHexString()}</span>}
+              className="large-color-picker"
               mode="single"
               onChangeComplete={(color) => {
                 setMainTextColor(color.toCssString());
               }}
               size='large'
             />
-          </Space>
+          </ConfigProvider>
         </div>
 
         {/*4  scrollbarThumbColor color selection  */}
         <div className='each_color_property' >
-          <h2 className='property_h2' >Scrollbar Thumb Color</h2>
 
-          <Space direction="vertical">
+          <ConfigProvider
+            theme={{
+              token: {
+                colorBgBase: currentTheme['--list-background-color'],
+                colorTextBase: currentTheme['--main-text-coloure'],
+                lineWidth: 1,
+              },
+            }}
+          >
             <ColorPicker
               value={scrollbarThumbColor}
               allowClear
-              showText
+              showText={(color) => <span>Scrollbar Thumb Color {color.toHexString()}</span>}
+              className="large-color-picker"
               mode="single"
               onChangeComplete={(color) => {
                 setScrollbarThumbColor(color.toCssString());
               }}
               size='large'
             />
-          </Space>
+          </ConfigProvider>
         </div>
 
         {/*5  listBackgroundColor color selection  */}
         <div className='each_color_property' >
-          <h2 className='property_h2' > List Background Color</h2>
-          <Space direction="vertical">
+          <ConfigProvider
+            theme={{
+              token: {
+                colorBgBase: currentTheme['--list-background-color'],
+                colorTextBase: currentTheme['--main-text-coloure'],
+                lineWidth: 1,
+              },
+            }}
+          >
             <ColorPicker
               value={listBackgroundColor}
               allowClear
-              showText
+              showText={(color) => <span>List Background Color {color.toHexString()}</span>}
+              className="large-color-picker"
               mode="single"
               onChangeComplete={(color) => {
                 setListBackgroundColor(color.toCssString());
               }}
               size='large'
             />
-          </Space>
+          </ConfigProvider>
         </div>
 
         {/*6  taskBackgroundColor color selection  */}
         <div className='each_color_property' >
-          <h2 className='property_h2' > Task Background Color</h2>
-          <Space direction="vertical">
+          <ConfigProvider
+            theme={{
+              token: {
+                colorBgBase: currentTheme['--list-background-color'],
+                colorTextBase: currentTheme['--main-text-coloure'],
+                lineWidth: 1,
+              },
+            }}
+          >
             <ColorPicker
               value={taskBackgroundColor}
               allowClear
-              showText
+              showText={(color) => <span>Task Background Color {color.toHexString()}</span>}
+              className="large-color-picker"
               mode="single"
               onChangeComplete={(color) => {
                 setTaskBackgroundColor(color.toCssString());
               }}
               size='large'
             />
-          </Space>
+          </ConfigProvider>
         </div>
 
 
