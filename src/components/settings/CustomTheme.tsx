@@ -27,6 +27,7 @@ interface CustomThemeProps {
   loading_image: { boardId: number, isLoading: boolean };
   setLoading_image: ({ boardId, isLoading }: { boardId: number, isLoading: boolean }) => void;
   setIsImageDeleting: (isImageDeleting: boolean) => void;
+  setDeleting_image_boardId: (boardId: number) => void;
 }
 
 const CustomTheme: React.FC<CustomThemeProps> = ({
@@ -41,7 +42,7 @@ const CustomTheme: React.FC<CustomThemeProps> = ({
   loading_image,
   setLoading_image,
   setIsImageDeleting,
-  
+  setDeleting_image_boardId,
 
 }) => {
   const [backgroundColor, setBackgroundColor] = useState<string>(currentTheme['--background-color']);
@@ -131,10 +132,9 @@ const CustomTheme: React.FC<CustomThemeProps> = ({
 
   // ===========================================  delet current image icon click ==========================================================
   const handleDeleteImageClick = (boardId: number) => {
-    setNew_image_for_board({ boardId, NewImage: new File([], "") });
-    setIsImageDeleting(true);
+    setIsImageDeleting(true); // Show the confirmation dialog
+    setDeleting_image_boardId(boardId); // Do not update the image immediately
   };
-
 
 
 
@@ -275,23 +275,32 @@ const CustomTheme: React.FC<CustomThemeProps> = ({
                     }
                   }}
                 >
-                  {boardItem.id === new_image_for_board.boardId ? (
-                    <img
-                      src={URL.createObjectURL(new_image_for_board.NewImage)}
-                      alt="Board Background"
-                      className='board_background_image'
-                      onClick={() => {
-                        const fileInputRef = fileInputRefs[boardItem.id];
-                        if (fileInputRef.current) {
-                          fileInputRef.current.click();
-                        }
-                      }}
-                    />
+
+                  {loading_image.isLoading && loading_image.boardId === boardItem.id ? (
+                    <div className='loading_image_container'>
+                      <GridLoader color={`${currentTheme['--border-color']}`} size={20} className="gridloader" />
+                    </div>
+
                   ) : (
-                    <FaRegImages className="no_image_icon" />
 
+                    <>
+                      {boardItem.id === new_image_for_board.boardId ? (
+                        <img
+                          src={URL.createObjectURL(new_image_for_board.NewImage)}
+                          alt="Board Background"
+                          className='board_background_image'
+                          onClick={() => {
+                            const fileInputRef = fileInputRefs[boardItem.id];
+                            if (fileInputRef.current) {
+                              fileInputRef.current.click();
+                            }
+                          }}
+                        />
+                      ) : (
+                        <FaRegImages className="no_image_icon" />
+                      )}
+                    </>
                   )}
-
                   <input
                     type="file"
                     accept="image/*"

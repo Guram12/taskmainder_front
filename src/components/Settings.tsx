@@ -23,6 +23,7 @@ interface SettingsProps {
   setSaved_custom_theme: (theme: ThemeSpecs) => void;
   boards: board[];
   setBoards: (boards: board[]) => void;
+
 }
 
 const Settings: React.FC<SettingsProps> = ({
@@ -35,10 +36,9 @@ const Settings: React.FC<SettingsProps> = ({
   boards,
   setBoards
 }) => {
-
-
-
+  // ================================================================================================================================
   const [isImageDeleting, setIsImageDeleting] = useState<boolean>(false);
+  const [deleting_image_boardId, setDeleting_image_boardId] = useState<number>(0);
   const [new_image_for_board, setNew_image_for_board] = useState<{ boardId: number, NewImage: File }>({
     boardId: 0,
     NewImage: new File([], "")
@@ -49,39 +49,56 @@ const Settings: React.FC<SettingsProps> = ({
   });
 
 
+  // =================================================== delete board backgrownd image  ============================================
   const handleDeleteImage = async (boardId: number) => {
-
     try {
       const response = await axiosInstance.delete(`/api/boards/${boardId}/delete-background-image/`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem('access')}`,
         },
       });
-      if (response.status === 204) {
+
+      if (response.status === 200) {
         console.log('Image deleted successfully');
+
+        // Update the boards state immutably
         const updatedBoards = boards.map(board => {
           if (board.id === boardId) {
             return {
               ...board,
-              background_image: null
+              background_image: null,
             };
           }
           return board;
         });
-        setBoards(updatedBoards);
+
+        setBoards([...updatedBoards]);
       }
     } catch (error) {
       console.error('Error deleting image:', error);
     } finally {
       setNew_image_for_board({
         boardId: 0,
-        NewImage: new File([], "")
+        NewImage: new File([], ""),
       });
       setLoading_image({ boardId: 0, isLoading: false });
       setIsImageDeleting(false);
     }
+  };
+
+  // =================================================== handle image delete  =====================================================
+
+  const handle_image_delete = (boardId: number) => {
+    setLoading_image({
+      boardId: boardId,
+      isLoading: true
+    });
+    setIsImageDeleting(false);
+    handleDeleteImage(boardId);
   }
 
+
+  // ================================================================================================================================
 
   return (
     <div className="main_settings_container">
@@ -89,7 +106,7 @@ const Settings: React.FC<SettingsProps> = ({
       {isImageDeleting && (
         <ConfirmationDialog
           message="Are you sure you want to delete this background image?"
-          onConfirm={() => handleDeleteImage(new_image_for_board.boardId)}
+          onConfirm={() => handle_image_delete(deleting_image_boardId)}
           onCancel={() => {
             setIsImageDeleting(false);
             setNew_image_for_board({ boardId: 0, NewImage: new File([], "") });
@@ -124,6 +141,8 @@ const Settings: React.FC<SettingsProps> = ({
         setLoading_image={setLoading_image}
         loading_image={loading_image}
         setIsImageDeleting={setIsImageDeleting}
+        setDeleting_image_boardId={setDeleting_image_boardId}
+
       />
       <DeleteAccount
         currentTheme={currentTheme}
