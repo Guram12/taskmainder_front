@@ -266,7 +266,7 @@ const SidebarComponent: React.FC<SidebarProps> = ({
 
         backdropFilter: 'blur(10px)', // Apply blur effect to the background
         WebkitBackdropFilter: 'blur(10px)', // Safari support
-        backgroundColor: 'transparent', // Fully transparent background
+        backgroundColor: 'rgba(0, 0, 0, 0.5)', // Semi-transparent black for darker effect
       }}
     >
       <div className="sidebar_container">

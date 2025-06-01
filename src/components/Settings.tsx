@@ -13,7 +13,6 @@ import axiosInstance from "../utils/axiosinstance";
 import { useState } from "react";
 
 
-
 interface SettingsProps {
   profileData: ProfileData;
   FetchProfileData: () => Promise<void>;
@@ -23,6 +22,7 @@ interface SettingsProps {
   setSaved_custom_theme: (theme: ThemeSpecs) => void;
   boards: board[];
   setBoards: (boards: board[]) => void;
+  current_user_email: string;
 
 }
 
@@ -34,7 +34,8 @@ const Settings: React.FC<SettingsProps> = ({
   setIsCustomThemeSelected,
   setSaved_custom_theme,
   boards,
-  setBoards
+  setBoards,
+  current_user_email,
 }) => {
   // ================================================================================================================================
   const [isImageDeleting, setIsImageDeleting] = useState<boolean>(false);
@@ -142,6 +143,7 @@ const Settings: React.FC<SettingsProps> = ({
         loading_image={loading_image}
         setIsImageDeleting={setIsImageDeleting}
         setDeleting_image_boardId={setDeleting_image_boardId}
+        current_user_email={current_user_email}
 
       />
       <DeleteAccount

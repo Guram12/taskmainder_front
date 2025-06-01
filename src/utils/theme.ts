@@ -13,7 +13,7 @@ const themes = {
   dark_gray: {
     '--background-color': '#121212',
     '--main-text-coloure': '#ffffff',
-    '--border-color': '#ffffff',
+    '--border-color': '#9BA1A7',
     '--scrollbar-thumb-color': '#555555',
     '--list-background-color': '#1e3a4a',
     '--task-background-color': '#2a2a2a'

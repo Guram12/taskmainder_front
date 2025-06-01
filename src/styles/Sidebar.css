@@ -6,6 +6,7 @@
   backdrop-filter: blur(10px); /* Apply blur effect to the background */
   -webkit-backdrop-filter: blur(10px); /* For Safari support */
   background-color: transparent; /* Fully transparent background */
+
 }
 
 .sidebar_container {

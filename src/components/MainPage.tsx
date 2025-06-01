@@ -120,8 +120,21 @@ const MainPage: React.FC<MainPageProps> = ({
     }
   };
 
+  // -------------------------------------   update backgrownd image based on board ---------------------------------------------------
 
-
+  // Update body's background image with smooth animation
+  useEffect(() => {
+    const body = document.body;
+    if (selectedBoard?.background_image) {
+      body.style.transition = "background-image 0.5s ease-in-out, background-color 0.5s ease-in-out";
+      body.style.backgroundImage = `url(${selectedBoard.background_image})`;
+      body.style.backgroundSize = "cover";
+      body.style.backgroundRepeat = "no-repeat";
+    } else {
+      body.style.transition = "background-image 0.5s ease-in-out, background-color 0.5s ease-in-out";
+      body.style.backgroundImage = ""; // Reset background image
+    }
+  }, [selectedBoard]);
 
 
   const renderComponent = useCallback(() => {
@@ -137,6 +150,7 @@ const MainPage: React.FC<MainPageProps> = ({
           setSaved_custom_theme={setSaved_custom_theme}
           boards={boards}
           setBoards={setBoards}
+          current_user_email={current_user_email}
           />;
 
       case "Calendar":

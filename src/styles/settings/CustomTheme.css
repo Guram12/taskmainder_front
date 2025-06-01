@@ -13,6 +13,8 @@
   border-radius: 10px;
   min-height: 150px;
   height: auto;
+  background-color: rgba(0 0 0 / 0.14) !important;
+
 }
 
 
@@ -30,6 +32,7 @@
   padding-left: 10px;
   padding-right: 10px;
   transition: background-color 0.3s ease,
+
 }
 
 .customtheme_p {
@@ -39,11 +42,20 @@
   font-weight: bold;
 }
 
+.background_image_tooltip_container {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+  margin-top: 10px;
+  margin-bottom: 0px;
+}
+
 .background_image_set_h1 {
   font-size: 20px;
   font-weight: bold;
-  margin: 10px;
-  margin-bottom: 0px;
+  margin: 0px;
+
 }
 
 
@@ -142,7 +154,7 @@
   border-radius: 10px;
   overflow: hidden;
   position: relative;
-  border: 1px solid #ccc;
+  border: 1px solid;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -226,6 +238,24 @@
 
 }
 
+
+
+.second_h1_and_tooltip_container {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.second_h1 {
+  font-size: 20px;
+  font-weight: bold;
+  margin: 0px;
+}
+
+
 .color_selection_container {
   display: flex;
   flex-direction: row;
@@ -268,9 +298,20 @@
   background-color: #4caf50;
 }
 
-
+/* ============================ antd color opicker styles ============================ */
 .large-color-picker {
-  width: 300px; 
+  width: 310px;
   font-weight: bold;
 }
 
+.ant-color-picker-trigger {
+  justify-content: flex-start !important;
+  padding-left: 5px !important;
+}
+
+.each_color_property {
+  text-align: left !important;
+
+}
+
+/* ======================================================================================== */

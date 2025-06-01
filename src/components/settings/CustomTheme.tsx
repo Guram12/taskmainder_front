@@ -9,11 +9,9 @@ import no_boards_image from '../../assets/no_boards_img.png';
 import GridLoader from "react-spinners/GridLoader";
 import { MdDeleteForever } from "react-icons/md";
 import { ConfigProvider } from 'antd';
+import { Tooltip } from 'antd';
+import { UserBoardStatuses } from '../../utils/interface';
 
-// setNew_image_for_board={setNew_image_for_board}
-// new_image_for_board={new_image_for_board}
-// setLoading_image={setLoading_image}
-// loading_image={loading_image}
 
 
 interface CustomThemeProps {
@@ -29,6 +27,7 @@ interface CustomThemeProps {
   setLoading_image: ({ boardId, isLoading }: { boardId: number, isLoading: boolean }) => void;
   setIsImageDeleting: (isImageDeleting: boolean) => void;
   setDeleting_image_boardId: (boardId: number) => void;
+  current_user_email: string;
 }
 
 const CustomTheme: React.FC<CustomThemeProps> = ({
@@ -44,7 +43,7 @@ const CustomTheme: React.FC<CustomThemeProps> = ({
   setLoading_image,
   setIsImageDeleting,
   setDeleting_image_boardId,
-
+  current_user_email,
 }) => {
   const [backgroundColor, setBackgroundColor] = useState<string>(currentTheme['--background-color']);
   const [borderColor, setBorderColor] = useState<string>(currentTheme['--border-color']);
@@ -54,6 +53,7 @@ const CustomTheme: React.FC<CustomThemeProps> = ({
   const [taskBackgroundColor, setTaskBackgroundColor] = useState<string>(currentTheme['--task-background-color']);
 
 
+  const [userBoardStatuses, setUserBoardStatuses] = useState<UserBoardStatuses[]>([]);
 
 
   const fileInputRefs = boards.reduce((acc, board) => {
@@ -78,7 +78,63 @@ const CustomTheme: React.FC<CustomThemeProps> = ({
     console.log('backgroundColor changed:', backgroundColor);
   }, [backgroundColor]);
 
-  // ============================================== Reference for the file input   ================================================
+
+  // ===========================================  get user status for board  ==========================================================
+
+  const getUserStatusForBoard = (boardId: number) => {
+    const status = userBoardStatuses.find(status => status.board_id === boardId);
+    return status ? status.user_status : null;
+  };
+
+  // -----------------------  save user statuses in state -----------------------
+  const user_board_statuses = boards.map(board => ({
+    boardId: board.id,
+    userStatus: getUserStatusForBoard(board.id),
+  }));
+
+  // -----------------------  show tooltip if user is not owner or admin -----------------------
+  const [showToolTip, setShowToolTip] = useState<boolean>(false);
+
+  const handle_image_click = (boardId: number) => {
+    if (user_board_statuses.some(status => status.boardId === boardId && status.userStatus === 'owner' || status.userStatus === 'admin')) {
+      const fileInputRef = fileInputRefs[boardId];
+      if (fileInputRef.current) {
+        fileInputRef.current.click();
+      }
+    } else {
+      setShowToolTip(true);
+      setTimeout(() => {
+        setShowToolTip(false);
+      }, 3000); // Hide tooltip after 3 seconds
+    }
+  }
+  // ============================================== fetch user board status  ================================================
+
+  useEffect(() => {
+    const fetchUserBoardStatuses = async () => {
+      try {
+        const response = await axiosInstance.get('/api/user-boards-status/', {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('access')}`,
+          },
+        });
+
+        if (response.status === 200) {
+          setUserBoardStatuses(response.data);
+        } else {
+          console.error('Failed to fetch user board statuses:', response.statusText);
+        }
+      } catch (error) {
+        console.error('Error fetching user board statuses:', error);
+      }
+    };
+
+    fetchUserBoardStatuses();
+  }, [current_user_email]);
+
+
+
+
 
 
   // ===========================================  save the image ==========================================================
@@ -133,8 +189,15 @@ const CustomTheme: React.FC<CustomThemeProps> = ({
 
   // ===========================================  delet current image icon click ==========================================================
   const handleDeleteImageClick = (boardId: number) => {
-    setIsImageDeleting(true); // Show the confirmation dialog
-    setDeleting_image_boardId(boardId); // Do not update the image immediately
+    if (user_board_statuses.some(status => status.boardId === boardId && status.userStatus === 'owner' || status.userStatus === 'admin')) {
+      setIsImageDeleting(true); // Show the confirmation dialog
+      setDeleting_image_boardId(boardId); // Do not update the image immediately
+    } else {
+      setShowToolTip(true);
+      setTimeout(() => {
+        setShowToolTip(false);
+      }, 3000); // Hide tooltip after 3 seconds
+    }
   };
 
 
@@ -198,31 +261,54 @@ const CustomTheme: React.FC<CustomThemeProps> = ({
         backdropFilter: 'blur(13px)',
         WebkitBackdropFilter: 'blur(10px)',
         backgroundColor: 'transparent',
+        borderColor: currentTheme["--border-color"],
       }}
     >
 
-      <div className="customtheme_container" style={{ backgroundColor: currentTheme["--background-color"] }}>
+      <div className="customtheme_container"
+        style={{ backgroundColor: currentTheme["--background-color"] }}>
         <p className="customtheme_p" style={{ color: currentTheme["--main-text-coloure"] }}> Create Custom Theme </p>
+
       </div>
 
 
       {boards.length !== 0 && (
-        <h1 className='background_image_set_h1'>Click image to select new background</h1>
+        <div className='background_image_tooltip_container'>
+          <h1 className='background_image_set_h1'>Click image to select new background</h1>
+          <Tooltip
+            title="You can change board background images if you are the owner or admin of this board."
+            placement="right"
+            color={currentTheme["--list-background-color"]}
+            open={showToolTip || undefined} // Show on hover and when showToolTip is true
+          >
+            <span style={{ marginLeft: 8, cursor: 'pointer', fontSize: 18, color: currentTheme["--main-text-coloure"] }}>🛈</span>
+          </Tooltip>
+        </div>
       )}
       <div className='boards_and_background_images_container' >
         {boards.length === 0 && (
           <div className='no_boards_container_customtheme'>
             <img src={no_boards_image} alt="No Boards" className='no_boards_image_customtheme' />
             <p className='no_boards_text'>No boards available. Please create a board first.</p>
+
           </div>
         )}
 
         {boards.map((boardItem) => (
-          <div key={boardItem.id} className='each_board_container' >
+
+          <div key={boardItem.id} className='each_board_container'
+            style={{
+              borderColor: currentTheme['--border-color'],
+              opacity: ['owner', 'admin'].includes(user_board_statuses.find(status => status.boardId === boardItem.id)?.userStatus || '')
+                ? 1
+                : 0.55,
+            }}
+
+          >
 
             <div className='board_name_container' >
               <p className='board_name_p' >{boardItem.name}</p>
-              {boardItem.background_image &&(
+              {boardItem.background_image && (
                 <MdDeleteForever className='delete_backg_img_icon' onClick={() => handleDeleteImageClick(boardItem.id)} />
               )}
 
@@ -240,12 +326,8 @@ const CustomTheme: React.FC<CustomThemeProps> = ({
                         src={boardItem.id === new_image_for_board.boardId ? URL.createObjectURL(new_image_for_board.NewImage) : boardItem.background_image}
                         alt="Board Background"
                         className='board_background_image'
-                        onClick={() => {
-                          const fileInputRef = fileInputRefs[boardItem.id];
-                          if (fileInputRef.current) {
-                            fileInputRef.current.click();
-                          }
-                        }}
+                        onClick={() => handle_image_click(boardItem.id)}
+
                       />
                       <input
                         type="file"
@@ -269,14 +351,7 @@ const CustomTheme: React.FC<CustomThemeProps> = ({
               ) : (
                 <div
                   className="no_image_container"
-                  onClick={() => {
-                    const fileInputRef = fileInputRefs[boardItem.id];
-                    if (fileInputRef && fileInputRef.current) {
-                      fileInputRef.current.click(); // Trigger the file input click
-                    } else {
-                      console.error(`File input ref not found for board ID: ${boardItem.id}`);
-                    }
-                  }}
+                  onClick={() => handle_image_click(boardItem.id)}
                 >
 
                   {loading_image.isLoading && loading_image.boardId === boardItem.id ? (
@@ -292,12 +367,7 @@ const CustomTheme: React.FC<CustomThemeProps> = ({
                           src={URL.createObjectURL(new_image_for_board.NewImage)}
                           alt="Board Background"
                           className='board_background_image'
-                          onClick={() => {
-                            const fileInputRef = fileInputRefs[boardItem.id];
-                            if (fileInputRef.current) {
-                              fileInputRef.current.click();
-                            }
-                          }}
+                          onClick={() => handle_image_click(boardItem.id)}
                         />
                       ) : (
                         <FaRegImages className="no_image_icon" />
@@ -332,10 +402,25 @@ const CustomTheme: React.FC<CustomThemeProps> = ({
           </div>
         ))}
 
+
       </div>
 
       {/* line */}
-      <div className='division_line' ></div>
+      {/* <div className='division_line' ></div> */}
+
+      <div className='second_h1_and_tooltip_container' >
+        <h1 className='second_h1' >Select Colors</h1>
+        <Tooltip
+          title="Your selected colors will be saved as a custom theme.  
+                To apply your custom theme, select it from the header.  
+                You can update these colors at any time."
+          placement="right"
+          color={currentTheme["--list-background-color"]}
+        >
+          <span style={{ marginLeft: 8, cursor: 'pointer', fontSize: 18, color: currentTheme["--main-text-coloure"] }}>🛈</span>
+        </Tooltip>
+      </div>
+
 
       <div className='color_selection_container' >
         {/*1  background color selection  */}

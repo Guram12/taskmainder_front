@@ -105,7 +105,7 @@ const Header: React.FC<HeaderProps> = ({
       style={{ 
         backdropFilter: 'blur(10px)', // Apply blur effect to the background
         WebkitBackdropFilter: 'blur(10px)', // Safari support
-        backgroundColor: 'transparent',
+        backgroundColor: 'rgba(0, 0, 0, 0.5)', // Semi-transparent black for darker effect
       }}
     >
       <div className='header_logo_container' >
