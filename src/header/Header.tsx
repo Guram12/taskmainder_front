@@ -43,7 +43,7 @@ const Header: React.FC<HeaderProps> = ({
   const navigate = useNavigate();
 
 
-
+// 
   useEffect(() => {
     if (location.pathname === "/" || location.pathname === "/register") {
       setShowHeader(false);

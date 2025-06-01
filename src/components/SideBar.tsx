@@ -1,6 +1,6 @@
 import '../styles/Sidebar.css';
 import 'shepherd.js/dist/css/shepherd.css';
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Sidebar, Menu, MenuItem, SubMenu } from 'react-pro-sidebar';
 import { FaCalendarAlt } from "react-icons/fa";
 import { TiPin, TiPinOutline } from "react-icons/ti";
@@ -13,8 +13,8 @@ import { GoRepoTemplate } from "react-icons/go";
 import axiosInstance from '../utils/axiosinstance';
 // import Shepherd from 'shepherd.js';
 import { MdNotificationsActive } from "react-icons/md";
-
-
+import { ThemeSpecs } from '../utils/theme';
+import { IoCloseSharp } from "react-icons/io5";
 
 
 
@@ -28,14 +28,12 @@ interface SidebarProps {
   setIsBoardsLoaded?: (isLoaded: boolean) => void;
   setIs_new_notification_received: (is_new_notification_received: boolean) => void;
   is_new_notification_received: boolean;
+  isMobile: boolean;
+  setIs_sidebar_open_on_mobile: (is_sidebar_open_on_mobile: boolean) => void;
+  is_sidebar_open_on_mobile: boolean;
 }
 
 
-interface ThemeSpecs {
-  '--background-color': string;
-  '--border-color': string;
-  '--main-text-coloure': string;
-}
 
 const SidebarComponent: React.FC<SidebarProps> = ({
   currentTheme,
@@ -47,11 +45,17 @@ const SidebarComponent: React.FC<SidebarProps> = ({
   setIsBoardsLoaded,
   setIs_new_notification_received,
   is_new_notification_received,
+  isMobile,
+  setIs_sidebar_open_on_mobile,
+  is_sidebar_open_on_mobile,
+
 }) => {
 
   const [isOpen, setIsOpen] = useState(true);
   const is_Pinned_Value: boolean = JSON.parse(localStorage.getItem('isPinned') || 'false');
   const [isPinned, setIsPinned] = useState<boolean>(is_Pinned_Value);
+
+
 
 
 
@@ -129,20 +133,43 @@ const SidebarComponent: React.FC<SidebarProps> = ({
   }
 
   const handleMouseEnter = () => {
-    if (isPinned) {
-      setIsOpen(true);
+    if (isMobile) {
+      return
     } else {
-      setIsOpen(true);
+      if (isPinned) {
+        setIsOpen(true);
+      } else {
+        setIsOpen(true);
+      }
     }
   };
 
   const handleMouseLeave = () => {
-    if (!isPinned) {
-      setIsOpen(false);
+    if (isMobile) {
+      return
     } else {
-      setIsOpen(true);
+      if (!isPinned) {
+        setIsOpen(false);
+      } else {
+        setIsOpen(true);
+      }
     }
   };
+
+
+
+
+  useEffect(() => {
+    console.log('mobile ', isMobile);
+  }, [isMobile]);
+
+
+
+  const handle_burger_icon_click = () => {
+    setIs_sidebar_open_on_mobile(!is_sidebar_open_on_mobile);
+    console.log('burger icon clicked, sidebar open state:', is_sidebar_open_on_mobile);
+  }
+
 
   // =========================================================================================================
   const handleBoardClick = async (board: board) => {
@@ -261,9 +288,9 @@ const SidebarComponent: React.FC<SidebarProps> = ({
   return (
     <div
       onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}
-      className={`sidebar_main_container ${isOpen ? 'open' : 'closed'}`}
+      className={`sidebar_main_container ${isOpen ? 'open' : 'closed'}
+        ${is_sidebar_open_on_mobile ? "sidebar_closed_on_mobile" : ''}`}
       style={{
-
         backdropFilter: 'blur(10px)', // Apply blur effect to the background
         WebkitBackdropFilter: 'blur(10px)', // Safari support
         backgroundColor: 'rgba(0, 0, 0, 0.5)', // Semi-transparent black for darker effect
@@ -277,10 +304,12 @@ const SidebarComponent: React.FC<SidebarProps> = ({
           onMouseLeave={handleMouseLeave}
           rootStyles={{
             height: '100%',
-
+            border: 'none',
           }}
           id="sidebar"
+          className='sidebar_lbrary'
         >
+
           <div style={{
             display: 'flex',
             flexDirection: 'column',
@@ -302,9 +331,23 @@ const SidebarComponent: React.FC<SidebarProps> = ({
                 <MenuItem icon={<MdSpaceDashboard className="dashboard_icon" />}>
                   <div className="for_dashboard_child_container">
                     <p> Dashboard</p>
-                    <div onClick={toggleSidebarPin} className="pin_container">
-                      {isPinned ? <TiPin className="pin_icon" /> : <TiPinOutline className="pin_icon" />}
-                    </div>
+                    {isMobile ?
+                      (
+                        <div
+                          className='close_dashboard_container'
+                          onClick={handle_burger_icon_click}
+                        >
+                          <IoCloseSharp
+                            className='close_dashboard_icon'
+                          />
+                        </div>
+                      )
+                      :
+                      (
+                        <div onClick={toggleSidebarPin} className="pin_container">
+                          {isPinned ? <TiPin className="pin_icon" /> : <TiPinOutline className="pin_icon" />}
+                        </div>
+                      )}
                   </div>
                 </MenuItem>
 
