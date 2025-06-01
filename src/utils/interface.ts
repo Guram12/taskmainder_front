@@ -75,24 +75,14 @@ export interface Template {
 
 
 
-// boardName
-// : 
-// "Birthday Party Board"
-// body
-// : 
-// "krazana has joined your board \"Birthday Party Board\"."
-// invitedUserEmail
-// invitedUserName
-// : 
-// "krazana"
-// title
-// : 
-// "Board Invitation Accepted"
-// type
-// : 
-// "BOARD_INVITATION_ACCEPTED"
 
+export interface UserBoardStatuses {
+  board_id: number;
+  board_name: string;
+  user_status: 'owner' | 'member' | 'admin';
 
+}
+  
 export interface NotificationPayload {
   type: 'USER_REMOVED_FROM_BOARD' | 'BOARD_INVITATION_ACCEPTED' | 'TASK_DUE_REMINDER' | 'BOARD_USER_UPDATE';
   title: string;

@@ -13,6 +13,7 @@ import axiosInstance from "../utils/axiosinstance";
 import { Board_Users } from "../utils/interface";
 import Notification from "./Notification";
 import GridLoader from "react-spinners/GridLoader";
+import { VscTriangleRight } from "react-icons/vsc";
 
 
 interface MainPageProps {
@@ -41,6 +42,7 @@ interface MainPageProps {
   setCurrentTheme: (theme: ThemeSpecs) => void;
   setIsCustomThemeSelected: (isCustomThemeSelected: boolean) => void;
   setSaved_custom_theme: (theme: ThemeSpecs) => void;
+  isMobile: boolean; // Optional prop for mobile view
 }
 
 const MainPage: React.FC<MainPageProps> = ({
@@ -68,6 +70,7 @@ const MainPage: React.FC<MainPageProps> = ({
   setCurrentTheme,
   setIsCustomThemeSelected,
   setSaved_custom_theme,
+  isMobile,
 }) => {
   const [selectedComponent, setSelectedComponent] = useState<string>("Boards");
 
@@ -120,8 +123,21 @@ const MainPage: React.FC<MainPageProps> = ({
     }
   };
 
+  // -------------------------------------   update backgrownd image based on board ---------------------------------------------------
 
-
+  // Update body's background image with smooth animation
+  useEffect(() => {
+    const body = document.body;
+    if (selectedBoard?.background_image) {
+      body.style.transition = "background-image 0.5s ease-in-out, background-color 0.5s ease-in-out";
+      body.style.backgroundImage = `url(${selectedBoard.background_image})`;
+      body.style.backgroundSize = "cover";
+      body.style.backgroundRepeat = "no-repeat";
+    } else {
+      body.style.transition = "background-image 0.5s ease-in-out, background-color 0.5s ease-in-out";
+      body.style.backgroundImage = ""; // Reset background image
+    }
+  }, [selectedBoard]);
 
 
   const renderComponent = useCallback(() => {
@@ -133,11 +149,12 @@ const MainPage: React.FC<MainPageProps> = ({
           FetchProfileData={FetchProfileData}
           currentTheme={currentTheme}
           setCurrentTheme={setCurrentTheme}
-          setIsCustomThemeSelected={setIsCustomThemeSelected} 
+          setIsCustomThemeSelected={setIsCustomThemeSelected}
           setSaved_custom_theme={setSaved_custom_theme}
           boards={boards}
           setBoards={setBoards}
-          />;
+          current_user_email={current_user_email}
+        />;
 
       case "Calendar":
         return <StyledEngineProvider injectFirst>
@@ -179,7 +196,7 @@ const MainPage: React.FC<MainPageProps> = ({
         return <Notification
           currentTheme={currentTheme}
           setIsLoading={setIsLoading}
-          
+
         />;
 
     }
@@ -187,14 +204,15 @@ const MainPage: React.FC<MainPageProps> = ({
     currentTheme, profileData, current_board_users,
     is_cur_Board_users_fetched, isLoading, setIsLoading,
     notificationData, isBoardsLoaded, setCurrent_board_users, setCurrentTheme,
-    
+
   ]);
 
 
 
-// ===========================================================================================================
+  // ===========================================================================================================
 
   const memoizedRenderComponent = useMemo(() => renderComponent(), [renderComponent]);
+  const [is_sidebar_open_on_mobile, setIs_sidebar_open_on_mobile] = useState(false);
 
   return (
     <div className="mainpage_component"
@@ -205,6 +223,22 @@ const MainPage: React.FC<MainPageProps> = ({
           <GridLoader color={`${currentTheme['--main-text-coloure']}`} size={20} className="gridloader" />
         </div>
       )}
+
+      {is_sidebar_open_on_mobile && isMobile && (
+        <div
+          className="side_open_rectangle_container"
+          onClick={() => setIs_sidebar_open_on_mobile(false)}
+          style={{
+            backgroundColor: currentTheme['--list-background-color'],
+            borderColor: currentTheme['--main-text-coloure'],
+          }}
+        >
+          <VscTriangleRight
+            className='close_sidebar_icon_triangle_icon'
+          />
+        </div>
+      )}
+      
       <SidebarComponent
         currentTheme={currentTheme}
         boards={boards}
@@ -215,6 +249,9 @@ const MainPage: React.FC<MainPageProps> = ({
         is_new_notification_received={is_new_notification_received}
         setIsBoardsLoaded={setIsBoardsLoaded}
         selectedBoard={selectedBoard}
+        isMobile={isMobile}
+        setIs_sidebar_open_on_mobile={setIs_sidebar_open_on_mobile}
+        is_sidebar_open_on_mobile={is_sidebar_open_on_mobile}
       />
       {memoizedRenderComponent}
     </div>

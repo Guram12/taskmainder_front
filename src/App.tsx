@@ -38,10 +38,6 @@ const App: React.FC = () => {
     is_social_account: false,
   });
 
-
-
-
-
   const default_is_custom_theme_selected = localStorage.getItem('isCustomThemeSelected') === null ? false : localStorage.getItem('isCustomThemeSelected') === 'true';
 
   const [isCustomThemeSelected, setIsCustomThemeSelected] = useState<boolean>(default_is_custom_theme_selected);
@@ -53,9 +49,15 @@ const App: React.FC = () => {
   const list_background_color = localStorage.getItem('list_background_color') || '#ffffff';
   const task_background_color = localStorage.getItem('task_background_color') || '#f0f0f0';
 
+  
+  const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
 
 
-
+  useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth <= 768);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
 
   const [saved_custom_theme, setSaved_custom_theme] = useState({
@@ -360,6 +362,7 @@ const App: React.FC = () => {
         isCustomThemeSelected={isCustomThemeSelected}
         saved_custom_theme={saved_custom_theme}
         setCurrentTheme={setCurrentTheme}
+        
       />
       <Routes>
         <Route path="/" element={<Login setIsAuthenticated={setIsAuthenticated} />} />
@@ -393,6 +396,7 @@ const App: React.FC = () => {
             setCurrentTheme={setCurrentTheme}
             setIsCustomThemeSelected={setIsCustomThemeSelected}
             setSaved_custom_theme={setSaved_custom_theme}
+            isMobile={isMobile}
           />} />
       </Routes>
     </Router>
