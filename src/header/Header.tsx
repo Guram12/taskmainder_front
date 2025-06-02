@@ -10,9 +10,9 @@ import { useNavigate } from 'react-router-dom';
 import Avatar from '@mui/material/Avatar'; // Import Avatar from Material-UI
 import getAvatarStyles from "../utils/SetRandomColor";
 import { Dropdown } from 'antd';
-import { IoMdArrowDropdown } from "react-icons/io";
 import { AiFillSkin } from "react-icons/ai"; // Optional: theme icon
 import { GlobalOutlined } from '@ant-design/icons'; // AntD icon for language
+import type { MenuProps } from 'antd';
 
 
 interface HeaderProps {
@@ -109,6 +109,85 @@ const Header: React.FC<HeaderProps> = ({
 
 
 
+  const themeMenu: MenuProps = {
+    items: [
+      {
+        key: 'dark_gray',
+        label: (
+          <div className='header_coloure_child_container example2'
+            onClick={() => changeTheme(themes.dark_gray)} />
+        ),
+      },
+      {
+        key: 'dark_blue',
+        label: (
+          <div className='header_coloure_child_container example3'
+            onClick={() => changeTheme(themes.dark_blue)} />
+        ),
+      },
+      {
+        key: 'yellow',
+        label: (
+          <div className='header_coloure_child_container example4'
+            onClick={() => changeTheme(themes.yellow)} />
+        ),
+      },
+      {
+        key: 'light_green',
+        label: (
+          <div className='header_coloure_child_container example5'
+            onClick={() => changeTheme(themes.light_green)} />
+        ),
+      },
+      {
+        key: 'custom',
+        label: (
+          <div
+            className='custom_theme_container_in_header'
+            style={{
+              backgroundColor: saved_custom_theme['--background-color'],
+              borderColor: saved_custom_theme['--border-color']
+            }}
+            onClick={handle_return_to_custom_theme}
+          >
+            Custom Theme
+          </div>
+        ),
+      },
+    ],
+  };
+
+  // Language dropdown menu
+  const languageMenu: MenuProps = {
+    items: [
+      {
+        key: 'en',
+        label: (
+          <div
+            className={`language_option${language === 'en' ? ' selected' : ''}`}
+            onClick={() => handleLanguageChange('en')}
+          >
+            <p style={{ color: currentTheme['--main-text-coloure'], margin: 0 }}>
+              🇬🇧 English
+            </p>
+          </div>
+        ),
+      },
+      {
+        key: 'ka',
+        label: (
+          <div
+            className={`language_option${language === 'ka' ? ' selected' : ''}`}
+            onClick={() => handleLanguageChange('ka')}
+          >
+            <p style={{ color: currentTheme['--main-text-coloure'], margin: 0 }}>
+              🇬🇪 ქართული
+            </p>
+          </div>
+        ),
+      },
+    ],
+  };
 
 
   return (
@@ -123,115 +202,75 @@ const Header: React.FC<HeaderProps> = ({
         <LogoComponent />
       </div>
 
+      {/* theme and language dropdowns*/}
+      <div className="header_all_dropdowns_container" >
+        {!isMobile ? (
+          <div className='header_coloure_container'>
+            <div className='header_coloure_child_container example2'
+              onClick={() => changeTheme(themes.dark_gray)}></div>
+            <div className='header_coloure_child_container example3'
+              onClick={() => changeTheme(themes.dark_blue)}></div>
+            <div className='header_coloure_child_container example4'
+              onClick={() => changeTheme(themes.yellow)}></div>
+            <div className='header_coloure_child_container example5'
+              onClick={() => changeTheme(themes.light_green)}></div>
 
-      {!isMobile ? (
-        <div className='header_coloure_container'>
-          <div className='header_coloure_child_container example2'
-            onClick={() => changeTheme(themes.dark_gray)}></div>
-          <div className='header_coloure_child_container example3'
-            onClick={() => changeTheme(themes.dark_blue)}></div>
-          <div className='header_coloure_child_container example4'
-            onClick={() => changeTheme(themes.yellow)}></div>
-          <div className='header_coloure_child_container example5'
-            onClick={() => changeTheme(themes.light_green)}></div>
-
-          <div className='custom_theme_container_in_header'
-            style={{
-              backgroundColor: saved_custom_theme['--background-color'],
-              borderColor: saved_custom_theme['--border-color']
-            }}
-            onClick={handle_return_to_custom_theme}
-          >
-            Custom Theme
+            <div className='custom_theme_container_in_header'
+              style={{
+                backgroundColor: saved_custom_theme['--background-color'],
+                borderColor: saved_custom_theme['--border-color']
+              }}
+              onClick={handle_return_to_custom_theme}
+            >
+              Custom Theme
+            </div>
           </div>
-        </div>
 
-      ) : (
-        <div className="mobile_theme_dropdown_wrapper"
+        ) : (
+          <div className="mobile_theme_dropdown_wrapper"
+          >
+            <Dropdown
+              menu={themeMenu}
+              placement="bottomLeft"
+              arrow
+              overlayClassName="custom-centered-dropdown"
 
-        >
-          <Dropdown
-            trigger={['click']}
-            overlay={
-              <div className="theme_dropdown"
+            >
+              <button className="mobile_theme_dropdown_btn"
                 style={{
-                  backdropFilter: 'blur(10px)', // Apply blur effect to the background
-                  WebkitBackdropFilter: 'blur(10px)', // Safari support
-                  backgroundColor: 'rgba(0 0 0 / 0.27)',
-                  borderColor: currentTheme['--border-color'] // Use the main text color for the border
+                  backgroundColor: currentTheme['--list-background-color'],
                 }}
               >
-                <div className='header_coloure_child_container example2'
-                  onClick={() => changeTheme(themes.dark_gray)} />
-                <div className='header_coloure_child_container example3'
-                  onClick={() => changeTheme(themes.dark_blue)} />
-                <div className='header_coloure_child_container example4'
-                  onClick={() => changeTheme(themes.yellow)} />
-                <div className='header_coloure_child_container example5'
-                  onClick={() => changeTheme(themes.light_green)} />
-                <div
-                  className='custom_theme_container_in_header'
-                  style={{
-                    backgroundColor: saved_custom_theme['--background-color'],
-                    borderColor: saved_custom_theme['--border-color']
-                  }}
-                  onClick={handle_return_to_custom_theme}
-                >
-                  Custom Theme
-                </div>
-              </div>
-            }
+                <AiFillSkin size={20} style={{ color: currentTheme['--main-text-coloure'] }} />
+              </button>
+            </Dropdown>
+          </div>
+        )}
+
+        {/* Language Dropdown */}
+        <div className="mobile_language_dropdown_wrapper">
+          <Dropdown
+            menu={languageMenu}
             placement="bottomLeft"
             arrow
+            overlayClassName="custom-centered-dropdown"
+
           >
-            <button className="mobile_theme_dropdown_btn"
+            <button className="mobile_language_dropdown_btn"
               style={{
                 backgroundColor: currentTheme['--list-background-color'],
-
               }}
             >
-              <AiFillSkin size={20} style={{ marginRight: 6, color: currentTheme['--main-text-coloure'] }} />
-
-              <IoMdArrowDropdown size={18} style={{ marginLeft: 4 }} />
+              <GlobalOutlined style={{ marginRight: 6, color: currentTheme['--main-text-coloure'] }} />
+              <p style={{ color: currentTheme['--main-text-coloure'], margin: 0 }}>
+                {language === 'en' ? 'EN' : 'KA'}
+              </p>
             </button>
           </Dropdown>
         </div>
-      )}
-
-      {/* Language Dropdown */}
-      <div className="mobile_language_dropdown_wrapper">
-        <Dropdown
-          trigger={['click']}
-          overlay={
-            <div className="language_dropdown">
-              <div
-                className={`language_option${language === 'en' ? ' selected' : ''}`}
-                onClick={() => handleLanguageChange('en')}
-              >
-                🇬🇧 English
-              </div>
-              <div
-                className={`language_option${language === 'ka' ? ' selected' : ''}`}
-                onClick={() => handleLanguageChange('ka')}
-              >
-                🇬🇪 ქართული
-              </div>
-            </div>
-          }
-          placement="bottomLeft"
-          arrow
-        >
-          <button className="mobile_language_dropdown_btn"
-            style={{
-              backgroundColor: currentTheme['--list-background-color'],
-            }}
-          >
-            <GlobalOutlined style={{ marginRight: 6, color: currentTheme['--main-text-coloure'] }} />
-            {language === 'en' ? 'EN' : 'KA'}
-            <IoMdArrowDropdown size={18} style={{ marginLeft: 4 }} />
-          </button>
-        </Dropdown>
       </div>
+
+
 
       <div>
         <div className="header_profile_container">
