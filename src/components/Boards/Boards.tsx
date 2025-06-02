@@ -1,13 +1,11 @@
 import '../../styles/Board Styles/Boards.css';
 import React, { useState, useEffect, useRef } from "react";
-import { HTML5Backend } from 'react-dnd-html5-backend';
+
 import { ThemeSpecs } from '../../utils/theme';
 import Members from '../Members';
-import { DndProvider } from 'react-dnd';
 import List from './Lists';
 import { board } from '../../utils/interface';
 import { isMobile } from 'react-device-detect'; // Install react-device-detect
-import { TouchBackend } from 'react-dnd-touch-backend';
 import { ProfileData } from '../../utils/interface';
 import { Board_Users } from '../../utils/interface';
 import SkeletonLoader from './SkeletonLoader';
@@ -683,10 +681,8 @@ const Boards: React.FC<BoardsProps> = ({
 
 
   return (
-    <DndProvider backend={isMobile ? TouchBackend : HTML5Backend}
-      options={isMobile ? { enableMouseEvents: true } : undefined}
-    >
-      <div className='members_container'>
+      <div className='members_container'
+      >
         {boards.length > 0 && (
           <div>
             {!isBoardsLoaded ? (
@@ -779,7 +775,6 @@ const Boards: React.FC<BoardsProps> = ({
         </div>
 
       </div>
-    </DndProvider >
   );
 };
 

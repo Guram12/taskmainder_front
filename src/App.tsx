@@ -16,8 +16,11 @@ import PasswordResetConfirm from './auth/PasswordResetConfirm';
 import subscribeToPushNotifications from './utils/supbscription';
 import { Board_Users } from './utils/interface';
 import { NotificationPayload } from './utils/interface';
-
-
+import { DndProvider } from 'react-dnd';
+import { HTML5Backend } from 'react-dnd-html5-backend';
+import { TouchBackend } from 'react-dnd-touch-backend';
+import { useDragLayer } from 'react-dnd';
+import CustomDragLayer from './components/Boards/CustomDragLayer';
 
 
 
@@ -352,59 +355,66 @@ const App: React.FC = () => {
   // ========================================================================================================
 
   return (
-    <Router>
-      <Header
-        profileData={profileData}
-        isAuthenticated={isAuthenticated}
-        setIsAuthenticated={setIsAuthenticated}
-        setChange_current_theme={setChange_current_theme}
-        change_current_theme={change_current_theme}
-        currentTheme={currentTheme}
-        isCustomThemeSelected={isCustomThemeSelected}
-        saved_custom_theme={saved_custom_theme}
-        setCurrentTheme={setCurrentTheme}
-        isMobile={isMobile}
-        setLanguage={setLanguage}
-        language={language}
+    <DndProvider backend={isMobile ? TouchBackend : HTML5Backend} options={isMobile ? { enableMouseEvents: true } : undefined}>
 
-      />
-      <Routes>
-        <Route path="/" element={<Login setIsAuthenticated={setIsAuthenticated} />} />
-        <Route path="/register" element={<Register />} />
-        <Route path="/password-reset" element={<PasswordReset />} />
-        <Route path="/password-reset-confirm/:uid/:token" element={<PasswordResetConfirm />} />
-        <Route path="/finish-profile" element={<FinishGoogleSignIn setIsAuthenticated={setIsAuthenticated} />} />
-        <Route path="/mainpage"
-          element={<MainPage
-            selectedBoard={selectedBoard}
-            setSelectedBoard={setSelectedBoard}
-            currentTheme={currentTheme}
-            boards={boards}
-            setBoards={setBoards}
-            current_user_email={profileData.email}
-            profileData={profileData}
-            FetchProfileData={FetchProfileData}
-            fetchBoards={fetchBoards}
-            setCurrent_board_users={setCurrent_board_users}
-            current_board_users={current_board_users}
-            is_cur_Board_users_fetched={is_cur_Board_users_fetched}
-            fetch_current_board_users={fetch_current_board_users}
-            isBoardsLoaded={isBoardsLoaded}
-            setIsBoardsLoaded={setIsBoardsLoaded}
-            setIsLoading={setIsLoading}
-            isLoading={isLoading}
-            notificationData={notificationData}
-            setIs_new_notification_received={setIs_new_notification_received}
-            is_new_notification_received={is_new_notification_received}
-            is_members_refreshing={is_members_refreshing}
-            setCurrentTheme={setCurrentTheme}
-            setIsCustomThemeSelected={setIsCustomThemeSelected}
-            setSaved_custom_theme={setSaved_custom_theme}
-            isMobile={isMobile}
-            setIsAuthenticated={setIsAuthenticated}
-          />} />
-      </Routes>
-    </Router>
+      <Router>
+        <Header
+          profileData={profileData}
+          isAuthenticated={isAuthenticated}
+          setIsAuthenticated={setIsAuthenticated}
+          setChange_current_theme={setChange_current_theme}
+          change_current_theme={change_current_theme}
+          currentTheme={currentTheme}
+          isCustomThemeSelected={isCustomThemeSelected}
+          saved_custom_theme={saved_custom_theme}
+          setCurrentTheme={setCurrentTheme}
+          isMobile={isMobile}
+          setLanguage={setLanguage}
+          language={language}
+
+        />
+        <Routes>
+          <Route path="/" element={<Login setIsAuthenticated={setIsAuthenticated} />} />
+          <Route path="/register" element={<Register />} />
+          <Route path="/password-reset" element={<PasswordReset />} />
+          <Route path="/password-reset-confirm/:uid/:token" element={<PasswordResetConfirm />} />
+          <Route path="/finish-profile" element={<FinishGoogleSignIn setIsAuthenticated={setIsAuthenticated} />} />
+          <Route path="/mainpage"
+            element={<MainPage
+              selectedBoard={selectedBoard}
+              setSelectedBoard={setSelectedBoard}
+              currentTheme={currentTheme}
+              boards={boards}
+              setBoards={setBoards}
+              current_user_email={profileData.email}
+              profileData={profileData}
+              FetchProfileData={FetchProfileData}
+              fetchBoards={fetchBoards}
+              setCurrent_board_users={setCurrent_board_users}
+              current_board_users={current_board_users}
+              is_cur_Board_users_fetched={is_cur_Board_users_fetched}
+              fetch_current_board_users={fetch_current_board_users}
+              isBoardsLoaded={isBoardsLoaded}
+              setIsBoardsLoaded={setIsBoardsLoaded}
+              setIsLoading={setIsLoading}
+              isLoading={isLoading}
+              notificationData={notificationData}
+              setIs_new_notification_received={setIs_new_notification_received}
+              is_new_notification_received={is_new_notification_received}
+              is_members_refreshing={is_members_refreshing}
+              setCurrentTheme={setCurrentTheme}
+              setIsCustomThemeSelected={setIsCustomThemeSelected}
+              setSaved_custom_theme={setSaved_custom_theme}
+              isMobile={isMobile}
+              setIsAuthenticated={setIsAuthenticated}
+            />} />
+        </Routes>
+        {isMobile && (
+          <CustomDragLayer />
+        )}
+      </Router>
+    </DndProvider>
+
   );
 };
 
