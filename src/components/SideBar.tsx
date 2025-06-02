@@ -15,8 +15,9 @@ import axiosInstance from '../utils/axiosinstance';
 import { MdNotificationsActive } from "react-icons/md";
 import { ThemeSpecs } from '../utils/theme';
 import { IoCloseSharp } from "react-icons/io5";
-
-
+import { useNavigate } from 'react-router-dom';
+import { MdOutlineLogout } from "react-icons/md";
+import ConfirmationDialog from './Boards/ConfirmationDialog';
 
 interface SidebarProps {
   currentTheme: ThemeSpecs;
@@ -31,6 +32,7 @@ interface SidebarProps {
   isMobile: boolean;
   setIs_sidebar_open_on_mobile: (is_sidebar_open_on_mobile: boolean) => void;
   is_sidebar_open_on_mobile: boolean;
+  setIsAuthenticated: (isAuthenticated: boolean) => void;
 }
 
 
@@ -48,19 +50,20 @@ const SidebarComponent: React.FC<SidebarProps> = ({
   isMobile,
   setIs_sidebar_open_on_mobile,
   is_sidebar_open_on_mobile,
-
+  setIsAuthenticated,
 }) => {
 
-  const [isOpen, setIsOpen] = useState(true);
+  const [isOpen, setIsOpen] = useState<boolean>(true);
   const is_Pinned_Value: boolean = JSON.parse(localStorage.getItem('isPinned') || 'false');
   const [isPinned, setIsPinned] = useState<boolean>(is_Pinned_Value);
 
-
-
+  const [isConfirmationDialogOpen, setIsConfirmationDialogOpen] = useState<boolean>(false);
 
 
   const [newBoardName, setNewBoardName] = useState<string>('');
   const [addingNewBoard, setAddingNewBoard] = useState<boolean>(false);
+
+  const navigate = useNavigate();
 
   // useEffect(() => {
   //   console.log('boards----------', boards);
@@ -127,6 +130,8 @@ const SidebarComponent: React.FC<SidebarProps> = ({
 
 
   // ================================== sidebar pin and unpin ===============================================
+  
+  // ================================================== toggle sidebar pin =================================================
   const toggleSidebarPin = () => {
     localStorage.setItem('isPinned', JSON.stringify(!isPinned));
     setIsPinned(!isPinned);
@@ -182,6 +187,8 @@ const SidebarComponent: React.FC<SidebarProps> = ({
       return; // Exit early if the board is already selected
     }
     try {
+    setIs_sidebar_open_on_mobile(true);
+
       if (setIsBoardsLoaded) {
         setIsBoardsLoaded(false); // Show skeleton loader
       }
@@ -226,13 +233,14 @@ const SidebarComponent: React.FC<SidebarProps> = ({
   const handel_sidebar_page_click = (component_name: string) => {
     setSelectedComponent(component_name);
     setSelectedBoard(null);
-
+    setIs_sidebar_open_on_mobile(true);
   }
 
   const handle_nnotification_page_click = () => {
     setSelectedComponent("Notification");
     setIs_new_notification_received(false);
     setSelectedBoard(null);
+    setIs_sidebar_open_on_mobile(true);
 
   }
 
@@ -283,20 +291,37 @@ const SidebarComponent: React.FC<SidebarProps> = ({
 
   // =========================================================================================================
 
+  const handleLogOutIconClick = () => {
+    setIsConfirmationDialogOpen(true);
+  }
 
+  const handleLogOut = () => {
+    localStorage.removeItem('access_token');
+    localStorage.removeItem('refresh_token');
+    setIsAuthenticated(false);
+    navigate('/');
+  }
 
   return (
     <div
       onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}
       className={`sidebar_main_container ${isOpen ? 'open' : 'closed'}
         ${is_sidebar_open_on_mobile ? "sidebar_closed_on_mobile" : ''}`}
+
       style={{
-        backdropFilter: 'blur(10px)', // Apply blur effect to the background
+        backdropFilter: 'blur(10px)', 
         WebkitBackdropFilter: 'blur(10px)', // Safari support
         backgroundColor: 'rgba(0, 0, 0, 0.5)', // Semi-transparent black for darker effect
       }}
     >
       <div className="sidebar_container">
+        {isConfirmationDialogOpen && (
+          <ConfirmationDialog
+            message="Are you sure you want to log out?"
+            onCancel={() => setIsConfirmationDialogOpen(false)}
+            onConfirm={handleLogOut}
+          />
+        )}
         <Sidebar
           collapsed={!isOpen}
           backgroundColor="transparent"
@@ -356,7 +381,7 @@ const SidebarComponent: React.FC<SidebarProps> = ({
 
                 >
                   {isOpen && (
-                    <div >
+                    <div className='mapped_boards_container' >
                       {boards.map((board: board) => (
                         <MenuItem
                           key={board.id}
@@ -435,11 +460,14 @@ const SidebarComponent: React.FC<SidebarProps> = ({
               </Menu>
             </div>
             <div >
-              <Menu style={{ marginTop: 'auto' }}>
+              <Menu style={{ marginTop: 'auto', position: 'relative' }}>
                 <MenuItem
                   icon={<RiSettings4Fill className="sidebar_big_icon" />}
                   onClick={() => handel_sidebar_page_click("Settings")}
                 >Settings</MenuItem>
+                <div className='logout_icon_container' >
+                  <MdOutlineLogout onClick={handleLogOutIconClick} className='logout_icon' />
+                </div>
               </Menu>
             </div>
           </div>

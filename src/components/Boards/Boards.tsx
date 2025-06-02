@@ -1,13 +1,11 @@
 import '../../styles/Board Styles/Boards.css';
 import React, { useState, useEffect, useRef } from "react";
-import { HTML5Backend } from 'react-dnd-html5-backend';
+
 import { ThemeSpecs } from '../../utils/theme';
 import Members from '../Members';
-import { DndProvider } from 'react-dnd';
 import List from './Lists';
 import { board } from '../../utils/interface';
 import { isMobile } from 'react-device-detect'; // Install react-device-detect
-import { TouchBackend } from 'react-dnd-touch-backend';
 import { ProfileData } from '../../utils/interface';
 import { Board_Users } from '../../utils/interface';
 import SkeletonLoader from './SkeletonLoader';
@@ -65,6 +63,8 @@ const Boards: React.FC<BoardsProps> = ({
     owner_email: '',
     members: [],
     board_users: [],
+    background_image: null
+
   });
 
   const [isAddingList, setIsAddingList] = useState<boolean>(false);
@@ -170,23 +170,23 @@ const Boards: React.FC<BoardsProps> = ({
           break;
 
 
-          case 'set_status':
-            console.log('Received set_status:', payload);
-            setBoardData((prevData) => {
-              const newBoardData = { ...prevData };
-              const userIndex = newBoardData.board_users.findIndex(user => user.id === payload.user_id);
-              if (userIndex !== -1) {
-                newBoardData.board_users[userIndex].user_status = payload.new_status;
-              }
-              return newBoardData;
-            });
-          
-            const updatedBoardUsers = selectedBoard?.board_users.map((user) =>
-              user.id === payload.user_id ? { ...user, user_status: payload.new_status } : user
-            );
-          
-            setCurrent_board_users(updatedBoardUsers || []);
-            break;
+        case 'set_status':
+          console.log('Received set_status:', payload);
+          setBoardData((prevData) => {
+            const newBoardData = { ...prevData };
+            const userIndex = newBoardData.board_users.findIndex(user => user.id === payload.user_id);
+            if (userIndex !== -1) {
+              newBoardData.board_users[userIndex].user_status = payload.new_status;
+            }
+            return newBoardData;
+          });
+
+          const updatedBoardUsers = selectedBoard?.board_users.map((user) =>
+            user.id === payload.user_id ? { ...user, user_status: payload.new_status } : user
+          );
+
+          setCurrent_board_users(updatedBoardUsers || []);
+          break;
 
         case 'create':
         case 'update':
@@ -324,6 +324,7 @@ const Boards: React.FC<BoardsProps> = ({
             owner_email: '',
             members: [],
             board_users: [],
+            background_image: null
           });
 
           if (payload.board_id) {
@@ -680,10 +681,8 @@ const Boards: React.FC<BoardsProps> = ({
 
 
   return (
-    <DndProvider backend={isMobile ? TouchBackend : HTML5Backend}
-      options={isMobile ? { enableMouseEvents: true } : undefined}
-    >
-      <div className='members_container'>
+      <div className='members_container'
+      >
         {boards.length > 0 && (
           <div>
             {!isBoardsLoaded ? (
@@ -776,7 +775,6 @@ const Boards: React.FC<BoardsProps> = ({
         </div>
 
       </div>
-    </DndProvider >
   );
 };
 

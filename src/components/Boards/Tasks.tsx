@@ -54,7 +54,7 @@ const Task: React.FC<TaskProps> = ({ task, deleteTask, updateTask, moveTaskWithi
 
   const [{ isDragging }, drag] = useDrag(() => ({
     type: ItemTypes.TASK,
-    item: { id: task.id, listId: task.list },
+    item: { id: task.id, listId: task.list, title: task.title }, 
     collect: (monitor) => ({
       isDragging: !!monitor.isDragging(),
     }),
@@ -76,17 +76,17 @@ const Task: React.FC<TaskProps> = ({ task, deleteTask, updateTask, moveTaskWithi
       return draggedTask.listId === task.list;
     },
   });
-  
+
   const [, dragReorder] = useDrag(() => ({
     type: ItemTypes.REORDER,
-    item: { id: task.id, listId: task.list },
+  item: { id: task.id, listId: task.list, title: task.title }, // <-- add title here
     collect: (monitor) => ({
       isDraggingReorder: !!monitor.isDragging(),
     }),
   }));
 
 
-// ============================================= show drop zone when dragging =========================================
+  // ============================================= show drop zone when dragging =========================================
 
   const [isDropZoneVisible, setIsDropZoneVisible] = useState(false);
 
@@ -94,7 +94,7 @@ const Task: React.FC<TaskProps> = ({ task, deleteTask, updateTask, moveTaskWithi
     const timeout = setTimeout(() => {
       setIsDropZoneVisible(isOver && canDrop); // Show drop zone only if canDrop is true
     }, 100); // Add a 100ms debounce delay
-  
+
     return () => clearTimeout(timeout);
   }, [isOver, canDrop]);
 
@@ -164,7 +164,7 @@ const Task: React.FC<TaskProps> = ({ task, deleteTask, updateTask, moveTaskWithi
     <>
       <div
         className={`drop-placeholder ${isDropZoneVisible ? '' : 'hidden'}`}
-        key={`drop-placeholder-${task.id}`} 
+        key={`drop-placeholder-${task.id}`}
       ></div>
 
       <div

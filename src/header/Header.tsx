@@ -9,7 +9,10 @@ import themes from '../utils/theme';
 import { useNavigate } from 'react-router-dom';
 import Avatar from '@mui/material/Avatar'; // Import Avatar from Material-UI
 import getAvatarStyles from "../utils/SetRandomColor";
-
+import { Dropdown } from 'antd';
+import { AiFillSkin } from "react-icons/ai"; // Optional: theme icon
+import { GlobalOutlined } from '@ant-design/icons'; // AntD icon for language
+import type { MenuProps } from 'antd';
 
 
 interface HeaderProps {
@@ -22,6 +25,9 @@ interface HeaderProps {
   setCurrentTheme: (currentTheme: ThemeSpecs) => void;
   isCustomThemeSelected: boolean;
   saved_custom_theme: ThemeSpecs;
+  isMobile: boolean; // Optional prop for mobile view
+  setLanguage: (language: 'en' | 'ka') => void;
+  language: 'en' | 'ka';
 }
 
 
@@ -35,7 +41,10 @@ const Header: React.FC<HeaderProps> = ({
   currentTheme,
   setCurrentTheme,
   // isCustomThemeSelected,
-  saved_custom_theme
+  saved_custom_theme,
+  isMobile,
+  setLanguage,
+  language
 }) => {
 
   const [showHeader, setShowHeader] = useState<boolean>(true);
@@ -43,7 +52,7 @@ const Header: React.FC<HeaderProps> = ({
   const navigate = useNavigate();
 
 
-// 
+  // 
   useEffect(() => {
     if (location.pathname === "/" || location.pathname === "/register") {
       setShowHeader(false);
@@ -53,6 +62,14 @@ const Header: React.FC<HeaderProps> = ({
     }
   }, [location.pathname])
 
+
+  // ======================================== language change function =========================================
+  const handleLanguageChange = (lang: 'en' | 'ka') => {
+    setLanguage(lang);
+    // Optionally, persist language selection:
+    localStorage.setItem('language', lang);
+    // Add your i18n logic here if needed
+  };
 
 
   // ============================== theme change function ======================================
@@ -75,65 +92,183 @@ const Header: React.FC<HeaderProps> = ({
   }
 
   // ==============================================================================================
-  // '--background-color': background_color,
-  // '--border-color': border_color,
-  // '--main-text-coloure': main_text_coloure,
-  // '--scrollbar-thumb-color': scrollbar_thumb_color,
-  // '--list-background-color': list_background_color,
-  // '--task-background-color': task_background_color,
-
 
   const handle_return_to_custom_theme = () => {
-    // Apply the saved custom theme to the document
     for (const [key, value] of Object.entries(saved_custom_theme)) {
       document.documentElement.style.setProperty(key, value);
     }
-  
-    // Update the body styles
     document.body.style.backgroundColor = saved_custom_theme['--background-color'];
     document.body.style.color = saved_custom_theme['--main-text-coloure'];
-  
-    // Update the current theme state
     setCurrentTheme(saved_custom_theme);
-  
     // Optionally, update the localStorage to reflect the custom theme selection
     localStorage.setItem('isCustomThemeSelected', 'true');
   };
-  // ==============================================================================================
+
+
+  // ===========================================  dropdown styles   ================================================
+
+
+
+  const themeMenu: MenuProps = {
+    items: [
+      {
+        key: 'dark_gray',
+        label: (
+          <div className='header_coloure_child_container example2'
+            onClick={() => changeTheme(themes.dark_gray)} />
+        ),
+      },
+      {
+        key: 'dark_blue',
+        label: (
+          <div className='header_coloure_child_container example3'
+            onClick={() => changeTheme(themes.dark_blue)} />
+        ),
+      },
+      {
+        key: 'yellow',
+        label: (
+          <div className='header_coloure_child_container example4'
+            onClick={() => changeTheme(themes.yellow)} />
+        ),
+      },
+      {
+        key: 'light_green',
+        label: (
+          <div className='header_coloure_child_container example5'
+            onClick={() => changeTheme(themes.light_green)} />
+        ),
+      },
+      {
+        key: 'custom',
+        label: (
+          <div
+            className='custom_theme_container_in_header'
+            style={{
+              backgroundColor: saved_custom_theme['--background-color'],
+              borderColor: saved_custom_theme['--border-color']
+            }}
+            onClick={handle_return_to_custom_theme}
+          >
+            Custom Theme
+          </div>
+        ),
+      },
+    ],
+  };
+
+  // Language dropdown menu
+  const languageMenu: MenuProps = {
+    items: [
+      {
+        key: 'en',
+        label: (
+          <div
+            className={`language_option${language === 'en' ? ' selected' : ''}`}
+            onClick={() => handleLanguageChange('en')}
+          >
+            <p style={{ color: currentTheme['--main-text-coloure'], margin: 0 }}>
+              🇬🇧 English
+            </p>
+          </div>
+        ),
+      },
+      {
+        key: 'ka',
+        label: (
+          <div
+            className={`language_option${language === 'ka' ? ' selected' : ''}`}
+            onClick={() => handleLanguageChange('ka')}
+          >
+            <p style={{ color: currentTheme['--main-text-coloure'], margin: 0 }}>
+              🇬🇪 ქართული
+            </p>
+          </div>
+        ),
+      },
+    ],
+  };
+
+
   return (
     <div className={`main_Header_container ${!isAuthenticated ? "hide_container" : ''}  ${!showHeader ? 'hide_header' : ""} `}
-      style={{ 
+      style={{
         backdropFilter: 'blur(10px)', // Apply blur effect to the background
         WebkitBackdropFilter: 'blur(10px)', // Safari support
         backgroundColor: 'rgba(0, 0, 0, 0.5)', // Semi-transparent black for darker effect
+
       }}
     >
       <div className='header_logo_container' >
         <LogoComponent />
       </div>
 
-      <div className='header_coloure_container'>
-        <div className='header_coloure_child_container example2'
-          onClick={() => changeTheme(themes.dark_gray)}></div>
-        <div className='header_coloure_child_container example3'
-          onClick={() => changeTheme(themes.dark_blue)}></div>
-        <div className='header_coloure_child_container example4'
-          onClick={() => changeTheme(themes.yellow)}></div>
-        <div className='header_coloure_child_container example5'
-          onClick={() => changeTheme(themes.light_green)}></div>
+      {/* theme and language dropdowns*/}
+      <div className="header_all_dropdowns_container" >
+        {!isMobile ? (
+          <div className='header_coloure_container'>
+            <div className='header_coloure_child_container example2'
+              onClick={() => changeTheme(themes.dark_gray)}></div>
+            <div className='header_coloure_child_container example3'
+              onClick={() => changeTheme(themes.dark_blue)}></div>
+            <div className='header_coloure_child_container example4'
+              onClick={() => changeTheme(themes.yellow)}></div>
+            <div className='header_coloure_child_container example5'
+              onClick={() => changeTheme(themes.light_green)}></div>
 
-        <div className='custom_theme_container_in_header'
-          style={{
-            backgroundColor: saved_custom_theme['--background-color'],
-            borderColor: saved_custom_theme['--border-color']
-          }}
-          onClick={handle_return_to_custom_theme} 
+            <div className='custom_theme_container_in_header'
+              style={{
+                backgroundColor: saved_custom_theme['--background-color'],
+                borderColor: saved_custom_theme['--border-color']
+              }}
+              onClick={handle_return_to_custom_theme}
+            >
+              Custom Theme
+            </div>
+          </div>
 
-        >
-          Custom Theme
+        ) : (
+          <div className="mobile_theme_dropdown_wrapper"
+          >
+            <Dropdown
+              menu={themeMenu}
+              placement="bottomLeft"
+              arrow
+              overlayClassName="custom-centered-dropdown"
+
+            >
+              <button className="mobile_theme_dropdown_btn"
+                style={{
+                  backgroundColor: currentTheme['--list-background-color'],
+                }}
+              >
+                <AiFillSkin size={20} style={{ color: currentTheme['--main-text-coloure'] }} />
+              </button>
+            </Dropdown>
+          </div>
+        )}
+
+        {/* Language Dropdown */}
+        <div className="mobile_language_dropdown_wrapper">
+          <Dropdown
+            menu={languageMenu}
+            placement="bottomLeft"
+            arrow
+            overlayClassName="custom-centered-dropdown"
+
+          >
+            <button className="mobile_language_dropdown_btn"
+              style={{
+                backgroundColor: currentTheme['--list-background-color'],
+              }}
+            >
+              <GlobalOutlined style={{ marginRight: 6, color: currentTheme['--main-text-coloure'] }} />
+              <p style={{ color: currentTheme['--main-text-coloure'], margin: 0 }}>
+                {language === 'en' ? 'EN' : 'KA'}
+              </p>
+            </button>
+          </Dropdown>
         </div>
-
-
       </div>
 
 
@@ -158,9 +293,12 @@ const Header: React.FC<HeaderProps> = ({
             </Avatar>
           )}
         </div>
-      </div>
-      <div>
-        <button onClick={handleLogOut}  >logout</button>
+
+        {!isMobile && (
+          <div>
+            <button onClick={handleLogOut}  >logout</button>
+          </div>
+        )}
       </div>
     </div>
   )
