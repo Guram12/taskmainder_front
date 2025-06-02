@@ -25,6 +25,7 @@ import { NotificationPayload } from './utils/interface';
 
 
 const App: React.FC = () => {
+  const [language, setLanguage] = useState<'en' | 'ka'>('en');
 
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -49,7 +50,7 @@ const App: React.FC = () => {
   const list_background_color = localStorage.getItem('list_background_color') || '#ffffff';
   const task_background_color = localStorage.getItem('task_background_color') || '#f0f0f0';
 
-  
+
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
 
 
@@ -362,7 +363,10 @@ const App: React.FC = () => {
         isCustomThemeSelected={isCustomThemeSelected}
         saved_custom_theme={saved_custom_theme}
         setCurrentTheme={setCurrentTheme}
-        
+        isMobile={isMobile}
+        setLanguage={setLanguage}
+        language={language}
+
       />
       <Routes>
         <Route path="/" element={<Login setIsAuthenticated={setIsAuthenticated} />} />
@@ -397,6 +401,7 @@ const App: React.FC = () => {
             setIsCustomThemeSelected={setIsCustomThemeSelected}
             setSaved_custom_theme={setSaved_custom_theme}
             isMobile={isMobile}
+            setIsAuthenticated={setIsAuthenticated}
           />} />
       </Routes>
     </Router>

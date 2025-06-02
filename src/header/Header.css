@@ -2,7 +2,6 @@
 
 
 .main_Header_container {
-  /* width: 100%; */
   height: 100px;
   border: 1px solid rebeccapurple;
   display: flex;
@@ -89,7 +88,7 @@
   cursor: pointer;
 }
 
-.custom_theme_container_in_header{
+.custom_theme_container_in_header {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -100,6 +99,69 @@
   border-radius: 30px;
   font-size: 13px;
 }
+
+/* ------------------------------------- mobile theme dropdown  styles -------------------------------------------------- */
+
+
+
+.mobile_theme_dropdown_wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  margin-left: 10px;
+}
+
+.mobile_theme_dropdown_btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 64px;
+  border: 1px solid var(--border-color, #ccc);
+  border-radius: 24px;
+  padding: 6px;
+  font-size: 15px;
+  cursor: pointer;
+  transition: background 0.2s, border-color 0.2s;
+  outline: none;
+}
+
+
+
+.theme_dropdown {
+  min-width: 160px;
+  padding: 12px 8px;
+  background: var(--background-color);
+  border-radius: 10px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.18);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  z-index: 9999;
+}
+
+.theme_dropdown .header_coloure_child_container {
+  width: 100%;
+  height: 28px;
+  border-radius: 18px;
+  border: 1px solid #333;
+  margin-bottom: 4px;
+}
+
+.theme_dropdown .custom_theme_container_in_header {
+  width: 100%;
+  height: 28px;
+  border-radius: 18px;
+  font-size: 14px;
+  border: 1px solid;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 6px;
+}
+
+/* ------------------------------------- mobile theme dropdown  styles -------------------------------------------------- */
+
+
 /* ======================================= vheader profile conmtainer styles ================================== */
 
 .header_profile_container {
@@ -125,3 +187,59 @@
 }
 
 
+@media screen and (max-width: 768px) {
+  .main_Header_container {
+    height: 100px;
+    border: 1px solid rebeccapurple;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: var(--background-color);
+    transition: background-color 0.3s ease, border-color 0.3s ease;
+
+  }
+
+  /* ------------------------------------- mobile theme dropdown  styles -------------------------------------------------- */
+  .mobile_language_dropdown_wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+    margin-left: 10px;
+  }
+
+  .language_dropdown {
+    min-width: 100px;
+    padding: 12px 8px;
+    background: var(--background-color);
+    border-radius: 10px;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.18);
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    z-index: 9999;
+  }
+
+  .mobile_language_dropdown_btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 64px;
+    border: 0.5px solid var(--border-color, #ccc);
+    border-radius: 24px;
+    padding: 6px;
+    font-size: 15px;
+    cursor: pointer;
+    transition: background 0.2s, border-color 0.2s;
+    outline: none;
+  }
+
+
+
+
+
+
+
+
+
+
+}

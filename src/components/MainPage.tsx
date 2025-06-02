@@ -43,6 +43,7 @@ interface MainPageProps {
   setIsCustomThemeSelected: (isCustomThemeSelected: boolean) => void;
   setSaved_custom_theme: (theme: ThemeSpecs) => void;
   isMobile: boolean; // Optional prop for mobile view
+  setIsAuthenticated: (isAuthenticated: boolean) => void;
 }
 
 const MainPage: React.FC<MainPageProps> = ({
@@ -71,6 +72,7 @@ const MainPage: React.FC<MainPageProps> = ({
   setIsCustomThemeSelected,
   setSaved_custom_theme,
   isMobile,
+  setIsAuthenticated,
 }) => {
   const [selectedComponent, setSelectedComponent] = useState<string>("Boards");
 
@@ -212,7 +214,20 @@ const MainPage: React.FC<MainPageProps> = ({
   // ===========================================================================================================
 
   const memoizedRenderComponent = useMemo(() => renderComponent(), [renderComponent]);
-  const [is_sidebar_open_on_mobile, setIs_sidebar_open_on_mobile] = useState(false);
+  const [is_sidebar_open_on_mobile, setIs_sidebar_open_on_mobile] = useState<boolean>(true);
+  const [showSidebarOpenArrow, setShowSidebarOpenArrow] = useState<boolean>(false);
+
+  useEffect(() => {
+    if (is_sidebar_open_on_mobile) {
+      setTimeout(() => {
+        setShowSidebarOpenArrow(is_sidebar_open_on_mobile);
+      }, 500);
+    } else {
+      setShowSidebarOpenArrow(is_sidebar_open_on_mobile);
+    }
+  }, [is_sidebar_open_on_mobile]);
+
+
 
   return (
     <div className="mainpage_component"
@@ -224,7 +239,7 @@ const MainPage: React.FC<MainPageProps> = ({
         </div>
       )}
 
-      {is_sidebar_open_on_mobile && isMobile && (
+      {showSidebarOpenArrow && isMobile && (
         <div
           className="side_open_rectangle_container"
           onClick={() => setIs_sidebar_open_on_mobile(false)}
@@ -238,7 +253,7 @@ const MainPage: React.FC<MainPageProps> = ({
           />
         </div>
       )}
-      
+
       <SidebarComponent
         currentTheme={currentTheme}
         boards={boards}
@@ -252,6 +267,7 @@ const MainPage: React.FC<MainPageProps> = ({
         isMobile={isMobile}
         setIs_sidebar_open_on_mobile={setIs_sidebar_open_on_mobile}
         is_sidebar_open_on_mobile={is_sidebar_open_on_mobile}
+        setIsAuthenticated={setIsAuthenticated}
       />
       {memoizedRenderComponent}
     </div>

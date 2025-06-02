@@ -162,11 +162,11 @@ export default Settings;
 // Update Profile Information     +
 // Custom Avatars                 +
 // Change Password                +
-// Theme Customization
-// Notification Preferences 
+// report bug or feedback  ???    
+// Theme Customization            +   
+// Notification                   +
 // Account Deletion               +
 // Language Preferences
-// Export/Import Data  ???
 // Keyboard Shortcuts  ???
 // Logout from All Devices  ???
 

@@ -65,6 +65,8 @@ const Boards: React.FC<BoardsProps> = ({
     owner_email: '',
     members: [],
     board_users: [],
+    background_image: null
+
   });
 
   const [isAddingList, setIsAddingList] = useState<boolean>(false);
@@ -170,23 +172,23 @@ const Boards: React.FC<BoardsProps> = ({
           break;
 
 
-          case 'set_status':
-            console.log('Received set_status:', payload);
-            setBoardData((prevData) => {
-              const newBoardData = { ...prevData };
-              const userIndex = newBoardData.board_users.findIndex(user => user.id === payload.user_id);
-              if (userIndex !== -1) {
-                newBoardData.board_users[userIndex].user_status = payload.new_status;
-              }
-              return newBoardData;
-            });
-          
-            const updatedBoardUsers = selectedBoard?.board_users.map((user) =>
-              user.id === payload.user_id ? { ...user, user_status: payload.new_status } : user
-            );
-          
-            setCurrent_board_users(updatedBoardUsers || []);
-            break;
+        case 'set_status':
+          console.log('Received set_status:', payload);
+          setBoardData((prevData) => {
+            const newBoardData = { ...prevData };
+            const userIndex = newBoardData.board_users.findIndex(user => user.id === payload.user_id);
+            if (userIndex !== -1) {
+              newBoardData.board_users[userIndex].user_status = payload.new_status;
+            }
+            return newBoardData;
+          });
+
+          const updatedBoardUsers = selectedBoard?.board_users.map((user) =>
+            user.id === payload.user_id ? { ...user, user_status: payload.new_status } : user
+          );
+
+          setCurrent_board_users(updatedBoardUsers || []);
+          break;
 
         case 'create':
         case 'update':
@@ -324,6 +326,7 @@ const Boards: React.FC<BoardsProps> = ({
             owner_email: '',
             members: [],
             board_users: [],
+            background_image: null
           });
 
           if (payload.board_id) {

@@ -39,7 +39,6 @@
 .close_dashboard_container {
   position: absolute;
   right: 0px;
-  border: 1px solid red;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -89,7 +88,7 @@
   justify-content: center;
   align-items: center;
   position: absolute;
-  right:  0px;
+  right: 0px;
 }
 
 .pin_icon {
@@ -97,6 +96,9 @@
   height: 30px;
 }
 
+
+/* ====================================================== mapped boards  styles  for mobile ===================================== */
+*/
 /* ======================================== icon styles in sidebar ===================================== */
 
 .dashboard_icon {
@@ -108,13 +110,25 @@
   font-size: 25px;
 }
 
+.logout_icon_container {
+  position: absolute;
+  right: 10px;
+  bottom: 8px;
+}
+
+.logout_icon{
+  width: 25px;
+  height: 25px;
+  cursor: pointer;
+  color: red;
+}
 /* ----------------------------------------------------------- mobile styles -------------------------------------------------------- */
 @media screen and (max-width: 768px) {
   .sidebar_main_container {
     width: 100% !important;
     position: fixed;
     transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-    z-index: 9999999999;
+    z-index: 9;
     overflow: hidden;
   }
 
@@ -142,6 +156,12 @@
 
   .sidebar_lbrary {
     width: 100% !important;
+  }
+
+
+  .mapped_boards_container {
+    max-height: 350px;
+    overflow-y: auto;
   }
 
 }
