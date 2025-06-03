@@ -1,6 +1,5 @@
 import '../../styles/Board Styles/Boards.css';
 import React, { useState, useEffect, useRef } from "react";
-
 import { ThemeSpecs } from '../../utils/theme';
 import Members from '../Members';
 import List from './Lists';
@@ -674,6 +673,7 @@ const Boards: React.FC<BoardsProps> = ({
       }
     };
   }, []);
+  // ==============================================================================================================
 
   const is_any_board_selected = selectedBoard?.name !== '';
 
@@ -681,100 +681,100 @@ const Boards: React.FC<BoardsProps> = ({
 
 
   return (
-      <div className='members_container'
-      >
-        {boards.length > 0 && (
-          <div>
-            {!isBoardsLoaded ? (
-              <div className='skeleton_in_board' >
-                <SkeletonMember currentTheme={currentTheme} />
-              </div>
-            ) : (
-              <Members
-                selectedBoard={selectedBoard}
-                socketRef={socketRef}
-                current_user_email={current_user_email}
-                currentTheme={currentTheme}
-                update_board_name={update_board_name}
-                deleteBoard={deleteBoard}
-                setCurrent_board_users={setCurrent_board_users}
-                current_board_users={current_board_users}
-                is_cur_Board_users_fetched={is_cur_Board_users_fetched}
-                fetch_current_board_users={fetch_current_board_users}
-                setBoards={setBoards}
-                boards={boards}
-                is_members_refreshing={is_members_refreshing}
-              />
+    <div className='members_container'
+    >
+      {boards.length > 0 && (
+        <div>
+          {!isBoardsLoaded ? (
+            <div className='skeleton_in_board' >
+              <SkeletonMember currentTheme={currentTheme} />
+            </div>
+          ) : (
+            <Members
+              selectedBoard={selectedBoard}
+              socketRef={socketRef}
+              current_user_email={current_user_email}
+              currentTheme={currentTheme}
+              update_board_name={update_board_name}
+              deleteBoard={deleteBoard}
+              setCurrent_board_users={setCurrent_board_users}
+              current_board_users={current_board_users}
+              is_cur_Board_users_fetched={is_cur_Board_users_fetched}
+              fetch_current_board_users={fetch_current_board_users}
+              setBoards={setBoards}
+              boards={boards}
+              is_members_refreshing={is_members_refreshing}
+            />
 
+          )}
+        </div>
+      )}
+
+
+      {isBoardsLoaded && boards.length === 0 && (
+        <NoBoards currentTheme={currentTheme} />
+      )}
+
+      <div className={`main_boards_container ${boards.length === 0 && isBoardsLoaded ? 'remove_height' : 'add_height'}`}  >
+        {!isBoardsLoaded ? (
+          <SkeletonLoader currentTheme={currentTheme} />
+        ) : (
+
+          < div className='lists_container' ref={listsContainerRef}>
+            {boardData.lists.map((list) => (
+              <List
+                key={list.id}
+                list={list}
+                moveTask={moveTask}
+                addTask={addTask}
+                deleteTask={deleteTask}
+                updateTask={updateTask}
+                socketRef={socketRef}
+                currentTheme={currentTheme}
+                deleteList={deleteList}
+                updateListName={updateListName}
+                allCurrentBoardUsers={allCurrentBoardUsers}
+                isLoading={loadingLists[list.id] || false}
+                setBoardData={setBoardData}
+                boardData={boardData}
+              />
+            ))}
+
+            {isAddingList && (
+              <SkeletonListLoader currentTheme={currentTheme} />
+            )}
+
+            {is_any_board_selected && (
+              <div className='list'
+                style={{ backgroundColor: `${currentTheme['--list-background-color']}` }}
+              >
+                {!Adding_new_list ?
+                  (
+                    <button onClick={() => setAdding_new_list(true)} >Create List</button>
+                  )
+                  :
+                  (
+                    <div className='add_new_list_cont' >
+                      <input
+                        type="text"
+                        placeholder='List Name'
+                        value={ListName}
+                        onChange={(e) => setListName(e.target.value)}
+                        required
+                      />
+                      <button onClick={() => addList()}  >Add</button>
+                      <button onClick={() => setAdding_new_list(false)}  >Cansel</button>
+                    </div>
+                  )
+                }
+
+              </div>
             )}
           </div>
         )}
-
-
-        {isBoardsLoaded && boards.length === 0 && (
-          <NoBoards currentTheme={currentTheme} />
-        )}
-
-        <div className={`main_boards_container ${boards.length === 0 && isBoardsLoaded ? 'remove_height' : 'add_height'}`}  >
-          {!isBoardsLoaded ? (
-            <SkeletonLoader currentTheme={currentTheme} />
-          ) : (
-
-            < div className='lists_container' ref={listsContainerRef}>
-              {boardData.lists.map((list) => (
-                <List
-                  key={list.id}
-                  list={list}
-                  moveTask={moveTask}
-                  addTask={addTask}
-                  deleteTask={deleteTask}
-                  updateTask={updateTask}
-                  socketRef={socketRef}
-                  currentTheme={currentTheme}
-                  deleteList={deleteList}
-                  updateListName={updateListName}
-                  allCurrentBoardUsers={allCurrentBoardUsers}
-                  isLoading={loadingLists[list.id] || false}
-                  setBoardData={setBoardData}
-                  boardData={boardData}
-                />
-              ))}
-
-              {isAddingList && (
-                <SkeletonListLoader currentTheme={currentTheme} />
-              )}
-
-              {is_any_board_selected && (
-                <div className='list'
-                  style={{ backgroundColor: `${currentTheme['--list-background-color']}` }}
-                >
-                  {!Adding_new_list ?
-                    (
-                      <button onClick={() => setAdding_new_list(true)} >Create List</button>
-                    )
-                    :
-                    (
-                      <div className='add_new_list_cont' >
-                        <input
-                          type="text"
-                          placeholder='List Name'
-                          value={ListName}
-                          onChange={(e) => setListName(e.target.value)}
-                          required
-                        />
-                        <button onClick={() => addList()}  >Add</button>
-                        <button onClick={() => setAdding_new_list(false)}  >Cansel</button>
-                      </div>
-                    )
-                  }
-
-                </div>
-              )}
-            </div>
-          )}
-        </div>
-
       </div>
+
+    </div>
   );
 };
 

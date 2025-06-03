@@ -19,7 +19,6 @@ import { NotificationPayload } from './utils/interface';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import { TouchBackend } from 'react-dnd-touch-backend';
-import { useDragLayer } from 'react-dnd';
 import CustomDragLayer from './components/Boards/CustomDragLayer';
 
 
@@ -355,7 +354,10 @@ const App: React.FC = () => {
   // ========================================================================================================
 
   return (
-    <DndProvider backend={isMobile ? TouchBackend : HTML5Backend} options={isMobile ? { enableMouseEvents: true } : undefined}>
+    <DndProvider
+      backend={isMobile ? TouchBackend : HTML5Backend}
+      options={isMobile ? { enableMouseEvents: true, enableTouchScroll: true } : undefined}
+    >
 
       <Router>
         <Header

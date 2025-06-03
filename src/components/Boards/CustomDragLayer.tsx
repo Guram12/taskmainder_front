@@ -51,6 +51,7 @@ const CustomDragLayer: React.FC = () => {
             boxShadow: '0 2px 8px rgba(0,0,0,0.15)',
             minWidth: 200,
             opacity: 0.9,
+            
           }}
         >
           {item.title || 'Dragging...'}
