@@ -13,6 +13,7 @@ import { MdRadioButtonUnchecked } from "react-icons/md";
 import Avatar from '@mui/material/Avatar'; // Import Avatar from Material-UI
 import getAvatarStyles from '../../utils/SetRandomColor';
 import { useDraggable } from '@dnd-kit/core';
+import { RxDragHandleDots2 } from "react-icons/rx";
 
 
 
@@ -46,6 +47,55 @@ const Task: React.FC<TaskProps> = ({ task, deleteTask, updateTask, moveTaskWithi
 
     filterAssociatedUsers();
   }, [task.task_associated_users_id, allCurrentBoardUsers]);
+
+  // REMOVE react-dnd useDrag/useDrop
+  // const ItemTypes = {
+  //   TASK: 'task',
+  //   REORDER: 'reorder', // New type for reordering
+  // };
+  // const [{  }, drag] = useDrag(() => ({
+  //   type: ItemTypes.TASK,
+  //   item: { id: task.id, listId: task.list, title: task.title }, 
+  //   collect: (monitor) => ({
+  //     isDragging: !!monitor.isDragging(),
+  //   }),
+  // }));
+  // const [{ isOver, canDrop }, drop] = useDrop({
+  //   accept: ItemTypes.REORDER,
+  //   drop: (draggedTask: { id: number; listId: number }) => {
+  //     if (draggedTask.id !== task.id && draggedTask.listId === task.list) {
+  //       moveTaskWithinList(draggedTask.id, task.id, task.list);
+  //     }
+  //   },
+  //   collect: (monitor) => ({
+  //     isOver: !!monitor.isOver(),
+  //     canDrop: monitor.canDrop(),
+  //   }),
+  //   canDrop: (draggedTask: { id: number; listId: number }) => {
+  //     // Only allow drop if the dragged task is from the same list
+  //     return draggedTask.listId === task.list;
+  //   },
+  // });
+  // const [, dragReorder] = useDrag(() => ({
+  //   type: ItemTypes.REORDER,
+  //   item: { id: task.id, listId: task.list, title: task.title }, // <-- add title here
+  //   collect: (monitor) => ({
+  //     isDraggingReorder: !!monitor.isDragging(),
+  //   }),
+  // }));
+
+  // ============================================= show drop zone when dragging =========================================
+
+  // const [isDropZoneVisible, setIsDropZoneVisible] = useState(false);
+
+  // useEffect(() => {
+  //   const timeout = setTimeout(() => {
+  //     setIsDropZoneVisible(isOver && canDrop); // Show drop zone only if canDrop is true
+  //   }, 100); // Add a 100ms debounce delay
+
+  //   return () => clearTimeout(timeout);
+  // }, [isOver, canDrop]);
+
 
   // =======================================    delete task functions   ======================================
 
@@ -142,13 +192,13 @@ const Task: React.FC<TaskProps> = ({ task, deleteTask, updateTask, moveTaskWithi
           <div className='edit_drag_icon_container'>
             <MdModeEdit className='edit_task_icon' onClick={handleTaskClick} />
             {/* Attach drag listeners only to the drag handle */}
-            <div
-              className="drag_handle"
-              {...listeners}
-              {...attributes}
-              style={{ cursor: 'grab' }}
-            >
-              <BiMoveVertical className='drag_icon' />
+            <div className='drag_bouth_handlers_container'>
+              <div className='reorder_container' >
+                <BiMoveVertical className='reorder_icon' />
+              </div>
+              <div className="drag_handle"  {...listeners}  {...attributes} style={{ cursor: 'grab' }}>
+                <RxDragHandleDots2 className='drag_icon' />
+              </div>
             </div>
           </div>
         </div>
