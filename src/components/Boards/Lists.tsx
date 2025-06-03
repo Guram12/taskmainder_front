@@ -57,12 +57,6 @@ const List: React.FC<ListProps> = ({
 
 
 
-  // =========================================u=====  drag and drop ==========================================
-
-  // DND-KIT: Make this list a droppable area
-  const { setNodeRef, isOver: isOverDnd } = useDroppable({
-    id: dndListId, // This should be a number (list.id)
-  });
 
 
   // ==========================================  add task inside list ==========================================
@@ -74,43 +68,6 @@ const List: React.FC<ListProps> = ({
     }
   };
 
-  // // ==========================================  move task inside list ==========================================
-
-  const moveTaskWithinList = (draggedTaskId: number, targetTaskId: number, listId: number) => {
-    const draggedTaskIndex = list.tasks.findIndex((task) => task.id === draggedTaskId);
-    const targetTaskIndex = list.tasks.findIndex((task) => task.id === targetTaskId);
-
-    if (draggedTaskIndex !== -1 && targetTaskIndex !== -1) {
-      // Optimistically update the UI
-      const updatedTasks = [...list.tasks];
-      const [draggedTask] = updatedTasks.splice(draggedTaskIndex, 1);
-      updatedTasks.splice(targetTaskIndex, 0, draggedTask);
-
-      // Create the updated board data
-      const updatedBoardData: board = {
-        ...boardData, // Spread the current board data
-        lists: boardData.lists.map((listItem) => {
-          if (listItem.id === listId) {
-            return { ...listItem, tasks: updatedTasks };
-          }
-          return listItem; // Keep other lists unchanged
-        }),
-      };
-
-      setBoardData(updatedBoardData);
-
-      // Send the updated task order to the backend via WebSocket
-      const taskOrder = updatedTasks.map((task) => task.id);
-      if (socketRef.current && socketRef.current.readyState === WebSocket.OPEN) {
-        socketRef.current.send(
-          JSON.stringify({
-            action: 'reorder_task',
-            payload: { list_id: listId, task_order: taskOrder },
-          })
-        );
-      }
-    }
-  };
 
   // ================================================ delete list ==========================================
   const handle_delete_list_click = () => {
@@ -148,6 +105,13 @@ const List: React.FC<ListProps> = ({
       handleUpdateListName();
     }
   }
+
+  // =========================================u=====  drag and drop ==========================================
+
+  // DND-KIT: Make this list a droppable area
+  const { setNodeRef, isOver: isOverDnd } = useDroppable({
+    id: dndListId, // This should be a number (list.id)
+  });
 
 
   return (
@@ -202,19 +166,40 @@ const List: React.FC<ListProps> = ({
       </div>
       <div className='margin_element' ></div>
       {list.tasks.map((task) => (
-        <Task
-          key={task.id}
-          task={task}
-          deleteTask={deleteTask}
-          updateTask={updateTask}
-          // DND-KIT: Pass listId for draggable
-          dndListId={list.id}
-          moveTaskWithinList={() => {}} // Not implemented for now
-          currentTheme={currentTheme}
-          allCurrentBoardUsers={allCurrentBoardUsers}
-        />
-      ))}
+        <>
+          <Task
+            key={task.id}
+            task={task}
+            deleteTask={deleteTask}
+            updateTask={updateTask}
+            // DND-KIT: Pass listId for draggable
+            dndListId={list.id}
+            moveTaskWithinList={() => { }} // Not implemented for now
+            currentTheme={currentTheme}
+            allCurrentBoardUsers={allCurrentBoardUsers}
+          />
 
+        </>
+      ))}
+      {isOverDnd && (
+        <div
+          className="each_task drop-placeholder"
+          style={{
+            border: '2px dashed #15cf8a',
+            background: 'rgba(21, 207, 138, 0.08)',
+            borderRadius: 8,
+            minHeight: 56,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            color: '#15cf8a',
+            fontWeight: 500,
+            margin: '8px 0'
+          }}
+        >
+          Drop task here
+        </div>
+      )}
       <div className='add_task_cont'>
         {isLoading && <SkeletonEachTask currentTheme={currentTheme} />}
         {!isAddingTask ? (

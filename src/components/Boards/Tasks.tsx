@@ -47,55 +47,6 @@ const Task: React.FC<TaskProps> = ({ task, deleteTask, updateTask, moveTaskWithi
     filterAssociatedUsers();
   }, [task.task_associated_users_id, allCurrentBoardUsers]);
 
-  // REMOVE react-dnd useDrag/useDrop
-  // const ItemTypes = {
-  //   TASK: 'task',
-  //   REORDER: 'reorder', // New type for reordering
-  // };
-  // const [{  }, drag] = useDrag(() => ({
-  //   type: ItemTypes.TASK,
-  //   item: { id: task.id, listId: task.list, title: task.title }, 
-  //   collect: (monitor) => ({
-  //     isDragging: !!monitor.isDragging(),
-  //   }),
-  // }));
-  // const [{ isOver, canDrop }, drop] = useDrop({
-  //   accept: ItemTypes.REORDER,
-  //   drop: (draggedTask: { id: number; listId: number }) => {
-  //     if (draggedTask.id !== task.id && draggedTask.listId === task.list) {
-  //       moveTaskWithinList(draggedTask.id, task.id, task.list);
-  //     }
-  //   },
-  //   collect: (monitor) => ({
-  //     isOver: !!monitor.isOver(),
-  //     canDrop: monitor.canDrop(),
-  //   }),
-  //   canDrop: (draggedTask: { id: number; listId: number }) => {
-  //     // Only allow drop if the dragged task is from the same list
-  //     return draggedTask.listId === task.list;
-  //   },
-  // });
-  // const [, dragReorder] = useDrag(() => ({
-  //   type: ItemTypes.REORDER,
-  //   item: { id: task.id, listId: task.list, title: task.title }, // <-- add title here
-  //   collect: (monitor) => ({
-  //     isDraggingReorder: !!monitor.isDragging(),
-  //   }),
-  // }));
-
-  // ============================================= show drop zone when dragging =========================================
-
-  // const [isDropZoneVisible, setIsDropZoneVisible] = useState(false);
-
-  // useEffect(() => {
-  //   const timeout = setTimeout(() => {
-  //     setIsDropZoneVisible(isOver && canDrop); // Show drop zone only if canDrop is true
-  //   }, 100); // Add a 100ms debounce delay
-
-  //   return () => clearTimeout(timeout);
-  // }, [isOver, canDrop]);
-
-
   // =======================================    delete task functions   ======================================
 
   const handleTaskClick = () => {

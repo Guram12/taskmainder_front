@@ -147,17 +147,9 @@ const Boards: React.FC<BoardsProps> = ({
       const { action, payload } = data;
 
       switch (action) {
-        // case 'full_board_state':
-        //   console.log('Received full board state:', payload);
-        //   setBoardData(payload); // Update the board data with the full state
-        //   setSelectedBoard(payload); // Update the selected board with the full state
-        //   setIsBoardsLoaded(true);
-        //   console.log('board loader after receiving full_board_state ==>>', isBoardsLoaded);
-
-        //   break;
-
 
         case 'move_task':
+          console.log('Received move_task:', payload);
           const { task_id, source_list_id, target_list_id } = payload;
           setBoardData((prevData) => {
             const newBoardData = { ...prevData };
