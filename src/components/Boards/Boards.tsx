@@ -16,8 +16,12 @@ import {
   closestCenter,
   DragEndEvent,
   DragOverlay,
+  PointerSensor,
+  TouchSensor,
+  useSensor,
+  useSensors,
 } from '@dnd-kit/core';
-import Task from './Tasks'; // Make sure this import exists
+import Task from './Tasks';
 
 if (isMobile) {
   console.log('Running on a mobile device');
@@ -723,6 +727,23 @@ const Boards: React.FC<BoardsProps> = ({
       moveTask(Number(active.id), Number(activeListId), Number(overListId));
     }
   };
+// ================================================ drag for mobile devices ========================================
+
+const pointerSensor = useSensor(PointerSensor, {
+  activationConstraint: {
+    distance: 5, // Optional: require a small drag before activating
+  },
+});
+const touchSensor = useSensor(TouchSensor, {
+  activationConstraint: {
+    delay: 150, // Optional: long-press before drag starts
+    tolerance: 5,
+  },
+});
+const sensors = useSensors(pointerSensor, touchSensor);
+
+
+
 
   return (
     <div className='members_container'
@@ -765,6 +786,7 @@ const Boards: React.FC<BoardsProps> = ({
         ) : (
           // DND-KIT: Wrap lists in DndContext
           <DndContext
+            sensors={sensors}
             collisionDetection={closestCenter}
             onDragStart={handleDragStart}
             onDragEnd={handleDragEnd}
