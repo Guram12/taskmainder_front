@@ -137,7 +137,12 @@ const Boards: React.FC<BoardsProps> = ({
     }
 
     const token = localStorage.getItem('access_token');
-    const newSocket = new WebSocket(`ws://${window.location.hostname}:8000/ws/boards/${selectedBoard.id}/?token=${token}`);
+    // Detect protocol and set ws or wss accordingly
+    const protocol = window.location.protocol === 'https:' ? 'wss' : 'ws';
+    // Use your backend's public domain or tunnel endpoint, NOT window.location.hostname
+    const backendHost = '446952c95fe5eac0751e5291d4fbd6ca.serveo.net'; // your backend domain or tunnel
+    const wsUrl = `${protocol}://${backendHost}/ws/boards/${selectedBoard.id}/?token=${token}`;
+    const newSocket = new WebSocket(wsUrl);
     socketRef.current = newSocket;
 
 
@@ -727,20 +732,20 @@ const Boards: React.FC<BoardsProps> = ({
       moveTask(Number(active.id), Number(activeListId), Number(overListId));
     }
   };
-// ================================================ drag for mobile devices ========================================
+  // ================================================ drag for mobile devices ========================================
 
-const pointerSensor = useSensor(PointerSensor, {
-  activationConstraint: {
-    distance: 5, // Optional: require a small drag before activating
-  },
-});
-const touchSensor = useSensor(TouchSensor, {
-  activationConstraint: {
-    delay: 150, // Optional: long-press before drag starts
-    tolerance: 5,
-  },
-});
-const sensors = useSensors(pointerSensor, touchSensor);
+  const pointerSensor = useSensor(PointerSensor, {
+    activationConstraint: {
+      distance: 5, // Optional: require a small drag before activating
+    },
+  });
+  const touchSensor = useSensor(TouchSensor, {
+    activationConstraint: {
+      delay: 150, // Optional: long-press before drag starts
+      tolerance: 5,
+    },
+  });
+  const sensors = useSensors(pointerSensor, touchSensor);
 
 
 
