@@ -171,6 +171,14 @@
   transform: scale(1.1);
 }
 
+.drag_bouth_handlers_container{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+}
+
 .drag_handle {
   cursor: grab;
   margin-right: 5px;
@@ -182,15 +190,31 @@
   transition: all 0.3s ease;
 }
 
+.reorder_container{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+}
+
+.reorder_icon{
+  width: 25px;
+  height: 25px;
+  cursor:grab;
+  transition: all 0.3s ease;
+}
+
 .drag_icon {
   width: 25px;
   height: 25px;
+  transition: all 0.3s ease;
 }
 
+.drag_icon:hover {
+  color: #2e78d8;
 
-.drag_handle:hover {
-  color: #d82e2e;
 }
+
 
 
 /* ============================= priority color ============================ */

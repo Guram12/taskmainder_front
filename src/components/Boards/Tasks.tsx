@@ -1,7 +1,6 @@
 import '../../styles/Board Styles/Task.css';
 import React, { useEffect, useState } from 'react';
 import { tasks } from '../../utils/interface';
-import { useDrag, useDrop } from 'react-dnd';
 import TaskUpdateModal from './TaskUpdateModal';
 import { BiMoveVertical } from "react-icons/bi"; // Import drag icon
 import { ThemeSpecs } from '../../utils/theme';
@@ -13,6 +12,8 @@ import { MdRadioButtonChecked } from "react-icons/md";
 import { MdRadioButtonUnchecked } from "react-icons/md";
 import Avatar from '@mui/material/Avatar'; // Import Avatar from Material-UI
 import getAvatarStyles from '../../utils/SetRandomColor';
+import { useDraggable } from '@dnd-kit/core';
+import { RxDragHandleDots2 } from "react-icons/rx";
 
 
 
@@ -23,11 +24,18 @@ interface TaskProps {
   moveTaskWithinList: (draggedTaskId: number, targetTaskId: number, listId: number) => void;
   currentTheme: ThemeSpecs;
   allCurrentBoardUsers: ProfileData[];
-
+  dndListId: number;
 }
 
 
-const Task: React.FC<TaskProps> = ({ task, deleteTask, updateTask, moveTaskWithinList, currentTheme, allCurrentBoardUsers }) => {
+const Task: React.FC<TaskProps> = ({ task,
+  deleteTask,
+  updateTask,
+  // moveTaskWithinList,
+  currentTheme,
+  allCurrentBoardUsers,
+  dndListId,
+}) => {
   const [showUpdateModal, setShowUpdateModal] = useState(false);
   const [associatedUsers, setAssociatedUsers] = useState<ProfileData[]>([]);
 
@@ -47,56 +55,53 @@ const Task: React.FC<TaskProps> = ({ task, deleteTask, updateTask, moveTaskWithi
     filterAssociatedUsers();
   }, [task.task_associated_users_id, allCurrentBoardUsers]);
 
-  const ItemTypes = {
-    TASK: 'task',
-    REORDER: 'reorder', // New type for reordering
-  };
-
-  const [{ isDragging }, drag] = useDrag(() => ({
-    type: ItemTypes.TASK,
-    item: { id: task.id, listId: task.list, title: task.title }, 
-    collect: (monitor) => ({
-      isDragging: !!monitor.isDragging(),
-    }),
-  }));
-
-  const [{ isOver, canDrop }, drop] = useDrop({
-    accept: ItemTypes.REORDER,
-    drop: (draggedTask: { id: number; listId: number }) => {
-      if (draggedTask.id !== task.id && draggedTask.listId === task.list) {
-        moveTaskWithinList(draggedTask.id, task.id, task.list);
-      }
-    },
-    collect: (monitor) => ({
-      isOver: !!monitor.isOver(),
-      canDrop: monitor.canDrop(),
-    }),
-    canDrop: (draggedTask: { id: number; listId: number }) => {
-      // Only allow drop if the dragged task is from the same list
-      return draggedTask.listId === task.list;
-    },
-  });
-
-  const [, dragReorder] = useDrag(() => ({
-    type: ItemTypes.REORDER,
-  item: { id: task.id, listId: task.list, title: task.title }, // <-- add title here
-    collect: (monitor) => ({
-      isDraggingReorder: !!monitor.isDragging(),
-    }),
-  }));
-
+  // REMOVE react-dnd useDrag/useDrop
+  // const ItemTypes = {
+  //   TASK: 'task',
+  //   REORDER: 'reorder', // New type for reordering
+  // };
+  // const [{  }, drag] = useDrag(() => ({
+  //   type: ItemTypes.TASK,
+  //   item: { id: task.id, listId: task.list, title: task.title }, 
+  //   collect: (monitor) => ({
+  //     isDragging: !!monitor.isDragging(),
+  //   }),
+  // }));
+  // const [{ isOver, canDrop }, drop] = useDrop({
+  //   accept: ItemTypes.REORDER,
+  //   drop: (draggedTask: { id: number; listId: number }) => {
+  //     if (draggedTask.id !== task.id && draggedTask.listId === task.list) {
+  //       moveTaskWithinList(draggedTask.id, task.id, task.list);
+  //     }
+  //   },
+  //   collect: (monitor) => ({
+  //     isOver: !!monitor.isOver(),
+  //     canDrop: monitor.canDrop(),
+  //   }),
+  //   canDrop: (draggedTask: { id: number; listId: number }) => {
+  //     // Only allow drop if the dragged task is from the same list
+  //     return draggedTask.listId === task.list;
+  //   },
+  // });
+  // const [, dragReorder] = useDrag(() => ({
+  //   type: ItemTypes.REORDER,
+  //   item: { id: task.id, listId: task.list, title: task.title }, // <-- add title here
+  //   collect: (monitor) => ({
+  //     isDraggingReorder: !!monitor.isDragging(),
+  //   }),
+  // }));
 
   // ============================================= show drop zone when dragging =========================================
 
-  const [isDropZoneVisible, setIsDropZoneVisible] = useState(false);
+  // const [isDropZoneVisible, setIsDropZoneVisible] = useState(false);
 
-  useEffect(() => {
-    const timeout = setTimeout(() => {
-      setIsDropZoneVisible(isOver && canDrop); // Show drop zone only if canDrop is true
-    }, 100); // Add a 100ms debounce delay
+  // useEffect(() => {
+  //   const timeout = setTimeout(() => {
+  //     setIsDropZoneVisible(isOver && canDrop); // Show drop zone only if canDrop is true
+  //   }, 100); // Add a 100ms debounce delay
 
-    return () => clearTimeout(timeout);
-  }, [isOver, canDrop]);
+  //   return () => clearTimeout(timeout);
+  // }, [isOver, canDrop]);
 
 
   // =======================================    delete task functions   ======================================
@@ -158,18 +163,19 @@ const Task: React.FC<TaskProps> = ({ task, deleteTask, updateTask, moveTaskWithi
   };
 
 
+  // DND-KIT: Make this task draggable
+  const { attributes, listeners, setNodeRef, isDragging } = useDraggable({
+    id: task.id,
+    data: { dndListId }, // dndListId should be a number (list.id)
+  });
+
 
 
   return (
     <>
       <div
-        className={`drop-placeholder ${isDropZoneVisible ? '' : 'hidden'}`}
-        key={`drop-placeholder-${task.id}`}
-      ></div>
-
-      <div
         className={`each_task ${isDragging ? 'dragging' : ''}`}
-        ref={(node) => drag(drop(node))}
+        ref={setNodeRef}
         style={{
           opacity: isDragging ? 0.5 : 1,
           backgroundColor: currentTheme['--task-background-color'],
@@ -187,20 +193,21 @@ const Task: React.FC<TaskProps> = ({ task, deleteTask, updateTask, moveTaskWithi
             <MdRadioButtonUnchecked className='not_completed_task_icon' onClick={() => handleCompletionToggle(task)} />
           )}
           {task.priority && (
-            <div className='priority_div' style={getPriorityStyle(task.priority)}>
-
-            </div>
+            <div className='priority_div' style={getPriorityStyle(task.priority)} />
           )}
-
 
           <div className='edit_drag_icon_container'>
             <MdModeEdit className='edit_task_icon' onClick={handleTaskClick} />
-            <div ref={dragReorder} className="drag_handle">
-              <BiMoveVertical className='drag_icon' />
+            {/* Attach drag listeners only to the drag handle */}
+            <div className='drag_bouth_handlers_container'>
+              <div className='reorder_container' >
+                <BiMoveVertical className='reorder_icon' />
+              </div>
+              <div className="drag_handle"  {...listeners}  {...attributes} style={{ cursor: 'grab' }}>
+                <RxDragHandleDots2 className='drag_icon' />
+              </div>
             </div>
           </div>
-
-
         </div>
 
         <div className={`conteiner_for_task_title ${task.completed ? 'task_completed' : ''}`} >

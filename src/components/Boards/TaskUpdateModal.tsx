@@ -12,9 +12,8 @@ import { ProfileData } from '../../utils/interface';
 import Select from 'react-select';
 import { RiDeleteBin2Line } from "react-icons/ri";
 import ConfirmationDialog from './ConfirmationDialog';
-
-
-
+import Avatar from '@mui/material/Avatar';
+import getAvatarStyles from '../../utils/SetRandomColor';
 
 
 interface TaskUpdateModalProps {
@@ -171,13 +170,27 @@ const TaskUpdateModal: React.FC<TaskUpdateModalProps> = ({ task, onClose, update
               <h4 className='prev_as_users_h4' >Previously Associated Users:</h4>
               <div className="associated-users">
                 {associatedUsers.map((user) => (
-                  <img
-                    key={user.id}
-                    src={user.profile_picture}
-                    alt={user.username}
-                    className="associated-user-image"
-                    title={user.username} // Tooltip with username
-                  />
+                  <>
+                    {user.profile_picture ? (
+
+                      <img
+                        key={user.id}
+                        src={user.profile_picture}
+                        alt={user.username}
+                        className="associated-user-image"
+                        title={user.username} 
+                      />
+                    ) : (
+                      <Avatar
+                        style={{
+                          backgroundColor: getAvatarStyles(user.username.charAt(0)).backgroundColor,
+                          color: getAvatarStyles(user.username.charAt(0)).color
+                        }}
+                      >
+                        {user.username.charAt(0).toUpperCase()}
+                      </Avatar>
+                    )}
+                  </>
                 ))}
               </div>
             </div>

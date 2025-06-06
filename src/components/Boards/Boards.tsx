@@ -11,6 +11,17 @@ import SkeletonLoader from './SkeletonLoader';
 import SkeletonMember from './SkeletonMember';
 import NoBoards from '../NoBoards';
 import SkeletonListLoader from './SkeletonListLoader';
+import {
+  DndContext,
+  closestCenter,
+  DragEndEvent,
+  DragOverlay,
+  PointerSensor,
+  TouchSensor,
+  useSensor,
+  useSensors,
+} from '@dnd-kit/core';
+import Task from './Tasks';
 
 if (isMobile) {
   console.log('Running on a mobile device');
@@ -81,6 +92,8 @@ const Boards: React.FC<BoardsProps> = ({
   const listsContainerRef = useRef<HTMLDivElement | null>(null);
   const scrollRef = useRef<{ direction: 'left' | 'right' | null, speed: number }>({ direction: null, speed: 2 }); // Reduced speed
   const isManualScrollRef = useRef(false);
+
+  const [activeTask, setActiveTask] = useState<null | { task: any; listId: number }>(null);
 
 
 
@@ -680,6 +693,58 @@ const Boards: React.FC<BoardsProps> = ({
   // ================================  render boards  ========================================
 
 
+  const handleDragStart = (event: any) => {
+    const { active } = event;
+    const taskId = active.id;
+    const sourceListId = active.data.current?.dndListId;
+    if (typeof taskId === 'number' && typeof sourceListId === 'number') {
+      // Find the task object
+      const sourceList = boardData.lists.find((l) => l.id === sourceListId);
+      const task = sourceList?.tasks.find((t) => t.id === taskId);
+      if (task) {
+        setActiveTask({ task, listId: sourceListId });
+      }
+    }
+  };
+
+  const handleDragEnd = (event: DragEndEvent) => {
+    const { active, over } = event;
+    setActiveTask(null); // Clear overlay
+    if (!over) return;
+
+    const activeListId = active.data.current?.dndListId;
+    const overListId = over.id;
+
+    // Only allow dropping on lists (not on tasks)
+    const isOverAList = boardData.lists.some(list => list.id === overListId);
+
+    if (
+      typeof activeListId === "number" &&
+      typeof overListId === "number" &&
+      activeListId !== overListId &&
+      isOverAList
+    ) {
+      moveTask(Number(active.id), Number(activeListId), Number(overListId));
+    }
+  };
+// ================================================ drag for mobile devices ========================================
+
+const pointerSensor = useSensor(PointerSensor, {
+  activationConstraint: {
+    distance: 5, // Optional: require a small drag before activating
+  },
+});
+const touchSensor = useSensor(TouchSensor, {
+  activationConstraint: {
+    delay: 150, // Optional: long-press before drag starts
+    tolerance: 5,
+  },
+});
+const sensors = useSensors(pointerSensor, touchSensor);
+
+
+
+
   return (
     <div className='members_container'
     >
@@ -719,58 +784,78 @@ const Boards: React.FC<BoardsProps> = ({
         {!isBoardsLoaded ? (
           <SkeletonLoader currentTheme={currentTheme} />
         ) : (
-
-          < div className='lists_container' ref={listsContainerRef}>
-            {boardData.lists.map((list) => (
-              <List
-                key={list.id}
-                list={list}
-                moveTask={moveTask}
-                addTask={addTask}
-                deleteTask={deleteTask}
-                updateTask={updateTask}
-                socketRef={socketRef}
-                currentTheme={currentTheme}
-                deleteList={deleteList}
-                updateListName={updateListName}
-                allCurrentBoardUsers={allCurrentBoardUsers}
-                isLoading={loadingLists[list.id] || false}
-                setBoardData={setBoardData}
-                boardData={boardData}
-              />
-            ))}
-
-            {isAddingList && (
-              <SkeletonListLoader currentTheme={currentTheme} />
-            )}
-
-            {is_any_board_selected && (
-              <div className='list'
-                style={{ backgroundColor: `${currentTheme['--list-background-color']}` }}
-              >
-                {!Adding_new_list ?
-                  (
-                    <button onClick={() => setAdding_new_list(true)} >Create List</button>
-                  )
-                  :
-                  (
-                    <div className='add_new_list_cont' >
-                      <input
-                        type="text"
-                        placeholder='List Name'
-                        value={ListName}
-                        onChange={(e) => setListName(e.target.value)}
-                        required
-                      />
-                      <button onClick={() => addList()}  >Add</button>
-                      <button onClick={() => setAdding_new_list(false)}  >Cansel</button>
-                    </div>
-                  )
-                }
-
-              </div>
-            )}
-          </div>
+          // DND-KIT: Wrap lists in DndContext
+          <DndContext
+            sensors={sensors}
+            collisionDetection={closestCenter}
+            onDragStart={handleDragStart}
+            onDragEnd={handleDragEnd}
+          >
+            <div className='lists_container' ref={listsContainerRef}>
+              {boardData.lists.map((list) => (
+                <List
+                  key={list.id}
+                  list={list}
+                  moveTask={moveTask}
+                  addTask={addTask}
+                  deleteTask={deleteTask}
+                  updateTask={updateTask}
+                  socketRef={socketRef}
+                  currentTheme={currentTheme}
+                  deleteList={deleteList}
+                  updateListName={updateListName}
+                  allCurrentBoardUsers={allCurrentBoardUsers}
+                  isLoading={loadingLists[list.id] || false}
+                  setBoardData={setBoardData}
+                  boardData={boardData}
+                  // DND-KIT: Pass listId for droppable
+                  dndListId={list.id}
+                />
+              ))}
+              {isAddingList && (
+                <SkeletonListLoader currentTheme={currentTheme} />
+              )}
+              {is_any_board_selected && (
+                <div className='list'
+                  style={{ backgroundColor: `${currentTheme['--list-background-color']}` }}
+                >
+                  {!Adding_new_list ?
+                    (
+                      <button onClick={() => setAdding_new_list(true)} >Create List</button>
+                    )
+                    :
+                    (
+                      <div className='add_new_list_cont' >
+                        <input
+                          type="text"
+                          placeholder='List Name'
+                          value={ListName}
+                          onChange={(e) => setListName(e.target.value)}
+                          required
+                        />
+                        <button onClick={() => addList()}  >Add</button>
+                        <button onClick={() => setAdding_new_list(false)}  >Cansel</button>
+                      </div>
+                    )
+                  }
+                </div>
+              )}
+            </div>
+            {/* DND-KIT: DragOverlay for ghost */}
+            <DragOverlay>
+              {activeTask ? (
+                <Task
+                  task={activeTask.task}
+                  deleteTask={() => { }}
+                  updateTask={() => { }}
+                  moveTaskWithinList={() => { }}
+                  currentTheme={currentTheme}
+                  allCurrentBoardUsers={allCurrentBoardUsers}
+                  dndListId={activeTask.listId}
+                />
+              ) : null}
+            </DragOverlay>
+          </DndContext>
         )}
       </div>
 
