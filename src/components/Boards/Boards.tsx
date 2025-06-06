@@ -706,10 +706,20 @@ const Boards: React.FC<BoardsProps> = ({
   const handleDragEnd = (event: DragEndEvent) => {
     const { active, over } = event;
     setActiveTask(null); // Clear overlay
-    if (!over || active.id === over.id) return;
+    if (!over) return;
+
     const activeListId = active.data.current?.dndListId;
     const overListId = over.id;
-    if (activeListId && overListId && activeListId !== overListId) {
+
+    // Only allow dropping on lists (not on tasks)
+    const isOverAList = boardData.lists.some(list => list.id === overListId);
+
+    if (
+      typeof activeListId === "number" &&
+      typeof overListId === "number" &&
+      activeListId !== overListId &&
+      isOverAList
+    ) {
       moveTask(Number(active.id), Number(activeListId), Number(overListId));
     }
   };
@@ -814,9 +824,9 @@ const Boards: React.FC<BoardsProps> = ({
               {activeTask ? (
                 <Task
                   task={activeTask.task}
-                  deleteTask={() => {}}
-                  updateTask={() => {}}
-                  moveTaskWithinList={() => {}}
+                  deleteTask={() => { }}
+                  updateTask={() => { }}
+                  moveTaskWithinList={() => { }}
                   currentTheme={currentTheme}
                   allCurrentBoardUsers={allCurrentBoardUsers}
                   dndListId={activeTask.listId}
