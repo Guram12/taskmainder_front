@@ -203,7 +203,13 @@ const Task: React.FC<TaskProps> = ({ task,
               <div className='reorder_container' >
                 <BiMoveVertical className='reorder_icon' />
               </div>
-              <div className="drag_handle"  {...listeners}  {...attributes} style={{ cursor: 'grab' }}>
+              {/* Ensure this drag handle is large enough and not blocked by CSS for touch events */}
+              <div
+                className="drag_handle"
+                {...listeners}
+                {...attributes}
+                style={{ cursor: 'grab', touchAction: 'none' }} // touchAction: 'none' helps on mobile
+              >
                 <RxDragHandleDots2 className='drag_icon' />
               </div>
             </div>
