@@ -35,18 +35,18 @@ interface ListProps {
 
 const List: React.FC<ListProps> = ({
   list,
-  moveTask,
+  // moveTask,
   addTask,
   deleteTask,
   updateTask,
-  socketRef,
+  // socketRef,
   currentTheme,
   deleteList,
   updateListName,
   allCurrentBoardUsers,
   isLoading,
-  setBoardData,
-  boardData,
+  // setBoardData,
+  // boardData,
   dndListId,
 }) => {
 
@@ -78,41 +78,41 @@ const List: React.FC<ListProps> = ({
 
   // // ==========================================  move task inside list ==========================================
 
-  const moveTaskWithinList = (draggedTaskId: number, targetTaskId: number, listId: number) => {
-    const draggedTaskIndex = list.tasks.findIndex((task) => task.id === draggedTaskId);
-    const targetTaskIndex = list.tasks.findIndex((task) => task.id === targetTaskId);
+  // const moveTaskWithinList = (draggedTaskId: number, targetTaskId: number, listId: number) => {
+  //   const draggedTaskIndex = list.tasks.findIndex((task) => task.id === draggedTaskId);
+  //   const targetTaskIndex = list.tasks.findIndex((task) => task.id === targetTaskId);
 
-    if (draggedTaskIndex !== -1 && targetTaskIndex !== -1) {
-      // Optimistically update the UI
-      const updatedTasks = [...list.tasks];
-      const [draggedTask] = updatedTasks.splice(draggedTaskIndex, 1);
-      updatedTasks.splice(targetTaskIndex, 0, draggedTask);
+  //   if (draggedTaskIndex !== -1 && targetTaskIndex !== -1) {
+  //     // Optimistically update the UI
+  //     const updatedTasks = [...list.tasks];
+  //     const [draggedTask] = updatedTasks.splice(draggedTaskIndex, 1);
+  //     updatedTasks.splice(targetTaskIndex, 0, draggedTask);
 
-      // Create the updated board data
-      const updatedBoardData: board = {
-        ...boardData, // Spread the current board data
-        lists: boardData.lists.map((listItem) => {
-          if (listItem.id === listId) {
-            return { ...listItem, tasks: updatedTasks };
-          }
-          return listItem; // Keep other lists unchanged
-        }),
-      };
+  //     // Create the updated board data
+  //     const updatedBoardData: board = {
+  //       ...boardData, // Spread the current board data
+  //       lists: boardData.lists.map((listItem) => {
+  //         if (listItem.id === listId) {
+  //           return { ...listItem, tasks: updatedTasks };
+  //         }
+  //         return listItem; // Keep other lists unchanged
+  //       }),
+  //     };
 
-      setBoardData(updatedBoardData);
+  //     setBoardData(updatedBoardData);
 
-      // Send the updated task order to the backend via WebSocket
-      const taskOrder = updatedTasks.map((task) => task.id);
-      if (socketRef.current && socketRef.current.readyState === WebSocket.OPEN) {
-        socketRef.current.send(
-          JSON.stringify({
-            action: 'reorder_task',
-            payload: { list_id: listId, task_order: taskOrder },
-          })
-        );
-      }
-    }
-  };
+  //     // Send the updated task order to the backend via WebSocket
+  //     const taskOrder = updatedTasks.map((task) => task.id);
+  //     if (socketRef.current && socketRef.current.readyState === WebSocket.OPEN) {
+  //       socketRef.current.send(
+  //         JSON.stringify({
+  //           action: 'reorder_task',
+  //           payload: { list_id: listId, task_order: taskOrder },
+  //         })
+  //       );
+  //     }
+  //   }
+  // };
 
   // ================================================ delete list ==========================================
   const handle_delete_list_click = () => {

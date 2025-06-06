@@ -28,7 +28,14 @@ interface TaskProps {
 }
 
 
-const Task: React.FC<TaskProps> = ({ task, deleteTask, updateTask, moveTaskWithinList, currentTheme, allCurrentBoardUsers, dndListId }) => {
+const Task: React.FC<TaskProps> = ({ task,
+  deleteTask,
+  updateTask,
+  // moveTaskWithinList,
+  currentTheme,
+  allCurrentBoardUsers,
+  dndListId,
+}) => {
   const [showUpdateModal, setShowUpdateModal] = useState(false);
   const [associatedUsers, setAssociatedUsers] = useState<ProfileData[]>([]);
 
