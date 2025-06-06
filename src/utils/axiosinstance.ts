@@ -2,7 +2,7 @@ import axios from 'axios';
 
 // const baseURL = "http://localhost:8000"
 
-const baseURL = "https://fad9f343964bf80ae1dedade4365c888.serveo.net/favicon.ico"
+const baseURL = "https://2edd2dd63785a0bb8dbb3127b1405f0e.serveo.net/"
 
 const axiosInstance = axios.create({
   baseURL: baseURL,
