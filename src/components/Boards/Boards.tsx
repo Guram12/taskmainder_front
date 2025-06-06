@@ -741,7 +741,7 @@ const Boards: React.FC<BoardsProps> = ({
   });
   const touchSensor = useSensor(TouchSensor, {
     activationConstraint: {
-      delay: 150, // Optional: long-press before drag starts
+      delay: 0, // Set to 0 for instant activation on touch
       tolerance: 5,
     },
   });
