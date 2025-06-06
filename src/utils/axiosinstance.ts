@@ -1,8 +1,9 @@
 import axios from 'axios';
 
-const baseURL = "http://localhost:8000"
+// const baseURL = "http://localhost:8000"
 
-// const baseURL = "https://fad9f343964bf80ae1dedade4365c888.serveo.net/favicon.ico"
+const baseURL = "https://fad9f343964bf80ae1dedade4365c888.serveo.net/favicon.ico"
+
 
 const axiosInstance = axios.create({
   baseURL: baseURL,
