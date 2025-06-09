@@ -508,7 +508,7 @@ const Boards: React.FC<BoardsProps> = ({
       const taskIndex = prevBoardData.lists[sourceListIndex].tasks.findIndex(task => task.id === taskId);
       if (taskIndex === -1) {
         // Prevent crash if task is missing
-        console.warn(`moveTask: Task ${taskId} not found in list ${sourceListId}`);
+        // console.warn(`moveTask: Task ${taskId} not found in list ${sourceListId}`);
         return prevBoardData;
       }
 
@@ -767,47 +767,44 @@ const Boards: React.FC<BoardsProps> = ({
   const handleReorderTasks = useCallback((event: any) => {
     const { listId, taskOrder } = event.detail;
 
-    // Debounce backend call
-    if (reorderDebounceRef.current) {
-      clearTimeout(reorderDebounceRef.current);
-    }
     setReordering(true); // Block moveTask during reorder
-    reorderDebounceRef.current = setTimeout(() => {
-      setBoardData((prevData) => {
-        const updatedLists = prevData.lists.map((list) => {
-          if (list.id === listId) {
-            // Only include tasks that exist in list.tasks
-            const reorderedTasks = taskOrder
-              .map((taskId: number) => {
-                const found = list.tasks.find((task) => task.id === taskId);
-                // Optional: warn if not found
-                if (!found) {
-                  console.warn(`Task with id ${taskId} not found in list ${listId}`);
-                }
-                return found;
-              })
-              .filter(Boolean); // Remove undefined
 
-            // Also add any tasks that are in list.tasks but not in taskOrder (to avoid losing tasks)
-            const missingTasks = list.tasks.filter(
-              (task) => !taskOrder.includes(task.id)
-            );
-            return { ...list, tasks: [...reorderedTasks, ...missingTasks] };
-          }
-          return list;
-        });
-        if (socketRef.current && socketRef.current.readyState === WebSocket.OPEN) {
-          socketRef.current.send(
-            JSON.stringify({
-              action: 'reorder_task',
-              payload: { list_id: listId, task_order: taskOrder },
+    setBoardData((prevData) => {
+      const updatedLists = prevData.lists.map((list) => {
+        if (list.id === listId) {
+          // Only include tasks that exist in list.tasks
+          const reorderedTasks = taskOrder
+            .map((taskId: number) => {
+              const found = list.tasks.find((task) => task.id === taskId);
+              // Optional: warn if not found
+              if (!found) {
+                console.warn(`Task with id ${taskId} not found in list ${listId}`);
+              }
+              return found;
             })
+            .filter(Boolean); // Remove undefined
+
+          // Also add any tasks that are in list.tasks but not in taskOrder (to avoid losing tasks)
+          const missingTasks = list.tasks.filter(
+            (task) => !taskOrder.includes(task.id)
           );
+          return { ...list, tasks: [...reorderedTasks, ...missingTasks] };
         }
-        setReordering(false); // Allow moveTask after reorder
-        return { ...prevData, lists: updatedLists };
+        return list;
       });
-    }, 200); // Increased debounce to 200ms
+      return { ...prevData, lists: updatedLists };
+    });
+
+    // Immediately send backend request (no debounce)
+    if (socketRef.current && socketRef.current.readyState === WebSocket.OPEN) {
+      socketRef.current.send(
+        JSON.stringify({
+          action: 'reorder_task',
+          payload: { list_id: listId, task_order: taskOrder },
+        })
+      );
+    }
+    setReordering(false); // Allow moveTask after reorder
   }, [setBoardData]);
 
   useEffect(() => {
@@ -926,7 +923,6 @@ const Boards: React.FC<BoardsProps> = ({
                   task={activeTask.task}
                   deleteTask={() => { }}
                   updateTask={() => { }}
-                  moveTaskWithinList={() => { }}
                   currentTheme={currentTheme}
                   allCurrentBoardUsers={allCurrentBoardUsers}
                   dndListId={activeTask.listId}

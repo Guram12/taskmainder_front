@@ -35,18 +35,14 @@ interface ListProps {
 
 const List: React.FC<ListProps> = ({
   list,
-  // moveTask,
   addTask,
   deleteTask,
   updateTask,
-  // socketRef,
   currentTheme,
   deleteList,
   updateListName,
   allCurrentBoardUsers,
   isLoading,
-  // setBoardData,
-  // boardData,
   dndListId,
 }) => {
 
@@ -61,7 +57,7 @@ const List: React.FC<ListProps> = ({
   const reorderTimeoutRef = useRef<NodeJS.Timeout | null>(null); // debounce ref
 
 
-  // =========================================u=====  drag and drop ==========================================
+  // ==============================================  drag and drop ==========================================
 
   // DND-KIT: Make this list a droppable area
   const { setNodeRef, isOver: isOverDnd } = useDroppable({
@@ -69,7 +65,7 @@ const List: React.FC<ListProps> = ({
   });
 
 
-  // --- SortableJS for reordering tasks within the list ---
+  //================================   SortableJS for reordering tasks within the list   ================================  
   useEffect(() => {
     if (!tasksContainerRef.current) return;
     const sortable = Sortable.create(tasksContainerRef.current, {
@@ -218,9 +214,7 @@ const List: React.FC<ListProps> = ({
               task={task}
               deleteTask={deleteTask}
               updateTask={updateTask}
-              // DND-KIT: Pass listId for draggable
               dndListId={list.id}
-              moveTaskWithinList={() => {}} // Not implemented for now
               currentTheme={currentTheme}
               allCurrentBoardUsers={allCurrentBoardUsers}
             />
