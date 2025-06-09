@@ -136,13 +136,17 @@ const Boards: React.FC<BoardsProps> = ({
       socketRef.current.close();
     }
 
+    // const token = localStorage.getItem('access_token');
+    // // Detect protocol and set ws or wss accordingly
+    // const protocol = window.location.protocol === 'https:' ? 'wss' : 'ws';
+    // // Use your backend's public domain or tunnel endpoint, NOT window.location.hostname
+    // const backendHost = '446952c95fe5eac0751e5291d4fbd6ca.serveo.net'; // your backend domain or tunnel
+    // const newSocket = new WebSocket(`ws://${backendHost}/ws/boards/${selectedBoard.id}/?token=${token}`);
+    // socketRef.current = newSocket;
+
+
     const token = localStorage.getItem('access_token');
-    // Detect protocol and set ws or wss accordingly
-    const protocol = window.location.protocol === 'https:' ? 'wss' : 'ws';
-    // Use your backend's public domain or tunnel endpoint, NOT window.location.hostname
-    const backendHost = '446952c95fe5eac0751e5291d4fbd6ca.serveo.net'; // your backend domain or tunnel
-    const wsUrl = `${protocol}://${backendHost}/ws/boards/${selectedBoard.id}/?token=${token}`;
-    const newSocket = new WebSocket(wsUrl);
+    const newSocket = new WebSocket(`ws://${window.location.hostname}:8000/ws/boards/${selectedBoard.id}/?token=${token}`);
     socketRef.current = newSocket;
 
 
