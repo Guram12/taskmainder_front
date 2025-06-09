@@ -21,7 +21,6 @@ interface TaskProps {
   task: tasks;
   deleteTask: (taskId: number, listId: number) => void;
   updateTask: (taskId: number, updatedTitle: string, due_date: string | null, description: string, completed: boolean, task_associated_users_id: number[], priority: 'green' | 'orange' | 'red' | null,) => void;
-  moveTaskWithinList: (draggedTaskId: number, targetTaskId: number, listId: number) => void;
   currentTheme: ThemeSpecs;
   allCurrentBoardUsers: ProfileData[];
   dndListId: number;
@@ -31,7 +30,6 @@ interface TaskProps {
 const Task: React.FC<TaskProps> = ({ task,
   deleteTask,
   updateTask,
-  // moveTaskWithinList,
   currentTheme,
   allCurrentBoardUsers,
   dndListId,
@@ -54,55 +52,6 @@ const Task: React.FC<TaskProps> = ({ task,
 
     filterAssociatedUsers();
   }, [task.task_associated_users_id, allCurrentBoardUsers]);
-
-  // REMOVE react-dnd useDrag/useDrop
-  // const ItemTypes = {
-  //   TASK: 'task',
-  //   REORDER: 'reorder', // New type for reordering
-  // };
-  // const [{  }, drag] = useDrag(() => ({
-  //   type: ItemTypes.TASK,
-  //   item: { id: task.id, listId: task.list, title: task.title }, 
-  //   collect: (monitor) => ({
-  //     isDragging: !!monitor.isDragging(),
-  //   }),
-  // }));
-  // const [{ isOver, canDrop }, drop] = useDrop({
-  //   accept: ItemTypes.REORDER,
-  //   drop: (draggedTask: { id: number; listId: number }) => {
-  //     if (draggedTask.id !== task.id && draggedTask.listId === task.list) {
-  //       moveTaskWithinList(draggedTask.id, task.id, task.list);
-  //     }
-  //   },
-  //   collect: (monitor) => ({
-  //     isOver: !!monitor.isOver(),
-  //     canDrop: monitor.canDrop(),
-  //   }),
-  //   canDrop: (draggedTask: { id: number; listId: number }) => {
-  //     // Only allow drop if the dragged task is from the same list
-  //     return draggedTask.listId === task.list;
-  //   },
-  // });
-  // const [, dragReorder] = useDrag(() => ({
-  //   type: ItemTypes.REORDER,
-  //   item: { id: task.id, listId: task.list, title: task.title }, // <-- add title here
-  //   collect: (monitor) => ({
-  //     isDraggingReorder: !!monitor.isDragging(),
-  //   }),
-  // }));
-
-  // ============================================= show drop zone when dragging =========================================
-
-  // const [isDropZoneVisible, setIsDropZoneVisible] = useState(false);
-
-  // useEffect(() => {
-  //   const timeout = setTimeout(() => {
-  //     setIsDropZoneVisible(isOver && canDrop); // Show drop zone only if canDrop is true
-  //   }, 100); // Add a 100ms debounce delay
-
-  //   return () => clearTimeout(timeout);
-  // }, [isOver, canDrop]);
-
 
   // =======================================    delete task functions   ======================================
 
@@ -198,12 +147,14 @@ const Task: React.FC<TaskProps> = ({ task,
 
           <div className='edit_drag_icon_container'>
             <MdModeEdit className='edit_task_icon' onClick={handleTaskClick} />
-            {/* Attach drag listeners only to the drag handle */}
             <div className='drag_bouth_handlers_container'>
+
+              {/* ============  for reordering  tasks within list =======================*/}
               <div className='reorder_container' >
                 <BiMoveVertical className='reorder_icon' />
               </div>
-              {/* Ensure this drag handle is large enough and not blocked by CSS for touch events */}
+
+              {/*============= for drag and drop from list to list =======================*/}
               <div
                 className="drag_handle"
                 {...listeners}
