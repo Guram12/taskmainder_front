@@ -21,7 +21,6 @@ interface TaskProps {
   task: tasks;
   deleteTask: (taskId: number, listId: number) => void;
   updateTask: (taskId: number, updatedTitle: string, due_date: string | null, description: string, completed: boolean, task_associated_users_id: number[], priority: 'green' | 'orange' | 'red' | null,) => void;
-  moveTaskWithinList: (draggedTaskId: number, targetTaskId: number, listId: number) => void;
   currentTheme: ThemeSpecs;
   allCurrentBoardUsers: ProfileData[];
   dndListId: number;
@@ -31,7 +30,6 @@ interface TaskProps {
 const Task: React.FC<TaskProps> = ({ task,
   deleteTask,
   updateTask,
-  // moveTaskWithinList,
   currentTheme,
   allCurrentBoardUsers,
   dndListId,
