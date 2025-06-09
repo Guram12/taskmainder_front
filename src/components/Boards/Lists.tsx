@@ -14,7 +14,7 @@ import { board } from '../../utils/interface';
 import { useDroppable } from '@dnd-kit/core';
 import { UniqueIdentifier } from '@dnd-kit/core';
 import Sortable from 'sortablejs';
-
+import type { SortableEvent } from 'sortablejs';
 
 interface ListProps {
   currentTheme: ThemeSpecs;
@@ -72,7 +72,7 @@ const List: React.FC<ListProps> = ({
       animation: 150,
       handle: '.reorder_icon', // Only allow drag with reorder icon
       draggable: '.sortable-task', // Only these elements are draggable
-      onEnd: (evt) => {
+      onEnd: (evt: SortableEvent) => {
         if (
           evt.oldIndex === undefined ||
           evt.newIndex === undefined ||
