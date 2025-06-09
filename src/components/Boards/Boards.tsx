@@ -1,5 +1,5 @@
 import '../../styles/Board Styles/Boards.css';
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import { ThemeSpecs } from '../../utils/theme';
 import Members from '../Members';
 import List from './Lists';
@@ -94,6 +94,7 @@ const Boards: React.FC<BoardsProps> = ({
   const isManualScrollRef = useRef(false);
 
   const [activeTask, setActiveTask] = useState<null | { task: any; listId: number }>(null);
+  const [reordering, setReordering] = useState(false); // Add this state
 
 
 
@@ -493,6 +494,11 @@ const Boards: React.FC<BoardsProps> = ({
 
 
   const moveTask = (taskId: number, sourceListId: number, targetListId: number) => {
+    if (reordering) {
+      // Prevent moveTask if a reorder is in progress
+      console.warn('moveTask blocked: reorder in progress');
+      return;
+    }
     setBoardData((prevBoardData) => {
       const sourceListIndex = prevBoardData.lists.findIndex(list => list.id === sourceListId);
       const targetListIndex = prevBoardData.lists.findIndex(list => list.id === targetListId);
@@ -500,7 +506,11 @@ const Boards: React.FC<BoardsProps> = ({
       if (sourceListIndex === -1 || targetListIndex === -1) return prevBoardData;
 
       const taskIndex = prevBoardData.lists[sourceListIndex].tasks.findIndex(task => task.id === taskId);
-      if (taskIndex === -1) return prevBoardData;
+      if (taskIndex === -1) {
+        // Prevent crash if task is missing
+        console.warn(`moveTask: Task ${taskId} not found in list ${sourceListId}`);
+        return prevBoardData;
+      }
 
       const [movedTask] = prevBoardData.lists[sourceListIndex].tasks.splice(taskIndex, 1);
       movedTask.list = targetListId;
@@ -750,6 +760,65 @@ const Boards: React.FC<BoardsProps> = ({
     },
   });
   const sensors = useSensors(pointerSensor, touchSensor);
+
+  const reorderDebounceRef = useRef<NodeJS.Timeout | null>(null);
+
+  // --- Handle reorder-tasks event from SortableJS ---
+  const handleReorderTasks = useCallback((event: any) => {
+    const { listId, taskOrder } = event.detail;
+
+    // Debounce backend call
+    if (reorderDebounceRef.current) {
+      clearTimeout(reorderDebounceRef.current);
+    }
+    setReordering(true); // Block moveTask during reorder
+    reorderDebounceRef.current = setTimeout(() => {
+      setBoardData((prevData) => {
+        const updatedLists = prevData.lists.map((list) => {
+          if (list.id === listId) {
+            // Only include tasks that exist in list.tasks
+            const reorderedTasks = taskOrder
+              .map((taskId: number) => {
+                const found = list.tasks.find((task) => task.id === taskId);
+                // Optional: warn if not found
+                if (!found) {
+                  console.warn(`Task with id ${taskId} not found in list ${listId}`);
+                }
+                return found;
+              })
+              .filter(Boolean); // Remove undefined
+
+            // Also add any tasks that are in list.tasks but not in taskOrder (to avoid losing tasks)
+            const missingTasks = list.tasks.filter(
+              (task) => !taskOrder.includes(task.id)
+            );
+            return { ...list, tasks: [...reorderedTasks, ...missingTasks] };
+          }
+          return list;
+        });
+        if (socketRef.current && socketRef.current.readyState === WebSocket.OPEN) {
+          socketRef.current.send(
+            JSON.stringify({
+              action: 'reorder_task',
+              payload: { list_id: listId, task_order: taskOrder },
+            })
+          );
+        }
+        setReordering(false); // Allow moveTask after reorder
+        return { ...prevData, lists: updatedLists };
+      });
+    }, 200); // Increased debounce to 200ms
+  }, [setBoardData]);
+
+  useEffect(() => {
+    window.addEventListener('reorder-tasks', handleReorderTasks as EventListener);
+    return () => {
+      window.removeEventListener('reorder-tasks', handleReorderTasks as EventListener);
+      if (reorderDebounceRef.current) {
+        clearTimeout(reorderDebounceRef.current);
+      }
+    };
+  }, [handleReorderTasks]);
 
 
 
