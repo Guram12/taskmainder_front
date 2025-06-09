@@ -1,5 +1,5 @@
 import '../../styles/Board Styles/List.css';
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Task from "./Tasks";
 import { lists } from "../../utils/interface";
 import { MdModeEdit } from "react-icons/md";
@@ -13,7 +13,7 @@ import SkeletonEachTask from './SkeletonEachTask';
 import { board } from '../../utils/interface';
 import { useDroppable } from '@dnd-kit/core';
 import { UniqueIdentifier } from '@dnd-kit/core';
-
+import Sortable from 'sortablejs';
 
 
 interface ListProps {
@@ -57,6 +57,8 @@ const List: React.FC<ListProps> = ({
   const [newTaskTitle, setNewTaskTitle] = useState<string>('');
   const [isAddingTask, setIsAddingTask] = useState<boolean>(false);
 
+  const tasksContainerRef = useRef<HTMLDivElement | null>(null);
+  const reorderTimeoutRef = useRef<NodeJS.Timeout | null>(null); // debounce ref
 
 
   // =========================================u=====  drag and drop ==========================================
@@ -67,6 +69,50 @@ const List: React.FC<ListProps> = ({
   });
 
 
+  // --- SortableJS for reordering tasks within the list ---
+  useEffect(() => {
+    if (!tasksContainerRef.current) return;
+    const sortable = Sortable.create(tasksContainerRef.current, {
+      animation: 150,
+      handle: '.reorder_icon', // Only allow drag with reorder icon
+      draggable: '.sortable-task', // Only these elements are draggable
+      onEnd: (evt) => {
+        if (
+          evt.oldIndex === undefined ||
+          evt.newIndex === undefined ||
+          evt.oldIndex === evt.newIndex
+        )
+          return;
+
+        // Debounce: clear previous timeout if exists
+        if (reorderTimeoutRef.current) {
+          clearTimeout(reorderTimeoutRef.current);
+        }
+
+        // Use a short timeout to batch rapid onEnd calls
+        reorderTimeoutRef.current = setTimeout(() => {
+          const updatedTasks = [...list.tasks];
+          const [removed] = updatedTasks.splice(evt.oldIndex!, 1);
+          updatedTasks.splice(evt.newIndex!, 0, removed);
+
+          if (typeof window !== "undefined" && window.dispatchEvent) {
+            window.dispatchEvent(
+              new CustomEvent('reorder-tasks', {
+                detail: { listId: list.id, taskOrder: updatedTasks.map(t => t.id) }
+              })
+            );
+          }
+        }, 50); // 50ms debounce
+      },
+    });
+    return () => {
+      sortable.destroy();
+      if (reorderTimeoutRef.current) {
+        clearTimeout(reorderTimeoutRef.current);
+      }
+    };
+  }, [list.tasks]);
+
   // ==========================================  add task inside list ==========================================
   const handleAddTask = () => {
     if (newTaskTitle.trim()) {
@@ -75,44 +121,6 @@ const List: React.FC<ListProps> = ({
       setIsAddingTask(false);
     }
   };
-
-  // // ==========================================  move task inside list ==========================================
-
-  // const moveTaskWithinList = (draggedTaskId: number, targetTaskId: number, listId: number) => {
-  //   const draggedTaskIndex = list.tasks.findIndex((task) => task.id === draggedTaskId);
-  //   const targetTaskIndex = list.tasks.findIndex((task) => task.id === targetTaskId);
-
-  //   if (draggedTaskIndex !== -1 && targetTaskIndex !== -1) {
-  //     // Optimistically update the UI
-  //     const updatedTasks = [...list.tasks];
-  //     const [draggedTask] = updatedTasks.splice(draggedTaskIndex, 1);
-  //     updatedTasks.splice(targetTaskIndex, 0, draggedTask);
-
-  //     // Create the updated board data
-  //     const updatedBoardData: board = {
-  //       ...boardData, // Spread the current board data
-  //       lists: boardData.lists.map((listItem) => {
-  //         if (listItem.id === listId) {
-  //           return { ...listItem, tasks: updatedTasks };
-  //         }
-  //         return listItem; // Keep other lists unchanged
-  //       }),
-  //     };
-
-  //     setBoardData(updatedBoardData);
-
-  //     // Send the updated task order to the backend via WebSocket
-  //     const taskOrder = updatedTasks.map((task) => task.id);
-  //     if (socketRef.current && socketRef.current.readyState === WebSocket.OPEN) {
-  //       socketRef.current.send(
-  //         JSON.stringify({
-  //           action: 'reorder_task',
-  //           payload: { list_id: listId, task_order: taskOrder },
-  //         })
-  //       );
-  //     }
-  //   }
-  // };
 
   // ================================================ delete list ==========================================
   const handle_delete_list_click = () => {
@@ -203,19 +211,22 @@ const List: React.FC<ListProps> = ({
         )}
       </div>
       <div className='margin_element' ></div>
-      {list.tasks.map((task) => (
-        <Task
-          key={task.id}
-          task={task}
-          deleteTask={deleteTask}
-          updateTask={updateTask}
-          // DND-KIT: Pass listId for draggable
-          dndListId={list.id}
-          moveTaskWithinList={() => {}} // Not implemented for now
-          currentTheme={currentTheme}
-          allCurrentBoardUsers={allCurrentBoardUsers}
-        />
-      ))}
+      <div ref={tasksContainerRef}>
+        {list.tasks.map((task) => (
+          <div key={task.id} className="sortable-task">
+            <Task
+              task={task}
+              deleteTask={deleteTask}
+              updateTask={updateTask}
+              // DND-KIT: Pass listId for draggable
+              dndListId={list.id}
+              moveTaskWithinList={() => {}} // Not implemented for now
+              currentTheme={currentTheme}
+              allCurrentBoardUsers={allCurrentBoardUsers}
+            />
+          </div>
+        ))}
+      </div>
 
       <div className='add_task_cont'>
         {isLoading && <SkeletonEachTask currentTheme={currentTheme} />}
