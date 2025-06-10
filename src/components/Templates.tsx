@@ -28,51 +28,39 @@ const Templates: React.FC<TemplatesProps> = ({ handleTemplateSelect, currentThem
         return;
       }
 
-      // Set the Authorization header with the access token
       const config = {
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },
       };
 
-      // Create the board
+      async function urlToBlob(url: string): Promise<Blob> {
+        const response = await fetch(url);
+        return await response.blob();
+      }
+
+      const formData = new FormData();
+      formData.append("name", template.board.name);
+
+      if (template.background_image) {
+        const blob = await urlToBlob(template.background_image);
+        // Use a unique filename for each template
+        const fileExt = template.background_image.split('.').pop() || 'webp';
+        formData.append(
+          "background_image",
+          blob,
+          `background_template_${template.id}.${fileExt}`
+        );
+      }
+      formData.append("lists", JSON.stringify(template.lists));
+      // Use the new endpoint for template creation
       const boardResponse = await axiosInstance.post(
-        "/api/boards/",
-        {
-          name: template.board.name,
-        },
+        "/api/create-from-template/", // <-- trailing slash is important
+        formData,
         config
       );
 
       const newBoard = boardResponse.data;
-
-      // Create the lists and tasks
-      for (const list of template.lists) {
-        const listResponse = await axiosInstance.post(
-          "/api/lists/",
-          {
-            name: list.name,
-            board: newBoard.id,
-          },
-          config
-        );
-
-        const newList = listResponse.data;
-
-        for (const task of list.tasks) {
-          await axiosInstance.post(
-            "/api/tasks/",
-            {
-              title: task.title,
-              description: task.description,
-              due_date: task.due_date,
-              list: newList.id,
-              priority: task.priority,
-            },
-            config
-          );
-        }
-      }
 
       // Notify the parent component to update the selected board
       handleTemplateSelect(newBoard.id);
@@ -82,6 +70,8 @@ const Templates: React.FC<TemplatesProps> = ({ handleTemplateSelect, currentThem
       setIsLoading(false);
     }
   };
+
+
 
   // =========================================== set priority styles ==========================================
 
@@ -97,7 +87,7 @@ const Templates: React.FC<TemplatesProps> = ({ handleTemplateSelect, currentThem
 
 
   return (
-    <div className="templates_container">
+    <div className="templates_container"   >
       <h2>Choose a Template</h2>
       <div className="templates-list">
         {templates.map((template) => (
@@ -110,6 +100,7 @@ const Templates: React.FC<TemplatesProps> = ({ handleTemplateSelect, currentThem
             <div
               key={template.id}
               className="template_card"
+              style={{ backgroundImage: `url(${template.background_image})` }}
             >
               {template.lists.map((list) => (
                 <div className="each_template_board_list" key={list.name} style={{ backgroundColor: `${currentTheme['--list-background-color']}` }}>

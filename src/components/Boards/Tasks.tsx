@@ -14,6 +14,7 @@ import Avatar from '@mui/material/Avatar'; // Import Avatar from Material-UI
 import getAvatarStyles from '../../utils/SetRandomColor';
 import { useDraggable } from '@dnd-kit/core';
 import { RxDragHandleDots2 } from "react-icons/rx";
+import ReactDOM from 'react-dom';
 
 
 
@@ -174,9 +175,9 @@ const Task: React.FC<TaskProps> = ({ task,
 
         <div className='task_description_and_due_date_container' >
           {task.due_date ? (
-            <p className='due_Date_p'>Due Date: {formatDate(task.due_date)}</p>
+            <p className='due_Date_p' style={{ color: currentTheme["--due-date-color"] }}>Due Date: {formatDate(task.due_date)}</p>
           ) : (
-            <p className='due_Date_p'>No due date</p>
+            <p className='due_Date_p' style={{ color: currentTheme["--due-date-color"] }}>No due date</p>
           )}
 
           <div className='associated_users_imgs_container'>
@@ -213,14 +214,14 @@ const Task: React.FC<TaskProps> = ({ task,
                 </div>
               ))
             ) : (
-              <p className='no_associated_users_p' >No associated users</p> // Fallback if no associated users
+              <p className='no_associated_users_p' style={{ color: currentTheme["--due-date-color"] }} >No associated users</p> // Fallback if no associated users
             )}
           </div>
 
         </div>
 
 
-        {showUpdateModal && (
+        {showUpdateModal && ReactDOM.createPortal(
           <ThemeProvider theme={MUI_Theme}>
             <TaskUpdateModal
               task={task}
@@ -230,9 +231,9 @@ const Task: React.FC<TaskProps> = ({ task,
               allCurrentBoardUsers={allCurrentBoardUsers}
               associatedUsers={associatedUsers}
               deleteTask={deleteTask}
-
             />
-          </ThemeProvider>
+          </ThemeProvider>,
+          document.body
         )}
       </div>
     </>

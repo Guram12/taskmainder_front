@@ -31,7 +31,9 @@
   margin-top: -16px;
   padding-left: 10px;
   padding-right: 10px;
-  transition: background-color 0.3s ease,
+  transition: background-color 0.3s ease;
+  border-radius: 40px;
+  border: 1px dashed;
 
 }
 

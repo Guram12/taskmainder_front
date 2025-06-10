@@ -11,6 +11,7 @@
   margin-top: 40px;
   border-radius: 10px;
   min-height: 100px;
+  background-color: rgba(0 0 0 / 0.14) !important;
 }
 
 .user_info_update_cont {
@@ -24,7 +25,9 @@
   margin-top: -16px;
   padding-left: 10px;
   padding-right: 10px;
-  transition: background-color 0.3s ease,
+  transition: background-color 0.3s ease;
+  border-radius: 40px;
+  border: 1px dashed;
 }
 
 .user_info_update_p {
@@ -82,7 +85,7 @@
   height: 25px;
 }
 
-.input_and_save_icoin_cont{
+.input_and_save_icoin_cont {
   display: flex;
   flex-direction: column;
   justify-content: center;

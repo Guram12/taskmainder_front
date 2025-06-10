@@ -71,7 +71,11 @@ const DeleteAccount: React.FC<DeleteAccountProps> = ({ currentTheme }) => {
 
   return (
     <div className='main_delete_acc_container' style={{ color: currentTheme['--main-text-coloure'] }}>
-      <div className="delete_acc_header_cont" style={{ backgroundColor: currentTheme["--background-color"] }}>
+      <div className="delete_acc_header_cont"
+        style={{
+          backgroundColor: currentTheme["--background-color"],
+        }}
+      >
         <p className="delete_acc_header_p">
           Danger Zone
         </p>

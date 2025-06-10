@@ -43,7 +43,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 500px;
+  width:min-content;
   height: 60px;
   gap: 30px;
 }
@@ -58,36 +58,45 @@
   border-radius: 30px;
 }
 
-/* // 1F271B
-// 19647E
-// 28AFB0
-// F4D35E
-// 708B75 
-// 2a9d8f
-*/
-
-.example1 {
-  background-color: #000000;
-}
 
 .example2 {
-  background-color: #121212;
+  background-color: #181A1B;
 }
 
 .example3 {
-  background-color: #2e4053;
+  background-color: #18221E;
 }
 
 .example4 {
-  background-color: #F4D35E;
+  background-color: #1A252F;
 }
 
 .example5 {
-  background-color: #708B75;
+  background-color: #16222A;
 }
 
 .example6 {
-  background-color: #005f54;
+  background-color: #101820;
+}
+
+.example7 {
+  background-color: #1E1C1D;
+}
+.example8 {
+  background-color: #1A1F1B;
+}
+.example9 {
+  background-color: #EAF6FB;
+}
+
+.example10 {
+  background-color: #E6FAF7;
+}
+.example11 {
+  background-color: #E6F7FA;
+}
+.example12 {
+  background-color: #F5F6FB;
 }
 
 .header_coloure_child_container:hover {

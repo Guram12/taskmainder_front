@@ -109,53 +109,52 @@ const Header: React.FC<HeaderProps> = ({
 
 
 
-  const themeMenu: MenuProps = {
-    items: [
-      {
-        key: 'dark_gray',
-        label: (
-          <div className='header_coloure_child_container example2'
-            onClick={() => changeTheme(themes.dark_gray)} />
-        ),
-      },
-      {
-        key: 'dark_blue',
-        label: (
-          <div className='header_coloure_child_container example3'
-            onClick={() => changeTheme(themes.dark_blue)} />
-        ),
-      },
-      {
-        key: 'yellow',
-        label: (
-          <div className='header_coloure_child_container example4'
-            onClick={() => changeTheme(themes.yellow)} />
-        ),
-      },
-      {
-        key: 'light_green',
-        label: (
-          <div className='header_coloure_child_container example5'
-            onClick={() => changeTheme(themes.light_green)} />
-        ),
-      },
-      {
-        key: 'custom',
-        label: (
-          <div
-            className='custom_theme_container_in_header'
-            style={{
-              backgroundColor: saved_custom_theme['--background-color'],
-              borderColor: saved_custom_theme['--border-color']
-            }}
-            onClick={handle_return_to_custom_theme}
-          >
-            Custom Theme
-          </div>
-        ),
-      },
-    ],
-  };
+// ...existing code...
+
+const themeKeys = [
+  'dark_gray',
+  'forest_night',
+  'ocean_teal',
+  'deep_aqua',
+  'ink_cobalt',
+  'charcoal_rose',
+  'velvet_moss',
+  'arctic_alice',
+  'mint_ice',
+  'spring_cloud',
+  'lavender_mist'
+];
+
+const themeMenu: MenuProps = {
+  items: [
+    ...themeKeys.map((key, idx) => ({
+      key,
+      label: (
+        <div
+          className={`header_coloure_child_container example${idx + 2}`}
+          onClick={() => changeTheme(themes[key as keyof typeof themes])}
+        />
+      ),
+    })),
+    {
+      key: 'custom',
+      label: (
+        <div
+          className='custom_theme_container_in_header'
+          style={{
+            backgroundColor: saved_custom_theme['--background-color'],
+            borderColor: saved_custom_theme['--border-color']
+          }}
+          onClick={handle_return_to_custom_theme}
+        >
+          Custom Theme
+        </div>
+      ),
+    },
+  ],
+};
+
+// ...existing code...
 
   // Language dropdown menu
   const languageMenu: MenuProps = {
@@ -208,13 +207,32 @@ const Header: React.FC<HeaderProps> = ({
         {!isMobile ? (
           <div className='header_coloure_container'>
             <div className='header_coloure_child_container example2'
+              style={{
+
+                borderColor: "white"
+              }}
               onClick={() => changeTheme(themes.dark_gray)}></div>
             <div className='header_coloure_child_container example3'
-              onClick={() => changeTheme(themes.dark_blue)}></div>
+              onClick={() => changeTheme(themes.forest_night)}></div>
             <div className='header_coloure_child_container example4'
-              onClick={() => changeTheme(themes.yellow)}></div>
+              onClick={() => changeTheme(themes.ocean_teal)}></div>
             <div className='header_coloure_child_container example5'
-              onClick={() => changeTheme(themes.light_green)}></div>
+              onClick={() => changeTheme(themes.deep_aqua)}></div>
+            <div className='header_coloure_child_container example6'
+              onClick={() => changeTheme(themes.ink_cobalt)}></div>
+            <div className='header_coloure_child_container example7'
+              onClick={() => changeTheme(themes.charcoal_rose)}></div>
+            <div className='header_coloure_child_container example8'
+              onClick={() => changeTheme(themes.velvet_moss)}></div>
+            <div className='header_coloure_child_container example9'
+              onClick={() => changeTheme(themes.arctic_alice)}></div>
+            <div className='header_coloure_child_container example10'
+              onClick={() => changeTheme(themes.mint_ice)}></div>
+            <div className='header_coloure_child_container example11'
+              onClick={() => changeTheme(themes.spring_cloud)}></div>
+            <div className='header_coloure_child_container example11'
+              onClick={() => changeTheme(themes.lavender_mist)}></div>
+
 
             <div className='custom_theme_container_in_header'
               style={{

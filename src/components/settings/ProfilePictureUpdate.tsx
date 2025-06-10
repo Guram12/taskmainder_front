@@ -180,8 +180,18 @@ const ProfilePictureUpdate: React.FC<ProfilePictureUpdateProps> = ({ profileData
           onCancel={handleCancelDelete}
         />
       )}
-      <div className="profile_picture_update_p_cont" style={{ backgroundColor: currentTheme["--background-color"] }}>
-        <p className="profile_picture_ipdate_p" style={{ color: currentTheme["--main-text-coloure"] }}>
+      <div className="profile_picture_update_p_cont"
+        style={{
+          backgroundColor: currentTheme["--background-color"],
+          borderColor: currentTheme["--border-color"]
+        }}
+      >
+        <p className="profile_picture_ipdate_p"
+          style={{
+            backgroundColor: currentTheme["--background-color"],
+            borderColor: currentTheme["--border-color"]
+          }}
+        >
           Profile Picture update
         </p>
       </div>

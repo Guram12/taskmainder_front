@@ -62,6 +62,7 @@ export interface Template {
   board: {
     name: string;
   };
+  background_image: string | null;
   lists: {
     name: string;
     tasks: {

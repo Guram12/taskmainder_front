@@ -67,9 +67,19 @@ const Profile_Info_update: React.FC<Profile_Info_updateProps> = ({ profileData, 
     setIsEditing({ ...isEditing, phone: false })
   }
   return (
-    <div className='main_profilinfo_cont'>
-      <div className="user_info_update_cont" style={{ backgroundColor: currentTheme["--background-color"] }}>
-        <p className="user_info_update_p" style={{ color: currentTheme["--main-text-coloure"] }}>
+    <div className='main_profilinfo_cont' style={{ borderColor: currentTheme['--border-color'] }} >
+      <div className="user_info_update_cont"
+        style={{
+          backgroundColor: currentTheme["--background-color"],
+          borderColor: currentTheme["--border-color"]
+        }}
+      >
+        <p className="user_info_update_p"
+          style={{
+            backgroundColor: currentTheme["--background-color"],
+            borderColor: currentTheme["--border-color"]
+          }}
+        >
           User information update
         </p>
       </div>

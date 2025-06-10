@@ -1,4 +1,10 @@
 import { Template } from "./interface";
+import wal_1 from "../assets/wal-1.webp";
+import wal_2 from "../assets/wal-2.webp";
+import wal_3 from "../assets/wal-3.webp";
+
+
+
 
 export const templates: Template[] = [
   {
@@ -7,6 +13,7 @@ export const templates: Template[] = [
     board: {
       name: "Development Sprint Board",
     },
+    background_image: wal_3,
     lists: [
       {
         name: "Backlog",
@@ -41,6 +48,7 @@ export const templates: Template[] = [
     board: {
       name: "Self-Improvement Board",
     },
+    background_image: wal_2,
     lists: [
       {
         name: "Health Goals",
@@ -64,6 +72,7 @@ export const templates: Template[] = [
     board: {
       name: "Birthday Party Board",
     },
+    background_image: wal_1,
     lists: [
       {
         name: "To Do",
