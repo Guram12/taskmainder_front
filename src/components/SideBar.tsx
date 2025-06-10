@@ -392,8 +392,9 @@ const SidebarComponent: React.FC<SidebarProps> = ({
                           key={board.id}
                           rootStyles={{
                             transition: 'all 0.3s',
-                            color: selectedBoard?.id === board.id ? 'green' : currentTheme['--main-text-coloure'],
+                            color: selectedBoard?.id === board.id ? 'seagreen' : currentTheme['--main-text-coloure'],
                             textAlign: 'left',
+                            fontWeight: 'bold',
                           }}
                           icon={<FaClipboardList />}
                           onClick={() => handleBoardClick(board)}
@@ -403,7 +404,7 @@ const SidebarComponent: React.FC<SidebarProps> = ({
                       ))}
                     </div>
                   )}
-                  {boards.length === 0 &&  !isBoardsLoaded &&(
+                  {boards.length === 0 && !isBoardsLoaded && (
                     <>
                       <SkeletonBoardName currentTheme={currentTheme} />
                       <SkeletonBoardName currentTheme={currentTheme} />

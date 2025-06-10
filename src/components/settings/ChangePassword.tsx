@@ -89,8 +89,13 @@ const ChangePassword: React.FC<ChangePasswordProps> = ({ currentTheme, profileDa
   };
 
   return (
-    <div className='main_password_container'>
-      <div className="password_change_container" style={{ backgroundColor: currentTheme["--background-color"] }}>
+    <div className='main_password_container' style={{borderColor: currentTheme['--border-color']}} >
+      <div className="password_change_container"
+        style={{
+          backgroundColor: currentTheme["--background-color"],
+          borderColor: currentTheme["--border-color"]
+        }}
+      >
         <p className="password_change_p" style={{ color: currentTheme["--main-text-coloure"] }}>Change Password </p>
       </div>
       {is_social_account ? (
@@ -128,7 +133,7 @@ const ChangePassword: React.FC<ChangePasswordProps> = ({ currentTheme, profileDa
           </div>
           <div className='password_validations_container'>
             <p className='password_validations' style={{ color: isLongEnough ? 'limegreen' : 'red' }}>
-            {!isLongEnough && <span>*</span>} hasUppercase Minimum 8 symbols
+              {!isLongEnough && <span>*</span>} hasUppercase Minimum 8 symbols
             </p>
             <p className='password_validations' style={{ color: hasUppercase ? 'limegreen' : 'red' }}>
               {!hasUppercase && <span>*</span>} At least one uppercase letter

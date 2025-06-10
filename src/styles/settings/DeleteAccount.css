@@ -11,6 +11,8 @@
   margin-top: 40px;
   border-radius: 10px;
   min-height: 100px;
+  background-color: rgba(0 0 0 / 0.14) !important;
+
 }
 
 
@@ -25,7 +27,9 @@
   margin-top: -16px;
   padding-left: 10px;
   padding-right: 10px;
-  transition: background-color 0.3s ease,
+  transition: background-color 0.3s ease;
+  border-radius: 40px;
+  border: 1px dashed red;
 }
 
 .delete_acc_header_p {

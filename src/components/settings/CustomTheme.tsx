@@ -266,7 +266,11 @@ const CustomTheme: React.FC<CustomThemeProps> = ({
     >
 
       <div className="customtheme_container"
-        style={{ backgroundColor: currentTheme["--background-color"] }}>
+        style={{
+          backgroundColor: currentTheme["--background-color"],
+          borderColor: currentTheme["--border-color"]
+        }}
+      >
         <p className="customtheme_p" style={{ color: currentTheme["--main-text-coloure"] }}> Create Custom Theme </p>
 
       </div>
@@ -351,6 +355,9 @@ const CustomTheme: React.FC<CustomThemeProps> = ({
               ) : (
                 <div
                   className="no_image_container"
+                  style={{
+                    borderColor: currentTheme['--border-color'],
+                  }}
                   onClick={() => handle_image_click(boardItem.id)}
                 >
 
