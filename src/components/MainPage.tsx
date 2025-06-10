@@ -263,6 +263,7 @@ const MainPage: React.FC<MainPageProps> = ({
         setIs_new_notification_received={setIs_new_notification_received}
         is_new_notification_received={is_new_notification_received}
         setIsBoardsLoaded={setIsBoardsLoaded}
+        isBoardsLoaded={isBoardsLoaded}
         selectedBoard={selectedBoard}
         isMobile={isMobile}
         setIs_sidebar_open_on_mobile={setIs_sidebar_open_on_mobile}

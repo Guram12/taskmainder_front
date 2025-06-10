@@ -18,6 +18,9 @@ import { IoCloseSharp } from "react-icons/io5";
 import { useNavigate } from 'react-router-dom';
 import { MdOutlineLogout } from "react-icons/md";
 import ConfirmationDialog from './Boards/ConfirmationDialog';
+import SkeletonBoardName from './Boards/SkeletonBoardName';
+
+
 
 interface SidebarProps {
   currentTheme: ThemeSpecs;
@@ -26,7 +29,8 @@ interface SidebarProps {
   selectedBoard: board | null;
   setSelectedBoard: (board: board | null) => void;
   setSelectedComponent: (component: string) => void;
-  setIsBoardsLoaded?: (isLoaded: boolean) => void;
+  setIsBoardsLoaded: (isLoaded: boolean) => void;
+  isBoardsLoaded: boolean;
   setIs_new_notification_received: (is_new_notification_received: boolean) => void;
   is_new_notification_received: boolean;
   isMobile: boolean;
@@ -45,6 +49,7 @@ const SidebarComponent: React.FC<SidebarProps> = ({
   setSelectedBoard,
   setSelectedComponent,
   setIsBoardsLoaded,
+  isBoardsLoaded,
   setIs_new_notification_received,
   is_new_notification_received,
   isMobile,
@@ -130,7 +135,7 @@ const SidebarComponent: React.FC<SidebarProps> = ({
 
 
   // ================================== sidebar pin and unpin ===============================================
-  
+
   // ================================================== toggle sidebar pin =================================================
   const toggleSidebarPin = () => {
     localStorage.setItem('isPinned', JSON.stringify(!isPinned));
@@ -187,7 +192,7 @@ const SidebarComponent: React.FC<SidebarProps> = ({
       return; // Exit early if the board is already selected
     }
     try {
-    setIs_sidebar_open_on_mobile(true);
+      setIs_sidebar_open_on_mobile(true);
 
       if (setIsBoardsLoaded) {
         setIsBoardsLoaded(false); // Show skeleton loader
@@ -309,7 +314,7 @@ const SidebarComponent: React.FC<SidebarProps> = ({
         ${is_sidebar_open_on_mobile ? "sidebar_closed_on_mobile" : ''}`}
 
       style={{
-        backdropFilter: 'blur(10px)', 
+        backdropFilter: 'blur(10px)',
         WebkitBackdropFilter: 'blur(10px)', // Safari support
         backgroundColor: 'rgba(0, 0, 0, 0.5)', // Semi-transparent black for darker effect
       }}
@@ -398,7 +403,13 @@ const SidebarComponent: React.FC<SidebarProps> = ({
                       ))}
                     </div>
                   )}
-
+                  {boards.length === 0 &&  !isBoardsLoaded &&(
+                    <>
+                      <SkeletonBoardName currentTheme={currentTheme} />
+                      <SkeletonBoardName currentTheme={currentTheme} />
+                      <SkeletonBoardName currentTheme={currentTheme} />
+                    </>
+                  )}
 
                   {!addingNewBoard && (
                     <div style={{
