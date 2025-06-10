@@ -14,6 +14,7 @@ import Avatar from '@mui/material/Avatar'; // Import Avatar from Material-UI
 import getAvatarStyles from '../../utils/SetRandomColor';
 import { useDraggable } from '@dnd-kit/core';
 import { RxDragHandleDots2 } from "react-icons/rx";
+import ReactDOM from 'react-dom';
 
 
 
@@ -220,7 +221,7 @@ const Task: React.FC<TaskProps> = ({ task,
         </div>
 
 
-        {showUpdateModal && (
+        {showUpdateModal && ReactDOM.createPortal(
           <ThemeProvider theme={MUI_Theme}>
             <TaskUpdateModal
               task={task}
@@ -230,9 +231,9 @@ const Task: React.FC<TaskProps> = ({ task,
               allCurrentBoardUsers={allCurrentBoardUsers}
               associatedUsers={associatedUsers}
               deleteTask={deleteTask}
-
             />
-          </ThemeProvider>
+          </ThemeProvider>,
+          document.body
         )}
       </div>
     </>
