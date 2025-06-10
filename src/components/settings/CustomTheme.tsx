@@ -229,6 +229,7 @@ const CustomTheme: React.FC<CustomThemeProps> = ({
       '--scrollbar-thumb-color': scrollbarThumbColor,
       '--list-background-color': listBackgroundColor,
       '--task-background-color': taskBackgroundColor,
+      
     });
 
     localStorage.setItem('theme', JSON.stringify({

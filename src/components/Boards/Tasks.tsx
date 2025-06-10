@@ -175,9 +175,9 @@ const Task: React.FC<TaskProps> = ({ task,
 
         <div className='task_description_and_due_date_container' >
           {task.due_date ? (
-            <p className='due_Date_p'>Due Date: {formatDate(task.due_date)}</p>
+            <p className='due_Date_p' style={{ color: currentTheme["--due-date-color"] }}>Due Date: {formatDate(task.due_date)}</p>
           ) : (
-            <p className='due_Date_p'>No due date</p>
+            <p className='due_Date_p' style={{ color: currentTheme["--due-date-color"] }}>No due date</p>
           )}
 
           <div className='associated_users_imgs_container'>
@@ -214,7 +214,7 @@ const Task: React.FC<TaskProps> = ({ task,
                 </div>
               ))
             ) : (
-              <p className='no_associated_users_p' >No associated users</p> // Fallback if no associated users
+              <p className='no_associated_users_p' style={{ color: currentTheme["--due-date-color"] }} >No associated users</p> // Fallback if no associated users
             )}
           </div>
 
