@@ -32,3 +32,4 @@ Sidebar copy.css
 SideBar copy.tsx
 # ======================================
 .env
+VAPID_key.json
