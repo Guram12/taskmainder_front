@@ -5,8 +5,8 @@ export interface ThemeSpecs {
   '--scrollbar-thumb-color': string;
   '--list-background-color': string;
   '--task-background-color': string;
-  '--hover-color'?: string;
-  '--due-date-color'?: string;
+  '--hover-color': string;
+  '--due-date-color': string;
 }
 
 
@@ -64,15 +64,15 @@ const themes = {
     '--hover-color': '#18232E',           // Lighter ink tone
     '--due-date-color': '#6A8DBA'
   },
-  charcoal_rose: {
-    '--background-color': '#1E1C1D',           // Almost black with warmth
-    '--main-text-coloure': '#F5DDE0',          // Pale rose-pink
-    '--border-color': '#3B3133',               // Subtle rose-gray
-    '--scrollbar-thumb-color': '#6D4C51',      // Muted dusty rose
-    '--list-background-color': '#2A2325',      // Slightly lighter charcoal
-    '--task-background-color': '#3F2F32',     // Warm and rich
-    '--hover-color': '#2A2325',           // Lighter charcoal
-    '--due-date-color': '#D7AAB7'         // Soft rose for due dates
+  blue_steel: {
+    '--background-color': '#202B38',           // Deep steel blue
+    '--main-text-coloure': '#E3ECF7',          // Soft, icy blue for high contrast
+    '--border-color': '#31475E',               // Muted blue-gray for borders
+    '--scrollbar-thumb-color': '#46627F',      // Muted steel blue for scrollbars
+    '--list-background-color': '#263445',      // Slightly lighter blue for lists
+    '--task-background-color': '#2F4258',      // Distinct, rich blue for cards/tasks
+    '--hover-color': '#263445',                // Slightly lighter blue for hover
+    '--due-date-color': '#7FA6C9'              // Muted blue for due dates
   },
   velvet_moss: {
     '--background-color': '#1A1F1B',           // Dark earthy green-black

@@ -41,13 +41,15 @@ const App: React.FC = () => {
 
   const [isCustomThemeSelected, setIsCustomThemeSelected] = useState<boolean>(default_is_custom_theme_selected);
 
-  const background_color = localStorage.getItem('background_color') || '#4E4E4E';
-  const border_color = localStorage.getItem('border_color') || '#d9e0e3';
-  const main_text_coloure = localStorage.getItem('main_text_coloure') || '#333';
-  const scrollbar_thumb_color = localStorage.getItem('scrollbar_thumb_color') || '#d9e0e3';
-  const list_background_color = localStorage.getItem('list_background_color') || '#ffffff';
-  const task_background_color = localStorage.getItem('task_background_color') || '#f0f0f0';
 
+  const background_color = localStorage.getItem('background_color') || '#1A252F';
+  const border_color = localStorage.getItem('border_color') || '#EAF6FB';
+  const main_text_coloure = localStorage.getItem('main_text_coloure') || '#274357';
+  const scrollbar_thumb_color = localStorage.getItem('scrollbar_thumb_color') || '#3B6E7A';
+  const list_background_color = localStorage.getItem('list_background_color') || '#22313F';
+  const task_background_color = localStorage.getItem('task_background_color') || '#2B4D5C';
+  const hover_color = localStorage.getItem('hover_color') || '#22313F';
+  const due_date_color = localStorage.getItem('due_date_color') || '#7FC6D7'; 1
 
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
 
@@ -66,15 +68,19 @@ const App: React.FC = () => {
     '--scrollbar-thumb-color': scrollbar_thumb_color,
     '--list-background-color': list_background_color,
     '--task-background-color': task_background_color,
+    '--hover-color': hover_color,
+    '--due-date-color': due_date_color,
   });
 
   const [currentTheme, setCurrentTheme] = useState<ThemeSpecs>({
-    '--background-color': '#4E4E4E',
-    '--border-color': '#d9e0e3',
-    '--main-text-coloure': '#333',
-    '--scrollbar-thumb-color': '#d9e0e3',
-    '--list-background-color': '#ffffff',
-    '--task-background-color': '#f0f0f0',
+    '--background-color': '#1A252F',
+    '--border-color': '#EAF6FB',
+    '--main-text-coloure': '#274357',
+    '--scrollbar-thumb-color': '#3B6E7A',
+    '--list-background-color': '#22313F',
+    '--task-background-color': '#2B4D5C',
+    '--hover-color': '#22313F',
+    '--due-date-color': '#7FC6D7',
   });
 
   const [change_current_theme, setChange_current_theme] = useState(false);
@@ -226,11 +232,6 @@ const App: React.FC = () => {
       });
     }
   }, []);
-
-
-
-
-
 
 
 

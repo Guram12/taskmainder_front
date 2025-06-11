@@ -4,7 +4,7 @@
   align-items: center;
   flex-direction: column;
   width: 100%;
-  max-height: calc(100vh - 110px);
+  max-height: calc(100vh - 70px);
 
   margin-left: 20px;
   margin-right: 20px;
@@ -41,7 +41,7 @@
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
   gap: 20px;
-  max-height: calc(100vh - 145px);
+  max-height: calc(100vh - 70px);
   overflow-y: auto;
   width: 100%;
   /* Ensure it takes the full width of its container */

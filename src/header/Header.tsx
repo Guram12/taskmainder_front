@@ -106,55 +106,50 @@ const Header: React.FC<HeaderProps> = ({
 
 
   // ===========================================  dropdown styles   ================================================
+  const themeKeys = [
+    'dark_gray',
+    'forest_night',
+    'ocean_teal',
+    'deep_aqua',
+    'ink_cobalt',
+    'charcoal_rose',
+    'velvet_moss',
+    'arctic_alice',
+    'mint_ice',
+    'spring_cloud',
+    'lavender_mist'
+  ];
+
+  const themeMenu: MenuProps = {
+    items: [
+      ...themeKeys.map((key, idx) => ({
+        key,
+        label: (
+          <div
+            className={`header_coloure_child_container example${idx + 2}`}
+            onClick={() => changeTheme(themes[key as keyof typeof themes])}
+          />
+        ),
+      })),
+      {
+        key: 'custom',
+        label: (
+          <div
+            className='custom_theme_container_in_header'
+            style={{
+              backgroundColor: saved_custom_theme['--background-color'],
+              borderColor: saved_custom_theme['--border-color']
+            }}
+            onClick={handle_return_to_custom_theme}
+          >
+            Custom Theme
+          </div>
+        ),
+      },
+    ],
+  };
 
 
-
-// ...existing code...
-
-const themeKeys = [
-  'dark_gray',
-  'forest_night',
-  'ocean_teal',
-  'deep_aqua',
-  'ink_cobalt',
-  'charcoal_rose',
-  'velvet_moss',
-  'arctic_alice',
-  'mint_ice',
-  'spring_cloud',
-  'lavender_mist'
-];
-
-const themeMenu: MenuProps = {
-  items: [
-    ...themeKeys.map((key, idx) => ({
-      key,
-      label: (
-        <div
-          className={`header_coloure_child_container example${idx + 2}`}
-          onClick={() => changeTheme(themes[key as keyof typeof themes])}
-        />
-      ),
-    })),
-    {
-      key: 'custom',
-      label: (
-        <div
-          className='custom_theme_container_in_header'
-          style={{
-            backgroundColor: saved_custom_theme['--background-color'],
-            borderColor: saved_custom_theme['--border-color']
-          }}
-          onClick={handle_return_to_custom_theme}
-        >
-          Custom Theme
-        </div>
-      ),
-    },
-  ],
-};
-
-// ...existing code...
 
   // Language dropdown menu
   const languageMenu: MenuProps = {
@@ -195,7 +190,7 @@ const themeMenu: MenuProps = {
         backdropFilter: 'blur(10px)', // Apply blur effect to the background
         WebkitBackdropFilter: 'blur(10px)', // Safari support
         backgroundColor: 'rgba(0, 0, 0, 0.5)', // Semi-transparent black for darker effect
-
+        borderColor: currentTheme['--border-color'],
       }}
     >
       <div className='header_logo_container' >
@@ -221,7 +216,7 @@ const themeMenu: MenuProps = {
             <div className='header_coloure_child_container example6'
               onClick={() => changeTheme(themes.ink_cobalt)}></div>
             <div className='header_coloure_child_container example7'
-              onClick={() => changeTheme(themes.charcoal_rose)}></div>
+              onClick={() => changeTheme(themes.blue_steel)}></div>
             <div className='header_coloure_child_container example8'
               onClick={() => changeTheme(themes.velvet_moss)}></div>
             <div className='header_coloure_child_container example9'
