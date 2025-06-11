@@ -202,10 +202,6 @@ const Header: React.FC<HeaderProps> = ({
         {!isMobile ? (
           <div className='header_coloure_container'>
             <div className='header_coloure_child_container example2'
-              style={{
-
-                borderColor: "white"
-              }}
               onClick={() => changeTheme(themes.dark_gray)}></div>
             <div className='header_coloure_child_container example3'
               onClick={() => changeTheme(themes.forest_night)}></div>
@@ -231,8 +227,8 @@ const Header: React.FC<HeaderProps> = ({
 
             <div className='custom_theme_container_in_header'
               style={{
-                backgroundColor: saved_custom_theme['--background-color'],
-                borderColor: saved_custom_theme['--border-color']
+                backgroundColor: currentTheme['--background-color'],
+                borderColor: currentTheme['--border-color'],
               }}
               onClick={handle_return_to_custom_theme}
             >
@@ -261,6 +257,12 @@ const Header: React.FC<HeaderProps> = ({
           </div>
         )}
 
+
+      </div>
+
+
+
+      <div className="language_and_user_in_header" >
         {/* Language Dropdown */}
         <div className="mobile_language_dropdown_wrapper">
           <Dropdown
@@ -273,6 +275,7 @@ const Header: React.FC<HeaderProps> = ({
             <button className="mobile_language_dropdown_btn"
               style={{
                 backgroundColor: currentTheme['--list-background-color'],
+                borderColor: currentTheme['--border-color'],
               }}
             >
               <GlobalOutlined style={{ marginRight: 6, color: currentTheme['--main-text-coloure'] }} />
@@ -282,11 +285,7 @@ const Header: React.FC<HeaderProps> = ({
             </button>
           </Dropdown>
         </div>
-      </div>
 
-
-
-      <div>
         <div className="header_profile_container">
           <h3 className="header_profile_username">{profileData.username}</h3>
           {profileData?.profile_picture ? (

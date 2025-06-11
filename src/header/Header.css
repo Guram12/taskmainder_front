@@ -32,7 +32,7 @@
   width: 40px;
 }
 
-.header_all_dropdowns_container{
+.header_all_dropdowns_container {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -43,7 +43,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  width:min-content;
+  width: min-content;
   height: 60px;
   gap: 30px;
 }
@@ -82,9 +82,11 @@
 .example7 {
   background-color: #202B38;
 }
+
 .example8 {
   background-color: #1A1F1B;
 }
+
 .example9 {
   background-color: #EAF6FB;
 }
@@ -92,9 +94,11 @@
 .example10 {
   background-color: #E6FAF7;
 }
+
 .example11 {
   background-color: #F5FCF9;
 }
+
 .example12 {
   background-color: #F5F6FB;
 }
@@ -123,7 +127,7 @@
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
   border-radius: 10px;
-  box-shadow: 0 2px 12px rgba(0,0,0,0.18);
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.18);
 }
 
 
@@ -203,15 +207,36 @@
 
 }
 
+.language_and_user_in_header {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-right: 10px;
+  gap: 10px;
+}
+
+
+.mobile_language_dropdown_btn {
+  height: 30px;
+  width: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid;
+  border-radius: 24px;
+  padding: 6px;
+  font-size: 13px;
+  cursor: pointer;
+  transition: background 0.2s, border-color 0.2s;
+  outline: none;
+}
 
 @media screen and (max-width: 768px) {
   .main_Header_container {
-    height: 100px;
-    border: 1px solid rebeccapurple;
+    height: 70px;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background-color: var(--background-color);
     transition: background-color 0.3s ease, border-color 0.3s ease;
 
   }
@@ -222,6 +247,7 @@
     display: flex;
     align-items: center;
     margin-left: 10px;
+
   }
 
   .language_dropdown {
@@ -241,7 +267,7 @@
     align-items: center;
     justify-content: center;
     width: 64px;
-    border: 0.5px solid var(--border-color, #ccc);
+    border: 1px solid var(--border-color, #ccc);
     border-radius: 24px;
     padding: 6px;
     font-size: 15px;
@@ -266,10 +292,10 @@
 
 
 
-.header_coloure_child_container{
-  width:120px;
+  .header_coloure_child_container {
+    width: 120px;
 
-}
+  }
 
 
 
