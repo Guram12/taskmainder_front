@@ -13,7 +13,7 @@
 
 
 .sidebar_container {
-  height: calc(100vh - 102px);
+  height: calc(100vh - 70px);
   width: min-content;
   display: flex;
   flex-direction: column;

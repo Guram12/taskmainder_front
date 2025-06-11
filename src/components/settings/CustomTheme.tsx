@@ -45,12 +45,18 @@ const CustomTheme: React.FC<CustomThemeProps> = ({
   setDeleting_image_boardId,
   current_user_email,
 }) => {
+  // '--hover-color': '#22313F',
+  // '--due-date-color': '#7FC6D7',
+
   const [backgroundColor, setBackgroundColor] = useState<string>(currentTheme['--background-color']);
   const [borderColor, setBorderColor] = useState<string>(currentTheme['--border-color']);
   const [mainTextColor, setMainTextColor] = useState<string>(currentTheme['--main-text-coloure']);
   const [scrollbarThumbColor, setScrollbarThumbColor] = useState<string>(currentTheme['--scrollbar-thumb-color']);
   const [listBackgroundColor, setListBackgroundColor] = useState<string>(currentTheme['--list-background-color']);
   const [taskBackgroundColor, setTaskBackgroundColor] = useState<string>(currentTheme['--task-background-color']);
+
+  const [hoverColor, setHoverColor] = useState<string>(currentTheme['--hover-color']);
+  const [dueDateColor, setDueDateColor] = useState<string>(currentTheme['--due-date-color']);
 
 
   const [userBoardStatuses, setUserBoardStatuses] = useState<UserBoardStatuses[]>([]);
@@ -229,7 +235,9 @@ const CustomTheme: React.FC<CustomThemeProps> = ({
       '--scrollbar-thumb-color': scrollbarThumbColor,
       '--list-background-color': listBackgroundColor,
       '--task-background-color': taskBackgroundColor,
-      
+      '--hover-color': hoverColor,
+      '--due-date-color': dueDateColor,
+
     });
 
     localStorage.setItem('theme', JSON.stringify({
@@ -239,6 +247,8 @@ const CustomTheme: React.FC<CustomThemeProps> = ({
       '--scrollbar-thumb-color': scrollbarThumbColor,
       '--list-background-color': listBackgroundColor,
       '--task-background-color': taskBackgroundColor,
+      '--hover-color': hoverColor,
+      '--due-date-color': dueDateColor,
     }));
 
     document.body.style.backgroundColor = backgroundColor;
@@ -251,6 +261,8 @@ const CustomTheme: React.FC<CustomThemeProps> = ({
       '--scrollbar-thumb-color': scrollbarThumbColor,
       '--list-background-color': listBackgroundColor,
       '--task-background-color': taskBackgroundColor,
+      '--hover-color': hoverColor,
+      '--due-date-color': dueDateColor,
     });
     console.log("Theme colors saved to localStorage.");
   };
@@ -318,7 +330,11 @@ const CustomTheme: React.FC<CustomThemeProps> = ({
               )}
 
             </div>
-            <div className='board_image_container' >
+            <div className='board_image_container'
+              style={{
+                borderColor: currentTheme['--border-color'],
+              }}
+            >
               {boardItem.background_image ? (
                 <>
                   {loading_image.isLoading && loading_image.boardId === boardItem.id ? (
@@ -378,7 +394,7 @@ const CustomTheme: React.FC<CustomThemeProps> = ({
                           onClick={() => handle_image_click(boardItem.id)}
                         />
                       ) : (
-                        <FaRegImages className="no_image_icon" />
+                        <FaRegImages className="no_image_icon" style={{ color: currentTheme['--border-color'] }} />
                       )}
                     </>
                   )}
@@ -588,6 +604,55 @@ const CustomTheme: React.FC<CustomThemeProps> = ({
           </ConfigProvider>
         </div>
 
+        {/*7  hoverColor color selection  */}
+        <div className='each_color_property' >
+          <ConfigProvider
+            theme={{
+              token: {
+                colorBgBase: currentTheme['--list-background-color'],
+                colorTextBase: currentTheme['--main-text-coloure'],
+                lineWidth: 1,
+              },
+            }}
+          >
+            <ColorPicker
+              value={hoverColor}
+              allowClear
+              showText={(color) => <span>Hover Color {color.toHexString()}</span>}
+              className="large-color-picker"
+              mode="single"
+              onChangeComplete={(color) => {
+                setHoverColor(color.toCssString());
+              }}
+              size='large'
+            />
+          </ConfigProvider>
+        </div>
+
+        {/*8  dueDateColor color selection  */}
+        <div className='each_color_property' >
+          <ConfigProvider
+            theme={{
+              token: {
+                colorBgBase: currentTheme['--list-background-color'],
+                colorTextBase: currentTheme['--main-text-coloure'],
+                lineWidth: 1,
+              },
+            }}
+          >
+            <ColorPicker
+              value={dueDateColor}
+              allowClear
+              showText={(color) => <span>Due Date Color {color.toHexString()}</span>}
+              className="large-color-picker"
+              mode="single"
+              onChangeComplete={(color) => {
+                setDueDateColor(color.toCssString());
+              }}
+              size='large'
+            />
+          </ConfigProvider>
+        </div>
 
 
       </div>

@@ -5,7 +5,7 @@
   gap: 1rem;
   overflow: auto;
   overflow-x: hidden;
-  max-height: calc(100vh - 110px);
+  max-height: calc(100vh - 70px);
 }
 
 

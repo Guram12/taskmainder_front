@@ -162,7 +162,8 @@ const List: React.FC<ListProps> = ({
       ref={setNodeRef}
       style={{
         backgroundColor: isOverDnd
-          ? `green`
+          ? `seagreen`
+
           : `${currentTheme['--list-background-color']}`,
         transition: 'background-color 0.3s ease',
       }}
