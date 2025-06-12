@@ -68,14 +68,15 @@ const TaskUpdateModal: React.FC<TaskUpdateModalProps> = ({ task, onClose, update
   const handleClearDueDate = () => {
     setUpdatedDueDate(null);
     setUpdatedDueTime(null);
-    setSelectedUsers([]);
   };
 
   const handleCancel = () => {
     onClose();
   };
 
-
+  const handleClearAssociatedUsers = () => {
+    setSelectedUsers([]);
+  }
   // ========================================= delete task ========================================
 
   const handleDelete = () => {
@@ -91,7 +92,7 @@ const TaskUpdateModal: React.FC<TaskUpdateModalProps> = ({ task, onClose, update
     setShowDialog(false);
   };
 
-  // Custom slotProps for MUI pickers to apply theme styles
+  // =====================   Custom slotProps for MUI pickers to apply theme styles =============================
   const pickerSlotProps = {
     textField: {
       InputProps: {
@@ -156,7 +157,7 @@ const TaskUpdateModal: React.FC<TaskUpdateModalProps> = ({ task, onClose, update
 
   };
 
-  // Custom styles for react-select based on currentTheme
+  //===================== Custom styles for react-select based on currentTheme  =============================
   const selectStyles = {
     control: (provided: any) => ({
       ...provided,
@@ -225,7 +226,10 @@ const TaskUpdateModal: React.FC<TaskUpdateModalProps> = ({ task, onClose, update
   return (
     <div className="task-update-modal">
       <div className="modal-content" style={{ backgroundColor: currentTheme['--background-color'] }}>
-        <h3>Update Task</h3>
+        <div className='bid_content_container' >
+
+        </div>
+        <h3 className='update_task_header' >Update Task</h3>
         <input
           type="text"
           value={updatedTitle}
@@ -294,6 +298,36 @@ const TaskUpdateModal: React.FC<TaskUpdateModalProps> = ({ task, onClose, update
         </button>
 
 
+
+
+        {/* User Select Input */}
+        <div className="user-select">
+          <label  >Select Associated Users:</label>
+          <Select
+            isMulti
+            options={allCurrentBoardUsers.map((user) => ({
+              value: user.id,
+              label: user.username,
+            }))}
+            value={selectedUsers.map((id) => {
+              const user = allCurrentBoardUsers.find((user) => user.id === id);
+              return user ? { value: user.id, label: user.username } : null;
+            }).filter(Boolean)} // Filter out null values
+            onChange={(selectedOptions) => {
+              if (selectedOptions) {
+                const userIds = selectedOptions
+                  .filter((option): option is { value: number; label: string } => option !== null)
+                  .map((option) => option.value);
+                setSelectedUsers(userIds);
+              } else {
+                setSelectedUsers([]); // Handle the case where no options are selected
+              }
+            }}
+            placeholder="Select users..."
+            styles={selectStyles}
+          />
+        </div>
+
         {/* Previously asociated users */}
         {
           associatedUsers.length > 0 && (
@@ -328,34 +362,9 @@ const TaskUpdateModal: React.FC<TaskUpdateModalProps> = ({ task, onClose, update
           )
         }
 
-        {/* User Select Input */}
-        <div className="user-select">
-          <label  >Select Associated Users:</label>
-          <Select
-            isMulti
-            options={allCurrentBoardUsers.map((user) => ({
-              value: user.id,
-              label: user.username,
-            }))}
-            value={selectedUsers.map((id) => {
-              const user = allCurrentBoardUsers.find((user) => user.id === id);
-              return user ? { value: user.id, label: user.username } : null;
-            }).filter(Boolean)} // Filter out null values
-            onChange={(selectedOptions) => {
-              if (selectedOptions) {
-                const userIds = selectedOptions
-                  .filter((option): option is { value: number; label: string } => option !== null)
-                  .map((option) => option.value);
-                setSelectedUsers(userIds);
-              } else {
-                setSelectedUsers([]); // Handle the case where no options are selected
-              }
-            }}
-            placeholder="Select users..."
-            styles={selectStyles}
-          />
-        </div>
-
+        <button onClick={handleClearAssociatedUsers}>
+          Clear Associated Users
+        </button>
 
         <div className="modal-actions">
           <button className='delete_task_button' onClick={handleDelete}>
