@@ -335,11 +335,10 @@ const TaskUpdateModal: React.FC<TaskUpdateModalProps> = ({ task, onClose, update
               <h4 className='prev_as_users_h4' >Previously Associated Users:</h4>
               <div className="associated-users">
                 {associatedUsers.map((user) => (
-                  <>
+                  // Add key to the fragment
+                  <React.Fragment key={user.id}>
                     {user.profile_picture ? (
-
                       <img
-                        key={user.id}
                         src={user.profile_picture}
                         alt={user.username}
                         className="associated-user-image"
@@ -355,7 +354,7 @@ const TaskUpdateModal: React.FC<TaskUpdateModalProps> = ({ task, onClose, update
                         {user.username.charAt(0).toUpperCase()}
                       </Avatar>
                     )}
-                  </>
+                  </React.Fragment>
                 ))}
               </div>
             </div>
