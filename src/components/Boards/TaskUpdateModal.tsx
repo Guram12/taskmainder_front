@@ -35,8 +35,12 @@ const TaskUpdateModal: React.FC<TaskUpdateModalProps> = ({ task, onClose, update
   const [updatedTitle, setUpdatedTitle] = useState<string>(task.title);
   const [isTitleUpdating, setIsTitleUpdating] = useState<boolean>(false);
 
-
   const [updatedDescription, setUpdatedDescription] = useState<string>(task.description || '');
+  const [isDescriptionUpdating, setIsDescriptionUpdating] = useState<boolean>(false);
+
+
+
+
   const [updatedDueDate, setUpdatedDueDate] = useState<Dayjs | null>(task.due_date ? dayjs(task.due_date.split('T')[0]) : null); // Use Dayjs for date
   const [updatedDueTime, setUpdatedDueTime] = useState<Dayjs | null>(task.due_date ? dayjs(task.due_date) : null); // Use Dayjs for time
   const [updatedCompletedStatus, setUpdatedCompletedStatus] = useState<boolean>(task.completed);
@@ -98,12 +102,17 @@ const TaskUpdateModal: React.FC<TaskUpdateModalProps> = ({ task, onClose, update
     setShowDialog(false);
   };
 
-  // ================================================   title click functions =======================================
+  // ================================================   input  click functions =======================================
   const handleCancelTitleUpdate = () => {
     setIsTitleUpdating(false);
     setUpdatedTitle(task.title);
   };
 
+  const handleCancelDescriptionUpdate = () => {
+    setIsDescriptionUpdating(false);
+    setUpdatedDescription(task.description || '');
+    console.log("cancel description update");
+  };
 
   // =====================   Custom slotProps for MUI pickers to apply theme styles =============================
   const pickerSlotProps = {
@@ -270,12 +279,37 @@ const TaskUpdateModal: React.FC<TaskUpdateModalProps> = ({ task, onClose, update
           )}
 
           {/* Description Input container*/}
+          <div className='description_container' >
+            {isDescriptionUpdating ? (
+              <div className='description_textarea_container' >
 
-          <textarea
-            value={updatedDescription}
-            onChange={(e) => setUpdatedDescription(e.target.value)}
-            placeholder="Task Description"
-          />
+                <textarea
+                  className='description_textarea'
+                  value={updatedDescription}
+                  onChange={(e) => setUpdatedDescription(e.target.value)}
+                  placeholder="Task Description"
+                  style={{
+                    backgroundColor: currentTheme['--background-color'],
+                    color: currentTheme['--main-text-coloure'],
+                    borderColor: currentTheme['--border-color'],
+                    outline: 'none',
+                    transition: 'border-color 0.2s',
+                  }}
+                />
+                <GrFormCheckmark className='title_checkmark_icon' onClick={() => setIsDescriptionUpdating(false)} />
+                <HiXMark className='title_close_icon' onClick={handleCancelDescriptionUpdate} />
+              </div>
+
+            ) : (
+              <div
+                className='description_text'
+                style={{ color: currentTheme['--main-text-coloure'], borderColor: currentTheme['--border-color'] }}
+                onClick={() => setIsDescriptionUpdating(true)}
+              >
+                {updatedDescription === '' ? 'Add a description...' : updatedDescription}
+              </div>
+            )}
+          </div>
 
 
 
