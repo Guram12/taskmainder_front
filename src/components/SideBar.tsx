@@ -19,7 +19,9 @@ import { useNavigate } from 'react-router-dom';
 import { MdOutlineLogout } from "react-icons/md";
 import ConfirmationDialog from './Boards/ConfirmationDialog';
 import SkeletonBoardName from './Boards/SkeletonBoardName';
-
+import { IoIosAddCircleOutline } from "react-icons/io";
+import { GrFormCheckmark } from "react-icons/gr";
+import { HiXMark } from "react-icons/hi2";
 
 
 interface SidebarProps {
@@ -67,6 +69,9 @@ const SidebarComponent: React.FC<SidebarProps> = ({
 
   const [newBoardName, setNewBoardName] = useState<string>('');
   const [addingNewBoard, setAddingNewBoard] = useState<boolean>(false);
+
+
+  const [isNewBoardSaving, setIsNewBoardSaving] = useState<boolean>(false);
 
   const navigate = useNavigate();
 
@@ -263,6 +268,7 @@ const SidebarComponent: React.FC<SidebarProps> = ({
 
 
   const handle_create_new_board = async () => {
+    setIsNewBoardSaving(true);
     try {
       const response = await axiosInstance.post('api/boards/', {
         name: newBoardName
@@ -287,9 +293,12 @@ const SidebarComponent: React.FC<SidebarProps> = ({
         // Reset the input and state
         setAddingNewBoard(false);
         setNewBoardName('');
+        setIsNewBoardSaving(false);
       }
     } catch (error) {
       console.error("Error creating new board:", error);
+    } finally {
+      setIsNewBoardSaving(false);
     }
   };
 
@@ -352,11 +361,23 @@ const SidebarComponent: React.FC<SidebarProps> = ({
             <div>
               <Menu
                 menuItemStyles={{
+                  root: {
+                    color: '#fff', // Always white
+                    fontWeight: 'bold',
+                  },
+                  button: {
+                    '&:hover': {
+                      backgroundColor: currentTheme['--hover-color'] || '#11995a',
+                    },
+                  },
                   subMenuContent: {
                     backgroundColor: 'transparent',
                   },
+
                 }}
               >
+
+
                 {/* dashboard  */}
                 <MenuItem icon={<MdSpaceDashboard className="dashboard_icon" />}>
                   <div className="for_dashboard_child_container">
@@ -392,7 +413,7 @@ const SidebarComponent: React.FC<SidebarProps> = ({
                           key={board.id}
                           rootStyles={{
                             transition: 'all 0.3s',
-                            color: selectedBoard?.id === board.id ? 'seagreen' : currentTheme['--main-text-coloure'],
+                            color: selectedBoard?.id === board.id ? 'seagreen' : 'white',
                             textAlign: 'left',
                             fontWeight: 'bold',
                           }}
@@ -412,33 +433,51 @@ const SidebarComponent: React.FC<SidebarProps> = ({
                     </>
                   )}
 
+                  {/* add new boarf  */}
                   {!addingNewBoard && (
-                    <div style={{
-
-                    }} >
-                      <h3
-                        onClick={handleBoardAddClick}
-                        style={{ backgroundColor: `${currentTheme['--background-color']}`, color: 'black', margin: '0px' }}
-                      >
-                        + New board
-                      </h3>
-                    </div>
+                    <MenuItem
+                      icon={<IoIosAddCircleOutline className='sidebar_big_icon' />}
+                      onClick={handleBoardAddClick}
+                      rootStyles={{
+                        transition: 'all 0.3s',
+                        textAlign: 'left',
+                        fontWeight: 'bold',
+                      }}
+                    >
+                      Add New Board
+                    </MenuItem>
                   )}
+
 
                   {addingNewBoard && (
                     <div>
-                      <input
-                        type="text"
-                        placeholder='board name'
-                        value={newBoardName}
-                        onChange={(e) => setNewBoardName(e.target.value)}
-                      />
-                      <button onClick={() => handle_create_new_board()}  > Add</button>
-                      <button onClick={canselBoardAdding}> Cansel</button>
+                      {isNewBoardSaving ? (
+                        <SkeletonBoardName currentTheme={currentTheme} />
+                      ) : (
+                        <>
+                          <input
+                            type="text"
+                            placeholder='board name'
+                            value={newBoardName}
+                            onChange={(e) => setNewBoardName(e.target.value)}
+                            className='add_board_input'
+                            style={{
+                              backgroundColor: currentTheme['--list-background-color'],
+                              color: currentTheme['--main-text-coloure'],
+                              border: `1px solid `,
+                              borderColor: currentTheme['--border-color'],
+                            }}
+                          />
+                          <div className='add_board_button_container' >
+                            <GrFormCheckmark onClick={() => handle_create_new_board()} className='add_board_icon' />
+                            <HiXMark onClick={canselBoardAdding} className='cancel_add_board_icon' />
+                          </div>
+                        </>
+                      )}
                     </div>
                   )}
-
                 </SubMenu>
+
 
                 <MenuItem icon={<GoRepoTemplate className='sidebar_big_icon' />} onClick={() => handel_sidebar_page_click("Templates")} >Templates</MenuItem>
                 <MenuItem
@@ -471,15 +510,27 @@ const SidebarComponent: React.FC<SidebarProps> = ({
                 </MenuItem>
               </Menu>
             </div>
+
+
+
+            {/* Settings and logout(loghout only on mobile) */}
             <div >
               <Menu style={{ marginTop: 'auto', position: 'relative' }}>
                 <MenuItem
                   icon={<RiSettings4Fill className="sidebar_big_icon" />}
                   onClick={() => handel_sidebar_page_click("Settings")}
-                >Settings</MenuItem>
-                <div className='logout_icon_container' >
-                  <MdOutlineLogout onClick={handleLogOutIconClick} className='logout_icon' />
-                </div>
+                >Settings
+                </MenuItem>
+                
+                {isMobile && (
+                  <MenuItem
+                    icon={<MdOutlineLogout className='sidebar_big_icon' />}
+                    onClick={handleLogOutIconClick}
+                    style={{ color: 'red', fontWeight: 'bold' }}
+                  > Log Out
+                  </MenuItem>
+                )}
+
               </Menu>
             </div>
           </div>
