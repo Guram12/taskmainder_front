@@ -6,6 +6,7 @@ import { MdOutlineKeyboardDoubleArrowLeft } from "react-icons/md";
 import { ThemeSpecs } from '../utils/theme';
 import { FaClipboardList } from "react-icons/fa";
 import { IoMdListBox } from "react-icons/io";
+import { Tooltip } from 'antd';
 
 
 
@@ -37,6 +38,8 @@ const Calendar: React.FC<CalendarProps> = ({ boards, currentTheme, fetchBoards }
 
   const [currentYear, setCurrentYear] = useState<number>(new Date().getFullYear());
 
+
+  const [showCalendarTooltip, setShowCalendarTooltip] = useState<boolean>(false);
 
 
   useEffect(() => {
@@ -85,7 +88,15 @@ const Calendar: React.FC<CalendarProps> = ({ boards, currentTheme, fetchBoards }
     }
     return days;
   };
-  const handleDayClick = (monthIndex: number, dayNumber: number) => {
+  const handleDayClick = (monthIndex: number, dayNumber: number, isHighlighted: boolean) => {
+    if (!isHighlighted ) {
+      setShowCalendarTooltip(true);
+      setTimeout(() => {
+        setShowCalendarTooltip(false);
+      }, 3000);
+      return;
+    }
+
     const selectedDate = new Date(currentYear, monthIndex, dayNumber);
 
     const tasksByBoard: Record<string, { boardName: string; lists: Record<string, TaskInfo[]> }> = {};
@@ -158,9 +169,7 @@ const Calendar: React.FC<CalendarProps> = ({ boards, currentTheme, fetchBoards }
               <div
                 key={day.toISOString()}
                 className={`calendar_day ${isHighlighted ? 'highlighted_day' : ''}`}
-                onClick={() =>
-                  isHighlighted && handleDayClick(monthIndex, dayNumber)
-                }
+                onClick={() => handleDayClick(monthIndex, dayNumber, isHighlighted)}
               >
                 {dayNumber}
               </div>
@@ -188,7 +197,7 @@ const Calendar: React.FC<CalendarProps> = ({ boards, currentTheme, fetchBoards }
   };
 
 
-  
+
 
   return (
     <div className="main_calendar_container">
@@ -196,6 +205,18 @@ const Calendar: React.FC<CalendarProps> = ({ boards, currentTheme, fetchBoards }
         < MdOutlineKeyboardDoubleArrowLeft onClick={() => handleYearChange('prev')} className='year_change_arrow_icon' />
         <h2 className='currentyear_h2' >{currentYear}</h2>
         <MdOutlineKeyboardDoubleArrowRight onClick={() => handleYearChange('next')} className='year_change_arrow_icon' />
+        <div className="calendar_tooltip_cont">
+
+          <Tooltip
+            title="No Due Date Tasks.  Click on a highlighted day to see tasks due on that day."
+            placement="right"
+            color={currentTheme["--list-background-color"]}
+            overlayInnerStyle={{ color: currentTheme["--main-text-coloure"] }} // <-- set text color dynamically
+            open={showCalendarTooltip}
+          >
+            <span style={{ marginLeft: 8, cursor: 'pointer', fontSize: 18, color: currentTheme["--main-text-coloure"] }}>🛈</span>
+          </Tooltip>
+        </div>
       </div>
 
       <div className="yearly_calendar">
@@ -209,12 +230,12 @@ const Calendar: React.FC<CalendarProps> = ({ boards, currentTheme, fetchBoards }
             style={{ backgroundColor: `${currentTheme['--list-background-color']}` }}
             onClick={(e) => e.stopPropagation()} // Prevent closing when clicking inside the modal
           >
-            <h3>Tasks for {selectedDay}</h3>
+            <h3 style={{ color: currentTheme['--main-text-coloure'] }} >Tasks for {selectedDay}</h3>
 
             {tasksForSelectedDay.length > 0 ? (
               <div className="selected_day_container_list">
                 {tasksForSelectedDay.map((board, boardIndex) => (
-                  <div key={boardIndex} className="selected_day_task_container">
+                  <div key={boardIndex} className="selected_day_task_container" style={{borderColor: currentTheme['--border-color']}}>
                     <div className="selected_day_task_board_container" style={{ backgroundColor: `${currentTheme['--list-background-color']}` }}>
                       <div className="selected_day_task_board">
                         <FaClipboardList />
@@ -223,19 +244,19 @@ const Calendar: React.FC<CalendarProps> = ({ boards, currentTheme, fetchBoards }
                       </div>
                     </div>
                     {Object.entries(board.lists).map(([listName, tasks], listIndex) => (
-                      <div key={listIndex} className="selected_day_task_list" style={{ backgroundColor: `${currentTheme['--list-background-color']}` }}>
+                      <div key={listIndex} className="selected_day_task_list" style={{ borderColor: currentTheme['--border-color'] }}>
                         <div className='selected_day_icon_list_h2' style={{ backgroundColor: `${currentTheme['--list-background-color']}` }}>
                           <IoMdListBox />
                           <h3 className='selected_day_h2' >{listName}</h3>
                         </div>
 
                         {tasks.map((task, taskIndex) => (
-                          <div key={taskIndex} className="selected_day_each_task" >
+                          <div key={taskIndex} className="selected_day_each_task" style={{ backgroundColor: currentTheme['--task-background-color'] }}>
                             {task.priority && (
                               <div className='selected_day_each_task_priority' style={getPriorityStyle(task.priority)}>  </div>
                             )}
-                            <p className='selected_day_each_task_title' >{task.taskTitle}</p>
-                            <p className='selected_day_each_task_due_date' >
+                            <p className='selected_day_each_task_title' style={{ color: currentTheme['--main-text-coloure'] }} >{task.taskTitle}</p>
+                            <p className='selected_day_each_task_due_date' style={{ color: currentTheme['--due-date-color'] }}>
                               Due Date:
                               {task.dueDate ? new Date(task.dueDate).toLocaleTimeString([],
                                 { hour: '2-digit', minute: '2-digit' }) : ''}
