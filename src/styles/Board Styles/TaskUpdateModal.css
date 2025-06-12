@@ -24,8 +24,201 @@
   text-align: center;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   transition: transform 0.3s ease;
-  z-index: 2001 !important; /* Just above the overlay */
+  z-index: 2001 !important;
+  /* Just above the overlay */
 }
+
+.inputs_container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  width: 100%;
+}
+
+.update_task_header {
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 20px;
+  margin-top: 0px;
+}
+
+.task_title_input_container {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 20px;
+  height: 35px;
+  border: 1px solid transparent;
+}
+
+.title_cursor {
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border: 1px dashed transparent;
+
+}
+
+.title_cursor:hover {
+  border: 1px solid;
+}
+
+.title_icon {
+  width: 30px;
+  height: 30px;
+  transition: all 0.3s ease;
+  margin-left: 5px;
+}
+
+.title_text {
+  margin: 0px;
+}
+
+
+.description_container {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.description_textarea_container {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+  width: 100%;
+  gap: 10px;
+}
+
+
+.description_textarea {
+  padding: 8px;
+  border: 1px solid;
+  border-radius: 4px;
+  outline: none;
+  transition: border-color 0.2s;
+  resize: vertical;
+  min-height: 60px;
+  width: 100%;
+  max-height: 150px;
+}
+
+.task_title_input {
+  padding: 8px;
+  border: 1px solid;
+  border-radius: 4px;
+  outline: none;
+  transition: border-color 0.2s;
+  width: 100%;
+}
+
+.title_checkmark_icon {
+  width: 30px;
+  height: 30px;
+  min-width: 30px;
+  min-height: 30px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.title_checkmark_icon:hover {
+  transform: scale(1.1);
+  color: mediumseagreen;
+}
+
+.title_close_icon {
+  width: 30px;
+  height: 30px;
+  min-width: 30px;
+  min-height: 30px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.title_close_icon:hover {
+  transform: scale(1.1);
+  color: red;
+}
+
+.description_text {
+  font-size: 14px;
+  text-align: left;
+  align-items: flex-start;
+  border: 1px dashed;
+  width: 100%;
+  padding: 8px;
+  cursor: pointer;
+  max-height: 150px;
+  overflow-y: auto;
+
+}
+
+.description_text:hover {
+  border: 1px solid;
+}
+
+
+
+.priority_container {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 10px;
+  margin-top: 20px;
+  border: 1px dashed;
+  width: 100%;
+  padding-top: 8px;
+  padding-bottom: 8px;
+}
+
+.priority_container:hover {
+  border: 1px solid;
+}
+
+.priority_p {
+  margin: 0px;
+  font-size: 14px;
+  margin-left: 5px;
+}
+
+.each_priority {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: 70px;
+  height: 20px;
+  border-radius: 30px;
+  cursor: pointer;
+  font-size: 10px;
+
+}
+
+.none {
+  background-color: transparent;
+  border: 1px solid;
+}
+
+.low {
+  background-color: green;
+}
+
+.medium {
+  background-color: orange;
+}
+
+.high {
+  background-color: red;
+}
+
 
 .modal-actions {
   margin-top: 10px;
@@ -39,43 +232,162 @@
 
 .date-time-inputs {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
   gap: 10px;
-  margin-top: 10px;
+  margin-top: 20px;
+  width: 100%;
 }
 
-.date-time-inputs label {
+.picker_container {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
+  align-items: center;
+  gap: 10px;
+}
+
+
+
+.clear_date_container {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: 100%;
+}
+
+
+.clear_date_button {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: transparent;
+  padding: 6px 14px;
+  border-radius: 20px;
   font-size: 14px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border: 1px dashed;
+}
+
+.clear_date_button:hover {
+  background: red;
+  border-color: red;
+  border: 1px solid;
+
+}
+
+.remove_date_icon {
+  font-size: 20px;
+
 }
 
 /* ============================== previously associated users container styles ========================== */
 
-.previously-associated-users{
+.previously-associated-users {
   display: flex;
   flex-direction: column;
   gap: 10px;
   margin-top: 10px;
-  border: 1px solid red;
+  width: 100%;
 }
 
-.prev_as_users_h4{
-  font-size: 14px;
+.prev_as_users_header {
+  font-size: 16px;
   font-weight: bold;
   margin: 0px;
   margin-bottom: 5px;
+  text-align: left;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 15px;
 }
 
-.associated-user-image{
+.icon_as_users_cont {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+.as_users_icon {
   width: 20px;
   height: 20px;
+}
+
+.prev_as_users_h4 {
+  font-size: 16px;
+  font-weight: bold;
+  margin: 0px;
+  text-align: left;
+}
+
+.clear_associated_users_button {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: transparent;
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border: 1px dashed;
+}
+
+.clear_associated_users_button:hover {
+  background: red;
+  border-color: red;
+  border: 1px solid;
+}
+
+.associated_users_cont {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  flex-wrap: wrap;
+  align-content: flex-start;
+  max-height: 100px;
+  width: 100%;
+  gap: 10px;
+}
+
+.associated_user_img_child_container {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid blue;
+  padding: 3px;
+  height: 30px;
+  border-radius: 30px;
+  border: 1px solid;
+  gap: 8px;
+  padding-left: 10px;
+  padding-right: 10px;
+}
+
+
+.associated-user-image {
+  width: 30px;
+  height: 30px;
   border-radius: 50%;
 }
 
 /* ============================================ drodown styles ========================================= */
 .user-select {
   margin-top: 15px;
+  width: 100%;
+}
+
+.asociate_users_p{
+  margin: 0px;
+  margin-bottom: 5px;
 }
 
 .user-select label {
@@ -107,3 +419,62 @@
   cursor: pointer;
 }
 
+/* Desktop & Mobile MUI TimePicker Clock Numbers */
+.MuiClockNumber-root {
+  color: var(--main-text-coloure) !important;
+}
+
+/* MUI Mobile Picker Dialog Theming */
+.MuiDialog-root .MuiPaper-root {
+  background-color: var(--background-color) !important;
+  color: var(--main-text-coloure) !important;
+}
+
+.MuiDialog-root .MuiPickersDay-root {
+  color: var(--main-text-coloure) !important;
+}
+
+.MuiDialog-root .MuiDayCalendar-weekDayLabel {
+  color: var(--main-text-coloure) !important;
+}
+
+.MuiDialog-root .MuiSvgIcon-root {
+  color: var(--main-text-coloure) !important;
+}
+
+.MuiDialog-root .MuiClockNumber-root {
+  color: var(--main-text-coloure) !important;
+}
+
+
+/* Fix AM/PM buttons position for mobile round clock - improved for clickability */
+.MuiClock-root {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: flex-start !important;
+  padding-bottom: 0 !important;
+  overflow: visible !important;
+  height: auto !important;
+}
+
+.MuiClock-ampmSelection {
+  position: static !important;
+  margin-top: 16px !important;
+  width: 100%;
+  display: flex !important;
+  justify-content: center !important;
+  gap: 16px;
+}
+
+/* Clock time text (top center - like "01:00 AM") */
+.MuiTimePickerToolbar-hourMinuteLabel,
+.MuiTimePickerToolbar-separator,
+.MuiTimePickerToolbar-ampmSelection {
+  color: var(--main-text-coloure) !important;
+}
+
+/* Top number time text (like "01:00") */
+.MuiTypography-root.MuiPickersToolbarText-root {
+  color: var(--main-text-coloure) !important;
+}

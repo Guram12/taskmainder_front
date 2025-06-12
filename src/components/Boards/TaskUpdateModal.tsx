@@ -4,7 +4,7 @@ import { tasks } from '../../utils/interface';
 import { ThemeSpecs } from '../../utils/theme';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { TimePicker } from '@mui/x-date-pickers/TimePicker';
+// import { TimePicker } from '@mui/x-date-pickers/TimePicker';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import dayjs, { Dayjs } from 'dayjs';
 import { renderTimeViewClock } from '@mui/x-date-pickers/timeViewRenderers';
@@ -14,6 +14,12 @@ import { RiDeleteBin2Line } from "react-icons/ri";
 import ConfirmationDialog from './ConfirmationDialog';
 import Avatar from '@mui/material/Avatar';
 import getAvatarStyles from '../../utils/SetRandomColor';
+import { DesktopTimePicker } from '@mui/x-date-pickers/DesktopTimePicker';
+import { GrFormCheckmark } from "react-icons/gr";
+import { HiXMark } from "react-icons/hi2";
+import { MdOutlineSubtitles } from "react-icons/md";
+import { MdOutlineRemoveCircleOutline } from "react-icons/md";
+import { FaUser } from "react-icons/fa";
 
 
 interface TaskUpdateModalProps {
@@ -29,7 +35,14 @@ interface TaskUpdateModalProps {
 
 const TaskUpdateModal: React.FC<TaskUpdateModalProps> = ({ task, onClose, updateTask, deleteTask, currentTheme, allCurrentBoardUsers, associatedUsers }) => {
   const [updatedTitle, setUpdatedTitle] = useState<string>(task.title);
+  const [isTitleUpdating, setIsTitleUpdating] = useState<boolean>(false);
+
   const [updatedDescription, setUpdatedDescription] = useState<string>(task.description || '');
+  const [isDescriptionUpdating, setIsDescriptionUpdating] = useState<boolean>(false);
+
+
+
+
   const [updatedDueDate, setUpdatedDueDate] = useState<Dayjs | null>(task.due_date ? dayjs(task.due_date.split('T')[0]) : null); // Use Dayjs for date
   const [updatedDueTime, setUpdatedDueTime] = useState<Dayjs | null>(task.due_date ? dayjs(task.due_date) : null); // Use Dayjs for time
   const [updatedCompletedStatus, setUpdatedCompletedStatus] = useState<boolean>(task.completed);
@@ -67,14 +80,15 @@ const TaskUpdateModal: React.FC<TaskUpdateModalProps> = ({ task, onClose, update
   const handleClearDueDate = () => {
     setUpdatedDueDate(null);
     setUpdatedDueTime(null);
-    setSelectedUsers([]);
   };
 
   const handleCancel = () => {
     onClose();
   };
 
-
+  const handleClearAssociatedUsers = () => {
+    setSelectedUsers([]);
+  }
   // ========================================= delete task ========================================
 
   const handleDelete = () => {
@@ -90,116 +104,317 @@ const TaskUpdateModal: React.FC<TaskUpdateModalProps> = ({ task, onClose, update
     setShowDialog(false);
   };
 
+  // ================================================   input  click functions =======================================
+  const handleCancelTitleUpdate = () => {
+    setIsTitleUpdating(false);
+    setUpdatedTitle(task.title);
+  };
+
+  const handleCancelDescriptionUpdate = () => {
+    setIsDescriptionUpdating(false);
+    setUpdatedDescription(task.description || '');
+    console.log("cancel description update");
+  };
+
+  // =====================   Custom slotProps for MUI pickers to apply theme styles =============================
+  const pickerSlotProps = {
+    textField: {
+      InputProps: {
+        style: {
+          backgroundColor: currentTheme['--background-color'],
+          color: currentTheme['--main-text-coloure'],
+          borderColor: currentTheme['--border-color'],
+        },
+      },
+      InputLabelProps: {
+        style: {
+          color: currentTheme['--main-text-coloure'],
+        },
+      },
+      sx: {
+        width: '180px',
+        '& .MuiInputLabel-root': {
+          color: currentTheme['--main-text-coloure'],
+        },
+        '& .MuiOutlinedInput-notchedOutline': {
+          borderColor: currentTheme['--main-text-coloure'],
+        },
+        '& .MuiSvgIcon-root': {
+          color: currentTheme['--main-text-coloure'],
+        },
+      },
+    },
+    popper: {
+      sx: {
+        '& .MuiPaper-root': {
+          backgroundColor: currentTheme['--background-color'],
+          color: currentTheme['--main-text-coloure'],
+        },
+        '& .MuiPickersDay-root': {
+          color: currentTheme['--main-text-coloure'],
+        },
+        '& .MuiDayCalendar-weekDayLabel': {
+          color: currentTheme['--main-text-coloure'],
+        },
+        '& .MuiSvgIcon-root': {
+          color: currentTheme['--main-text-coloure'],
+        },
+        '& .MuiClockNumber-root': {
+          color: currentTheme['--main-text-coloure'],
+        },
+        '& .MuiPickersToolbar-root': {
+          backgroundColor: currentTheme['--background-color'],
+          color: currentTheme['--main-text-coloure'],
+        },
+        '& .MuiPickersToolbarText-root': {
+          color: currentTheme['--main-text-coloure'],
+        },
+        '& .MuiTypography-root': {
+          color: currentTheme['--main-text-coloure'],
+        },
+
+      },
+    },
+
+  };
+
+  //===================== Custom styles for react-select based on currentTheme  =============================
+  const selectStyles = {
+    control: (provided: any) => ({
+      ...provided,
+      width: '100%',
+      backgroundColor: currentTheme['--background-color'],
+      color: currentTheme['--main-text-coloure'],
+      borderColor: currentTheme['--main-text-coloure'],
+      boxShadow: 'none',
+    }),
+    menu: (provided: any) => ({
+      ...provided,
+      backgroundColor: currentTheme['--background-color'],
+      color: currentTheme['--main-text-coloure'],
+    }),
+    option: (provided: any, state: any) => ({
+      ...provided,
+      backgroundColor: state.isFocused
+        ? currentTheme['--main-text-coloure']
+        : currentTheme['--background-color'],
+      color: state.isFocused
+        ? currentTheme['--background-color']
+        : currentTheme['--main-text-coloure'],
+    }),
+    singleValue: (provided: any) => ({
+      ...provided,
+      color: currentTheme['--main-text-coloure'],
+    }),
+    multiValue: (provided: any) => ({
+      ...provided,
+      backgroundColor: currentTheme['--main-text-coloure'],
+      color: currentTheme['--background-color'],
+    }),
+    multiValueLabel: (provided: any) => ({
+      ...provided,
+      color: currentTheme['--background-color'],
+    }),
+    multiValueRemove: (provided: any) => ({
+      ...provided,
+      color: currentTheme['--background-color'],
+      ':hover': {
+        backgroundColor: currentTheme['--main-text-coloure'],
+        color: currentTheme['--background-color'],
+      },
+    }),
+    input: (provided: any) => ({
+      ...provided,
+      color: currentTheme['--main-text-coloure'],
+    }),
+    placeholder: (provided: any) => ({
+      ...provided,
+      color: currentTheme['--main-text-coloure'],
+    }),
+    dropdownIndicator: (provided: any) => ({
+      ...provided,
+      color: currentTheme['--main-text-coloure'],
+    }),
+    indicatorSeparator: (provided: any) => ({
+      ...provided,
+      backgroundColor: currentTheme['--main-text-coloure'],
+    }),
+    clearIndicator: (provided: any) => ({
+      ...provided,
+      color: currentTheme['--main-text-coloure'],
+    }),
+  };
+
 
 
   return (
     <div className="task-update-modal">
       <div className="modal-content" style={{ backgroundColor: currentTheme['--background-color'] }}>
-        <h3>Update Task</h3>
-        <input
-          type="text"
-          value={updatedTitle}
-          onChange={(e) => setUpdatedTitle(e.target.value)}
-          placeholder="Task Title"
-        />
-        <textarea
-          value={updatedDescription}
-          onChange={(e) => setUpdatedDescription(e.target.value)}
-          placeholder="Task Description"
-        />
-        <label>
-          Completed:
-          <input
-            type="checkbox"
-            checked={updatedCompletedStatus}
-            onChange={(e) => setUpdatedCompletedStatus(e.target.checked)}
-          />
-        </label>
+        <div className='inputs_container' >
+          <h3 className='update_task_header' >Update Task</h3>
+          {isTitleUpdating ? (
+            <div className='task_title_input_container'>
+              <input
+                type="text"
+                value={updatedTitle}
+                onChange={(e) => setUpdatedTitle(e.target.value)}
+                placeholder="Task Title"
+                className='task_title_input'
+                style={{
+                  backgroundColor: currentTheme['--background-color'],
+                  color: currentTheme['--main-text-coloure'],
+                  borderColor: currentTheme['--border-color'],
+                  outline: 'none',
+                  transition: 'border-color 0.2s',
+                }}
+              />
+              <GrFormCheckmark className='title_checkmark_icon' onClick={() => {
+                setIsTitleUpdating(false);
+              }} />
+              <HiXMark className='title_close_icon' onClick={handleCancelTitleUpdate} />
+            </div>
+          ) : (
+            <div className='task_title_input_container title_cursor' onClick={() => setIsTitleUpdating(true)} style={{ borderColor: currentTheme['--border-color'] }}>
+              <MdOutlineSubtitles className='title_icon' style={{ color: currentTheme['--main-text-coloure'] }} />
+              <p className='title_text' style={{ color: currentTheme['--main-text-coloure'] }}>{updatedTitle}</p>
+            </div>
+          )}
+
+          {/* Description Input container*/}
+          <div className='description_container' >
+            {isDescriptionUpdating ? (
+              <div className='description_textarea_container' >
+
+                <textarea
+                  className='description_textarea'
+                  value={updatedDescription}
+                  onChange={(e) => setUpdatedDescription(e.target.value)}
+                  placeholder="Task Description"
+                  style={{
+                    backgroundColor: currentTheme['--background-color'],
+                    color: currentTheme['--main-text-coloure'],
+                    borderColor: currentTheme['--border-color'],
+                    outline: 'none',
+                    transition: 'border-color 0.2s',
+                  }}
+                />
+                <GrFormCheckmark className='title_checkmark_icon' onClick={() => setIsDescriptionUpdating(false)} />
+                <HiXMark className='title_close_icon' onClick={handleCancelDescriptionUpdate} />
+              </div>
+
+            ) : (
+              <div
+                className='description_text'
+                style={{ color: currentTheme['--main-text-coloure'], borderColor: currentTheme['--border-color'] }}
+                onClick={() => setIsDescriptionUpdating(true)}
+              >
+                {updatedDescription === '' ? 'Add a description...' : updatedDescription}
+              </div>
+            )}
+          </div>
+
+        </div>
+
+
+
 
         {/* Priority Input */}
-        <div className="priority-input">
-          <label>Priority:</label>
-          <select
-            value={updatedPriority || ''}
-            onChange={(e) => setUpdatedPriority(e.target.value as 'green' | 'orange' | 'red' | null)}
+        <div className="priority_container"
+          style={{ borderColor: currentTheme['--border-color'] }}
+        >
+          <p className='priority_p' >Select Priority:</p>
+          <div
+            className='each_priority none'
+            onClick={() => setUpdatedPriority(null)}
+            style={{
+              borderWidth: updatedPriority === null ? '2px' : '1px',
+              borderStyle: 'solid',
+              borderColor: updatedPriority !== null ? currentTheme['--border-color'] : currentTheme['--main-text-coloure'],
+              color: currentTheme['--main-text-coloure'],
+            }}
           >
-            <option value="">None</option>
-            <option value="green">Low</option>
-            <option value="orange">Medium</option>
-            <option value="red">High</option>
-          </select>
+            No priority
+          </div>
+          <div
+            className='each_priority low'
+            onClick={() => setUpdatedPriority('green')}
+            style={{
+              borderWidth: updatedPriority === 'green' ? '2px' : 'none',
+              borderStyle: updatedPriority === 'green' ? 'solid' : undefined,
+              borderColor: currentTheme['--main-text-coloure'],
+            }}
+          ></div>
+          <div
+            className='each_priority medium'
+            onClick={() => setUpdatedPriority('orange')}
+            style={{
+              borderWidth: updatedPriority === 'orange' ? '2px' : 'none',
+              borderStyle: updatedPriority === 'orange' ? 'solid' : undefined,
+              borderColor: currentTheme['--main-text-coloure'],
+            }}
+          ></div>
+          <div
+            className='each_priority high'
+            onClick={() => setUpdatedPriority('red')}
+            style={{
+              borderWidth: updatedPriority === 'red' ? '2px' : 'none',
+              borderStyle: updatedPriority === 'red' ? 'solid' : undefined,
+              borderColor: currentTheme['--main-text-coloure'],
+            }}
+          ></div>
+
         </div>
 
 
         <div className="date-time-inputs">
-          <LocalizationProvider dateAdapter={AdapterDayjs}   >
-            {/* Date Picker */}
-            <DatePicker
-              label="Select Date"
-              value={updatedDueDate}
-              onChange={(newValue) => setUpdatedDueDate(newValue)}
-              disablePast
-              views={['year', 'month', 'day']}
+          <div className='picker_container' >
+            <LocalizationProvider dateAdapter={AdapterDayjs}   >
+              {/* Date Picker */}
+              <DatePicker
+                label="Select Date"
+                value={updatedDueDate}
+                onChange={(newValue) => setUpdatedDueDate(newValue)}
+                disablePast
+                views={['year', 'month', 'day']}
+                slotProps={pickerSlotProps}
+              />
+              {/* Time Picker */}
+              <DesktopTimePicker
+                label="Select Time"
+                value={updatedDueTime}
+                onChange={(newValue) => setUpdatedDueTime(newValue)}
+                views={['hours', 'minutes']}
+                viewRenderers={{
+                  hours: renderTimeViewClock,
+                  minutes: renderTimeViewClock,
+                  seconds: renderTimeViewClock,
+                }}
+                slotProps={pickerSlotProps}
+              />
+            </LocalizationProvider>
+          </div>
 
-            />
-            {/* Time Picker */}
-            <TimePicker
-              label="Select Time"
-              value={updatedDueTime}
-              onChange={(newValue) => setUpdatedDueTime(newValue)}
-              views={['hours', 'minutes']}
-              viewRenderers={{
-                hours: renderTimeViewClock,
-                minutes: renderTimeViewClock,
-                seconds: renderTimeViewClock,
+          <div className='clear_date_container' >
+            <button onClick={handleClearDueDate} className='clear_date_button'
+              style={{
+                borderColor: currentTheme['--border-color'],
+                color: currentTheme['--main-text-coloure'],
               }}
-            />
-          </LocalizationProvider>
+            >
+              <MdOutlineRemoveCircleOutline className='remove_date_icon' />
+              Clear Due Date
+            </button>
+          </div>
         </div>
 
 
-        <button onClick={handleClearDueDate} style={{ backgroundColor: 'red', color: 'white' }}>
-          Clear Due Date
-        </button>
 
 
-        {/* Previously asociated users */}
-        {
-          associatedUsers.length > 0 && (
-            <div className="previously-associated-users">
-              <h4 className='prev_as_users_h4' >Previously Associated Users:</h4>
-              <div className="associated-users">
-                {associatedUsers.map((user) => (
-                  <>
-                    {user.profile_picture ? (
 
-                      <img
-                        key={user.id}
-                        src={user.profile_picture}
-                        alt={user.username}
-                        className="associated-user-image"
-                        title={user.username} 
-                      />
-                    ) : (
-                      <Avatar
-                        style={{
-                          backgroundColor: getAvatarStyles(user.username.charAt(0)).backgroundColor,
-                          color: getAvatarStyles(user.username.charAt(0)).color
-                        }}
-                      >
-                        {user.username.charAt(0).toUpperCase()}
-                      </Avatar>
-                    )}
-                  </>
-                ))}
-              </div>
-            </div>
-          )
-        }
 
         {/* User Select Input */}
         <div className="user-select">
-          <label  >Select Associated Users:</label>
+          <p className='asociate_users_p'  >Asociate Users To Task</p>
           <Select
             isMulti
             options={allCurrentBoardUsers.map((user) => ({
@@ -221,10 +436,82 @@ const TaskUpdateModal: React.FC<TaskUpdateModalProps> = ({ task, onClose, update
               }
             }}
             placeholder="Select users..."
+            styles={selectStyles}
           />
         </div>
 
+        {/* Previously asociated users */}
+        {associatedUsers.length > 0 && (
+          <div className="previously-associated-users">
+            <div className='prev_as_users_header' style={{ color: currentTheme['--main-text-coloure'] }} >
+              <div className='icon_as_users_cont' >
+                <FaUser className='as_users_icon' />
+                <h4 className='prev_as_users_h4' >Associated Users :</h4>
+              </div>
+              <button
+                onClick={handleClearAssociatedUsers}
+                style={{
+                  borderColor: currentTheme['--border-color'],
+                  color: currentTheme['--main-text-coloure'],
+                }}
+                className='clear_associated_users_button'
+              >
+                <MdOutlineRemoveCircleOutline className='remove_date_icon' />
+                Clear All Associated Users
+              </button>
+            </div>
+            <div className="associated_users_cont">
+              {associatedUsers.map((user) => (
+                // Add key to the fragment
+                <React.Fragment key={user.id}>
+                  {user.profile_picture ? (
+                    <div className='associated_user_img_child_container'
+                      style={{ borderColor: currentTheme['--border-color'] }}
+                    >
 
+                      <img
+                        src={user.profile_picture}
+                        alt={user.username}
+                        className="associated-user-image"
+                        title={user.username}
+                      />
+                      <p>{user.username}</p>
+                    </div>
+                  ) : (
+                    <div className='associated_user_img_child_container'
+                      style={{ borderColor: currentTheme['--border-color'] }}
+                    >
+
+                      <Avatar
+                        style={{
+                          backgroundColor: getAvatarStyles(user.username.charAt(0)).backgroundColor,
+                          color: getAvatarStyles(user.username.charAt(0)).color,
+                          width: '30px',
+                          height: '30px',
+                        }}
+                      >
+                        {user.username.charAt(0).toUpperCase()}
+                      </Avatar>
+                      <p>{user.username}</p>
+                    </div>
+
+                  )}
+                </React.Fragment>
+              ))}
+            </div>
+          </div>
+        )
+        }
+
+
+        <label>
+          Completed:
+          <input
+            type="checkbox"
+            checked={updatedCompletedStatus}
+            onChange={(e) => setUpdatedCompletedStatus(e.target.checked)}
+          />
+        </label>
         <div className="modal-actions">
           <button className='delete_task_button' onClick={handleDelete}>
             <RiDeleteBin2Line className='delete_icon' />
