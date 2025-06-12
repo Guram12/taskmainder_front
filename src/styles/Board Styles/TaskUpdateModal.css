@@ -69,6 +69,7 @@
   width: 30px;
   height: 30px;
   transition: all 0.3s ease;
+  margin-left: 5px;
 }
 
 .title_text {
@@ -85,7 +86,8 @@
   gap: 10px;
   margin-top: 20px;
 }
-.description_textarea_container{
+
+.description_textarea_container {
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -144,15 +146,16 @@
   color: red;
 }
 
-.description_text{
+.description_text {
   font-size: 14px;
   text-align: left;
+  align-items: flex-start;
   border: 1px dashed;
-  width:  100% ;
+  width: 100%;
   padding: 8px;
   cursor: pointer;
   max-height: 150px;
-  overflow-y:  auto;
+  overflow-y: auto;
 
 }
 
@@ -161,6 +164,60 @@
 }
 
 
+
+.priority_container {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 10px;
+  margin-top: 20px;
+  border: 1px dashed;
+  width: 100%;
+  padding-top: 8px;
+  padding-bottom: 8px;
+}
+
+.priority_container:hover {
+  border: 1px solid;
+}
+
+.priority_p {
+  margin: 0px;
+  font-size: 14px;
+  margin-left: 5px;
+}
+
+.each_priority {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: 70px;
+  height: 20px;
+  border-radius: 30px;
+  cursor: pointer;
+  font-size: 10px;
+
+}
+
+.none {
+  background-color: transparent;
+  border: 1px solid;
+}
+
+.low {
+  background-color: green;
+}
+
+.medium {
+  background-color: orange;
+}
+
+.high {
+  background-color: red;
+}
 
 
 .modal-actions {

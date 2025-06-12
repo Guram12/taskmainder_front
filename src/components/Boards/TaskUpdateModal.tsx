@@ -311,30 +311,59 @@ const TaskUpdateModal: React.FC<TaskUpdateModalProps> = ({ task, onClose, update
             )}
           </div>
 
-
-
-          <label>
-            Completed:
-            <input
-              type="checkbox"
-              checked={updatedCompletedStatus}
-              onChange={(e) => setUpdatedCompletedStatus(e.target.checked)}
-            />
-          </label>
         </div>
 
+
+
+
         {/* Priority Input */}
-        <div className="priority-input">
-          <label>Priority:</label>
-          <select
-            value={updatedPriority || ''}
-            onChange={(e) => setUpdatedPriority(e.target.value as 'green' | 'orange' | 'red' | null)}
+        <div className="priority_container"
+          style={{ borderColor: currentTheme['--border-color'] }}
+        >
+          <p className='priority_p' >Select Priority:</p>
+
+
+
+          <div
+            className='each_priority none'
+            onClick={() => setUpdatedPriority(null)}
+            style={{
+              borderWidth: updatedPriority === null ? '2px' : '1px',
+              borderStyle: 'solid',
+              borderColor: updatedPriority !== null ?  currentTheme['--border-color'] : currentTheme['--main-text-coloure'],
+              color: currentTheme['--main-text-coloure'],
+            }}
           >
-            <option value="">None</option>
-            <option value="green">Low</option>
-            <option value="orange">Medium</option>
-            <option value="red">High</option>
-          </select>
+            No priority
+          </div>
+          <div
+            className='each_priority low'
+            onClick={() => setUpdatedPriority('green')}
+            style={{
+              borderWidth: updatedPriority === 'green' ? '2px' : 'none',
+              borderStyle: updatedPriority === 'green' ? 'solid' : undefined,
+              borderColor: currentTheme['--main-text-coloure'],
+            }}
+          ></div>
+          <div
+            className='each_priority medium'
+            onClick={() => setUpdatedPriority('orange')}
+            style={{
+              borderWidth: updatedPriority === 'orange' ? '2px' : 'none',
+              borderStyle: updatedPriority === 'orange' ? 'solid' : undefined,
+              borderColor: currentTheme['--main-text-coloure'],
+            }}
+          ></div>
+          <div
+            className='each_priority high'
+            onClick={() => setUpdatedPriority('red')}
+            style={{
+              borderWidth: updatedPriority === 'red' ? '2px' : 'none',
+              borderStyle: updatedPriority === 'red' ? 'solid' : undefined,
+              borderColor: currentTheme['--main-text-coloure'],
+            }}
+          ></div>
+
         </div>
 
 
@@ -437,7 +466,14 @@ const TaskUpdateModal: React.FC<TaskUpdateModalProps> = ({ task, onClose, update
         <button onClick={handleClearAssociatedUsers}>
           Clear Associated Users
         </button>
-
+        <label>
+          Completed:
+          <input
+            type="checkbox"
+            checked={updatedCompletedStatus}
+            onChange={(e) => setUpdatedCompletedStatus(e.target.checked)}
+          />
+        </label>
         <div className="modal-actions">
           <button className='delete_task_button' onClick={handleDelete}>
             <RiDeleteBin2Line className='delete_icon' />
