@@ -19,6 +19,7 @@ import { GrFormCheckmark } from "react-icons/gr";
 import { HiXMark } from "react-icons/hi2";
 import { MdOutlineSubtitles } from "react-icons/md";
 import { MdOutlineRemoveCircleOutline } from "react-icons/md";
+import { FaUser } from "react-icons/fa";
 
 
 interface TaskUpdateModalProps {
@@ -181,6 +182,7 @@ const TaskUpdateModal: React.FC<TaskUpdateModalProps> = ({ task, onClose, update
   const selectStyles = {
     control: (provided: any) => ({
       ...provided,
+      width: '100%',
       backgroundColor: currentTheme['--background-color'],
       color: currentTheme['--main-text-coloure'],
       borderColor: currentTheme['--main-text-coloure'],
@@ -242,6 +244,8 @@ const TaskUpdateModal: React.FC<TaskUpdateModalProps> = ({ task, onClose, update
       color: currentTheme['--main-text-coloure'],
     }),
   };
+
+
 
   return (
     <div className="task-update-modal">
@@ -410,7 +414,7 @@ const TaskUpdateModal: React.FC<TaskUpdateModalProps> = ({ task, onClose, update
 
         {/* User Select Input */}
         <div className="user-select">
-          <label  >Select Associated Users:</label>
+          <p className='asociate_users_p'  >Asociate Users To Task</p>
           <Select
             isMulti
             options={allCurrentBoardUsers.map((user) => ({
@@ -437,41 +441,68 @@ const TaskUpdateModal: React.FC<TaskUpdateModalProps> = ({ task, onClose, update
         </div>
 
         {/* Previously asociated users */}
-        {
-          associatedUsers.length > 0 && (
-            <div className="previously-associated-users">
-              <h4 className='prev_as_users_h4' >Previously Associated Users:</h4>
-              <div className="associated-users">
-                {associatedUsers.map((user) => (
-                  // Add key to the fragment
-                  <React.Fragment key={user.id}>
-                    {user.profile_picture ? (
+        {associatedUsers.length > 0 && (
+          <div className="previously-associated-users">
+            <div className='prev_as_users_header' style={{ color: currentTheme['--main-text-coloure'] }} >
+              <div className='icon_as_users_cont' >
+                <FaUser className='as_users_icon' />
+                <h4 className='prev_as_users_h4' >Associated Users :</h4>
+              </div>
+              <button
+                onClick={handleClearAssociatedUsers}
+                style={{
+                  borderColor: currentTheme['--border-color'],
+                  color: currentTheme['--main-text-coloure'],
+                }}
+                className='clear_associated_users_button'
+              >
+                <MdOutlineRemoveCircleOutline className='remove_date_icon' />
+                Clear All Associated Users
+              </button>
+            </div>
+            <div className="associated_users_cont">
+              {associatedUsers.map((user) => (
+                // Add key to the fragment
+                <React.Fragment key={user.id}>
+                  {user.profile_picture ? (
+                    <div className='associated_user_img_child_container'
+                      style={{ borderColor: currentTheme['--border-color'] }}
+                    >
+
                       <img
                         src={user.profile_picture}
                         alt={user.username}
                         className="associated-user-image"
                         title={user.username}
                       />
-                    ) : (
+                      <p>{user.username}</p>
+                    </div>
+                  ) : (
+                    <div className='associated_user_img_child_container'
+                      style={{ borderColor: currentTheme['--border-color'] }}
+                    >
+
                       <Avatar
                         style={{
                           backgroundColor: getAvatarStyles(user.username.charAt(0)).backgroundColor,
-                          color: getAvatarStyles(user.username.charAt(0)).color
+                          color: getAvatarStyles(user.username.charAt(0)).color,
+                          width: '30px',
+                          height: '30px',
                         }}
                       >
                         {user.username.charAt(0).toUpperCase()}
                       </Avatar>
-                    )}
-                  </React.Fragment>
-                ))}
-              </div>
+                      <p>{user.username}</p>
+                    </div>
+
+                  )}
+                </React.Fragment>
+              ))}
             </div>
-          )
+          </div>
+        )
         }
 
-        <button onClick={handleClearAssociatedUsers}>
-          Clear Associated Users
-        </button>
 
         <label>
           Completed:
