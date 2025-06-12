@@ -4,7 +4,7 @@ import { tasks } from '../../utils/interface';
 import { ThemeSpecs } from '../../utils/theme';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { TimePicker } from '@mui/x-date-pickers/TimePicker';
+// import { TimePicker } from '@mui/x-date-pickers/TimePicker';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import dayjs, { Dayjs } from 'dayjs';
 import { renderTimeViewClock } from '@mui/x-date-pickers/timeViewRenderers';
@@ -14,6 +14,7 @@ import { RiDeleteBin2Line } from "react-icons/ri";
 import ConfirmationDialog from './ConfirmationDialog';
 import Avatar from '@mui/material/Avatar';
 import getAvatarStyles from '../../utils/SetRandomColor';
+import { DesktopTimePicker } from '@mui/x-date-pickers/DesktopTimePicker';
 
 
 interface TaskUpdateModalProps {
@@ -90,7 +91,136 @@ const TaskUpdateModal: React.FC<TaskUpdateModalProps> = ({ task, onClose, update
     setShowDialog(false);
   };
 
+  // Custom slotProps for MUI pickers to apply theme styles
+  const pickerSlotProps = {
+    textField: {
+      InputProps: {
+        style: {
+          backgroundColor: currentTheme['--background-color'],
+          color: currentTheme['--main-text-coloure'],
+        },
+      },
+      InputLabelProps: {
+        style: {
+          color: currentTheme['--main-text-coloure'],
+        },
+      },
+      sx: {
+        '& .MuiOutlinedInput-root': {
+          backgroundColor: currentTheme['--background-color'],
+          color: currentTheme['--main-text-coloure'],
+        },
+        '& .MuiInputLabel-root': {
+          color: currentTheme['--main-text-coloure'],
+        },
+        '& .MuiOutlinedInput-notchedOutline': {
+          borderColor: currentTheme['--main-text-coloure'],
+        },
+        // Style the icons in the input
+        '& .MuiSvgIcon-root': {
+          color: currentTheme['--main-text-coloure'],
+        },
+      },
+    },
+    popper: {
+      sx: {
+        '& .MuiPaper-root': {
+          backgroundColor: currentTheme['--background-color'],
+          color: currentTheme['--main-text-coloure'],
+        },
+        '& .MuiPickersDay-root': {
+          color: currentTheme['--main-text-coloure'],
+        },
+        '& .MuiDayCalendar-weekDayLabel': {
+          color: currentTheme['--main-text-coloure'],
+        },
+        '& .MuiSvgIcon-root': {
+          color: currentTheme['--main-text-coloure'],
+        },
+        '& .MuiClockNumber-root': {
+          color: currentTheme['--main-text-coloure'],
+        },
+        '& .MuiPickersToolbar-root': {
+          backgroundColor: currentTheme['--background-color'],
+          color: currentTheme['--main-text-coloure'],
+        },
+        '& .MuiPickersToolbarText-root': {
+          color: currentTheme['--main-text-coloure'],
+        },
+        '& .MuiTypography-root': {
+          color: currentTheme['--main-text-coloure'],
+        },
 
+      },
+    },
+
+  };
+
+  // Custom styles for react-select based on currentTheme
+  const selectStyles = {
+    control: (provided: any) => ({
+      ...provided,
+      backgroundColor: currentTheme['--background-color'],
+      color: currentTheme['--main-text-coloure'],
+      borderColor: currentTheme['--main-text-coloure'],
+      boxShadow: 'none',
+    }),
+    menu: (provided: any) => ({
+      ...provided,
+      backgroundColor: currentTheme['--background-color'],
+      color: currentTheme['--main-text-coloure'],
+    }),
+    option: (provided: any, state: any) => ({
+      ...provided,
+      backgroundColor: state.isFocused
+        ? currentTheme['--main-text-coloure']
+        : currentTheme['--background-color'],
+      color: state.isFocused
+        ? currentTheme['--background-color']
+        : currentTheme['--main-text-coloure'],
+    }),
+    singleValue: (provided: any) => ({
+      ...provided,
+      color: currentTheme['--main-text-coloure'],
+    }),
+    multiValue: (provided: any) => ({
+      ...provided,
+      backgroundColor: currentTheme['--main-text-coloure'],
+      color: currentTheme['--background-color'],
+    }),
+    multiValueLabel: (provided: any) => ({
+      ...provided,
+      color: currentTheme['--background-color'],
+    }),
+    multiValueRemove: (provided: any) => ({
+      ...provided,
+      color: currentTheme['--background-color'],
+      ':hover': {
+        backgroundColor: currentTheme['--main-text-coloure'],
+        color: currentTheme['--background-color'],
+      },
+    }),
+    input: (provided: any) => ({
+      ...provided,
+      color: currentTheme['--main-text-coloure'],
+    }),
+    placeholder: (provided: any) => ({
+      ...provided,
+      color: currentTheme['--main-text-coloure'],
+    }),
+    dropdownIndicator: (provided: any) => ({
+      ...provided,
+      color: currentTheme['--main-text-coloure'],
+    }),
+    indicatorSeparator: (provided: any) => ({
+      ...provided,
+      backgroundColor: currentTheme['--main-text-coloure'],
+    }),
+    clearIndicator: (provided: any) => ({
+      ...provided,
+      color: currentTheme['--main-text-coloure'],
+    }),
+  };
 
   return (
     <div className="task-update-modal">
@@ -140,10 +270,10 @@ const TaskUpdateModal: React.FC<TaskUpdateModalProps> = ({ task, onClose, update
               onChange={(newValue) => setUpdatedDueDate(newValue)}
               disablePast
               views={['year', 'month', 'day']}
-
+              slotProps={pickerSlotProps}
             />
             {/* Time Picker */}
-            <TimePicker
+            <DesktopTimePicker
               label="Select Time"
               value={updatedDueTime}
               onChange={(newValue) => setUpdatedDueTime(newValue)}
@@ -153,6 +283,7 @@ const TaskUpdateModal: React.FC<TaskUpdateModalProps> = ({ task, onClose, update
                 minutes: renderTimeViewClock,
                 seconds: renderTimeViewClock,
               }}
+              slotProps={pickerSlotProps}
             />
           </LocalizationProvider>
         </div>
@@ -178,7 +309,7 @@ const TaskUpdateModal: React.FC<TaskUpdateModalProps> = ({ task, onClose, update
                         src={user.profile_picture}
                         alt={user.username}
                         className="associated-user-image"
-                        title={user.username} 
+                        title={user.username}
                       />
                     ) : (
                       <Avatar
@@ -221,6 +352,7 @@ const TaskUpdateModal: React.FC<TaskUpdateModalProps> = ({ task, onClose, update
               }
             }}
             placeholder="Select users..."
+            styles={selectStyles}
           />
         </div>
 

@@ -107,3 +107,59 @@
   cursor: pointer;
 }
 
+/* Desktop & Mobile MUI TimePicker Clock Numbers */
+.MuiClockNumber-root {
+  color: var(--main-text-coloure) !important;
+}
+
+/* MUI Mobile Picker Dialog Theming */
+.MuiDialog-root .MuiPaper-root {
+  background-color: var(--background-color) !important;
+  color: var(--main-text-coloure) !important;
+}
+.MuiDialog-root .MuiPickersDay-root {
+  color: var(--main-text-coloure) !important;
+}
+.MuiDialog-root .MuiDayCalendar-weekDayLabel {
+  color: var(--main-text-coloure) !important;
+}
+.MuiDialog-root .MuiSvgIcon-root {
+  color: var(--main-text-coloure) !important;
+}
+.MuiDialog-root .MuiClockNumber-root {
+  color: var(--main-text-coloure) !important;
+}
+
+
+/* Fix AM/PM buttons position for mobile round clock - improved for clickability */
+.MuiClock-root {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: flex-start !important;
+  padding-bottom: 0 !important;
+  overflow: visible !important;
+  height: auto !important;
+}
+
+.MuiClock-ampmSelection {
+  position: static !important;
+  margin-top: 16px !important;
+  width: 100%;
+  display: flex !important;
+  justify-content: center !important;
+  gap: 16px;
+}
+/* Clock time text (top center - like "01:00 AM") */
+.MuiTimePickerToolbar-hourMinuteLabel,
+.MuiTimePickerToolbar-separator,
+.MuiTimePickerToolbar-ampmSelection {
+  color: var(--main-text-coloure) !important;
+}
+
+/* Top number time text (like "01:00") */
+.MuiTypography-root.MuiPickersToolbarText-root {
+  color: var(--main-text-coloure) !important;
+}
+
+
