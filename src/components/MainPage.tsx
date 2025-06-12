@@ -259,6 +259,7 @@ const MainPage: React.FC<MainPageProps> = ({
         boards={boards}
         setBoards={setBoards}
         setSelectedBoard={setSelectedBoard}
+        selectedComponent={selectedComponent}
         setSelectedComponent={setSelectedComponent}
         setIs_new_notification_received={setIs_new_notification_received}
         is_new_notification_received={is_new_notification_received}

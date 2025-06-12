@@ -318,13 +318,20 @@ const CustomTheme: React.FC<CustomThemeProps> = ({
               borderColor: currentTheme['--border-color'],
               opacity: ['owner', 'admin'].includes(user_board_statuses.find(status => status.boardId === boardItem.id)?.userStatus || '')
                 ? 1
-                : 0.55,
+                : 0.50,
             }}
 
           >
 
             <div className='board_name_container' >
-              <p className='board_name_p' >{boardItem.name}</p>
+              <p className='board_name_p'
+                style={{
+                  color: currentTheme['--main-text-coloure'],
+                  opacity: ['owner', 'admin'].includes(user_board_statuses.find(status => status.boardId === boardItem.id)?.userStatus || '')
+                    ? 1
+                    : 0.50,
+                }}
+              >{boardItem.name}</p>
               {boardItem.background_image && (
                 <MdDeleteForever className='delete_backg_img_icon' onClick={() => handleDeleteImageClick(boardItem.id)} />
               )}

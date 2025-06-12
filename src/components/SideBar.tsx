@@ -30,6 +30,7 @@ interface SidebarProps {
   setBoards?: (boards: board[]) => void;
   selectedBoard: board | null;
   setSelectedBoard: (board: board | null) => void;
+  selectedComponent: string;
   setSelectedComponent: (component: string) => void;
   setIsBoardsLoaded: (isLoaded: boolean) => void;
   isBoardsLoaded: boolean;
@@ -49,6 +50,7 @@ const SidebarComponent: React.FC<SidebarProps> = ({
   setBoards,
   selectedBoard,
   setSelectedBoard,
+  selectedComponent,
   setSelectedComponent,
   setIsBoardsLoaded,
   isBoardsLoaded,
@@ -479,12 +481,33 @@ const SidebarComponent: React.FC<SidebarProps> = ({
                 </SubMenu>
 
 
-                <MenuItem icon={<GoRepoTemplate className='sidebar_big_icon' />} onClick={() => handel_sidebar_page_click("Templates")} >Templates</MenuItem>
                 <MenuItem
+                  icon={<GoRepoTemplate className='sidebar_big_icon' />}
+                  onClick={() => handel_sidebar_page_click("Templates")}
+                  style={{
+                    color: selectedComponent === "Templates" ? 'seagreen' : 'white',
+                    fontWeight: 'bold',
+                    transition: 'all 0.3s',
+                  }}
+                >Templates
+                </MenuItem>
+
+
+                <MenuItem
+                  style={{
+                    color: selectedComponent === "Calendar" ? 'seagreen' : 'white',
+                    fontWeight: 'bold',
+                    transition: 'all 0.3s',
+                  }}
                   icon={<FaCalendarAlt className='sidebar_big_icon' />}
                   onClick={() => handel_sidebar_page_click("Calendar")}
                 >Calendar</MenuItem>
                 <MenuItem
+                  style={{
+                    color: selectedComponent === "Notification" ? 'seagreen' : 'white',
+                    fontWeight: 'bold',
+                    transition: 'all 0.3s',
+                  }}
                   icon={
                     <div style={{ position: 'relative' }}>
                       <MdNotificationsActive className="sidebar_big_icon" />
@@ -515,13 +538,34 @@ const SidebarComponent: React.FC<SidebarProps> = ({
 
             {/* Settings and logout(loghout only on mobile) */}
             <div >
-              <Menu style={{ marginTop: 'auto', position: 'relative' }}>
+              <Menu
+                style={{ marginTop: 'auto', position: 'relative' }}
+                menuItemStyles={{
+                  root: {
+                    color: '#fff', // Always white
+                    fontWeight: 'bold',
+                  },
+                  button: {
+                    '&:hover': {
+                      backgroundColor: currentTheme['--hover-color'] || '#11995a',
+                    },
+                  },
+                  subMenuContent: {
+                    backgroundColor: 'transparent',
+                  },
+                }}
+              >
                 <MenuItem
                   icon={<RiSettings4Fill className="sidebar_big_icon" />}
                   onClick={() => handel_sidebar_page_click("Settings")}
+                  style={{
+                    color: selectedComponent === "Settings" ? 'seagreen' : 'white',
+                    fontWeight: 'bold',
+                    transition: 'all 0.3s',
+                  }}
                 >Settings
                 </MenuItem>
-                
+
                 {isMobile && (
                   <MenuItem
                     icon={<MdOutlineLogout className='sidebar_big_icon' />}
