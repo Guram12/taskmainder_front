@@ -18,6 +18,7 @@ import { DesktopTimePicker } from '@mui/x-date-pickers/DesktopTimePicker';
 import { GrFormCheckmark } from "react-icons/gr";
 import { HiXMark } from "react-icons/hi2";
 import { MdOutlineSubtitles } from "react-icons/md";
+import { MdOutlineRemoveCircleOutline } from "react-icons/md";
 
 
 interface TaskUpdateModalProps {
@@ -121,6 +122,7 @@ const TaskUpdateModal: React.FC<TaskUpdateModalProps> = ({ task, onClose, update
         style: {
           backgroundColor: currentTheme['--background-color'],
           color: currentTheme['--main-text-coloure'],
+          borderColor: currentTheme['--border-color'],
         },
       },
       InputLabelProps: {
@@ -129,17 +131,13 @@ const TaskUpdateModal: React.FC<TaskUpdateModalProps> = ({ task, onClose, update
         },
       },
       sx: {
-        '& .MuiOutlinedInput-root': {
-          backgroundColor: currentTheme['--background-color'],
-          color: currentTheme['--main-text-coloure'],
-        },
+        width: '180px',
         '& .MuiInputLabel-root': {
           color: currentTheme['--main-text-coloure'],
         },
         '& .MuiOutlinedInput-notchedOutline': {
           borderColor: currentTheme['--main-text-coloure'],
         },
-        // Style the icons in the input
         '& .MuiSvgIcon-root': {
           color: currentTheme['--main-text-coloure'],
         },
@@ -321,16 +319,13 @@ const TaskUpdateModal: React.FC<TaskUpdateModalProps> = ({ task, onClose, update
           style={{ borderColor: currentTheme['--border-color'] }}
         >
           <p className='priority_p' >Select Priority:</p>
-
-
-
           <div
             className='each_priority none'
             onClick={() => setUpdatedPriority(null)}
             style={{
               borderWidth: updatedPriority === null ? '2px' : '1px',
               borderStyle: 'solid',
-              borderColor: updatedPriority !== null ?  currentTheme['--border-color'] : currentTheme['--main-text-coloure'],
+              borderColor: updatedPriority !== null ? currentTheme['--border-color'] : currentTheme['--main-text-coloure'],
               color: currentTheme['--main-text-coloure'],
             }}
           >
@@ -368,36 +363,47 @@ const TaskUpdateModal: React.FC<TaskUpdateModalProps> = ({ task, onClose, update
 
 
         <div className="date-time-inputs">
-          <LocalizationProvider dateAdapter={AdapterDayjs}   >
-            {/* Date Picker */}
-            <DatePicker
-              label="Select Date"
-              value={updatedDueDate}
-              onChange={(newValue) => setUpdatedDueDate(newValue)}
-              disablePast
-              views={['year', 'month', 'day']}
-              slotProps={pickerSlotProps}
-            />
-            {/* Time Picker */}
-            <DesktopTimePicker
-              label="Select Time"
-              value={updatedDueTime}
-              onChange={(newValue) => setUpdatedDueTime(newValue)}
-              views={['hours', 'minutes']}
-              viewRenderers={{
-                hours: renderTimeViewClock,
-                minutes: renderTimeViewClock,
-                seconds: renderTimeViewClock,
+          <div className='picker_container' >
+            <LocalizationProvider dateAdapter={AdapterDayjs}   >
+              {/* Date Picker */}
+              <DatePicker
+                label="Select Date"
+                value={updatedDueDate}
+                onChange={(newValue) => setUpdatedDueDate(newValue)}
+                disablePast
+                views={['year', 'month', 'day']}
+                slotProps={pickerSlotProps}
+              />
+              {/* Time Picker */}
+              <DesktopTimePicker
+                label="Select Time"
+                value={updatedDueTime}
+                onChange={(newValue) => setUpdatedDueTime(newValue)}
+                views={['hours', 'minutes']}
+                viewRenderers={{
+                  hours: renderTimeViewClock,
+                  minutes: renderTimeViewClock,
+                  seconds: renderTimeViewClock,
+                }}
+                slotProps={pickerSlotProps}
+              />
+            </LocalizationProvider>
+          </div>
+
+          <div className='clear_date_container' >
+            <button onClick={handleClearDueDate} className='clear_date_button'
+              style={{
+                borderColor: currentTheme['--border-color'],
+                color: currentTheme['--main-text-coloure'],
               }}
-              slotProps={pickerSlotProps}
-            />
-          </LocalizationProvider>
+            >
+              <MdOutlineRemoveCircleOutline className='remove_date_icon' />
+              Clear Due Date
+            </button>
+          </div>
         </div>
 
 
-        <button onClick={handleClearDueDate} style={{ backgroundColor: 'red', color: 'white' }}>
-          Clear Due Date
-        </button>
 
 
 
@@ -466,6 +472,7 @@ const TaskUpdateModal: React.FC<TaskUpdateModalProps> = ({ task, onClose, update
         <button onClick={handleClearAssociatedUsers}>
           Clear Associated Users
         </button>
+
         <label>
           Completed:
           <input
