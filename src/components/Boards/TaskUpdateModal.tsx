@@ -15,6 +15,9 @@ import ConfirmationDialog from './ConfirmationDialog';
 import Avatar from '@mui/material/Avatar';
 import getAvatarStyles from '../../utils/SetRandomColor';
 import { DesktopTimePicker } from '@mui/x-date-pickers/DesktopTimePicker';
+import { GrFormCheckmark } from "react-icons/gr";
+import { HiXMark } from "react-icons/hi2";
+import { MdOutlineSubtitles } from "react-icons/md";
 
 
 interface TaskUpdateModalProps {
@@ -30,6 +33,9 @@ interface TaskUpdateModalProps {
 
 const TaskUpdateModal: React.FC<TaskUpdateModalProps> = ({ task, onClose, updateTask, deleteTask, currentTheme, allCurrentBoardUsers, associatedUsers }) => {
   const [updatedTitle, setUpdatedTitle] = useState<string>(task.title);
+  const [isTitleUpdating, setIsTitleUpdating] = useState<boolean>(false);
+
+
   const [updatedDescription, setUpdatedDescription] = useState<string>(task.description || '');
   const [updatedDueDate, setUpdatedDueDate] = useState<Dayjs | null>(task.due_date ? dayjs(task.due_date.split('T')[0]) : null); // Use Dayjs for date
   const [updatedDueTime, setUpdatedDueTime] = useState<Dayjs | null>(task.due_date ? dayjs(task.due_date) : null); // Use Dayjs for time
@@ -91,6 +97,13 @@ const TaskUpdateModal: React.FC<TaskUpdateModalProps> = ({ task, onClose, update
   const cancelDelete = () => {
     setShowDialog(false);
   };
+
+  // ================================================   title click functions =======================================
+  const handleCancelTitleUpdate = () => {
+    setIsTitleUpdating(false);
+    setUpdatedTitle(task.title);
+  };
+
 
   // =====================   Custom slotProps for MUI pickers to apply theme styles =============================
   const pickerSlotProps = {
@@ -226,29 +239,55 @@ const TaskUpdateModal: React.FC<TaskUpdateModalProps> = ({ task, onClose, update
   return (
     <div className="task-update-modal">
       <div className="modal-content" style={{ backgroundColor: currentTheme['--background-color'] }}>
-        <div className='bid_content_container' >
+        <div className='inputs_container' >
+          <h3 className='update_task_header' >Update Task</h3>
+          {isTitleUpdating ? (
+            <div className='task_title_input_container'>
+              <input
+                type="text"
+                value={updatedTitle}
+                onChange={(e) => setUpdatedTitle(e.target.value)}
+                placeholder="Task Title"
+                className='task_title_input'
+                style={{
+                  backgroundColor: currentTheme['--background-color'],
+                  color: currentTheme['--main-text-coloure'],
+                  borderColor: currentTheme['--border-color'],
+                  outline: 'none',
+                  transition: 'border-color 0.2s',
+                }}
+              />
+              <GrFormCheckmark className='title_checkmark_icon' onClick={() => {
+                setIsTitleUpdating(false);
+              }} />
+              <HiXMark className='title_close_icon' onClick={handleCancelTitleUpdate} />
+            </div>
+          ) : (
+            <div className='task_title_input_container title_cursor' onClick={() => setIsTitleUpdating(true)} style={{ borderColor: currentTheme['--border-color'] }}>
+              <MdOutlineSubtitles className='title_icon' style={{ color: currentTheme['--main-text-coloure'] }} />
+              <p className='title_text' style={{ color: currentTheme['--main-text-coloure'] }}>{updatedTitle}</p>
+            </div>
+          )}
 
-        </div>
-        <h3 className='update_task_header' >Update Task</h3>
-        <input
-          type="text"
-          value={updatedTitle}
-          onChange={(e) => setUpdatedTitle(e.target.value)}
-          placeholder="Task Title"
-        />
-        <textarea
-          value={updatedDescription}
-          onChange={(e) => setUpdatedDescription(e.target.value)}
-          placeholder="Task Description"
-        />
-        <label>
-          Completed:
-          <input
-            type="checkbox"
-            checked={updatedCompletedStatus}
-            onChange={(e) => setUpdatedCompletedStatus(e.target.checked)}
+          {/* Description Input container*/}
+
+          <textarea
+            value={updatedDescription}
+            onChange={(e) => setUpdatedDescription(e.target.value)}
+            placeholder="Task Description"
           />
-        </label>
+
+
+
+          <label>
+            Completed:
+            <input
+              type="checkbox"
+              checked={updatedCompletedStatus}
+              onChange={(e) => setUpdatedCompletedStatus(e.target.checked)}
+            />
+          </label>
+        </div>
 
         {/* Priority Input */}
         <div className="priority-input">
