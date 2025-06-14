@@ -5,20 +5,21 @@ import { Board_Users } from "../utils/interface";
 import { CgCloseR } from "react-icons/cg";
 import axiosInstance from "../utils/axiosinstance";
 import { RiCloseFill } from "react-icons/ri";
-import { RiDeleteBinLine } from "react-icons/ri";
 import { FaClipboardList } from "react-icons/fa";
 import { ThemeSpecs } from "../utils/theme";
 import { MdModeEdit } from "react-icons/md";
 import { RiUserSettingsFill } from "react-icons/ri";
 import { GrFormCheckmark } from "react-icons/gr";
 import { HiOutlineXMark } from "react-icons/hi2";
-import { MdDeleteForever } from "react-icons/md";
 import ConfirmationDialog from "./Boards/ConfirmationDialog";
 import Avatar from '@mui/material/Avatar';
 import getAvatarStyles from "../utils/SetRandomColor";
 import Skeleton from 'react-loading-skeleton';
 import { TbRefresh } from "react-icons/tb";
 import SkeletonEachUser from "./Boards/SkeletonEachUser";
+import ReactDOM from 'react-dom';
+import { MdDeleteForever } from "react-icons/md";
+
 
 
 
@@ -211,8 +212,19 @@ const Members: React.FC<MembersProps> = ({
         return [...prev_emails, email];
       }
     });
+    // Remove selected user from suggestions
+    setSuggestedUsers((prev) => prev.filter((user) => user.email !== email));
+    // Clear search input
+    setSearchInput("");
   };
 
+  const handle_unselect_email = (email: string) => {
+    setSelected_emails((prev_emails) => prev_emails.filter((prev_email) => prev_email !== email));
+    // Add the unselected email back to suggestions
+
+    // Clear search input
+    setSearchInput("");
+  }
   // ========================================== delete user from members ==================================================
   const handleDeleteUser = async (userId: number) => {
     console.log('Deleting user:', userId);
@@ -316,9 +328,13 @@ const Members: React.FC<MembersProps> = ({
 
   return (
     <div className="main_members_container">
-      <RiUserSettingsFill className="add_user_icon" onClick={() => setIsUsersWindowOpen(true)} />
+      <RiUserSettingsFill
+        className="add_user_icon"
+        onClick={() => setIsUsersWindowOpen(true)}
+        style={{ color: currentTheme['--main-text-coloure'] }}
+      />
 
-      {/* skeleton loader  befire fetching current board users, and after fetching current board users,
+      {/* skeleton loader  before fetching current board users, and after fetching current board users,
        it will be replaced with actual user avatars */}
       {!is_cur_Board_users_fetched ? (
         <div className="user_avatar_skeleton_cont" >
@@ -437,19 +453,24 @@ const Members: React.FC<MembersProps> = ({
 
 
       {/* current board users list and their permission in window */}
+
       <div>
-        {isUsersWindowOpen && (
+        {isUsersWindowOpen && ReactDOM.createPortal(
           <div className="all_users_main_window">
             <div className="bloored_ackgrownd"></div>
-            <div className="each_user_container">
-              <div className="close_icon_cont">
-                {!is_members_refreshing && (
-                  <TbRefresh className="refresh_users_icon" onClick={fetch_current_board_users} />
-                )}
-                <CgCloseR className="close_icon" onClick={() => setIsUsersWindowOpen(false)} />
+            <div className="each_user_container" style={{ backgroundColor: `${currentTheme['--list-background-color']}` }} >
 
+              <div className="close_icon_cont">
+                <p className="manage_users_text" >Manage Users</p>
+                <div className="refresh_and_close_icons_cont" >
+                  {!is_members_refreshing && (
+                    <TbRefresh className="refresh_users_icon" onClick={fetch_current_board_users} style={{ color: currentTheme['--main-text-coloure'] }} />
+                  )}
+                  <CgCloseR className="close_icon" onClick={() => setIsUsersWindowOpen(false)} style={{ color: currentTheme['--main-text-coloure'] }} />
+                </div>
               </div>
-              <p>guram</p>
+
+
               {/* search input for searching users  */}
               {is_current_user_admin_or_owner && (
                 <div className="parent_of_input_and_emails" >
@@ -459,37 +480,83 @@ const Members: React.FC<MembersProps> = ({
                     value={searchInput}
                     onChange={handleSearchInputChange}
                     placeholder="Search users by email"
+                    style={{
+                      backgroundColor: currentTheme['--task-background-color'],
+                      color: currentTheme['--main-text-coloure'],
+                      border: `1px solid ${currentTheme['--border-color']}`,
+                    }}
+                    className="search_input"
                   />
 
                   {/* suggested users conmtainer  */}
-                  <div className="suggested_users_list">
-                    {suggestedUsers.map((user) => (
-                      <div key={user.email} className="suggested_user" onClick={() => handle_email_click(user.email)}>
-                        {user.email}
-                      </div>
-                    ))}
+                  <div className="suggested_users_list"
+
+                  >
+                    {suggestedUsers
+                      .filter(
+                        (user) =>
+                          !current_board_users.some(
+                            (boardUser) =>
+                              boardUser.email === user.email &&
+                              (boardUser.user_status === "admin" || boardUser.user_status === "member" || boardUser.user_status === "owner")
+                          )
+                      )
+                      .map((user) => (
+                        <div
+                          key={user.email}
+                          className="suggested_user"
+                          onClick={() => handle_email_click(user.email)}
+                          style={{
+                            backgroundColor: `${currentTheme['--task-background-color']}`,
+                            color: `${currentTheme['--main-text-coloure']}`,
+                            borderColor: `${currentTheme['--border-color']}`
+                          }}
+                        >
+                          {user.email}
+                        </div>
+                      ))}
                   </div>
 
-                  <div style={{ width: '80%', height: '1px', backgroundColor: "black" }} ></div>
-
-                  <div className="selected_emails_cont" >
-                    {selected_emails.map((email) => (
-                      <div key={email} className="selected_email" >
-                        {email}
-                        <RiCloseFill className='unselect_email' />
-                      </div>
-                    ))}
-                  </div>
+                  {/* selected emails container  */}
+                  {selected_emails.length > 0 && (
+                    <div className="selected_emails_cont"
+                      style={{
+                        backgroundColor: `${currentTheme['--background-color']}`,
+                        color: `${currentTheme['--main-text-coloure']}`,
+                        border: `1px solid ${currentTheme['--border-color']}`
+                      }}
+                    >
+                      {selected_emails.map((email) => (
+                        <div
+                          key={email}
+                          className="selected_email"
+                          style={{
+                            backgroundColor: `${currentTheme['--task-background-color']}`,
+                            color: `${currentTheme['--main-text-coloure']}`
+                          }}
+                        >
+                          {email}
+                          <RiCloseFill className='unselect_email' onClick={() => handle_unselect_email(email)} />
+                        </div>
+                      ))}
+                    </div>
+                  )}
 
                 </div>
               )}
 
               {/* button for adding selected emails to board users  */}
-              {is_current_user_admin_or_owner && (
+              {is_current_user_admin_or_owner && selected_emails.length > 0 && (
                 <button
                   onClick={() => handleAddUsers()}
-                  style={{ cursor: `${selected_emails.length > 0 ? 'pointer' : 'not-allowed'}` }}
                   disabled={selected_emails.length === 0}
+                  className="invite_users_button"
+                  style={{
+                    cursor: `${selected_emails.length > 0 ? 'pointer' : 'not-allowed'}`,
+                    backgroundColor: `${currentTheme['--task-background-color']}`,
+                    color: `${currentTheme['--main-text-coloure']}`,
+                    border: `1px solid ${currentTheme['--border-color']}`
+                  }}
                 >
                   Invite
                 </button>
@@ -539,12 +606,12 @@ const Members: React.FC<MembersProps> = ({
                             </Avatar>
                           )}
                           <p>{boardUser.username}</p>
-                          <p className="boarduser_email">{boardUser.email}</p>
+                          <p className="boarduser_email" style={{ color: currentTheme['--due-date-color'] }} >{boardUser.email}</p>
                         </div>
 
                         <div className="select_and_delete_icon">
                           {boardUser.user_status !== 'owner' && boardUser.email !== current_user_email && (
-                            <RiDeleteBinLine
+                            <MdDeleteForever
                               className={`delete_user ${is_current_user_admin_or_owner ? "delete_icon_for_admin" : "delete_icon_for_member"}`}
                               onClick={() => handle_delete_icon_click(boardUser)}
                             />
@@ -573,19 +640,19 @@ const Members: React.FC<MembersProps> = ({
 
 
 
-                {!is_current_user_owner && (
-                  <div>
-                    <button onClick={handleLeaveBoardClick} className="leave_board_button" >Leave board</button>
-                    {is_leaving_board && (
-                      <ConfirmationDialog
-                        message={`Are you sure you want to leav the board "${selectedBoard?.name}"?`}
-                        onConfirm={handleLeaveBoard}
-                        onCancel={() => setIs_leaving_board(false)}
-                      />
-                    )}
-                  </div>
-                )}
               </div>
+              {!is_current_user_owner && (
+                <div>
+                  <button onClick={handleLeaveBoardClick} className="leave_board_button" >Leave board</button>
+                  {is_leaving_board && (
+                    <ConfirmationDialog
+                      message={`Are you sure you want to leav the board "${selectedBoard?.name}"?`}
+                      onConfirm={handleLeaveBoard}
+                      onCancel={() => setIs_leaving_board(false)}
+                    />
+                  )}
+                </div>
+              )}
 
               {isDeletingSelectedUser && (
                 <div className="delete_user_window">
@@ -596,7 +663,8 @@ const Members: React.FC<MembersProps> = ({
                 </div>
               )}
             </div>
-          </div>
+          </div>,
+          document.body
         )}
       </div>
     </div>

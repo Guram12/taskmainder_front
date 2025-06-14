@@ -819,7 +819,6 @@ const Boards: React.FC<BoardsProps> = ({
 
 
 
-
   return (
     <div className='members_container'
     >

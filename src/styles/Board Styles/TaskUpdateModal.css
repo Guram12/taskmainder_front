@@ -18,14 +18,12 @@
   padding: 20px;
   border-radius: 8px;
   width: 600px;
-  max-width: 90%;
-  min-height: 600px;
-  max-height: 85%;
+  max-width: 95%;
+  max-height: 95%;
   text-align: center;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   transition: transform 0.3s ease;
   z-index: 2001 !important;
-  /* Just above the overlay */
 }
 
 .inputs_container {
@@ -43,6 +41,20 @@
   margin-top: 0px;
 }
 
+.title_p {
+  margin: 0px;
+  margin-top: 2px;
+}
+
+.description_main_cont {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 10px;
+}
+
 .task_title_input_container {
   width: 100%;
   display: flex;
@@ -50,8 +62,11 @@
   align-items: center;
   justify-content: flex-start;
   gap: 20px;
-  height: 35px;
+  min-height: 30px;
+  max-height: 80px;
+  overflow-y: auto;
   border: 1px solid transparent;
+  padding: 5px;
 }
 
 .title_cursor {
@@ -65,22 +80,35 @@
   border: 1px solid;
 }
 
+.sistle_and_titleicon_container {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+
+}
+
 .title_icon {
   width: 30px;
   height: 30px;
+  min-width: 30px;
+  min-height: 30px;
   transition: all 0.3s ease;
   margin-left: 5px;
 }
 
 .title_text {
   margin: 0px;
+  text-align: left;
 }
 
 
 .description_container {
   width: 100%;
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   align-items: center;
   justify-content: flex-start;
   gap: 10px;
@@ -152,11 +180,14 @@
   align-items: flex-start;
   border: 1px dashed;
   width: 100%;
-  padding: 8px;
+  padding: 5px;
+  min-height: 30px;
   cursor: pointer;
   max-height: 150px;
   overflow-y: auto;
-
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
 }
 
 .description_text:hover {
@@ -174,8 +205,8 @@
   margin-top: 20px;
   border: 1px dashed;
   width: 100%;
-  padding-top: 8px;
-  padding-bottom: 8px;
+  padding: 5px;
+  min-height: 30px;
 }
 
 .priority_container:hover {
@@ -208,7 +239,7 @@
 }
 
 .low {
-  background-color: green;
+  background-color: rgb(21, 207, 138);
 }
 
 .medium {
@@ -228,6 +259,15 @@
   flex-direction: column;
   align-items: center;
   gap: 10px;
+  width: 100%;
+}
+
+.delete_and_save_task_button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  width: 100%;
 }
 
 .date-time-inputs {
@@ -353,6 +393,7 @@
   flex-wrap: wrap;
   align-content: flex-start;
   max-height: 100px;
+  overflow-y: auto;
   width: 100%;
   gap: 10px;
 }
@@ -379,13 +420,59 @@
   border-radius: 50%;
 }
 
+
+/* =================================================== completed status styles ========================================= */
+
+.completed-label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 16px;
+  margin-top: 20px;
+  margin-bottom: 10px;
+}
+
+.custom-checkbox-container {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  cursor: pointer;
+  margin-left: 8px;
+}
+
+.custom-checkbox {
+  opacity: 0;
+  width: 0;
+  height: 0;
+  position: absolute;
+}
+
+.checkmark {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  border: 2px solid;
+  border-radius: 6px;
+  transition: background 0.2s, box-shadow 0.2s, border-color 0.2s;
+  font-size: 20px;
+  cursor: pointer;
+}
+
+.custom-checkbox:focus + .checkmark {
+  outline: 2px solid #888;
+}
+
+/* ...existing code... */
+
 /* ============================================ drodown styles ========================================= */
 .user-select {
   margin-top: 15px;
   width: 100%;
 }
 
-.asociate_users_p{
+.asociate_users_p {
   margin: 0px;
   margin-bottom: 5px;
 }
@@ -407,18 +494,78 @@
 
 
 /* ===================================== delete task button styles ===================================== */
-.delete_task_button {
-  background-color: transparent;
-  border: none;
-  border: 1px solid green;
-}
+
 
 .delete_icon {
-  color: tomato;
   font-size: 20px;
   cursor: pointer;
 }
 
+.save_task_button_container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+}
+
+.save_task_button {
+  width: 90px;
+  border: 1px solid;
+  height: 30px;
+  border-radius: 15px;
+  font-weight: bold;
+  font-size: 16px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.save_task_button:hover {
+  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+  background-color: rgb(20, 139, 72) !important;
+}
+
+.cancel_task_update_button {
+  width: 90px;
+  border: 1px solid;
+  height: 30px;
+  border-radius: 15px;
+  font-weight: bold;
+  font-size: 16px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.cancel_task_update_button:hover {
+  background-color: red !important;
+  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+}
+
+.delete_task_button {
+  position: absolute;
+  height: 30px;
+  right: 0px;
+  top: 0px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: transparent;
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border: 1px dashed;
+}
+
+.delete_task_button:hover {
+  background-color: red !important;
+  border: 1px solid;
+  border: 1px solid;
+}
+
+
+
+/* =============================================================================================== */
 /* Desktop & Mobile MUI TimePicker Clock Numbers */
 .MuiClockNumber-root {
   color: var(--main-text-coloure) !important;

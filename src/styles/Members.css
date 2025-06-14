@@ -153,8 +153,16 @@
 }
 
 .each_user_container {
-
-  border: 1px solid red;
+  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+  min-height: 500px;
+  padding: 10px;
+  border-radius: 10px;
+  z-index: 1002;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  max-width: 650px;
 }
 
 
@@ -164,14 +172,15 @@
   justify-content: flex-start;
   flex-direction: column;
   align-items: center;
-  border: 1px solid lime;
-  width: 700px;
-  height: 80%;
+  width: 100%;
+  height: 400px;
+  max-height: 400px;
+  overflow-y: auto;
   gap: 20px;
-  max-height: 700px;
-  min-height: 500px;
+  margin-top: 20px;
 }
-.users_skeleton_container{
+
+.users_skeleton_container {
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -184,10 +193,25 @@
 
 .close_icon_cont {
   display: flex;
-  justify-content: flex-end;
+  justify-content: center;
   align-items: center;
   width: 100%;
   height: 50px;
+  position: relative;
+}
+
+.manage_users_text {
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.refresh_and_close_icons_cont {
+  position: absolute;
+  top: 10;
+  right: 0;
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }
 
 
@@ -196,14 +220,13 @@
   height: 30px;
   margin-left: 10px;
   cursor: pointer;
-  color: white;
   margin-right: 20px;
   transition: all 0.3s ease;
 }
 
 .refresh_users_icon:hover {
-  transform: rotate(180deg); 
-  color: #2ed8c1;
+  transform: rotate(180deg) scale(1.2);
+  color: #2ed8c1 !important;
 }
 
 
@@ -213,8 +236,13 @@
   height: 30px;
   margin-left: 10px;
   cursor: pointer;
-  color: white;
   margin-right: 20px;
+  transition: all 0.3s ease;
+}
+
+.close_icon:hover {
+  transform: scale(1.2);
+  color: red !important;
 }
 
 .parent_of_input_and_emails {
@@ -225,36 +253,55 @@
   align-items: center;
 }
 
+.search_input {
+  border-radius: 5px;
+  padding: 6px 10px;
+  margin-bottom: 10px;
+  outline: none;
+  width: 200px;
+  font-size: 15px;
+}
+
+.search_input::placeholder {
+  color: var(--placeholder-color, #aaa);
+}
+
 .suggested_users_list {
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
   align-items: center;
   gap: 10px;
-  width: 300px;
+  width: 90%;
   overflow-y: auto;
   height: auto;
   max-height: 300px;
   border-radius: 5px;
-  padding: 10px;
-  border: 1px solid green;
+  padding: 5px;
 }
 
 .suggested_user {
-  border: 1px solid black;
   padding: 3px;
-  background-color: rgba(42, 194, 143, 0.459);
   border-radius: 15px;
   padding-left: 5px;
   padding-right: 5px;
   cursor: pointer;
-  color: rgb(255, 255, 255);
+  border: 1px solid;
 }
 
 .selected_emails_cont {
   display: flex;
   justify-content: flex-start;
   align-items: flex-start;
+  flex-wrap: wrap;
+  height: auto;
+  gap: 10px;
+  max-height: 130px;
+  overflow-y: auto;
+  width: 90%;
+  padding: 5px;
+  border-radius: 10px;
+  box-shadow: inset 0 0 10px #00000050;
 }
 
 .selected_email {
@@ -274,7 +321,28 @@
 
 .unselect_email {
   cursor: pointer;
-  color: tomato;
+  color: red;
+  width: 20px;
+  height: 20px;
+  transition: all 0.3s ease;
+}
+
+.unselect_email:hover {
+  transform: scale(1.2);
+  color: firebrick !important;
+}
+
+.invite_users_button {
+  width: 150px;
+  height: 30px;
+  border-radius: 5px;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  margin-top: 20px;
+  margin-bottom: 20px;
+  font-size: 15px;
+  font-weight: bold;
 }
 
 .each_user {
@@ -328,11 +396,11 @@
 }
 
 .delete_user {
-  width: 20px;
-  height: 20px;
+  width: 30px;
+  height: 30px;
 }
 
-.leave_board_button{
+.leave_board_button {
   width: 130px;
   height: 30px;
   border-radius: 5px;
@@ -341,13 +409,20 @@
   border: none;
   outline: none;
   cursor: pointer;
+  margin-top: 20px;
 }
 
 .delete_icon_for_admin {
   cursor: pointer;
-  color: tomato;
-
+  color: red;
+  transition: all 0.3s ease;
 }
+
+.delete_icon_for_admin:hover {
+  transform: scale(1.2);
+  color: firebrick !important;
+}
+
 
 .delete_icon_for_member {
   cursor: not-allowed;
@@ -388,7 +463,7 @@
   position: fixed;
   top: 0;
   left: 0;
-  background-color: rgba(0, 0, 0, 0.548);
+  background-color: rgba(0, 0, 0, 0.342);
   backdrop-filter: blur(10px);
   z-index: -1;
 }

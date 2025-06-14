@@ -170,7 +170,7 @@ const List: React.FC<ListProps> = ({
     >
 
       {/* <SkeletonEachTask currentTheme={currentTheme} /> */}
-      <div className='list_title_and_buttons'  >
+      <div className='list_title_and_buttons' style={{ backgroundColor: currentTheme['--list-background-color'] }}  >
         {isListEditing ? (
           <input
             type="text"
@@ -227,19 +227,57 @@ const List: React.FC<ListProps> = ({
         {isLoading && <SkeletonEachTask currentTheme={currentTheme} />}
         {!isAddingTask ? (
           <>
-            {!isLoading && <button onClick={() => setIsAddingTask(true)}>Add Task</button>}
+            {!isLoading && <button
+              className='add_new_task_button'
+              onClick={() => setIsAddingTask(true)}
+              style={{
+                background: currentTheme['--task-background-color'],
+                color: currentTheme['--main-text-coloure'],
+              }}
+            >
+              Add Task
+            </button>
+            }
           </>
         ) : (
-          <div className='each_task'>
+          <div className='newtask_adding_buttons'>
             <input
               type="text"
               placeholder="Task Title"
               value={newTaskTitle}
               onChange={(e) => setNewTaskTitle(e.target.value)}
-              disabled={isLoading} // Disable input while loading
+              disabled={isLoading}
+              style={{
+                background: currentTheme['--task-background-color'],
+                color: currentTheme['--main-text-coloure'],
+                borderColor: currentTheme['--border-color'],
+              }}
+              className='new_task_input'
             />
-            <button onClick={handleAddTask}>Add</button>
-            <button onClick={() => setIsAddingTask(false)}>Cancel</button>
+
+            <div className='adding_task_buttons_cont' >
+
+              <button
+                className='add_task_button_2'
+                onClick={handleAddTask}
+                style={{
+                  background: currentTheme['--task-background-color'],
+                  color: currentTheme['--main-text-coloure'],
+                }}
+              >Add</button>
+              <button
+                className='cancel_task_button'
+                onClick={() => {
+                  setIsAddingTask(false);
+                  setNewTaskTitle('');
+                }}
+                style={{
+                  background: currentTheme['--task-background-color'],
+                  color: currentTheme['--main-text-coloure'],
+                }}
+              >
+                Cancel</button>
+            </div>
           </div>
         )}
       </div>
