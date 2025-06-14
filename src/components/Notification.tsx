@@ -164,7 +164,7 @@ const Notification: React.FC<NotificationProps> = ({ currentTheme, setIsLoading 
               />
               <h3 className="notification_title">{notification.title}</h3>
               <p className="notification_body_text">{notification.body}</p>
-              <p className="notification_date">
+              <p className="notification_date" style={{ color: currentTheme['--due-date-color'] }}>
                 {new Date(notification.created_at).toLocaleString()}
               </p>
             </div>

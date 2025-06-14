@@ -5,7 +5,6 @@ import { Board_Users } from "../utils/interface";
 import { CgCloseR } from "react-icons/cg";
 import axiosInstance from "../utils/axiosinstance";
 import { RiCloseFill } from "react-icons/ri";
-import { RiDeleteBinLine } from "react-icons/ri";
 import { FaClipboardList } from "react-icons/fa";
 import { ThemeSpecs } from "../utils/theme";
 import { MdModeEdit } from "react-icons/md";
@@ -20,7 +19,6 @@ import { TbRefresh } from "react-icons/tb";
 import SkeletonEachUser from "./Boards/SkeletonEachUser";
 import ReactDOM from 'react-dom';
 import { MdDeleteForever } from "react-icons/md";
-import { MdDelete } from "react-icons/md";
 
 
 
@@ -214,8 +212,19 @@ const Members: React.FC<MembersProps> = ({
         return [...prev_emails, email];
       }
     });
+    // Remove selected user from suggestions
+    setSuggestedUsers((prev) => prev.filter((user) => user.email !== email));
+    // Clear search input
+    setSearchInput("");
   };
 
+  const handle_unselect_email = (email: string) => {
+    setSelected_emails((prev_emails) => prev_emails.filter((prev_email) => prev_email !== email));
+    // Add the unselected email back to suggestions
+
+    // Clear search input
+    setSearchInput("");
+  }
   // ========================================== delete user from members ==================================================
   const handleDeleteUser = async (userId: number) => {
     console.log('Deleting user:', userId);
@@ -451,13 +460,12 @@ const Members: React.FC<MembersProps> = ({
                 <p className="manage_users_text" >Manage Users</p>
                 <div className="refresh_and_close_icons_cont" >
                   {!is_members_refreshing && (
-                    <TbRefresh className="refresh_users_icon" onClick={fetch_current_board_users} />
+                    <TbRefresh className="refresh_users_icon" onClick={fetch_current_board_users} style={{color: currentTheme['--main-text-coloure']}} />
                   )}
-                  <CgCloseR className="close_icon" onClick={() => setIsUsersWindowOpen(false)} />
+                  <CgCloseR className="close_icon" onClick={() => setIsUsersWindowOpen(false)} style={{color: currentTheme['--main-text-coloure']}} />
                 </div>
               </div>
 
-              <p>guram</p>
 
               {/* search input for searching users  */}
               {is_current_user_admin_or_owner && (
@@ -468,37 +476,83 @@ const Members: React.FC<MembersProps> = ({
                     value={searchInput}
                     onChange={handleSearchInputChange}
                     placeholder="Search users by email"
+                    style={{
+                      backgroundColor: currentTheme['--task-background-color'],
+                      color: currentTheme['--main-text-coloure'],
+                      border: `1px solid ${currentTheme['--border-color']}`,
+                    }}
+                    className="search_input"
                   />
 
                   {/* suggested users conmtainer  */}
-                  <div className="suggested_users_list">
-                    {suggestedUsers.map((user) => (
-                      <div key={user.email} className="suggested_user" onClick={() => handle_email_click(user.email)}>
-                        {user.email}
-                      </div>
-                    ))}
+                  <div className="suggested_users_list"
+
+                  >
+                    {suggestedUsers
+                      .filter(
+                        (user) =>
+                          !current_board_users.some(
+                            (boardUser) =>
+                              boardUser.email === user.email &&
+                              (boardUser.user_status === "admin" || boardUser.user_status === "member" || boardUser.user_status === "owner")
+                          )
+                      )
+                      .map((user) => (
+                        <div
+                          key={user.email}
+                          className="suggested_user"
+                          onClick={() => handle_email_click(user.email)}
+                          style={{
+                            backgroundColor: `${currentTheme['--task-background-color']}`,
+                            color: `${currentTheme['--main-text-coloure']}`,
+                            borderColor: `${currentTheme['--border-color']}`
+                          }}
+                        >
+                          {user.email}
+                        </div>
+                      ))}
                   </div>
 
-                  <div style={{ width: '80%', height: '1px', backgroundColor: "black" }} ></div>
-
-                  <div className="selected_emails_cont" >
-                    {selected_emails.map((email) => (
-                      <div key={email} className="selected_email" >
-                        {email}
-                        <RiCloseFill className='unselect_email' />
-                      </div>
-                    ))}
-                  </div>
+                  {/* selected emails container  */}
+                  {selected_emails.length > 0 && (
+                    <div className="selected_emails_cont" 
+                      style={{
+                        backgroundColor: `${currentTheme['--background-color']}`,
+                        color: `${currentTheme['--main-text-coloure']}`,
+                        border: `1px solid ${currentTheme['--border-color']}`
+                      }}
+                    >
+                      {selected_emails.map((email) => (
+                        <div
+                          key={email}
+                          className="selected_email"
+                          style={{
+                            backgroundColor: `${currentTheme['--task-background-color']}`,
+                            color: `${currentTheme['--main-text-coloure']}`
+                          }}
+                        >
+                          {email}
+                          <RiCloseFill className='unselect_email' onClick={() => handle_unselect_email(email)} />
+                        </div>
+                      ))}
+                    </div>
+                  )}
 
                 </div>
               )}
 
               {/* button for adding selected emails to board users  */}
-              {is_current_user_admin_or_owner && (
+              {is_current_user_admin_or_owner && selected_emails.length > 0 && (
                 <button
                   onClick={() => handleAddUsers()}
-                  style={{ cursor: `${selected_emails.length > 0 ? 'pointer' : 'not-allowed'}` }}
                   disabled={selected_emails.length === 0}
+                  className="invite_users_button"
+                  style={{
+                    cursor: `${selected_emails.length > 0 ? 'pointer' : 'not-allowed'}`,
+                    backgroundColor: `${currentTheme['--task-background-color']}`,
+                    color: `${currentTheme['--main-text-coloure']}`,
+                    border: `1px solid ${currentTheme['--border-color']}`
+                  }}
                 >
                   Invite
                 </button>

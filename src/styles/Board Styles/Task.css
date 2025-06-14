@@ -16,20 +16,21 @@
 }
 
 .drop-placeholder {
-  height: 10px; 
+  height: 10px;
   background-color: rgba(46, 216, 193, 0.2);
   border: 2px dashed #2ed8c1;
   margin: 5px 0;
   /* Smooth animation for appearance */
   transition: height 0.3s ease, margin 0.3s ease, opacity 0.3s ease;
-  opacity: 1; /* Fully visible */
+  opacity: 1;
+  /* Fully visible */
 }
 
 /* Hidden state for drop-placeholder */
 .drop-placeholder.hidden {
-  opacity: 0; 
-  height: 0; 
-  margin: 0; 
+  opacity: 0;
+  height: 0;
+  margin: 0;
 }
 
 .task_complition_checkbox_container {
@@ -171,7 +172,7 @@
   transform: scale(1.1);
 }
 
-.drag_bouth_handlers_container{
+.drag_bouth_handlers_container {
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -190,17 +191,17 @@
   transition: all 0.3s ease;
 }
 
-.reorder_container{
+.reorder_container {
   display: flex;
   flex-direction: row;
   align-items: center;
   justify-content: center;
 }
 
-.reorder_icon{
+.reorder_icon {
   width: 25px;
   height: 25px;
-  cursor:grab;
+  cursor: grab;
   transition: all 0.3s ease;
 }
 
@@ -224,4 +225,59 @@
   width: 100px;
   height: 15px;
   border-radius: 30px;
+}
+
+/* ================================================ add task button styles ==================================== */
+
+.new_task_input{
+  width: 100%;
+  height: 30px;
+  border-radius: 5px;
+  padding: 5px;
+  border: 1px solid;
+  outline: none;
+  transition: border-color 0.2s ease;
+}
+
+
+.adding_task_buttons_cont {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 5px;
+}
+
+.add_task_button_2 {
+  border: none;
+  border-radius: 5px;
+  padding: 5px 16px;
+  font-size: 15px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s, box-shadow 0.2s;
+  margin-top: 5px;
+  transition: all 0.3s ease;
+}
+
+.add_task_button_2:hover {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.cancel_task_button {
+  border: none;
+  border-radius: 5px;
+  padding: 5px 16px;
+  font-size: 15px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s, box-shadow 0.2s;
+  margin-top: 5px;
+  transition: all 0.3s ease;
+}
+
+.cancel_task_button:hover {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  background-color: #DB0000 !important;
 }

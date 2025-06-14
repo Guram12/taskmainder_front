@@ -17,7 +17,8 @@ const themes = {
     '--border-color': '#2C2F33',               // Subtle, slightly lighter than background
     '--scrollbar-thumb-color': '#44474A',      // Muted mid-gray for scrollbars
     '--list-background-color': '#23272A',      // Slightly lighter than background for lists
-    '--task-background-color': '#222326',     // Close to list bg, but distinct for cards/tasks
+    '--task-background-color': '#181A1BCE',     // Close to list bg, but distinct for cards/tasks
+    // '--task-background-color': '#222326', 
     '--hover-color': '#23272A',           // Slightly lighter than background
     '--due-date-color': '#A3B1C6'         // Muted blue-gray for due dates
   },
