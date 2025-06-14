@@ -153,8 +153,15 @@
 }
 
 .each_user_container {
-
-  border: 1px solid red;
+  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+  min-height: 500px;
+  padding: 10px;
+  border-radius: 10px;
+  z-index: 1002;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
 
 
@@ -165,13 +172,14 @@
   flex-direction: column;
   align-items: center;
   border: 1px solid lime;
-  width: 700px;
-  height: 80%;
+  width: 100%;
+  height: 400px;
+  max-height: 400px;
+  overflow-y: auto;
   gap: 20px;
-  max-height: 700px;
-  min-height: 500px;
 }
-.users_skeleton_container{
+
+.users_skeleton_container {
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -184,10 +192,25 @@
 
 .close_icon_cont {
   display: flex;
-  justify-content: flex-end;
+  justify-content: center;
   align-items: center;
   width: 100%;
   height: 50px;
+  position: relative;
+}
+
+.manage_users_text {
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.refresh_and_close_icons_cont {
+  position: absolute;
+  top: 10;
+  right: 0;
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }
 
 
@@ -202,7 +225,7 @@
 }
 
 .refresh_users_icon:hover {
-  transform: rotate(180deg); 
+  transform: rotate(180deg);
   color: #2ed8c1;
 }
 
@@ -328,11 +351,11 @@
 }
 
 .delete_user {
-  width: 20px;
-  height: 20px;
+  width: 30px;
+  height: 30px;
 }
 
-.leave_board_button{
+.leave_board_button {
   width: 130px;
   height: 30px;
   border-radius: 5px;
@@ -341,13 +364,20 @@
   border: none;
   outline: none;
   cursor: pointer;
+  margin-top: 20px;
 }
 
 .delete_icon_for_admin {
   cursor: pointer;
-  color: tomato;
-
+  color: red;
+  transition: all 0.3s ease;
 }
+
+.delete_icon_for_admin:hover {
+  transform: scale(1.2);
+  color: firebrick !important;
+}
+
 
 .delete_icon_for_member {
   cursor: not-allowed;
@@ -388,7 +418,7 @@
   position: fixed;
   top: 0;
   left: 0;
-  background-color: rgba(0, 0, 0, 0.548);
+  background-color: rgba(0, 0, 0, 0.342);
   backdrop-filter: blur(10px);
   z-index: -1;
 }

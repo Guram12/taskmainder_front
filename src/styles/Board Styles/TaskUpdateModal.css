@@ -18,7 +18,7 @@
   padding: 20px;
   border-radius: 8px;
   width: 600px;
-  max-width: 90%;
+  max-width: 95%;
   min-height: 600px;
   max-height: 85%;
   text-align: center;
@@ -50,7 +50,8 @@
   align-items: center;
   justify-content: flex-start;
   gap: 20px;
-  height: 35px;
+  max-height: 50px;
+  overflow-y: auto;
   border: 1px solid transparent;
 }
 
@@ -68,12 +69,15 @@
 .title_icon {
   width: 30px;
   height: 30px;
+  min-width: 30px; 
+  min-height: 30px;
   transition: all 0.3s ease;
   margin-left: 5px;
 }
 
 .title_text {
   margin: 0px;
+  text-align: left;
 }
 
 
@@ -353,6 +357,7 @@
   flex-wrap: wrap;
   align-content: flex-start;
   max-height: 100px;
+  overflow-y: auto;
   width: 100%;
   gap: 10px;
 }

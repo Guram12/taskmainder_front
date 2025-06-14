@@ -72,6 +72,8 @@
 
 .template_list_name {
   margin-top: 5px;
+  font-size: 18px;
+  font-weight: bold;
 }
 
 
@@ -86,8 +88,6 @@
   flex-direction: column;
   justify-content: space-between;
   align-items: flex-start;
-
-  background-color: #2ed8c1;
   padding: 5px;
   margin-bottom: 5px;
   border-radius: 3px;

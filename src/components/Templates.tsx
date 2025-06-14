@@ -104,13 +104,16 @@ const Templates: React.FC<TemplatesProps> = ({ handleTemplateSelect, currentThem
             >
               {template.lists.map((list) => (
                 <div className="each_template_board_list" key={list.name} style={{ backgroundColor: `${currentTheme['--list-background-color']}` }}>
-                  <p className="template_list_name"> {list.name}</p>
+                  <p className="template_list_name" style={{ color: currentTheme['--main-text-coloure'] }} > {list.name}</p>
 
                   {list.tasks.map((task) => (
-                    <div key={task.title} className="task_item">
+                    <div key={task.title} className="task_item" style={{
+                      backgroundColor: `${currentTheme['--task-background-color']}`,
+                      color: `${currentTheme['--main-text-coloure']}`,
+                    }}>
                       <div className="priority" style={getPriorityStyle(task.priority)}></div>
-                      <p className="template_task_p" >{task.title}</p>
-                      <p className='template_due_Date_p'>No due date</p>
+                      <p className="template_task_p" style={{color: currentTheme['--main-text-coloure']}} >{task.title}</p>
+                      <p className='template_due_Date_p' style={{color: currentTheme['--due-date-color']}} >No due date</p>
                     </div>
                   ))}
                 </div>
