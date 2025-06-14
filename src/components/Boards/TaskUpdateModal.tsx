@@ -10,7 +10,6 @@ import dayjs, { Dayjs } from 'dayjs';
 import { renderTimeViewClock } from '@mui/x-date-pickers/timeViewRenderers';
 import { ProfileData } from '../../utils/interface';
 import Select from 'react-select';
-import { RiDeleteBin2Line } from "react-icons/ri";
 import ConfirmationDialog from './ConfirmationDialog';
 import Avatar from '@mui/material/Avatar';
 import getAvatarStyles from '../../utils/SetRandomColor';
@@ -20,6 +19,8 @@ import { HiXMark } from "react-icons/hi2";
 import { MdOutlineSubtitles } from "react-icons/md";
 import { MdOutlineRemoveCircleOutline } from "react-icons/md";
 import { FaUser } from "react-icons/fa";
+import { MdDeleteForever } from "react-icons/md";
+import { PiTextAlignLeft } from "react-icons/pi";
 
 
 interface TaskUpdateModalProps {
@@ -252,6 +253,10 @@ const TaskUpdateModal: React.FC<TaskUpdateModalProps> = ({ task, onClose, update
       <div className="modal-content" style={{ backgroundColor: currentTheme['--background-color'] }}>
         <div className='inputs_container' >
           <h3 className='update_task_header' >Update Task</h3>
+          <div className='sistle_and_titleicon_container'>
+            <MdOutlineSubtitles className='title_icon' style={{ color: currentTheme['--main-text-coloure'] }} />
+            <h3 className='title_p' style={{ color: currentTheme['--main-text-coloure'] }}>Title </h3>
+          </div>
           {isTitleUpdating ? (
             <div className='task_title_input_container'>
               <input
@@ -274,14 +279,19 @@ const TaskUpdateModal: React.FC<TaskUpdateModalProps> = ({ task, onClose, update
               <HiXMark className='title_close_icon' onClick={handleCancelTitleUpdate} />
             </div>
           ) : (
+
             <div className='task_title_input_container title_cursor' onClick={() => setIsTitleUpdating(true)} style={{ borderColor: currentTheme['--border-color'] }}>
-              <MdOutlineSubtitles className='title_icon' style={{ color: currentTheme['--main-text-coloure'] }} />
               <p className='title_text' style={{ color: currentTheme['--main-text-coloure'] }}>{updatedTitle}</p>
             </div>
+
           )}
 
           {/* Description Input container*/}
           <div className='description_container' >
+            <div className='description_main_cont'>
+              <PiTextAlignLeft className='title_icon' style={{ color: currentTheme['--main-text-coloure'] }} />
+              <h3 className='title_p' style={{ color: currentTheme['--main-text-coloure'] }}>Description </h3>
+            </div>
             {isDescriptionUpdating ? (
               <div className='description_textarea_container' >
 
@@ -504,18 +514,74 @@ const TaskUpdateModal: React.FC<TaskUpdateModalProps> = ({ task, onClose, update
         }
 
 
-        <label>
+        <label className="completed-label" style={{ color: currentTheme['--main-text-coloure'] }}>
           Completed:
-          <input
-            type="checkbox"
-            checked={updatedCompletedStatus}
-            onChange={(e) => setUpdatedCompletedStatus(e.target.checked)}
-          />
+          <span className="custom-checkbox-container">
+            <input
+              type="checkbox"
+              checked={updatedCompletedStatus}
+              onChange={(e) => setUpdatedCompletedStatus(e.target.checked)}
+              className="custom-checkbox"
+              style={{ accentColor: currentTheme['--main-text-coloure'] }} // fallback for browsers that support accent-color
+            />
+            <span
+              className="checkmark"
+              style={{
+                borderColor: currentTheme['--border-color'],
+                backgroundColor: updatedCompletedStatus
+                  ? currentTheme['--main-text-coloure']
+                  : currentTheme['--background-color'],
+                color: updatedCompletedStatus
+                  ? currentTheme['--background-color']
+                  : currentTheme['--main-text-coloure'],
+                boxShadow: updatedCompletedStatus
+                  ? `0 0 8px 2px ${currentTheme['--main-text-coloure']}55`
+                  : 'none',
+              }}
+            >
+              {updatedCompletedStatus ? <GrFormCheckmark /> : ''}
+            </span>
+          </span>
         </label>
+
+
+
         <div className="modal-actions">
-          <button className='delete_task_button' onClick={handleDelete}>
-            <RiDeleteBin2Line className='delete_icon' />
-          </button>
+          <div className='delete_and_save_task_button' >
+            <button className='delete_task_button' onClick={handleDelete} style={{
+              backgroundColor: currentTheme['--background-color'],
+              borderColor: currentTheme['--border-color'],
+            }}>
+              delete task
+              <MdDeleteForever className='delete_icon'
+                style={{ color: currentTheme['--main-text-coloure'] }}
+              />
+            </button>
+            <div className='save_task_button_container' >
+              <button
+                className='save_task_button'
+                style={{
+                  backgroundColor: currentTheme['--task-background-color'],
+                  borderColor: currentTheme['--border-color'],
+                }}
+                onClick={handleUpdate}
+              >
+                Save
+              </button>
+              <button
+                className='cancel_task_update_button'
+                onClick={handleCancel}
+                style={{
+                  backgroundColor: currentTheme['--task-background-color'],
+                  borderColor: currentTheme['--border-color'],
+                }}
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
+
+
           {showDialog && (
             <ConfirmationDialog
               message={`Are you sure you want to delete the task "${task.title}"?`}
@@ -523,10 +589,7 @@ const TaskUpdateModal: React.FC<TaskUpdateModalProps> = ({ task, onClose, update
               onCancel={cancelDelete}
             />
           )}
-          <div>
-            <button onClick={handleUpdate}>Save</button>
-            <button onClick={handleCancel}>Cancel</button>
-          </div>
+
         </div>
       </div>
     </div>

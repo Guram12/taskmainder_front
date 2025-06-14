@@ -117,7 +117,7 @@ const Header: React.FC<HeaderProps> = ({
     'arctic_alice',
     'mint_ice',
     'spring_cloud',
-    'lavender_mist'
+    'sky_breeze',
   ];
 
   const themeMenu: MenuProps = {
@@ -221,8 +221,8 @@ const Header: React.FC<HeaderProps> = ({
               onClick={() => changeTheme(themes.mint_ice)}></div>
             <div className='header_coloure_child_container example11'
               onClick={() => changeTheme(themes.spring_cloud)}></div>
-            <div className='header_coloure_child_container example11'
-              onClick={() => changeTheme(themes.lavender_mist)}></div>
+            <div className='header_coloure_child_container example12'
+              onClick={() => changeTheme(themes.sky_breeze)}></div>
 
 
             <div className='custom_theme_container_in_header'

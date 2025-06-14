@@ -328,9 +328,13 @@ const Members: React.FC<MembersProps> = ({
 
   return (
     <div className="main_members_container">
-      <RiUserSettingsFill className="add_user_icon" onClick={() => setIsUsersWindowOpen(true)} />
+      <RiUserSettingsFill
+        className="add_user_icon"
+        onClick={() => setIsUsersWindowOpen(true)}
+        style={{ color: currentTheme['--main-text-coloure'] }}
+      />
 
-      {/* skeleton loader  befire fetching current board users, and after fetching current board users,
+      {/* skeleton loader  before fetching current board users, and after fetching current board users,
        it will be replaced with actual user avatars */}
       {!is_cur_Board_users_fetched ? (
         <div className="user_avatar_skeleton_cont" >
@@ -460,9 +464,9 @@ const Members: React.FC<MembersProps> = ({
                 <p className="manage_users_text" >Manage Users</p>
                 <div className="refresh_and_close_icons_cont" >
                   {!is_members_refreshing && (
-                    <TbRefresh className="refresh_users_icon" onClick={fetch_current_board_users} style={{color: currentTheme['--main-text-coloure']}} />
+                    <TbRefresh className="refresh_users_icon" onClick={fetch_current_board_users} style={{ color: currentTheme['--main-text-coloure'] }} />
                   )}
-                  <CgCloseR className="close_icon" onClick={() => setIsUsersWindowOpen(false)} style={{color: currentTheme['--main-text-coloure']}} />
+                  <CgCloseR className="close_icon" onClick={() => setIsUsersWindowOpen(false)} style={{ color: currentTheme['--main-text-coloure'] }} />
                 </div>
               </div>
 
@@ -515,7 +519,7 @@ const Members: React.FC<MembersProps> = ({
 
                   {/* selected emails container  */}
                   {selected_emails.length > 0 && (
-                    <div className="selected_emails_cont" 
+                    <div className="selected_emails_cont"
                       style={{
                         backgroundColor: `${currentTheme['--background-color']}`,
                         color: `${currentTheme['--main-text-coloure']}`,

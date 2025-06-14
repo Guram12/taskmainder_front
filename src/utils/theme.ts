@@ -118,17 +118,18 @@ const themes = {
     '--due-date-color': '#81B4AA'
   },
 
-  lavender_mist: {
-    '--background-color': '#F5F6FB',           // Very light lavender/blue
-    '--main-text-coloure': '#2D3142',          // Deep blue-gray for contrast
-    '--border-color': '#C7C9E2',               // Soft lavender-gray border
-    '--scrollbar-thumb-color': '#D8DAF2',      // Pale lavender for scrollbars
-    '--list-background-color': '#E7E9F7',      // Slightly deeper lavender for lists
-    '--task-background-color': '#E0E3F3',    // Gentle blue-lavender for cards/tasks
-    '--hover-color': '#E7E9F7',           // Soft lavender for hover
-    '--due-date-color': '#898FB3'
+// ...existing code...
+  sky_breeze: {
+    '--background-color': '#B3D8F6',           // Soft sky blue
+    '--main-text-coloure': '#234060',          // Deep blue for contrast
+    '--border-color': '#8CB4D9',               // Muted blue border
+    '--scrollbar-thumb-color': '#A5C7E8',      // Gentle blue for scrollbars
+    '--list-background-color': '#C6E2FA',      // Lighter sky for lists
+    '--task-background-color': '#D6ECFB',      // Very light blue for cards/tasks
+    '--hover-color': '#C6E2FA',                // Lighter blue for hover
+    '--due-date-color': '#4A90E2'              // Vivid sky blue for due dates
   },
-
+// ...existing code...
 };
 
 export default themes;
