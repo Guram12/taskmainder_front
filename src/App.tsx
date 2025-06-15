@@ -16,7 +16,7 @@ import PasswordResetConfirm from './auth/PasswordResetConfirm';
 import subscribeToPushNotifications from './utils/supbscription';
 import { Board_Users } from './utils/interface';
 import { NotificationPayload } from './utils/interface';
-
+import ErrorPage from './components/ErrorPage';
 
 
 
@@ -349,6 +349,17 @@ const App: React.FC = () => {
 
 
   // ========================================================================================================
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    if (
+      params.get('isAuthenticated') === 'false' &&
+      params.get('invitation') === 'error'
+    ) {
+      window.history.replaceState({}, '', '/error'); // Clean up URL
+      window.location.href = '/error'; // Redirect to error page
+    }
+  }, []);
+  // ========================================================================================================
 
   return (
 
@@ -373,6 +384,7 @@ const App: React.FC = () => {
         <Route path="/register" element={<Register />} />
         <Route path="/password-reset" element={<PasswordReset />} />
         <Route path="/password-reset-confirm/:uid/:token" element={<PasswordResetConfirm />} />
+        <Route path="/error" element={<ErrorPage currentTheme={currentTheme} />} />
         <Route path="/finish-profile" element={<FinishGoogleSignIn setIsAuthenticated={setIsAuthenticated} />} />
         <Route path="/mainpage"
           element={<MainPage

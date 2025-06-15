@@ -583,6 +583,11 @@
     margin: 0px;
   }
 
+  .owner_status {
+    margin: 0px;
+    font-weight: bold;
+    font-size: 18px;
+  }
 
   .refresh_and_close_icons_cont {
     position: absolute;
@@ -624,6 +629,6 @@
     height: 40px;
     font-size: 18px;
     font-weight: bold;
-    
+
   }
 }
