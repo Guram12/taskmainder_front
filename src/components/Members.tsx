@@ -444,6 +444,7 @@ const Members: React.FC<MembersProps> = ({
                   message={`Are you sure you want to delete the board "${selectedBoard?.name}"?`}
                   onConfirm={delete_board}
                   onCancel={canselBoardDelete}
+                  currentTheme={currentTheme}
                 />
               )}
             </>
@@ -649,6 +650,7 @@ const Members: React.FC<MembersProps> = ({
                       message={`Are you sure you want to leav the board "${selectedBoard?.name}"?`}
                       onConfirm={handleLeaveBoard}
                       onCancel={() => setIs_leaving_board(false)}
+                      currentTheme={currentTheme}
                     />
                   )}
                 </div>

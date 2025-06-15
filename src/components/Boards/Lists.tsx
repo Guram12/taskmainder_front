@@ -232,6 +232,7 @@ const List: React.FC<ListProps> = ({
             message={`Are you sure you want to delete the task "${list.name}"?`}
             onConfirm={confirmDelete}
             onCancel={cancelListDelete}
+            currentTheme={currentTheme}
           />
         )}
       </div>

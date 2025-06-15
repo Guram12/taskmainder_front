@@ -178,6 +178,7 @@ const ProfilePictureUpdate: React.FC<ProfilePictureUpdateProps> = ({ profileData
           message="Are you sure you want to delete your profile picture?"
           onConfirm={deleteProfilePicture}
           onCancel={handleCancelDelete}
+          currentTheme={currentTheme}
         />
       )}
       <div className="profile_picture_update_p_cont"

@@ -1,25 +1,54 @@
 import React from 'react';
 import '../../styles/Board Styles/ConfirmationDialog.css';
+import ReactDOM from 'react-dom';
+import { ThemeSpecs } from '../../utils/theme';
 
 interface ConfirmationDialogProps {
   message: string;
   onConfirm: () => void;
   onCancel: () => void;
+  currentTheme: ThemeSpecs;
 }
 
-const ConfirmationDialog: React.FC<ConfirmationDialogProps> = ({ message, onConfirm, onCancel }) => {
+const ConfirmationDialog: React.FC<ConfirmationDialogProps> = ({ message, onConfirm, onCancel, currentTheme }) => {
 
-  
+
   return (
-    <div className="confirmation-dialog-overlay">
-      <div className="confirmation-dialog">
-        <p className='conf_text'>{message}</p>
-        <div className="confirmation-dialog-buttons">
-          <button className="confirm-button" onClick={onConfirm}>Yes</button>
-          <button className="cancel-button" onClick={onCancel}>No</button>
-        </div>
-      </div>
-    </div>
+    <>
+      {ReactDOM.createPortal(
+        <div className="confirmation-dialog-overlay">
+          <div className="confirmation-dialog" style={{
+            backgroundColor: currentTheme['--list-background-color'],
+          }} >
+            <p className='conf_text' style={{
+              color: currentTheme['--main-text-coloure'],
+
+            }} >{message}</p>
+            <div className="confirmation-dialog-buttons">
+              <button
+                className="confirm-button"
+                style={{
+                  color: currentTheme['--main-text-coloure'],
+                  backgroundColor: currentTheme['--task-background-color']
+                }}
+                onClick={onConfirm}
+              >Yes
+              </button>
+              <button
+                className="cancel-button"
+                style={{
+                  color: currentTheme['--main-text-coloure'],
+                  backgroundColor: currentTheme['--task-background-color']
+                }}
+                onClick={onCancel}
+              >No
+              </button>
+            </div>
+          </div>
+        </div>,
+        document.body
+      )}
+    </>
   );
 };
 
