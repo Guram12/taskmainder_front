@@ -112,6 +112,7 @@ const Settings: React.FC<SettingsProps> = ({
             setIsImageDeleting(false);
             setNew_image_for_board({ boardId: 0, NewImage: new File([], "") });
           }}
+          currentTheme={currentTheme}
         />
       )}
 

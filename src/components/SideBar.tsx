@@ -336,6 +336,7 @@ const SidebarComponent: React.FC<SidebarProps> = ({
             message="Are you sure you want to log out?"
             onCancel={() => setIsConfirmationDialogOpen(false)}
             onConfirm={handleLogOut}
+            currentTheme={currentTheme}
           />
         )}
         <Sidebar

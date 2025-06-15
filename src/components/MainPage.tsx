@@ -192,6 +192,7 @@ const MainPage: React.FC<MainPageProps> = ({
             isBoardsLoaded={isBoardsLoaded}
             setIsLoading={setIsLoading}
             is_members_refreshing={is_members_refreshing}
+            isMobile={isMobile}
           />
         );
       case "Notification":

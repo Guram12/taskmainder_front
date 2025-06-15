@@ -54,7 +54,7 @@ const Header: React.FC<HeaderProps> = ({
 
   // 
   useEffect(() => {
-    if (location.pathname === "/" || location.pathname === "/register") {
+    if (location.pathname === "/" || location.pathname === "/register" ||location.pathname === '/error') {
       setShowHeader(false);
     }
     else {

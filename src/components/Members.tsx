@@ -24,7 +24,6 @@ import { MdDeleteForever } from "react-icons/md";
 
 
 
-
 interface MembersProps {
   selectedBoard: board | null;
   socketRef: React.MutableRefObject<WebSocket | null>;
@@ -39,6 +38,7 @@ interface MembersProps {
   setBoards: (boards: board[]) => void;
   boards: board[];
   is_members_refreshing: boolean;
+  isMobile: boolean; // Optional prop for mobile view
 }
 
 const Members: React.FC<MembersProps> = ({
@@ -55,7 +55,7 @@ const Members: React.FC<MembersProps> = ({
   setBoards,
   boards,
   is_members_refreshing,
-
+  isMobile,
 }) => {
 
   const [isUsersWindowOpen, setIsUsersWindowOpen] = useState<boolean>(false);
@@ -251,11 +251,32 @@ const Members: React.FC<MembersProps> = ({
   // =============================================   Edit board name   ========================================================
 
 
+
+  const [isMobileBoardNameUpdateModalOpen, setIsMobileBoardNameUpdateModalOpen] = useState(false);
+
+  const [is_board_newname_empty, setIs_board_newname_empty] = useState<boolean>(false);
+
   const handle_edit_board_click = () => {
-    setIsBoardEditing(true);
-  }
+    setNewBoardName(selectedBoard?.name || '');
+    if (isMobile) {
+      setIsMobileBoardNameUpdateModalOpen(true);
+    } else {
+      setIsBoardEditing(true);
+    }
+  };
+
 
   const handleBoardNameUpdate = () => {
+    if (!newBoardName.trim()) {
+      setIs_board_newname_empty(true);
+      return;
+    }
+    // if length of  string is more than 25. i should not allow to update board name
+    if (newBoardName.length > 25) {
+      alert("Board name cannot be more than 25 characters long.");
+      setIs_board_newname_empty(true);
+      return;
+    }
     console.log('Updating board name:', newBoardName);
 
     // Create the updated boards array
@@ -268,9 +289,26 @@ const Members: React.FC<MembersProps> = ({
 
     // Send the update to the server
     update_board_name(newBoardName);
-
     setIsBoardEditing(false);
+
+    // if mobile version is open, close it 
+    if (isMobile) {
+      setIsMobileBoardNameUpdateModalOpen(false);
+    }
   };
+
+  const board_name_update_icon_click = () => {
+    if (!isMobile) {
+      handleBoardNameUpdate();
+      return;
+    }
+
+    // Mobile specific logic
+    setIsMobileBoardNameUpdateModalOpen(true);
+  };
+
+
+
 
   // =============================================   Delete Board   ========================================================
 
@@ -367,38 +405,138 @@ const Members: React.FC<MembersProps> = ({
         :
         (
           <>
-            {current_board_users.map((boardUser) => (
-              boardUser.profile_picture !== null ? (
-                <img
-                  key={boardUser.id}
-                  src={boardUser.profile_picture}
-                  alt="user profile"
-                  className="user_profile_images"
-                />
-              ) : (
+            {isMobile ? (
+              <>
+                {current_board_users.slice(0, 3).map((boardUser) =>
+                  boardUser.profile_picture !== null ? (
+                    <img
+                      key={boardUser.id}
+                      src={boardUser.profile_picture}
+                      alt="user profile"
+                      className="user_profile_images"
+                    />
+                  ) : (
+                    <Avatar
+                      key={boardUser.id}
+                      className="user_profile_images"
+                      sx={{ width: 30, height: 30 }}
+                      alt={boardUser.username}
+                      style={{
+                        backgroundColor: getAvatarStyles(boardUser.username.charAt(0)).backgroundColor,
+                        color: getAvatarStyles(boardUser.username.charAt(0)).color
+                      }}
+                    >
+                      {boardUser.username.charAt(0).toUpperCase()}
+                    </Avatar>
+                  )
+                )}
+                {current_board_users.length > 3 && (
+                  <span className="more-avatars"
+                    style={{
+                      marginLeft: '-25px',
+                      display: 'inline-block',
+                      color: currentTheme['--main-text-coloure'],
+                      borderRadius: '50%',
+                      width: 30,
+                      height: 30,
+                      textAlign: 'center',
+                      lineHeight: '30px',
+                      fontWeight: 'bold',
+                      marginTop: '15px',
 
-                <Avatar
-                  key={boardUser.id}
-                  className="user_profile_images"
-                  sx={{ width: 30, height: 30 }}
-                  alt={boardUser.username}
-                  style={{
-                    backgroundColor: getAvatarStyles(boardUser.username.charAt(0)).backgroundColor,
-                    color: getAvatarStyles(boardUser.username.charAt(0)).color
-                  }}
-                >
-                  {boardUser.username.charAt(0).toUpperCase()}
-                </Avatar>
-              )
-            ))}
+                    }}>
+                    ...
+                  </span>
+                )}
+              </>
+            ) : (
+              <>
+                {current_board_users.map((boardUser) =>
+                  boardUser.profile_picture !== null ? (
+                    <img
+                      key={boardUser.id}
+                      src={boardUser.profile_picture}
+                      alt="user profile"
+                      className="user_profile_images"
+                    />
+                  ) : (
+                    <Avatar
+                      key={boardUser.id}
+                      className="user_profile_images"
+                      sx={{ width: 30, height: 30 }}
+                      alt={boardUser.username}
+                      style={{
+                        backgroundColor: getAvatarStyles(boardUser.username.charAt(0)).backgroundColor,
+                        color: getAvatarStyles(boardUser.username.charAt(0)).color
+                      }}
+                    >
+                      {boardUser.username.charAt(0).toUpperCase()}
+                    </Avatar>
+                  )
+                )}
+              </>
+            )}
           </>
         )}
 
 
       {/* board name and icons for editing and deleting board, and board name */}
+      {/* აქ არის ორი ვერსია სახელის აფდეითისთვის, ერტი მობაილისტვის და მეორე დესკტოპისთვის.isMobile  ის მიხედვით რენდერდება რომელიმე */}
       <>
-        <FaClipboardList className='board_icon' style={{ fill: `${currentTheme['--main-text-coloure']}` }} />
         <div className="board_name_cont">
+          <FaClipboardList className='board_icon' style={{ fill: `${currentTheme['--main-text-coloure']}` }} />
+          {isMobileBoardNameUpdateModalOpen && isMobile && ReactDOM.createPortal(
+            <div>
+              <div className="dark_mobile_background" ></div>
+              <div className="board_name_update_modal_on_mobile" style={{ backgroundColor: `${currentTheme['--list-background-color']}` }} >
+                <p className="update_board_name_text" style={{ color: currentTheme['--main-text-coloure'] }}>Update Board Name</p>
+                <input
+                  type="text"
+                  value={newBoardName}
+                  onChange={(e) => setNewBoardName(e.target.value)}
+                  className="board_name_input"
+                  placeholder="Edit Name.(Max 25 characters)"
+                  style={{
+                    backgroundColor: `${currentTheme['--list-background-color']}`,
+                    color: `${currentTheme['--main-text-coloure']}`,
+                    border: `1px solid ${currentTheme['--border-color']}`,
+                    borderColor: is_board_newname_empty ? 'red' : currentTheme['--border-color'],
+                    ['--placeholder-color' as any]: currentTheme['--due-date-color'] || '#888',
+                  } as React.CSSProperties}
+                />
+                <div className="board_name_update_buttons_cont_onmobile" >
+
+                  <button
+                    onClick={() => handleBoardNameUpdate()}
+                    style={{
+                      color: `${currentTheme['--main-text-coloure']}`,
+                      border: `1px solid ${currentTheme['--background-color']}`,
+                    }}
+                    className="save_btn_onmobile"
+                  >
+                    Save
+                  </button>
+
+                  <button
+                    onClick={() => {
+                      setIsMobileBoardNameUpdateModalOpen(false);
+                      setIs_board_newname_empty(false);
+                      setNewBoardName('');
+                    }}
+                    style={{
+                      color: `${currentTheme['--main-text-coloure']}`,
+                      border: `1px solid ${currentTheme['--background-color']}`,
+                    }}
+                    className="cancel_btn_onmobile"
+                  >
+                    Cancel
+                  </button>
+
+                </div>
+              </div>
+            </div>,
+            document.body
+          )}
 
           {isBoardEditing ? (
             <div className="board_name_inp_cont" >
@@ -407,22 +545,46 @@ const Members: React.FC<MembersProps> = ({
                 value={newBoardName}
                 onChange={(e) => setNewBoardName(e.target.value)}
                 className="board_name_input"
-                placeholder="Enter new board name"
+                placeholder="Edit Name.(Max 25 characters)"
+                style={{
+                  backgroundColor: `${currentTheme['--list-background-color']}`,
+                  color: `${currentTheme['--main-text-coloure']}`,
+                  border: `1px solid ${currentTheme['--border-color']}`,
+                  borderColor: is_board_newname_empty ? 'red' : currentTheme['--border-color'],
+                  ['--placeholder-color' as any]: currentTheme['--due-date-color'] || '#888',
+                } as React.CSSProperties}
               />
               <GrFormCheckmark
                 style={{ color: `${currentTheme['--main-text-coloure']}` }}
                 className="save_board_name_icon"
-                onClick={() => { handleBoardNameUpdate() }}
+                onClick={() => { board_name_update_icon_click() }}
               />
               <HiOutlineXMark
                 style={{ color: `${currentTheme['--main-text-coloure']}` }}
                 className="discard_board_name_icon"
-                onClick={() => setIsBoardEditing(false)}
+                onClick={() => { setIsBoardEditing(false); setIs_board_newname_empty(false); setNewBoardName(''); }}
               />
             </div>
           ) : (
             <>
-              <h3 className="board_name" style={{ color: `${currentTheme['--main-text-coloure']}` }} >{selectedBoard?.name}</h3>
+              {/* aq unda davayeno skeletoni  */}
+              <h3 className="board_name" style={{ color: `${currentTheme['--main-text-coloure']}` }} >
+                {isMobile
+                  ? (
+                    <p className="board_name_text" >
+                      {selectedBoard?.name && selectedBoard?.name.length > 10
+                        ? `${selectedBoard?.name.slice(0, 10)}...`
+                        : selectedBoard?.name}
+                    </p>
+                  )
+                  : (
+                    <p>
+                      {selectedBoard?.name}
+                    </p>
+                  )
+                }
+              </h3>
+
               {is_current_user_admin_or_owner && (
 
                 <MdModeEdit
@@ -444,6 +606,7 @@ const Members: React.FC<MembersProps> = ({
                   message={`Are you sure you want to delete the board "${selectedBoard?.name}"?`}
                   onConfirm={delete_board}
                   onCancel={canselBoardDelete}
+                  currentTheme={currentTheme}
                 />
               )}
             </>
@@ -565,9 +728,9 @@ const Members: React.FC<MembersProps> = ({
               <div className="each_user_child_container">
                 {is_members_refreshing ? (
                   <div className="users_skeleton_container" >
-                    <SkeletonEachUser currentTheme={currentTheme} />
-                    <SkeletonEachUser currentTheme={currentTheme} />
-                    <SkeletonEachUser currentTheme={currentTheme} />
+                    <SkeletonEachUser currentTheme={currentTheme}  isMobile={isMobile} />
+                    <SkeletonEachUser currentTheme={currentTheme}  isMobile={isMobile} />
+                    <SkeletonEachUser currentTheme={currentTheme}  isMobile={isMobile} />
                   </div>
 
                 ) : (
@@ -601,11 +764,13 @@ const Members: React.FC<MembersProps> = ({
                                 backgroundColor: getAvatarStyles(boardUser.username.charAt(0)).backgroundColor,
                                 color: getAvatarStyles(boardUser.username.charAt(0)).color
                               }}
+                              sx={{ width: !isMobile ? 30 : 60, height: !isMobile ? 30 : 60 }}
+
                             >
                               {boardUser.username.charAt(0).toUpperCase()}
                             </Avatar>
                           )}
-                          <p>{boardUser.username}</p>
+                          <p className="boarduser_name" style={{ color: currentTheme['--main-text-coloure'] }} >{boardUser.username}</p>
                           <p className="boarduser_email" style={{ color: currentTheme['--due-date-color'] }} >{boardUser.email}</p>
                         </div>
 
@@ -624,6 +789,12 @@ const Members: React.FC<MembersProps> = ({
                                 className="select_status"
                                 value={boardUser.user_status}
                                 onChange={(e) => handleStatusChange(boardUser.id, e.target.value)}
+                                style={{
+                                  backgroundColor: currentTheme['--task-background-color'],
+                                  color: currentTheme['--main-text-coloure'],
+                                  border: `1px solid ${currentTheme['--border-color']}`,
+
+                                }}
                               >
                                 <option value="admin">admin</option>
                                 <option value="member">member</option>
@@ -649,19 +820,21 @@ const Members: React.FC<MembersProps> = ({
                       message={`Are you sure you want to leav the board "${selectedBoard?.name}"?`}
                       onConfirm={handleLeaveBoard}
                       onCancel={() => setIs_leaving_board(false)}
+                      currentTheme={currentTheme}
                     />
                   )}
                 </div>
               )}
 
               {isDeletingSelectedUser && (
-                <div className="delete_user_window">
-                  <div className="dark_background_for_delete" ></div>
-                  <p>Do you want to delete board: <b>{current_board_user_to_delete.username}</b> from current board?</p>
-                  <button onClick={() => handleDeleteUser(current_board_user_to_delete.id)} >Yes</button>
-                  <button onClick={() => setIsDeletingSelectedUser(false)} >No</button>
-                </div>
+                <ConfirmationDialog
+                  message={`Are you sure you want to delete the user "${current_board_user_to_delete.username}" from the board "${selectedBoard?.name}"?`}
+                  onConfirm={() => handleDeleteUser(current_board_user_to_delete.id)}
+                  onCancel={() => setIsDeletingSelectedUser(false)}
+                  currentTheme={currentTheme}
+                />
               )}
+
             </div>
           </div>,
           document.body

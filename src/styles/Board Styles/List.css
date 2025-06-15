@@ -11,10 +11,26 @@
 
 }
 
+
+
+
+
 .list_title_and_buttons.scrolled {
   box-shadow: 0 4px 12px -4px rgba(0, 0, 0, 0.15);
   z-index: 2;
 }
+
+.list_name_input{
+  width: 220px;
+  height: 20px;
+  border-radius: 5px;
+  padding: 5px;
+  border: 1px solid;
+  outline: none;
+  transition: border-color 0.2s ease;
+  border: 1px solid;
+}
+
 
 .list_title {
   margin: 0px;
@@ -67,6 +83,7 @@
   transition: background-color 0.3s;
   display: inline-block;
   min-width: 300px;
+  min-height: 50px;
   margin-left: 20px;
   max-height: 95%;
   overflow-y: auto;
@@ -94,7 +111,7 @@
   border-radius: 5px;
   padding: 6px 16px;
   font-size: 15px;
-  font-weight: 500;
+  font-weight: 600;
   cursor: pointer;
   transition: background 0.2s, box-shadow 0.2s;
   margin-top: 5px;

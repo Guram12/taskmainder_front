@@ -4,7 +4,6 @@ import { ThemeSpecs } from '../../utils/theme';
 import Members from '../Members';
 import List from './Lists';
 import { board } from '../../utils/interface';
-import { isMobile } from 'react-device-detect'; // Install react-device-detect
 import { ProfileData } from '../../utils/interface';
 import { Board_Users } from '../../utils/interface';
 import SkeletonLoader from './SkeletonLoader';
@@ -23,11 +22,6 @@ import {
 } from '@dnd-kit/core';
 import Task from './Tasks';
 
-if (isMobile) {
-  console.log('Running on a mobile device');
-}
-
-
 
 
 export interface BoardsProps {
@@ -45,6 +39,7 @@ export interface BoardsProps {
   isBoardsLoaded: boolean;
   setIsLoading: (isLoading: boolean) => void;
   is_members_refreshing: boolean;
+  isMobile: boolean; 
 
 }
 
@@ -62,7 +57,7 @@ const Boards: React.FC<BoardsProps> = ({
   isBoardsLoaded,
   setIsLoading,
   is_members_refreshing,
-
+  isMobile,
 }) => {
   const [boardData, setBoardData] = useState<board>({
     id: 0,
@@ -80,6 +75,8 @@ const Boards: React.FC<BoardsProps> = ({
   const [isAddingList, setIsAddingList] = useState<boolean>(false);
   const [Adding_new_list, setAdding_new_list] = useState<boolean>(false);
   const [ListName, setListName] = useState<string>('');
+
+  const [updatingListNameId, setUpdatingListNameId] = useState<number | null>(null);
 
 
   const [allCurrentBoardUsers, setAllCurrentBoardUsers] = useState<ProfileData[]>([]);
@@ -233,6 +230,7 @@ const Boards: React.FC<BoardsProps> = ({
             const updatedLists = prevData.lists.map((list) =>
               list.id === payload.list_id ? { ...list, name: payload.new_name } : list
             );
+            setUpdatingListNameId(null);
             return { ...prevData, lists: updatedLists };
           });
           break;
@@ -546,6 +544,11 @@ const Boards: React.FC<BoardsProps> = ({
   // =================================================== add list =========================================================
 
   const addList = () => {
+    if (!ListName.trim()) {
+      console.error('List name cannot be empty');
+      return;
+    }
+
     if (socketRef.current && socketRef.current.readyState === WebSocket.OPEN) {
       setIsAddingList(true); //loading state for list adding 
 
@@ -843,11 +846,13 @@ const Boards: React.FC<BoardsProps> = ({
               setBoards={setBoards}
               boards={boards}
               is_members_refreshing={is_members_refreshing}
+              isMobile={isMobile}
             />
 
           )}
         </div>
       )}
+
 
 
       {isBoardsLoaded && boards.length === 0 && (
@@ -874,6 +879,8 @@ const Boards: React.FC<BoardsProps> = ({
                   addTask={addTask}
                   deleteTask={deleteTask}
                   updateTask={updateTask}
+                  setUpdatingListNameId={setUpdatingListNameId}
+                  updatingListNameId={updatingListNameId}
                   socketRef={socketRef}
                   currentTheme={currentTheme}
                   deleteList={deleteList}
@@ -895,7 +902,18 @@ const Boards: React.FC<BoardsProps> = ({
                 >
                   {!Adding_new_list ?
                     (
-                      <button onClick={() => setAdding_new_list(true)} >Create List</button>
+                      <button
+                        onClick={() => setAdding_new_list(true)}
+                        className='add_new_list_btn'
+                        style={{
+                          backgroundColor: currentTheme['--task-background-color'],
+                          color: currentTheme['--main-text-coloure'],
+                          borderColor: currentTheme['--border-color'],
+
+                        }}
+                      >
+                        Create List
+                      </button>
                     )
                     :
                     (
@@ -906,9 +924,42 @@ const Boards: React.FC<BoardsProps> = ({
                           value={ListName}
                           onChange={(e) => setListName(e.target.value)}
                           required
+                          style={{
+                            background: currentTheme['--task-background-color'],
+                            color: currentTheme['--main-text-coloure'],
+                            borderColor: currentTheme['--border-color'],
+                            ['--placeholder-color' as any]: currentTheme['--due-date-color'] || '#888',
+                          } as React.CSSProperties}
+                          className='add_new_list_input'
                         />
-                        <button onClick={() => addList()}  >Add</button>
-                        <button onClick={() => setAdding_new_list(false)}  >Cansel</button>
+                        <button
+                          onClick={() => addList()}
+                          style={{
+                            backgroundColor: currentTheme['--task-background-color'],
+                            color: currentTheme['--main-text-coloure'],
+                            borderColor: currentTheme['--border-color'],
+                            cursor: ListName.trim() === '' ? 'not-allowed' : 'pointer',
+                          }}
+                          className='save_new_list_btn'
+                          disabled={ListName.trim() === ''}
+                        >
+                          Add
+                        </button>
+                        <button
+                          onClick={() => {
+                            setAdding_new_list(false);
+                            setListName('');
+                          }}
+                          style={{
+                            backgroundColor: currentTheme['--task-background-color'],
+                            color: currentTheme['--main-text-coloure'],
+                            borderColor: currentTheme['--border-color'],
+                          }}
+                          className='cancel_new_list_btn'
+
+                        >
+                          Cancel
+                        </button>
                       </div>
                     )
                   }

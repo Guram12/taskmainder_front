@@ -5,16 +5,17 @@ import { ThemeSpecs } from '../../utils/theme';
 
 interface SkeletonEachUserProps {
   currentTheme: ThemeSpecs;
+  isMobile: boolean; // Optional prop for mobile view
 }
 
 
-const SkeletonEachUser: React.FC<SkeletonEachUserProps> = ({ currentTheme }) => {
+const SkeletonEachUser: React.FC<SkeletonEachUserProps> = ({ currentTheme, isMobile }) => {
   return (
     <div className="skeleton_user_container" style={{ backgroundColor: currentTheme['--task-background-color'] }}>
       <div className='skeleton_user_info'>
         <Skeleton
-          width={30}
-          height={30}
+          width={isMobile ? 60 : 30}
+          height={isMobile ? 60 : 30}
           circle={true}
           style={{ marginLeft: '10px' }}
           highlightColor={currentTheme['--main-text-coloure']}

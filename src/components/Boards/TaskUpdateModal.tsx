@@ -587,6 +587,7 @@ const TaskUpdateModal: React.FC<TaskUpdateModalProps> = ({ task, onClose, update
               message={`Are you sure you want to delete the task "${task.title}"?`}
               onConfirm={confirmDelete}
               onCancel={cancelDelete}
+              currentTheme={currentTheme}
             />
           )}
 
