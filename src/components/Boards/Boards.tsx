@@ -4,7 +4,6 @@ import { ThemeSpecs } from '../../utils/theme';
 import Members from '../Members';
 import List from './Lists';
 import { board } from '../../utils/interface';
-import { isMobile } from 'react-device-detect'; // Install react-device-detect
 import { ProfileData } from '../../utils/interface';
 import { Board_Users } from '../../utils/interface';
 import SkeletonLoader from './SkeletonLoader';
@@ -23,11 +22,6 @@ import {
 } from '@dnd-kit/core';
 import Task from './Tasks';
 
-if (isMobile) {
-  console.log('Running on a mobile device');
-}
-
-
 
 
 export interface BoardsProps {
@@ -45,6 +39,7 @@ export interface BoardsProps {
   isBoardsLoaded: boolean;
   setIsLoading: (isLoading: boolean) => void;
   is_members_refreshing: boolean;
+  isMobile: boolean; 
 
 }
 
@@ -62,7 +57,7 @@ const Boards: React.FC<BoardsProps> = ({
   isBoardsLoaded,
   setIsLoading,
   is_members_refreshing,
-
+  isMobile,
 }) => {
   const [boardData, setBoardData] = useState<board>({
     id: 0,
@@ -851,11 +846,13 @@ const Boards: React.FC<BoardsProps> = ({
               setBoards={setBoards}
               boards={boards}
               is_members_refreshing={is_members_refreshing}
+              isMobile={isMobile}
             />
 
           )}
         </div>
       )}
+
 
 
       {isBoardsLoaded && boards.length === 0 && (
