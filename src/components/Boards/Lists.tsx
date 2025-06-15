@@ -15,6 +15,7 @@ import { useDroppable } from '@dnd-kit/core';
 import { UniqueIdentifier } from '@dnd-kit/core';
 import Sortable from 'sortablejs';
 import type { SortableEvent } from 'sortablejs';
+import Skeleton from 'react-loading-skeleton';
 
 interface ListProps {
   currentTheme: ThemeSpecs;
@@ -23,6 +24,8 @@ interface ListProps {
   addTask: (listId: number, taskTitle: string) => void;
   deleteTask: (taskId: number, listId: number) => void;
   updateTask: (taskId: number, updatedTitle: string, due_date: string | null, description: string, completed: boolean, task_associated_users_id: number[], priority: 'green' | 'orange' | 'red' | null,) => void;
+  setUpdatingListNameId: (updatingListNameId: number | null) => void;
+  updatingListNameId: number | null;
   socketRef: React.RefObject<WebSocket>;
   deleteList: (listId: number) => void;
   updateListName: (listId: number, newName: string) => void;
@@ -44,6 +47,8 @@ const List: React.FC<ListProps> = ({
   allCurrentBoardUsers,
   isLoading,
   dndListId,
+  setUpdatingListNameId,
+  updatingListNameId,
 }) => {
 
   const [isListEditing, setIsListEditing] = useState<boolean>(false);
@@ -142,7 +147,7 @@ const List: React.FC<ListProps> = ({
       return;
     }
     // if user push enter key than update the list name
-
+    setUpdatingListNameId(list.id);
     setlistInputNameErrorMessage(''); // Clear the error message if validation passes
     updateListName(list.id, newListName);
     setIsListEditing(false);
@@ -190,13 +195,23 @@ const List: React.FC<ListProps> = ({
           />
         ) : (
           <>
-            <h3
-              className='list_title'
-              style={{ color: currentTheme['--main-text-coloure'] }}
-              onClick={() => setIsListEditing(true)}
-            >
-              {list.name}
-            </h3>
+            {updatingListNameId === list.id ?
+              (
+                <Skeleton
+                  width="100px"
+                  height="20px"
+                  highlightColor={currentTheme['--main-text-coloure']}
+                  baseColor={currentTheme['--list-background-color']}
+                />
+              ) : (
+                <h3
+                  className='list_title'
+                  style={{ color: currentTheme['--main-text-coloure'] }}
+                  onClick={() => setIsListEditing(true)}
+                >
+                  {list.name}
+                </h3>
+              )}
           </>
         )}
         <div className='list_buttons' style={{ color: currentTheme['--main-text-coloure'] }} >

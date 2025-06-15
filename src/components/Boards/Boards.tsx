@@ -81,6 +81,8 @@ const Boards: React.FC<BoardsProps> = ({
   const [Adding_new_list, setAdding_new_list] = useState<boolean>(false);
   const [ListName, setListName] = useState<string>('');
 
+  const [updatingListNameId, setUpdatingListNameId] = useState<number | null>(null);
+
 
   const [allCurrentBoardUsers, setAllCurrentBoardUsers] = useState<ProfileData[]>([]);
 
@@ -233,6 +235,7 @@ const Boards: React.FC<BoardsProps> = ({
             const updatedLists = prevData.lists.map((list) =>
               list.id === payload.list_id ? { ...list, name: payload.new_name } : list
             );
+            setUpdatingListNameId(null);
             return { ...prevData, lists: updatedLists };
           });
           break;
@@ -874,6 +877,8 @@ const Boards: React.FC<BoardsProps> = ({
                   addTask={addTask}
                   deleteTask={deleteTask}
                   updateTask={updateTask}
+                  setUpdatingListNameId={setUpdatingListNameId}
+                  updatingListNameId={updatingListNameId}
                   socketRef={socketRef}
                   currentTheme={currentTheme}
                   deleteList={deleteList}
