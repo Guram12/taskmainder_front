@@ -230,7 +230,7 @@
 /* ================================================ add task button styles ==================================== */
 
 .new_task_input {
-  width: 100%;
+  width: 290px;
   height: 30px;
   border-radius: 5px;
   padding: 5px;

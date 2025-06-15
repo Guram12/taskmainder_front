@@ -549,6 +549,11 @@ const Boards: React.FC<BoardsProps> = ({
   // =================================================== add list =========================================================
 
   const addList = () => {
+    if (!ListName.trim()) {
+      console.error('List name cannot be empty');
+      return;
+    }
+
     if (socketRef.current && socketRef.current.readyState === WebSocket.OPEN) {
       setIsAddingList(true); //loading state for list adding 
 
@@ -900,7 +905,18 @@ const Boards: React.FC<BoardsProps> = ({
                 >
                   {!Adding_new_list ?
                     (
-                      <button onClick={() => setAdding_new_list(true)} >Create List</button>
+                      <button
+                        onClick={() => setAdding_new_list(true)}
+                        className='add_new_list_btn'
+                        style={{
+                          backgroundColor: currentTheme['--task-background-color'],
+                          color: currentTheme['--main-text-coloure'],
+                          borderColor: currentTheme['--border-color'],
+
+                        }}
+                      >
+                        Create List
+                      </button>
                     )
                     :
                     (
@@ -911,9 +927,42 @@ const Boards: React.FC<BoardsProps> = ({
                           value={ListName}
                           onChange={(e) => setListName(e.target.value)}
                           required
+                          style={{
+                            background: currentTheme['--task-background-color'],
+                            color: currentTheme['--main-text-coloure'],
+                            borderColor: currentTheme['--border-color'],
+                            ['--placeholder-color' as any]: currentTheme['--due-date-color'] || '#888',
+                          } as React.CSSProperties}
+                          className='add_new_list_input'
                         />
-                        <button onClick={() => addList()}  >Add</button>
-                        <button onClick={() => setAdding_new_list(false)}  >Cansel</button>
+                        <button
+                          onClick={() => addList()}
+                          style={{
+                            backgroundColor: currentTheme['--task-background-color'],
+                            color: currentTheme['--main-text-coloure'],
+                            borderColor: currentTheme['--border-color'],
+                            cursor: ListName.trim() === '' ? 'not-allowed' : 'pointer',
+                          }}
+                          className='save_new_list_btn'
+                          disabled={ListName.trim() === ''}
+                        >
+                          Add
+                        </button>
+                        <button
+                          onClick={() => {
+                            setAdding_new_list(false);
+                            setListName('');
+                          }}
+                          style={{
+                            backgroundColor: currentTheme['--task-background-color'],
+                            color: currentTheme['--main-text-coloure'],
+                            borderColor: currentTheme['--border-color'],
+                          }}
+                          className='cancel_new_list_btn'
+
+                        >
+                          Cancel
+                        </button>
                       </div>
                     )
                   }

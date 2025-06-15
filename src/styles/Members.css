@@ -68,6 +68,11 @@
   padding-left: 5px;
   border: none;
   outline: none;
+  width: 200px;
+}
+
+.board_name_input::placeholder {
+  color: var(--placeholder-color, #aaa);
 }
 
 .save_board_name_icon {

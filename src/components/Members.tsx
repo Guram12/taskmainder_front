@@ -251,11 +251,23 @@ const Members: React.FC<MembersProps> = ({
   // =============================================   Edit board name   ========================================================
 
 
+  const [is_board_newname_empty, setIs_board_newname_empty] = useState<boolean>(false);
+
   const handle_edit_board_click = () => {
     setIsBoardEditing(true);
   }
 
   const handleBoardNameUpdate = () => {
+    if (!newBoardName.trim()) {
+      setIs_board_newname_empty(true);
+      return;
+    }
+    // if length of  string is more than 25. i should not allow to update board name
+    if (newBoardName.length > 25) {
+      alert("Board name cannot be more than 25 characters long.");
+      setIs_board_newname_empty(true);
+      return;
+    }
     console.log('Updating board name:', newBoardName);
 
     // Create the updated boards array
@@ -397,8 +409,8 @@ const Members: React.FC<MembersProps> = ({
 
       {/* board name and icons for editing and deleting board, and board name */}
       <>
-        <FaClipboardList className='board_icon' style={{ fill: `${currentTheme['--main-text-coloure']}` }} />
         <div className="board_name_cont">
+          <FaClipboardList className='board_icon' style={{ fill: `${currentTheme['--main-text-coloure']}` }} />
 
           {isBoardEditing ? (
             <div className="board_name_inp_cont" >
@@ -407,7 +419,14 @@ const Members: React.FC<MembersProps> = ({
                 value={newBoardName}
                 onChange={(e) => setNewBoardName(e.target.value)}
                 className="board_name_input"
-                placeholder="Enter new board name"
+                placeholder="Edit Name.(Max 25 characters)"
+                style={{
+                  backgroundColor: `${currentTheme['--list-background-color']}`,
+                  color: `${currentTheme['--main-text-coloure']}`,
+                  border: `1px solid ${currentTheme['--border-color']}`,
+                  borderColor: is_board_newname_empty ? 'red' : currentTheme['--border-color'],
+                  ['--placeholder-color' as any]: currentTheme['--due-date-color'] || '#888',
+                } as React.CSSProperties}
               />
               <GrFormCheckmark
                 style={{ color: `${currentTheme['--main-text-coloure']}` }}
@@ -417,12 +436,14 @@ const Members: React.FC<MembersProps> = ({
               <HiOutlineXMark
                 style={{ color: `${currentTheme['--main-text-coloure']}` }}
                 className="discard_board_name_icon"
-                onClick={() => setIsBoardEditing(false)}
+                onClick={() => { setIsBoardEditing(false); setIs_board_newname_empty(false); setNewBoardName(''); }}
               />
             </div>
           ) : (
             <>
+              {/* aq unda davayeno skeletoni  */}
               <h3 className="board_name" style={{ color: `${currentTheme['--main-text-coloure']}` }} >{selectedBoard?.name}</h3>
+
               {is_current_user_admin_or_owner && (
 
                 <MdModeEdit
