@@ -155,6 +155,9 @@ const List: React.FC<ListProps> = ({
     }
   }
 
+  const handleSaveListNameIconClick = () => {
+    handleUpdateListName();
+  };
 
   return (
     <div
@@ -177,20 +180,30 @@ const List: React.FC<ListProps> = ({
             value={newListName}
             onChange={(e) => setNewListName(e.target.value)}
             style={{
-              border: listInputNameErrorMessage ? '1px solid red' : '1px solid #ccc',
+              borderColor: listInputNameErrorMessage ? 'red' : currentTheme['--border-color'],
               outline: listInputNameErrorMessage ? 'none' : '',
+              backgroundColor: currentTheme['--task-background-color'],
             }}
             onKeyDown={handleKeyDown}
             placeholder="List Name"
+            className='list_name_input'
           />
         ) : (
-          <h3 className='list_title' style={{ color: currentTheme['--main-text-coloure'] }} onClick={() => setIsListEditing(true)} >{list.name}</h3>
+          <>
+            <h3
+              className='list_title'
+              style={{ color: currentTheme['--main-text-coloure'] }}
+              onClick={() => setIsListEditing(true)}
+            >
+              {list.name}
+            </h3>
+          </>
         )}
         <div className='list_buttons' style={{ color: currentTheme['--main-text-coloure'] }} >
           {isListEditing ? (
             <>
-              <GrFormCheckmark className='edit_list_icon' onClick={() => handleUpdateListName()} />
-              <HiOutlineXMark className='delete_list_icon' onClick={() => setIsListEditing(false)} />
+              <GrFormCheckmark className='edit_list_icon' onClick={() => handleSaveListNameIconClick()} />
+              <HiOutlineXMark className='delete_list_icon' onClick={() => { setIsListEditing(false); setNewListName(list.name) }} />
             </>
           ) :
             <>
@@ -251,7 +264,8 @@ const List: React.FC<ListProps> = ({
                 background: currentTheme['--task-background-color'],
                 color: currentTheme['--main-text-coloure'],
                 borderColor: currentTheme['--border-color'],
-              }}
+                ['--placeholder-color' as any]: currentTheme['--due-date-color'] || '#888',
+              } as React.CSSProperties}
               className='new_task_input'
             />
 

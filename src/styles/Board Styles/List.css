@@ -11,10 +11,26 @@
 
 }
 
+
+
+
+
 .list_title_and_buttons.scrolled {
   box-shadow: 0 4px 12px -4px rgba(0, 0, 0, 0.15);
   z-index: 2;
 }
+
+.list_name_input{
+  width: 220px;
+  height: 20px;
+  border-radius: 5px;
+  padding: 5px;
+  border: 1px solid;
+  outline: none;
+  transition: border-color 0.2s ease;
+  border: 1px solid;
+}
+
 
 .list_title {
   margin: 0px;
