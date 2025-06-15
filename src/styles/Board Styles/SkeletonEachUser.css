@@ -27,3 +27,26 @@
 
   gap: 10px;
 }
+
+@media screen and (max-width: 768px) {
+  .skeleton_user_container {
+    width: 300px !important;
+    height: 60px;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    max-height: none;
+    justify-content: flex-start;
+    height: 250px;
+  }
+
+  .skeleton_user_info {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 20px;
+  }
+
+
+}

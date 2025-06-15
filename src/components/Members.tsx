@@ -728,9 +728,9 @@ const Members: React.FC<MembersProps> = ({
               <div className="each_user_child_container">
                 {is_members_refreshing ? (
                   <div className="users_skeleton_container" >
-                    <SkeletonEachUser currentTheme={currentTheme} />
-                    <SkeletonEachUser currentTheme={currentTheme} />
-                    <SkeletonEachUser currentTheme={currentTheme} />
+                    <SkeletonEachUser currentTheme={currentTheme}  isMobile={isMobile} />
+                    <SkeletonEachUser currentTheme={currentTheme}  isMobile={isMobile} />
+                    <SkeletonEachUser currentTheme={currentTheme}  isMobile={isMobile} />
                   </div>
 
                 ) : (
@@ -764,11 +764,13 @@ const Members: React.FC<MembersProps> = ({
                                 backgroundColor: getAvatarStyles(boardUser.username.charAt(0)).backgroundColor,
                                 color: getAvatarStyles(boardUser.username.charAt(0)).color
                               }}
+                              sx={{ width: !isMobile ? 30 : 60, height: !isMobile ? 30 : 60 }}
+
                             >
                               {boardUser.username.charAt(0).toUpperCase()}
                             </Avatar>
                           )}
-                          <p>{boardUser.username}</p>
+                          <p className="boarduser_name" style={{ color: currentTheme['--main-text-coloure'] }} >{boardUser.username}</p>
                           <p className="boarduser_email" style={{ color: currentTheme['--due-date-color'] }} >{boardUser.email}</p>
                         </div>
 
@@ -787,6 +789,12 @@ const Members: React.FC<MembersProps> = ({
                                 className="select_status"
                                 value={boardUser.user_status}
                                 onChange={(e) => handleStatusChange(boardUser.id, e.target.value)}
+                                style={{
+                                  backgroundColor: currentTheme['--task-background-color'],
+                                  color: currentTheme['--main-text-coloure'],
+                                  border: `1px solid ${currentTheme['--border-color']}`,
+
+                                }}
                               >
                                 <option value="admin">admin</option>
                                 <option value="member">member</option>
@@ -819,13 +827,14 @@ const Members: React.FC<MembersProps> = ({
               )}
 
               {isDeletingSelectedUser && (
-                <div className="delete_user_window">
-                  <div className="dark_background_for_delete" ></div>
-                  <p>Do you want to delete board: <b>{current_board_user_to_delete.username}</b> from current board?</p>
-                  <button onClick={() => handleDeleteUser(current_board_user_to_delete.id)} >Yes</button>
-                  <button onClick={() => setIsDeletingSelectedUser(false)} >No</button>
-                </div>
+                <ConfirmationDialog
+                  message={`Are you sure you want to delete the user "${current_board_user_to_delete.username}" from the board "${selectedBoard?.name}"?`}
+                  onConfirm={() => handleDeleteUser(current_board_user_to_delete.id)}
+                  onCancel={() => setIsDeletingSelectedUser(false)}
+                  currentTheme={currentTheme}
+                />
               )}
+
             </div>
           </div>,
           document.body
