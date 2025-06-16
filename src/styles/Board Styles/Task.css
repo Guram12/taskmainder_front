@@ -262,6 +262,10 @@
   border-radius: 30px;
 }
 
+.move_if_description{
+  margin-left: 30px;
+}
+
 /* ================================================ add task button styles ==================================== */
 
 .new_task_input {

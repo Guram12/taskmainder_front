@@ -154,17 +154,17 @@ const Task: React.FC<TaskProps> = ({ task,
             >
               <div className='completed_task_icon_cont' >
                 {completingTaskId === task.id ? (
-                  <div className='completing_task_loader_container'> 
+                  <div className='completing_task_loader_container'>
 
-                  <PuffLoader
-                    className='completing_task_loader'
-                    color={currentTheme['--main-text-coloure']}
-                    size={15}
+                    <PuffLoader
+                      className='completing_task_loader'
+                      color={currentTheme['--main-text-coloure']}
+                      size={15}
                     />
-                    </div>
+                  </div>
 
                 ) : (
-                  <>
+                  < >
                     {task.completed ? (
                       <MdRadioButtonChecked
                         className='completed_task_icon'
@@ -192,7 +192,7 @@ const Task: React.FC<TaskProps> = ({ task,
 
 
               {task.priority && (
-                <div className='priority_div' style={getPriorityStyle(task.priority)} />
+                <div className={`priority_div  ${task.description ? '' : 'move_if_description'}`} style={getPriorityStyle(task.priority)} />
               )}
 
               <div className='edit_drag_icon_container'>
