@@ -39,7 +39,7 @@ export interface BoardsProps {
   isBoardsLoaded: boolean;
   setIsLoading: (isLoading: boolean) => void;
   is_members_refreshing: boolean;
-  isMobile: boolean; 
+  isMobile: boolean;
 
 }
 
@@ -68,7 +68,8 @@ const Boards: React.FC<BoardsProps> = ({
     owner_email: '',
     members: [],
     board_users: [],
-    background_image: null
+    background_image: null,
+    creation_date: '',
 
   });
 
@@ -80,6 +81,9 @@ const Boards: React.FC<BoardsProps> = ({
 
 
   const [allCurrentBoardUsers, setAllCurrentBoardUsers] = useState<ProfileData[]>([]);
+
+  const [updatingTaskId, setUpdatingTaskId] = useState<number | null>(null);
+  const [completingTaskId, setCompletingTaskId] = useState<number | null>(null);
 
 
   const [loadingLists, setLoadingLists] = useState<{ [listId: number]: boolean }>({});
@@ -133,14 +137,6 @@ const Boards: React.FC<BoardsProps> = ({
     if (socketRef.current) {
       socketRef.current.close();
     }
-
-    // const token = localStorage.getItem('access_token');
-    // // Detect protocol and set ws or wss accordingly
-    // const protocol = window.location.protocol === 'https:' ? 'wss' : 'ws';
-    // // Use your backend's public domain or tunnel endpoint, NOT window.location.hostname
-    // const backendHost = '446952c95fe5eac0751e5291d4fbd6ca.serveo.net'; // your backend domain or tunnel
-    // const newSocket = new WebSocket(`ws://${backendHost}/ws/boards/${selectedBoard.id}/?token=${token}`);
-    // socketRef.current = newSocket;
 
 
     const token = localStorage.getItem('access_token');
@@ -288,6 +284,8 @@ const Boards: React.FC<BoardsProps> = ({
                 } : task
               ),
             }));
+            setUpdatingTaskId(null);
+            setCompletingTaskId(null);
             return { ...prevData, lists: updatedLists };
           });
           break;
@@ -344,7 +342,9 @@ const Boards: React.FC<BoardsProps> = ({
             owner_email: '',
             members: [],
             board_users: [],
-            background_image: null
+            background_image: null,
+            creation_date: '',
+
           });
 
           if (payload.board_id) {
@@ -440,7 +440,6 @@ const Boards: React.FC<BoardsProps> = ({
 
 
   // ================================================== Update task =========================================================
-
 
 
   const updateTask = (
@@ -847,6 +846,7 @@ const Boards: React.FC<BoardsProps> = ({
               boards={boards}
               is_members_refreshing={is_members_refreshing}
               isMobile={isMobile}
+              profileData={profileData}
             />
 
           )}
@@ -891,6 +891,10 @@ const Boards: React.FC<BoardsProps> = ({
                   boardData={boardData}
                   // DND-KIT: Pass listId for droppable
                   dndListId={list.id}
+                  setUpdatingTaskId={setUpdatingTaskId}
+                  updatingTaskId={updatingTaskId}
+                  setCompletingTaskId={setCompletingTaskId}
+                  completingTaskId={completingTaskId}
                 />
               ))}
               {isAddingList && (
@@ -973,9 +977,13 @@ const Boards: React.FC<BoardsProps> = ({
                   task={activeTask.task}
                   deleteTask={() => { }}
                   updateTask={() => { }}
+                  setUpdatingTaskId={() => { }}
+                  updatingTaskId={null}
                   currentTheme={currentTheme}
                   allCurrentBoardUsers={allCurrentBoardUsers}
                   dndListId={activeTask.listId}
+                  setCompletingTaskId={setCompletingTaskId}
+                  completingTaskId={completingTaskId}
                 />
               ) : null}
             </DragOverlay>

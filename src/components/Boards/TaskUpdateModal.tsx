@@ -1,5 +1,5 @@
 import '../../styles/Board Styles/TaskUpdateModal.css';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { tasks } from '../../utils/interface';
 import { ThemeSpecs } from '../../utils/theme';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
@@ -31,16 +31,28 @@ interface TaskUpdateModalProps {
   currentTheme: ThemeSpecs;
   allCurrentBoardUsers: ProfileData[];
   associatedUsers: ProfileData[];
+  setUpdatingTaskId: (updatingTaskId: number | null) => void;
 
 }
 
-const TaskUpdateModal: React.FC<TaskUpdateModalProps> = ({ task, onClose, updateTask, deleteTask, currentTheme, allCurrentBoardUsers, associatedUsers }) => {
+const TaskUpdateModal: React.FC<TaskUpdateModalProps> = ({
+  task,
+  onClose,
+  updateTask,
+  deleteTask,
+  currentTheme,
+  allCurrentBoardUsers,
+  associatedUsers,
+  setUpdatingTaskId,
+}) => {
+
   const [updatedTitle, setUpdatedTitle] = useState<string>(task.title);
   const [isTitleUpdating, setIsTitleUpdating] = useState<boolean>(false);
 
   const [updatedDescription, setUpdatedDescription] = useState<string>(task.description || '');
   const [isDescriptionUpdating, setIsDescriptionUpdating] = useState<boolean>(false);
 
+  const [caracter_limit, setCaracter_limit] = useState(1000 - updatedTitle.length);
 
 
 
@@ -58,6 +70,11 @@ const TaskUpdateModal: React.FC<TaskUpdateModalProps> = ({ task, onClose, update
 
 
   const handleUpdate = () => {
+    if (updatedTitle.trim() === '') {
+      return;
+    }
+
+    setUpdatingTaskId(task.id);
     if (updatedTitle.trim()) {
       const combinedDueDateTime =
         updatedDueDate && updatedDueTime
@@ -78,6 +95,15 @@ const TaskUpdateModal: React.FC<TaskUpdateModalProps> = ({ task, onClose, update
       onClose();
     }
   };
+  // ======================================= cancel update if title is empty =========================================
+  const handle_save_title_click = () => {
+    if (updatedTitle.trim() === '') {
+      return;
+    }
+    setIsTitleUpdating(false);
+  }
+
+  // ===================================================================================================================
   const handleClearDueDate = () => {
     setUpdatedDueDate(null);
     setUpdatedDueTime(null);
@@ -246,6 +272,12 @@ const TaskUpdateModal: React.FC<TaskUpdateModalProps> = ({ task, onClose, update
     }),
   };
 
+  // ============================================ show caracter length ================================
+
+
+  useEffect(() => {
+    setCaracter_limit(1000 - updatedTitle.length);
+  }, [updatedTitle]);
 
 
   return (
@@ -255,7 +287,10 @@ const TaskUpdateModal: React.FC<TaskUpdateModalProps> = ({ task, onClose, update
           <h3 className='update_task_header' >Update Task</h3>
           <div className='sistle_and_titleicon_container'>
             <MdOutlineSubtitles className='title_icon' style={{ color: currentTheme['--main-text-coloure'] }} />
-            <h3 className='title_p' style={{ color: currentTheme['--main-text-coloure'] }}>Title </h3>
+            <h3 className='title_p' style={{ color: currentTheme['--main-text-coloure'] }}>Title</h3>
+            <p className='title_char_limit' style={{ color: currentTheme['--due-date-color'] }}
+              onClick={() => setCaracter_limit(1000 - updatedTitle.length)}
+            >( {caracter_limit} characters left)</p>
           </div>
           {isTitleUpdating ? (
             <div className='task_title_input_container'>
@@ -268,14 +303,16 @@ const TaskUpdateModal: React.FC<TaskUpdateModalProps> = ({ task, onClose, update
                 style={{
                   backgroundColor: currentTheme['--background-color'],
                   color: currentTheme['--main-text-coloure'],
-                  borderColor: currentTheme['--border-color'],
+                  borderColor: caracter_limit === 1000 ? 'red' : currentTheme['--border-color'],
                   outline: 'none',
                   transition: 'border-color 0.2s',
                 }}
               />
-              <GrFormCheckmark className='title_checkmark_icon' onClick={() => {
-                setIsTitleUpdating(false);
-              }} />
+              <GrFormCheckmark
+                className='title_checkmark_icon'
+                onClick={() => handle_save_title_click()}
+                style={{ cursor: caracter_limit === 1000 ? 'not-allowed' : 'pointer' }}
+              />
               <HiXMark className='title_close_icon' onClick={handleCancelTitleUpdate} />
             </div>
           ) : (
@@ -353,7 +390,7 @@ const TaskUpdateModal: React.FC<TaskUpdateModalProps> = ({ task, onClose, update
               borderStyle: updatedPriority === 'green' ? 'solid' : undefined,
               borderColor: currentTheme['--main-text-coloure'],
             }}
-          ></div>
+          >Low</div>
           <div
             className='each_priority medium'
             onClick={() => setUpdatedPriority('orange')}
@@ -362,7 +399,7 @@ const TaskUpdateModal: React.FC<TaskUpdateModalProps> = ({ task, onClose, update
               borderStyle: updatedPriority === 'orange' ? 'solid' : undefined,
               borderColor: currentTheme['--main-text-coloure'],
             }}
-          ></div>
+          >Medium</div>
           <div
             className='each_priority high'
             onClick={() => setUpdatedPriority('red')}
@@ -371,7 +408,7 @@ const TaskUpdateModal: React.FC<TaskUpdateModalProps> = ({ task, onClose, update
               borderStyle: updatedPriority === 'red' ? 'solid' : undefined,
               borderColor: currentTheme['--main-text-coloure'],
             }}
-          ></div>
+          >High</div>
 
         </div>
 
@@ -563,6 +600,7 @@ const TaskUpdateModal: React.FC<TaskUpdateModalProps> = ({ task, onClose, update
                 style={{
                   backgroundColor: currentTheme['--task-background-color'],
                   borderColor: currentTheme['--border-color'],
+                  cursor: updatedTitle.trim() === '' ? 'not-allowed' : 'pointer',
                 }}
                 onClick={handleUpdate}
               >

@@ -18,14 +18,14 @@ export const templates: Template[] = [
       {
         name: "Backlog",
         tasks: [
-          { title: "Research API integration", description: "", due_date: null, priority: 'green' },
+          { title: "Research API integration", description: "Investigate available APIs and document integration steps.", due_date: null, priority: 'green' },
           { title: "Design wireframes", description: "", due_date: null, priority: 'orange' },
         ],
       },
       {
         name: "In Progress",
         tasks: [
-          { title: "Implement authentication", description: "", due_date: null, priority: 'red' },
+          { title: "Implement authentication", description: "Set up user login and registration using JWT.", due_date: null, priority: 'red' },
         ],
       },
       {
@@ -37,7 +37,7 @@ export const templates: Template[] = [
       {
         name: "Done",
         tasks: [
-          { title: "Set up project repository", description: "", due_date: null, priority: 'green' },
+          { title: "Set up project repository", description: "Initialized GitHub repository and added README.", due_date: null, priority: 'green' },
         ],
       },
     ],
@@ -53,14 +53,14 @@ export const templates: Template[] = [
       {
         name: "Health Goals",
         tasks: [
-          { title: "Morning workout", description: "", due_date: null, priority: 'orange' },
-          { title: "Meal prep", description: "", due_date: null, priority: 'red' },
+          { title: "Morning workout", description: "30-minute cardio and strength training routine.", due_date: null, priority: 'orange' },
+          { title: "Meal prep", description: "Prepare healthy lunches for the week.", due_date: null, priority: 'red' },
         ],
       },
       {
         name: "Learning Goals",
         tasks: [
-          { title: "Complete TypeScript course", description: "", due_date: null, priority: 'green' },
+          { title: "Complete TypeScript course", description: "Finish all modules and quizzes on the online platform.", due_date: null, priority: 'green' },
           { title: "Read a book", description: "", due_date: null, priority: null },
         ],
       },
@@ -78,19 +78,19 @@ export const templates: Template[] = [
         name: "To Do",
         tasks: [
           { title: "Book venue", description: "", due_date: null, priority: 'red' },
-          { title: "Send invitations", description: "", due_date: null, priority: 'green' },
+          { title: "Send invitations", description: "Email digital invitations to all guests.", due_date: null, priority: 'green' },
         ],
       },
       {
         name: "In Progress",
         tasks: [
-          { title: "Order decorations", description: "", due_date: null, priority: 'orange' },
+          { title: "Order decorations", description: "Purchase balloons, banners, and tableware online.", due_date: null, priority: 'orange' },
         ],
       },
       {
         name: "Completed",
         tasks: [
-          { title: "Plan menu", description: "", due_date: null, priority: null },
+          { title: "Plan menu", description: "Decided on food and drinks for the event.", due_date: null, priority: null },
         ],
       },
     ],

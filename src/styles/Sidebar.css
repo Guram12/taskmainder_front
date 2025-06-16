@@ -125,6 +125,11 @@
   border: none;
 }
 
+.add_board_input::placeholder {
+  color: var(--placeholder-color);
+  font-size: medium;
+}
+
 .add_board_button_container {
   display: flex;
   justify-content: center;

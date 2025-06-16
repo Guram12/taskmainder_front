@@ -8,11 +8,10 @@
   padding: 5px;
   transition: background-color 0.3s;
   min-height: 33px;
-
+  border-bottom-left-radius: 15px;
+  border-bottom-right-radius: 15px;
+  transition: border-radius 0.7s ease;
 }
-
-
-
 
 
 .list_title_and_buttons.scrolled {
@@ -20,7 +19,7 @@
   z-index: 2;
 }
 
-.list_name_input{
+.list_name_input {
   width: 220px;
   height: 20px;
   border-radius: 5px;
@@ -120,4 +119,61 @@
 
 .add_new_task_button:hover {
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.newtask_adding_buttons {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 5px;
+}
+
+
+.add_task_button_2 {
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background 0.2s, box-shadow 0.2s;
+  transition: all 0.3s ease;
+  height: 42px;
+  width: 52px !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.add_task_button_2:hover {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  background-color: rgb(21, 207, 138) !important;
+
+}
+
+.add_task_button_2_icon {
+  width: 70%;
+  height: 70%;
+}
+
+.cancel_task_button {
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background 0.2s, box-shadow 0.2s;
+  transition: all 0.3s ease;
+  height: 42px;
+  width: 52px !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.cancel_task_button:hover {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  background-color: #DB0000 !important;
+}
+
+.cancel_task_button_icon {
+  width: 70%;
+  height: 70%;
 }

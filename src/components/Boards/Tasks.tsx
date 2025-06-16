@@ -15,7 +15,9 @@ import getAvatarStyles from '../../utils/SetRandomColor';
 import { useDraggable } from '@dnd-kit/core';
 import { RxDragHandleDots2 } from "react-icons/rx";
 import ReactDOM from 'react-dom';
-
+import SkeletonEachTask from './SkeletonEachTask';
+import { PiTextAlignLeft } from "react-icons/pi";
+import PuffLoader from 'react-spinners/PuffLoader';
 
 
 interface TaskProps {
@@ -25,6 +27,10 @@ interface TaskProps {
   currentTheme: ThemeSpecs;
   allCurrentBoardUsers: ProfileData[];
   dndListId: number;
+  setUpdatingTaskId: (updatingTaskId: number | null) => void;
+  updatingTaskId: number | null;
+  setCompletingTaskId: (completingTaskId: number | null) => void;
+  completingTaskId: number | null;
 }
 
 
@@ -34,6 +40,10 @@ const Task: React.FC<TaskProps> = ({ task,
   currentTheme,
   allCurrentBoardUsers,
   dndListId,
+  setUpdatingTaskId,
+  updatingTaskId,
+  setCompletingTaskId,
+  completingTaskId,
 }) => {
   const [showUpdateModal, setShowUpdateModal] = useState(false);
   const [associatedUsers, setAssociatedUsers] = useState<ProfileData[]>([]);
@@ -123,119 +133,161 @@ const Task: React.FC<TaskProps> = ({ task,
 
   return (
     <>
-      <div
-        className={`each_task ${isDragging ? 'dragging' : ''}`}
-        ref={setNodeRef}
-        style={{
-          opacity: isDragging ? 0.5 : 1,
-          backgroundColor: currentTheme['--task-background-color'],
-          color: currentTheme['--main-text-coloure'],
-        }}
-        data-task-id={task.id}
-      >
-        <div
-          className='task_complition_checkbox_container'
-          style={{ borderColor: currentTheme['--border-color'] }}
-        >
-          {task.completed ? (
-            <MdRadioButtonChecked className='completed_task_icon' onClick={() => handleCompletionToggle(task)} />
-          ) : (
-            <MdRadioButtonUnchecked className='not_completed_task_icon' onClick={() => handleCompletionToggle(task)} />
-          )}
-          {task.priority && (
-            <div className='priority_div' style={getPriorityStyle(task.priority)} />
-          )}
+      {updatingTaskId === task.id ? (
+        <SkeletonEachTask currentTheme={currentTheme} />
+      )
+        :
+        (
+          <div
+            className={`each_task ${isDragging ? 'dragging' : ''}`}
+            ref={setNodeRef}
+            style={{
+              opacity: isDragging ? 0.5 : 1,
+              backgroundColor: currentTheme['--task-background-color'],
+              color: currentTheme['--main-text-coloure'],
+            }}
+            data-task-id={task.id}
+          >
+            <div
+              className='task_complition_checkbox_container'
+              style={{ borderColor: currentTheme['--border-color'] }}
+            >
+              <div className='completed_task_icon_cont' >
+                {completingTaskId === task.id ? (
+                  <div className='completing_task_loader_container'>
 
-          <div className='edit_drag_icon_container'>
-            <MdModeEdit className='edit_task_icon' onClick={handleTaskClick} />
-            <div className='drag_bouth_handlers_container'>
+                    <PuffLoader
+                      className='completing_task_loader'
+                      color={currentTheme['--main-text-coloure']}
+                      size={15}
+                    />
+                  </div>
 
-              {/* ============  for reordering  tasks within list =======================*/}
-              <div className='reorder_container' >
-                <BiMoveVertical className='reorder_icon' />
+                ) : (
+                  < >
+                    {task.completed ? (
+                      <MdRadioButtonChecked
+                        className='completed_task_icon'
+                        onClick={() => {
+                          handleCompletionToggle(task);
+                          setCompletingTaskId(task.id);
+                        }}
+                      />
+                    ) : (
+                      <MdRadioButtonUnchecked
+                        className='not_completed_task_icon'
+                        onClick={() => {
+                          handleCompletionToggle(task);
+                          setCompletingTaskId(task.id);
+                        }}
+                      />
+                    )}
+                  </>
+                )}
+
+                {task.description && (
+                  <PiTextAlignLeft className='task_description_icon' title='Task Description' />
+                )}
               </div>
 
-              {/*============= for drag and drop from list to list =======================*/}
-              <div
-                className="drag_handle"
-                {...listeners}
-                {...attributes}
-                style={{ cursor: 'grab', touchAction: 'none' }} // touchAction: 'none' helps on mobile
-              >
-                <RxDragHandleDots2 className='drag_icon' />
+
+              {task.priority && (
+                <div className={`priority_div  ${task.description ? '' : 'move_if_description'}`} style={getPriorityStyle(task.priority)} />
+              )}
+
+              <div className='edit_drag_icon_container'>
+                <MdModeEdit className='edit_task_icon' onClick={handleTaskClick} />
+                <div className='drag_bouth_handlers_container'>
+
+                  {/* ============  for reordering  tasks within list =======================*/}
+                  <div className='reorder_container' >
+                    <BiMoveVertical className='reorder_icon' />
+                  </div>
+
+                  {/*============= for drag and drop from list to list =======================*/}
+                  <div
+                    className="drag_handle"
+                    {...listeners}
+                    {...attributes}
+                    style={{ cursor: 'grab', touchAction: 'none' }} // touchAction: 'none' helps on mobile
+                  >
+                    <RxDragHandleDots2 className='drag_icon' />
+                  </div>
+                </div>
               </div>
             </div>
-          </div>
-        </div>
 
-        <div className={`conteiner_for_task_title ${task.completed ? 'task_completed' : ''}`} >
-          <p className='task_title'>{task.title}</p>
-        </div>
+            <div className={`conteiner_for_task_title ${task.completed ? 'task_completed' : ''}`} >
+              <p className='task_title'>{task.title}</p>
+            </div>
 
 
-        <div className='task_description_and_due_date_container' >
-          {task.due_date ? (
-            <p className='due_Date_p' style={{ color: currentTheme["--due-date-color"] }}>Due Date: {formatDate(task.due_date)}</p>
-          ) : (
-            <p className='due_Date_p' style={{ color: currentTheme["--due-date-color"] }}>No due date</p>
-          )}
+            <div className='task_description_and_due_date_container' >
+              {task.due_date ? (
+                <p className='due_Date_p' style={{ color: currentTheme["--due-date-color"] }}>Due Date: {formatDate(task.due_date)}</p>
+              ) : (
+                <p className='due_Date_p' style={{ color: currentTheme["--due-date-color"] }}>No due date</p>
+              )}
 
-          <div className='associated_users_imgs_container'>
-            {associatedUsers.length > 0 ? (
-              associatedUsers.map((user) => (
-                <div key={user.id} className='associated_user_img_container'>
-                  {user.profile_picture ? (
+              <div className='associated_users_imgs_container'>
+                {associatedUsers.length > 0 ? (
+                  associatedUsers.map((user) => (
+                    <div key={user.id} className='associated_user_img_container'>
+                      {user.profile_picture ? (
 
-                    <img
-                      key={user.id}
-                      src={user.profile_picture}
-                      alt={user.username}
-                      className='associated_user_image'
-                      title={user.username}
-                    />
+                        <img
+                          key={user.id}
+                          src={user.profile_picture}
+                          alt={user.username}
+                          className='associated_user_image'
+                          title={user.username}
+                        />
 
 
-                  ) : (
-                    <Avatar
-                      key={user.id}
-                      sx={{
-                        width: 20,
-                        height: 20,
-                        fontSize: '0.75rem',
-                        backgroundColor: getAvatarStyles(user.username.charAt(0)).backgroundColor,
-                        color: getAvatarStyles(user.username.charAt(0)).color,
-                      }}
-                      className='associated_user_image'
-                      title={user.username}
-                    >
-                      {user.username.charAt(0).toUpperCase()}
-                    </Avatar>
-                  )}
-                </div>
-              ))
-            ) : (
-              <p className='no_associated_users_p' style={{ color: currentTheme["--due-date-color"] }} >No associated users</p> // Fallback if no associated users
+                      ) : (
+                        <Avatar
+                          key={user.id}
+                          sx={{
+                            width: 20,
+                            height: 20,
+                            fontSize: '0.75rem',
+                            backgroundColor: getAvatarStyles(user.username.charAt(0)).backgroundColor,
+                            color: getAvatarStyles(user.username.charAt(0)).color,
+                          }}
+                          className='associated_user_image'
+                          title={user.username}
+                        >
+                          {user.username.charAt(0).toUpperCase()}
+                        </Avatar>
+                      )}
+                    </div>
+                  ))
+                ) : (
+                  <p className='no_associated_users_p' style={{ color: currentTheme["--due-date-color"] }} >No associated users</p> // Fallback if no associated users
+                )}
+              </div>
+
+            </div>
+
+
+            {showUpdateModal && ReactDOM.createPortal(
+              <ThemeProvider theme={MUI_Theme}>
+                <TaskUpdateModal
+                  task={task}
+                  updateTask={updateTask}
+                  onClose={handle_update_modal_close}
+                  currentTheme={currentTheme}
+                  allCurrentBoardUsers={allCurrentBoardUsers}
+                  associatedUsers={associatedUsers}
+                  deleteTask={deleteTask}
+                  setUpdatingTaskId={setUpdatingTaskId}
+                />
+              </ThemeProvider>,
+              document.body
             )}
           </div>
-
-        </div>
-
-
-        {showUpdateModal && ReactDOM.createPortal(
-          <ThemeProvider theme={MUI_Theme}>
-            <TaskUpdateModal
-              task={task}
-              updateTask={updateTask}
-              onClose={handle_update_modal_close}
-              currentTheme={currentTheme}
-              allCurrentBoardUsers={allCurrentBoardUsers}
-              associatedUsers={associatedUsers}
-              deleteTask={deleteTask}
-            />
-          </ThemeProvider>,
-          document.body
         )}
-      </div>
+
     </>
 
   );

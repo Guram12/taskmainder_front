@@ -20,7 +20,7 @@ const SkeletonEachTask: React.FC<SkeletonEachTaskProps> = ({ currentTheme }) => 
   return (
     <div className="skeleton_task_container" style={{ backgroundColor: currentTheme['--task-background-color'] }}>
       <Skeleton
-        width={250}
+        width={280}
         height={20}
         highlightColor={currentTheme['--main-text-coloure']}
         baseColor={currentTheme['--list-background-color']}

@@ -411,21 +411,24 @@ const SidebarComponent: React.FC<SidebarProps> = ({
                 >
                   {isOpen && (
                     <div className='mapped_boards_container' >
-                      {boards.map((board: board) => (
-                        <MenuItem
-                          key={board.id}
-                          rootStyles={{
-                            transition: 'all 0.3s',
-                            color: selectedBoard?.id === board.id ? 'seagreen' : 'white',
-                            textAlign: 'left',
-                            fontWeight: 'bold',
-                          }}
-                          icon={<FaClipboardList />}
-                          onClick={() => handleBoardClick(board)}
-                        >
-                          {board.name}
-                        </MenuItem>
-                      ))}
+                      {boards
+                        .slice()
+                        .sort((a, b) => new Date(a.creation_date).getTime() - new Date(b.creation_date).getTime())
+                        .map((board: board) => (
+                          <MenuItem
+                            key={board.id}
+                            rootStyles={{
+                              transition: 'all 0.3s',
+                              color: selectedBoard?.id === board.id ? 'seagreen' : 'white',
+                              textAlign: 'left',
+                              fontWeight: 'bold',
+                            }}
+                            icon={<FaClipboardList />}
+                            onClick={() => handleBoardClick(board)}
+                          >
+                            {board.name}
+                          </MenuItem>
+                        ))}
                     </div>
                   )}
                   {boards.length === 0 && !isBoardsLoaded && (
@@ -469,7 +472,9 @@ const SidebarComponent: React.FC<SidebarProps> = ({
                               color: currentTheme['--main-text-coloure'],
                               border: `1px solid `,
                               borderColor: currentTheme['--border-color'],
-                            }}
+                              ['--placeholder-color']: currentTheme['--due-date-color'],
+                            } as React.CSSProperties}
+                            
                           />
                           <div className='add_board_button_container' >
                             <GrFormCheckmark onClick={() => handle_create_new_board()} className='add_board_icon' />

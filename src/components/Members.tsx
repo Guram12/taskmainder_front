@@ -19,8 +19,7 @@ import { TbRefresh } from "react-icons/tb";
 import SkeletonEachUser from "./Boards/SkeletonEachUser";
 import ReactDOM from 'react-dom';
 import { MdDeleteForever } from "react-icons/md";
-
-
+import { ProfileData } from "../utils/interface";
 
 
 
@@ -38,7 +37,8 @@ interface MembersProps {
   setBoards: (boards: board[]) => void;
   boards: board[];
   is_members_refreshing: boolean;
-  isMobile: boolean; // Optional prop for mobile view
+  isMobile: boolean;
+  profileData: ProfileData;
 }
 
 const Members: React.FC<MembersProps> = ({
@@ -56,6 +56,7 @@ const Members: React.FC<MembersProps> = ({
   boards,
   is_members_refreshing,
   isMobile,
+  profileData,
 }) => {
 
   const [isUsersWindowOpen, setIsUsersWindowOpen] = useState<boolean>(false);
@@ -647,7 +648,8 @@ const Members: React.FC<MembersProps> = ({
                       backgroundColor: currentTheme['--task-background-color'],
                       color: currentTheme['--main-text-coloure'],
                       border: `1px solid ${currentTheme['--border-color']}`,
-                    }}
+                      ['--placeholder-color']: currentTheme['--due-date-color'],
+                    } as React.CSSProperties}
                     className="search_input"
                   />
 
@@ -728,9 +730,9 @@ const Members: React.FC<MembersProps> = ({
               <div className="each_user_child_container">
                 {is_members_refreshing ? (
                   <div className="users_skeleton_container" >
-                    <SkeletonEachUser currentTheme={currentTheme}  isMobile={isMobile} />
-                    <SkeletonEachUser currentTheme={currentTheme}  isMobile={isMobile} />
-                    <SkeletonEachUser currentTheme={currentTheme}  isMobile={isMobile} />
+                    <SkeletonEachUser currentTheme={currentTheme} isMobile={isMobile} />
+                    <SkeletonEachUser currentTheme={currentTheme} isMobile={isMobile} />
+                    <SkeletonEachUser currentTheme={currentTheme} isMobile={isMobile} />
                   </div>
 
                 ) : (
@@ -770,7 +772,7 @@ const Members: React.FC<MembersProps> = ({
                               {boardUser.username.charAt(0).toUpperCase()}
                             </Avatar>
                           )}
-                          <p className="boarduser_name" style={{ color: currentTheme['--main-text-coloure'] }} >{boardUser.username}</p>
+                          <p className="boarduser_name" style={{ color: currentTheme['--main-text-coloure'] }} >{boardUser.username} {boardUser.id === profileData.id ? '(me)' : ''}</p>
                           <p className="boarduser_email" style={{ color: currentTheme['--due-date-color'] }} >{boardUser.email}</p>
                         </div>
 

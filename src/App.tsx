@@ -95,6 +95,7 @@ const App: React.FC = () => {
     members: [],
     board_users: [],
     background_image: null,
+    creation_date: '',
   });
 
   const [isBoardsLoaded, setIsBoardsLoaded] = useState<boolean>(false);

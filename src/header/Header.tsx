@@ -54,7 +54,7 @@ const Header: React.FC<HeaderProps> = ({
 
   // 
   useEffect(() => {
-    if (location.pathname === "/" || location.pathname === "/register" ||location.pathname === '/error') {
+    if (location.pathname === "/" || location.pathname === "/register" || location.pathname === '/error') {
       setShowHeader(false);
     }
     else {
@@ -126,8 +126,9 @@ const Header: React.FC<HeaderProps> = ({
         key,
         label: (
           <div
-            className={`header_coloure_child_container example${idx + 2}`}
+            className={`header_coloure_child_container  example${idx + 2}`}
             onClick={() => changeTheme(themes[key as keyof typeof themes])}
+            id="ttt"
           />
         ),
       })),
@@ -138,10 +139,12 @@ const Header: React.FC<HeaderProps> = ({
             className='custom_theme_container_in_header'
             style={{
               backgroundColor: saved_custom_theme['--background-color'],
-              borderColor: saved_custom_theme['--border-color']
+              borderColor: saved_custom_theme['--border-color'],
+              color: saved_custom_theme['--main-text-coloure'],
             }}
             onClick={handle_return_to_custom_theme}
           >
+
             Custom Theme
           </div>
         ),
@@ -167,6 +170,7 @@ const Header: React.FC<HeaderProps> = ({
           </div>
         ),
       },
+
       {
         key: 'ka',
         label: (
@@ -182,6 +186,9 @@ const Header: React.FC<HeaderProps> = ({
       },
     ],
   };
+
+
+  // =====================================================================================================================
 
 
   return (

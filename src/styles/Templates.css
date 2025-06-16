@@ -36,6 +36,23 @@
   text-align: left;
 }
 
+.select_template_button{
+  width: 150px;
+  height: auto;
+  padding: 3px;
+  border: 1px solid ;
+  border-radius: 5px;
+  font-size: 16px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.select_template_button:hover {
+  background-color: #00AA77 !important;
+  box-shadow: 0 4px 6px rgba(0 0 0 / 0.34);
+  cursor: pointer;
+}
+
 
 .template_card {
   background-size: cover;
