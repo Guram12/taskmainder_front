@@ -16,6 +16,12 @@ import { UniqueIdentifier } from '@dnd-kit/core';
 import Sortable from 'sortablejs';
 import type { SortableEvent } from 'sortablejs';
 import Skeleton from 'react-loading-skeleton';
+import { HiXMark } from "react-icons/hi2";
+
+
+
+
+
 
 interface ListProps {
   currentTheme: ThemeSpecs;
@@ -281,37 +287,42 @@ const List: React.FC<ListProps> = ({
               value={newTaskTitle}
               onChange={(e) => setNewTaskTitle(e.target.value)}
               disabled={isLoading}
+              className='new_task_input'
               style={{
                 background: currentTheme['--task-background-color'],
                 color: currentTheme['--main-text-coloure'],
                 borderColor: currentTheme['--border-color'],
                 ['--placeholder-color' as any]: currentTheme['--due-date-color'] || '#888',
               } as React.CSSProperties}
-              className='new_task_input'
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') handleAddTask();
+              }}
+
             />
+            
+            <div
+              className='add_task_button_2'
+              onClick={handleAddTask}
+              style={{
+                background: currentTheme['--task-background-color'],
+                color: currentTheme['--main-text-coloure'],
+              }}
+            >
+              <GrFormCheckmark className='add_task_button_2_icon' />
+            </div>
 
-            <div className='adding_task_buttons_cont' >
-
-              <button
-                className='add_task_button_2'
-                onClick={handleAddTask}
-                style={{
-                  background: currentTheme['--task-background-color'],
-                  color: currentTheme['--main-text-coloure'],
-                }}
-              >Add</button>
-              <button
-                className='cancel_task_button'
-                onClick={() => {
-                  setIsAddingTask(false);
-                  setNewTaskTitle('');
-                }}
-                style={{
-                  background: currentTheme['--task-background-color'],
-                  color: currentTheme['--main-text-coloure'],
-                }}
-              >
-                Cancel</button>
+            <div
+              className='cancel_task_button'
+              onClick={() => {
+                setIsAddingTask(false);
+                setNewTaskTitle('');
+              }}
+              style={{
+                background: currentTheme['--task-background-color'],
+                color: currentTheme['--main-text-coloure'],
+              }}
+            >
+              <HiXMark className='cancel_task_button_icon' />
             </div>
           </div>
         )}

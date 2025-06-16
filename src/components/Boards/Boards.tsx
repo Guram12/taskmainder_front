@@ -842,6 +842,7 @@ const Boards: React.FC<BoardsProps> = ({
               boards={boards}
               is_members_refreshing={is_members_refreshing}
               isMobile={isMobile}
+              profileData={profileData}
             />
 
           )}

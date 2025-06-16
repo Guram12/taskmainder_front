@@ -120,3 +120,60 @@
 .add_new_task_button:hover {
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
+
+.newtask_adding_buttons {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 5px;
+}
+
+
+.add_task_button_2 {
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background 0.2s, box-shadow 0.2s;
+  transition: all 0.3s ease;
+  height: 42px;
+  width: 52px !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.add_task_button_2:hover {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  background-color: rgb(21, 207, 138) !important;
+
+}
+
+.add_task_button_2_icon {
+  width: 70%;
+  height: 70%;
+}
+
+.cancel_task_button {
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background 0.2s, box-shadow 0.2s;
+  transition: all 0.3s ease;
+  height: 42px;
+  width: 52px !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.cancel_task_button:hover {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  background-color: #DB0000 !important;
+}
+
+.cancel_task_button_icon {
+  width: 70%;
+  height: 70%;
+}

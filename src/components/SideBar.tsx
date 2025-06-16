@@ -472,7 +472,9 @@ const SidebarComponent: React.FC<SidebarProps> = ({
                               color: currentTheme['--main-text-coloure'],
                               border: `1px solid `,
                               borderColor: currentTheme['--border-color'],
-                            }}
+                              ['--placeholder-color']: currentTheme['--due-date-color'],
+                            } as React.CSSProperties}
+                            
                           />
                           <div className='add_board_button_container' >
                             <GrFormCheckmark onClick={() => handle_create_new_board()} className='add_board_icon' />
