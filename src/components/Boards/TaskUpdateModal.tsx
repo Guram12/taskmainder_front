@@ -390,7 +390,7 @@ const TaskUpdateModal: React.FC<TaskUpdateModalProps> = ({
               borderStyle: updatedPriority === 'green' ? 'solid' : undefined,
               borderColor: currentTheme['--main-text-coloure'],
             }}
-          ></div>
+          >Low</div>
           <div
             className='each_priority medium'
             onClick={() => setUpdatedPriority('orange')}
@@ -399,7 +399,7 @@ const TaskUpdateModal: React.FC<TaskUpdateModalProps> = ({
               borderStyle: updatedPriority === 'orange' ? 'solid' : undefined,
               borderColor: currentTheme['--main-text-coloure'],
             }}
-          ></div>
+          >Medium</div>
           <div
             className='each_priority high'
             onClick={() => setUpdatedPriority('red')}
@@ -408,7 +408,7 @@ const TaskUpdateModal: React.FC<TaskUpdateModalProps> = ({
               borderStyle: updatedPriority === 'red' ? 'solid' : undefined,
               borderColor: currentTheme['--main-text-coloure'],
             }}
-          ></div>
+          >High</div>
 
         </div>
 

@@ -17,6 +17,7 @@ import { RxDragHandleDots2 } from "react-icons/rx";
 import ReactDOM from 'react-dom';
 import SkeletonEachTask from './SkeletonEachTask';
 import { PiTextAlignLeft } from "react-icons/pi";
+import PuffLoader from 'react-spinners/PuffLoader';
 
 
 interface TaskProps {
@@ -28,6 +29,8 @@ interface TaskProps {
   dndListId: number;
   setUpdatingTaskId: (updatingTaskId: number | null) => void;
   updatingTaskId: number | null;
+  setCompletingTaskId: (completingTaskId: number | null) => void;
+  completingTaskId: number | null;
 }
 
 
@@ -39,6 +42,8 @@ const Task: React.FC<TaskProps> = ({ task,
   dndListId,
   setUpdatingTaskId,
   updatingTaskId,
+  setCompletingTaskId,
+  completingTaskId,
 }) => {
   const [showUpdateModal, setShowUpdateModal] = useState(false);
   const [associatedUsers, setAssociatedUsers] = useState<ProfileData[]>([]);
@@ -148,11 +153,36 @@ const Task: React.FC<TaskProps> = ({ task,
               style={{ borderColor: currentTheme['--border-color'] }}
             >
               <div className='completed_task_icon_cont' >
+                {completingTaskId === task.id ? (
+                  <div className='completing_task_loader_container'> 
 
-                {task.completed ? (
-                  <MdRadioButtonChecked className='completed_task_icon' onClick={() => handleCompletionToggle(task)} />
+                  <PuffLoader
+                    className='completing_task_loader'
+                    color={currentTheme['--main-text-coloure']}
+                    size={15}
+                    />
+                    </div>
+
                 ) : (
-                  <MdRadioButtonUnchecked className='not_completed_task_icon' onClick={() => handleCompletionToggle(task)} />
+                  <>
+                    {task.completed ? (
+                      <MdRadioButtonChecked
+                        className='completed_task_icon'
+                        onClick={() => {
+                          handleCompletionToggle(task);
+                          setCompletingTaskId(task.id);
+                        }}
+                      />
+                    ) : (
+                      <MdRadioButtonUnchecked
+                        className='not_completed_task_icon'
+                        onClick={() => {
+                          handleCompletionToggle(task);
+                          setCompletingTaskId(task.id);
+                        }}
+                      />
+                    )}
+                  </>
                 )}
 
                 {task.description && (

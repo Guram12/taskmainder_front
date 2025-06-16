@@ -82,6 +82,9 @@ const Boards: React.FC<BoardsProps> = ({
 
   const [allCurrentBoardUsers, setAllCurrentBoardUsers] = useState<ProfileData[]>([]);
 
+  const [updatingTaskId, setUpdatingTaskId] = useState<number | null>(null);
+  const [completingTaskId, setCompletingTaskId] = useState<number | null>(null);
+
 
   const [loadingLists, setLoadingLists] = useState<{ [listId: number]: boolean }>({});
 
@@ -282,6 +285,7 @@ const Boards: React.FC<BoardsProps> = ({
               ),
             }));
             setUpdatingTaskId(null);
+            setCompletingTaskId(null);
             return { ...prevData, lists: updatedLists };
           });
           break;
@@ -436,9 +440,6 @@ const Boards: React.FC<BoardsProps> = ({
 
 
   // ================================================== Update task =========================================================
-
-  const [updatingTaskId, setUpdatingTaskId] = useState<number | null>(null);
-
 
 
   const updateTask = (
@@ -892,6 +893,8 @@ const Boards: React.FC<BoardsProps> = ({
                   dndListId={list.id}
                   setUpdatingTaskId={setUpdatingTaskId}
                   updatingTaskId={updatingTaskId}
+                  setCompletingTaskId={setCompletingTaskId}
+                  completingTaskId={completingTaskId}
                 />
               ))}
               {isAddingList && (
@@ -979,6 +982,8 @@ const Boards: React.FC<BoardsProps> = ({
                   currentTheme={currentTheme}
                   allCurrentBoardUsers={allCurrentBoardUsers}
                   dndListId={activeTask.listId}
+                  setCompletingTaskId={setCompletingTaskId}
+                  completingTaskId={completingTaskId}
                 />
               ) : null}
             </DragOverlay>
