@@ -281,6 +281,7 @@ const Boards: React.FC<BoardsProps> = ({
                 } : task
               ),
             }));
+            setUpdatingTaskId(null);
             return { ...prevData, lists: updatedLists };
           });
           break;
@@ -435,6 +436,8 @@ const Boards: React.FC<BoardsProps> = ({
 
 
   // ================================================== Update task =========================================================
+
+  const [updatingTaskId, setUpdatingTaskId] = useState<number | null>(null);
 
 
 
@@ -887,6 +890,8 @@ const Boards: React.FC<BoardsProps> = ({
                   boardData={boardData}
                   // DND-KIT: Pass listId for droppable
                   dndListId={list.id}
+                  setUpdatingTaskId={setUpdatingTaskId}
+                  updatingTaskId={updatingTaskId}
                 />
               ))}
               {isAddingList && (
@@ -969,6 +974,8 @@ const Boards: React.FC<BoardsProps> = ({
                   task={activeTask.task}
                   deleteTask={() => { }}
                   updateTask={() => { }}
+                  setUpdatingTaskId={() => { }}
+                  updatingTaskId={null}
                   currentTheme={currentTheme}
                   allCurrentBoardUsers={allCurrentBoardUsers}
                   dndListId={activeTask.listId}

@@ -40,6 +40,8 @@ interface ListProps {
   setBoardData: (boardData: board) => void;
   boardData: board;
   dndListId: UniqueIdentifier;
+  setUpdatingTaskId: (updatingTaskId: number | null) => void;
+  updatingTaskId: number | null;
 }
 
 const List: React.FC<ListProps> = ({
@@ -55,6 +57,8 @@ const List: React.FC<ListProps> = ({
   dndListId,
   setUpdatingListNameId,
   updatingListNameId,
+  setUpdatingTaskId,
+  updatingTaskId,
 }) => {
 
   const [isListEditing, setIsListEditing] = useState<boolean>(false);
@@ -258,6 +262,8 @@ const List: React.FC<ListProps> = ({
               dndListId={list.id}
               currentTheme={currentTheme}
               allCurrentBoardUsers={allCurrentBoardUsers}
+              setUpdatingTaskId={setUpdatingTaskId}
+              updatingTaskId={updatingTaskId}
             />
           </div>
         ))}
