@@ -171,14 +171,19 @@ const List: React.FC<ListProps> = ({
       style={{
         backgroundColor: isOverDnd
           ? `seagreen`
-
           : `${currentTheme['--list-background-color']}`,
         transition: 'background-color 0.3s ease',
       }}
     >
-
       {/* <SkeletonEachTask currentTheme={currentTheme} /> */}
-      <div className='list_title_and_buttons' style={{ backgroundColor: currentTheme['--list-background-color'] }}  >
+      <div className='list_title_and_buttons'
+        style={{
+          backgroundColor: currentTheme['--list-background-color'],
+          color: currentTheme['--main-text-coloure'],
+          borderBottomLeftRadius: isOverDnd ? '15px' : '0',
+          borderBottomRightRadius: isOverDnd ? '15px' : '0',
+        }}
+      >
         {isListEditing ? (
           <input
             type="text"

@@ -8,11 +8,10 @@
   padding: 5px;
   transition: background-color 0.3s;
   min-height: 33px;
-
+  border-bottom-left-radius: 15px;
+  border-bottom-right-radius: 15px;
+  transition: border-radius 0.7s ease;
 }
-
-
-
 
 
 .list_title_and_buttons.scrolled {
@@ -20,7 +19,7 @@
   z-index: 2;
 }
 
-.list_name_input{
+.list_name_input {
   width: 220px;
   height: 20px;
   border-radius: 5px;
