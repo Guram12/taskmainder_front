@@ -23,6 +23,7 @@ export interface board {
   members: string[];
   board_users: Board_Users[];
   background_image: string | null;
+  creation_date : string;
 }
 
 export interface Board_Users {

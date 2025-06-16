@@ -39,7 +39,7 @@ export interface BoardsProps {
   isBoardsLoaded: boolean;
   setIsLoading: (isLoading: boolean) => void;
   is_members_refreshing: boolean;
-  isMobile: boolean; 
+  isMobile: boolean;
 
 }
 
@@ -68,7 +68,8 @@ const Boards: React.FC<BoardsProps> = ({
     owner_email: '',
     members: [],
     board_users: [],
-    background_image: null
+    background_image: null,
+    creation_date: '',
 
   });
 
@@ -133,14 +134,6 @@ const Boards: React.FC<BoardsProps> = ({
     if (socketRef.current) {
       socketRef.current.close();
     }
-
-    // const token = localStorage.getItem('access_token');
-    // // Detect protocol and set ws or wss accordingly
-    // const protocol = window.location.protocol === 'https:' ? 'wss' : 'ws';
-    // // Use your backend's public domain or tunnel endpoint, NOT window.location.hostname
-    // const backendHost = '446952c95fe5eac0751e5291d4fbd6ca.serveo.net'; // your backend domain or tunnel
-    // const newSocket = new WebSocket(`ws://${backendHost}/ws/boards/${selectedBoard.id}/?token=${token}`);
-    // socketRef.current = newSocket;
 
 
     const token = localStorage.getItem('access_token');
@@ -344,7 +337,9 @@ const Boards: React.FC<BoardsProps> = ({
             owner_email: '',
             members: [],
             board_users: [],
-            background_image: null
+            background_image: null,
+            creation_date: '',
+
           });
 
           if (payload.board_id) {

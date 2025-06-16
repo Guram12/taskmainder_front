@@ -1,10 +1,11 @@
 import "../styles/Templates.css";
 import React from "react";
+import { useState } from "react";
 import { Template } from "../utils/interface";
 import axiosInstance from "../utils/axiosinstance";
 import { templates } from "../utils/Templates";
 import { ThemeSpecs } from "../utils/theme";
-
+import ConfirmationDialog from "./Boards/ConfirmationDialog";
 
 
 interface TemplatesProps {
@@ -16,9 +17,14 @@ interface TemplatesProps {
 
 const Templates: React.FC<TemplatesProps> = ({ handleTemplateSelect, currentTheme, setIsLoading }) => {
 
+  const [dialogTemplateId, setDialogTemplateId] = useState<number | null>(null);
+
+  const handleTemplateClick = (templateId: number) => {
+    setDialogTemplateId(templateId);
+  };
 
 
-  const handle_tanmplate_click = async (template: Template) => {
+  const handle_select_template = async (template: Template) => {
     setIsLoading(true);
 
     try {
@@ -94,8 +100,19 @@ const Templates: React.FC<TemplatesProps> = ({ handleTemplateSelect, currentThem
           <div key={template.id}>
             <div className="template_boardname_button_cont" >
               <h1 className="template_boardname">{template.name}</h1>
-              <button onClick={() => handle_tanmplate_click(template)} >select template</button>
+              <button
+                className="select_template_button"
+                onClick={() => handleTemplateClick(template.id)}
+                style={{
+                  backgroundColor: currentTheme['--task-background-color'],
+                  color: currentTheme['--main-text-coloure'],
+                  borderColor: currentTheme['--background-color'],
+                }}
+              >
+                Select Template
+              </button>
             </div>
+
 
             <div
               key={template.id}
@@ -103,7 +120,11 @@ const Templates: React.FC<TemplatesProps> = ({ handleTemplateSelect, currentThem
               style={{ backgroundImage: `url(${template.background_image})` }}
             >
               {template.lists.map((list) => (
-                <div className="each_template_board_list" key={list.name} style={{ backgroundColor: `${currentTheme['--list-background-color']}` }}>
+                <div
+                  className="each_template_board_list"
+                  key={list.name}
+                  style={{ backgroundColor: `${currentTheme['--list-background-color']}` }}
+                >
                   <p className="template_list_name" style={{ color: currentTheme['--main-text-coloure'] }} > {list.name}</p>
 
                   {list.tasks.map((task) => (
@@ -112,14 +133,24 @@ const Templates: React.FC<TemplatesProps> = ({ handleTemplateSelect, currentThem
                       color: `${currentTheme['--main-text-coloure']}`,
                     }}>
                       <div className="priority" style={getPriorityStyle(task.priority)}></div>
-                      <p className="template_task_p" style={{color: currentTheme['--main-text-coloure']}} >{task.title}</p>
-                      <p className='template_due_Date_p' style={{color: currentTheme['--due-date-color']}} >No due date</p>
+                      <p className="template_task_p" style={{ color: currentTheme['--main-text-coloure'] }} >{task.title}</p>
+                      <p className='template_due_Date_p' style={{ color: currentTheme['--due-date-color'] }} >No due date</p>
                     </div>
                   ))}
                 </div>
               ))}
             </div>
 
+            <div>
+              {dialogTemplateId === template.id && (
+                <ConfirmationDialog
+                  onConfirm={() => handle_select_template(template)}
+                  onCancel={() => setDialogTemplateId(null)}
+                  message={`Are you sure you want to select the template "${template.name}"?`}
+                  currentTheme={currentTheme}
+                />
+              )}
+            </div>
           </div>
         ))}
       </div>
