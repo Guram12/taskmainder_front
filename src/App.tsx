@@ -41,6 +41,10 @@ const App: React.FC = () => {
 
   const [isCustomThemeSelected, setIsCustomThemeSelected] = useState<boolean>(default_is_custom_theme_selected);
 
+useEffect(() => {
+  console.log('language changed to:', language);
+}, [language]);
+
 
   const background_color = localStorage.getItem('background_color') || '#1A252F';
   const border_color = localStorage.getItem('border_color') || '#EAF6FB';
