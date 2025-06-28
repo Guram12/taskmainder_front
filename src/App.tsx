@@ -45,6 +45,11 @@ useEffect(() => {
   console.log('language changed to:', language);
 }, [language]);
 
+ useEffect(() => {  
+  console.log('isCustomThemeSelected changed to:', isCustomThemeSelected);
+  localStorage.setItem('isCustomThemeSelected', String(isCustomThemeSelected));
+    }, [isCustomThemeSelected]);
+
 
   const background_color = localStorage.getItem('background_color') || '#1A252F';
   const border_color = localStorage.getItem('border_color') || '#EAF6FB';
