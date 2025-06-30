@@ -118,17 +118,19 @@
 
 
 .custom_file_input_button {
-  background-color: #121212;
   border: 0px;
   cursor: pointer;
   width: 120px;
   height: 30px;
   border-radius: 5px;
+  border: 1px solid;
   transition: color 0.3s ease, background-color 0.3s ease;
 }
 
 .custom_file_input_button:hover {
-  background-color: #1a1a1a;
+  background-color: seagreen !important;
+  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+  border: none;
 }
 
 
