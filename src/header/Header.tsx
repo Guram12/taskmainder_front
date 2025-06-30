@@ -7,13 +7,14 @@ import { useState, useEffect } from 'react';
 import { ThemeSpecs } from '../utils/theme';
 import themes from '../utils/theme';
 import { useNavigate } from 'react-router-dom';
-import Avatar from '@mui/material/Avatar'; // Import Avatar from Material-UI
+import Avatar from '@mui/material/Avatar';
 import getAvatarStyles from "../utils/SetRandomColor";
 import { Dropdown } from 'antd';
-import { AiFillSkin } from "react-icons/ai"; // Optional: theme icon
-import { GlobalOutlined } from '@ant-design/icons'; // AntD icon for language
+import { AiFillSkin } from "react-icons/ai";
+import { GlobalOutlined } from '@ant-design/icons';
 import type { MenuProps } from 'antd';
-
+import { LuLogOut } from "react-icons/lu";
+import ConfirmationDialog from "../components/Boards/ConfirmationDialog";
 
 interface HeaderProps {
   profileData: ProfileData;
@@ -46,6 +47,10 @@ const Header: React.FC<HeaderProps> = ({
   setLanguage,
   language
 }) => {
+
+
+
+  const [confirmation_for_logout, setConfirmation_for_logout] = useState<boolean>(false);
 
   const [showHeader, setShowHeader] = useState<boolean>(true);
   const location = useLocation();
@@ -84,10 +89,15 @@ const Header: React.FC<HeaderProps> = ({
   }
   // ===========================================================================================
 
+const handle_logout_icon_click = () => {
+    setConfirmation_for_logout(true);
+  }
+
   const handleLogOut = () => {
     localStorage.removeItem('access_token');
     localStorage.removeItem('refresh_token');
     setIsAuthenticated(false);
+    setConfirmation_for_logout(false);
     navigate('/');
   }
 
@@ -314,10 +324,28 @@ const Header: React.FC<HeaderProps> = ({
         </div>
 
         {!isMobile && (
-          <div>
-            <button onClick={handleLogOut}  >logout</button>
+          <div
+            onClick={handle_logout_icon_click}
+            className="header_profile_container"
+          >
+            <LuLogOut
+              size={26}
+              style={{ color: currentTheme['--main-text-coloure'] }}
+              className="header_logout_icon"
+            />
           </div>
         )}
+
+        {confirmation_for_logout && (
+          <ConfirmationDialog
+            message="Are you sure you want to log out?"
+            onConfirm={handleLogOut}
+            onCancel={() => setConfirmation_for_logout(false)}
+            currentTheme={currentTheme}
+          />
+        )}
+
+
       </div>
     </div>
   )
@@ -325,16 +353,6 @@ const Header: React.FC<HeaderProps> = ({
 
 export default Header;
 
-
-
-
-
-// 1F271B for example 1
-// 19647E for example 2
-// 28AFB0 for example 3
-// F4D35E for example 4
-// 708B75 for example 5
-// 005f54 for example 6
 
 
 
