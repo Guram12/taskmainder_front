@@ -1,5 +1,5 @@
 import "../styles/Register.css";
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import axiosInstance from '../utils/axiosinstance';
 import { useNavigate } from 'react-router-dom';
 import timezone_data from "../utils/data.json";
@@ -11,6 +11,7 @@ import { FaPhone } from "react-icons/fa6";
 import { IoEarth } from "react-icons/io5";
 import PhoneInput from 'react-phone-input-2';
 import 'react-phone-input-2/lib/style.css';
+import { Select } from 'antd';
 
 
 export interface FilteredCountry {
@@ -30,10 +31,8 @@ const Register: React.FC<RegisterProps> = ({ currentTheme }) => {
   const [confirmPassword, setConfirmPassword] = useState<string>('');
   const [phoneNumber, setPhoneNumber] = useState<string>('');
   const [message, setMessage] = useState<string>('');
-  const [countryInput, setCountryInput] = useState<string>('');
-  const [filteredCountries, setFilteredCountries] = useState<FilteredCountry[]>([]);
 
-  const [selectedTimeZone, setSelectedTimeZone] = useState<string>('');
+  const [selectedTimeZone, setSelectedTimeZone] = useState<string | undefined>(undefined);
 
   const navigate = useNavigate();
 
@@ -46,7 +45,10 @@ const Register: React.FC<RegisterProps> = ({ currentTheme }) => {
     formData.append('username', username);
     formData.append('password', password);
     formData.append('phone_number', phoneNumber);
-    formData.append('timezone', selectedTimeZone);
+
+    if (selectedTimeZone !== undefined) {
+      formData.append('timezone', selectedTimeZone);
+    }
 
     try {
       await axiosInstance.post('/acc/register/', formData, {
@@ -66,47 +68,22 @@ const Register: React.FC<RegisterProps> = ({ currentTheme }) => {
     navigate('/');
   };
 
-  // ==================================== search country by name =====================================
-
-  const handleCountryInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
-    setCountryInput(value);
-    if (value) {
-      const filtered: FilteredCountry[] = [];
-      timezone_data.forEach(entry => {
-        if (entry.country_name.toLowerCase().includes(value.toLowerCase())) {
-          filtered.push({ name: entry.country_name, timezone: entry.timezone, utc_offset: entry.utc_offset });
-        }
-      });
-      setFilteredCountries(filtered);
-    } else {
-      setFilteredCountries([]);
-    }
-  };
-  const handleTimeZoneClick = (country: FilteredCountry) => {
-    setSelectedTimeZone(country.timezone);
-    setCountryInput(country.timezone);
-    setFilteredCountries([]);
-  };
-
-  useEffect(() => {
-    console.log("selectedTimeZone:===>", selectedTimeZone);
-  }, [selectedTimeZone]);
 
   // ============================================== hilight countri latters that match ================================
 
-  const getHighlightedText = (text: string, highlight: string) => {
-    const parts = text.split(new RegExp(`(${highlight})`, 'gi'));
-    return parts.map((part, index) =>
-      part.toLowerCase() === highlight.toLowerCase() ? <span key={index} className="highlight">{part}</span> : part
-    );
-  }
+
 
   const openEmailProvider = () => {
     const emailDomain = email.split('@')[1];
     const emailProviderUrl = `https://${emailDomain}`;
     window.open(emailProviderUrl, '_blank');
   };
+
+
+  const timezoneOptions = timezone_data.map((entry) => ({
+    label: `${entry.country_name} (Timezone: ${entry.timezone}, ${entry.utc_offset})`,
+    value: entry.timezone,
+  }));
 
 
   return (
@@ -126,6 +103,7 @@ const Register: React.FC<RegisterProps> = ({ currentTheme }) => {
             border: `1px solid ${currentTheme['--border-color']}`,
             color: currentTheme['--main-text-coloure'],
             borderRadius: '10px',
+
           }}
         >
           <div className="register_form_group" >
@@ -141,7 +119,8 @@ const Register: React.FC<RegisterProps> = ({ currentTheme }) => {
                 background: currentTheme['--task-background-color'],
                 color: currentTheme['--main-text-coloure'],
                 border: `1px solid ${currentTheme['--border-color']}`,
-              }}
+                ['--placeholder-color']: currentTheme['--due-date-color'],
+              } as React.CSSProperties}
             />
           </div>
 
@@ -158,24 +137,14 @@ const Register: React.FC<RegisterProps> = ({ currentTheme }) => {
                 background: currentTheme['--task-background-color'],
                 color: currentTheme['--main-text-coloure'],
                 border: `1px solid ${currentTheme['--border-color']}`,
-              }}
+                ['--placeholder-color']: currentTheme['--due-date-color'],
+
+              } as React.CSSProperties}
             />
           </div>
 
           <div className="register_form_group"  >
             <FaPhone className='register_icons' style={{ color: currentTheme['--main-text-coloure'] }} />
-            {/* <input
-              type="text"
-              value={phoneNumber}
-              onChange={(e) => setPhoneNumber(e.target.value)}
-              className="register_input"
-              placeholder="Enter your phone number"
-              style={{
-                background: currentTheme['--task-background-color'],
-                color: currentTheme['--main-text-coloure'],
-                border: `1px solid ${currentTheme['--border-color']}`,
-              }}
-            /> */}
             <PhoneInput
               country={'us'}
               value={phoneNumber}
@@ -199,6 +168,37 @@ const Register: React.FC<RegisterProps> = ({ currentTheme }) => {
             />
           </div>
 
+          {/* =============== timezone select ================= */}
+          <div className="register_form_group">
+            <IoEarth className='register_icons' style={{ color: currentTheme['--main-text-coloure'] }} />
+            <Select
+              showSearch
+              value={selectedTimeZone}
+              onChange={(value) => {
+                setSelectedTimeZone(value);
+              }}
+              options={timezoneOptions}
+              placeholder="Select your country for timezone"
+              style={{
+                width: 320,
+                height: '40px',
+                background: currentTheme['--task-background-color'],
+                color: currentTheme['--main-text-coloure'],
+                border: `1px solid ${currentTheme['--border-color']}`,
+              }}
+              dropdownStyle={{
+                background: currentTheme['--list-background-color'],
+                color: currentTheme['--main-text-coloure'],
+                border: `1px solid ${currentTheme['--border-color']}`,
+              }}
+              filterOption={(input, option) =>
+                (option?.label ?? '').toLowerCase().includes(input.toLowerCase())
+              }
+            />
+          </div>
+
+          {/* =============== password creation ================= */}
+
           <div className="register_form_group" >
             <PiPasswordBold className='register_icons' style={{ color: currentTheme['--main-text-coloure'] }} />
             <input
@@ -212,7 +212,8 @@ const Register: React.FC<RegisterProps> = ({ currentTheme }) => {
                 background: currentTheme['--task-background-color'],
                 color: currentTheme['--main-text-coloure'],
                 border: `1px solid ${currentTheme['--border-color']}`,
-              }}
+                ['--placeholder-color']: currentTheme['--due-date-color'],
+              } as React.CSSProperties}
             />
           </div>
 
@@ -229,50 +230,15 @@ const Register: React.FC<RegisterProps> = ({ currentTheme }) => {
                 background: currentTheme['--task-background-color'],
                 color: currentTheme['--main-text-coloure'],
                 border: `1px solid ${currentTheme['--border-color']}`,
-              }}
+                ['--placeholder-color']: currentTheme['--due-date-color'],
+              } as React.CSSProperties}
             />
           </div>
 
 
-          <div className="country_select_inputs_container">
-            <IoEarth className='register_icons' style={{ color: currentTheme['--main-text-coloure'] }} />
-            <input
-              type="text"
-              value={countryInput}
-              onChange={handleCountryInputChange}
-              className="register_input"
-              style={{
-                background: currentTheme['--task-background-color'],
-                color: currentTheme['--main-text-coloure'],
-                border: `1px solid ${currentTheme['--border-color']}`,
-              }}
-            />
-            {filteredCountries.length > 0 && (
-              <div
-                className="country_list"
-                style={{
-                  background: currentTheme['--list-background-color'],
-                  color: currentTheme['--main-text-coloure'],
-                  border: `1px solid ${currentTheme['--border-color']}`,
-                }}
-              >
-                {filteredCountries.map((country, index) => (
-                  <p
-                    className="country"
-                    key={index}
-                    onClick={() => handleTimeZoneClick(country)}
-                    style={{
-                      color: currentTheme['--main-text-coloure'],
-                      background: currentTheme['--task-background-color'],
-                      border: `1px solid ${currentTheme['--border-color']}`,
-                    }}
-                  >
-                    {getHighlightedText(country.name, countryInput)} (Timezone: {country.timezone}, {country.utc_offset})
-                  </p>
-                ))}
-              </div>
-            )}
-          </div>
+
+
+          {/* =======================  register button ======================= */}
           <button
             type="submit"
             className="register_button"
