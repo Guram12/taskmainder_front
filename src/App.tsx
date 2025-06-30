@@ -390,8 +390,8 @@ useEffect(() => {
 
       />
       <Routes>
-        <Route path="/" element={<Login setIsAuthenticated={setIsAuthenticated} />} />
-        <Route path="/register" element={<Register />} />
+        <Route path="/" element={<Login setIsAuthenticated={setIsAuthenticated} currentTheme={currentTheme} />} />
+        <Route path="/register" element={<Register currentTheme={currentTheme} />} />
         <Route path="/password-reset" element={<PasswordReset />} />
         <Route path="/password-reset-confirm/:uid/:token" element={<PasswordResetConfirm />} />
         <Route path="/error" element={<ErrorPage currentTheme={currentTheme} />} />
