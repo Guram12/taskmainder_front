@@ -1,17 +1,25 @@
 import '../styles/Login.css';
-import React, {  useState } from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axiosInstance from '../utils/axiosinstance';
 import GoogleSignIn from './GoogleSignIn';
+import { ThemeSpecs } from '../utils/theme';
+import { MdOutlineAlternateEmail } from "react-icons/md";
+import { PiPasswordBold } from "react-icons/pi";
+import { FaEye } from "react-icons/fa";
+import { FaEyeSlash } from "react-icons/fa";
+
 
 
 interface loginProps {
   setIsAuthenticated: (value: boolean) => void;
+  currentTheme: ThemeSpecs;
 }
 
-const Login: React.FC<loginProps> = ({ setIsAuthenticated }) => {
+const Login: React.FC<loginProps> = ({ setIsAuthenticated, currentTheme }) => {
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
+  const [showPassword, setShowPassword] = useState<boolean>(false);
   const [error, setError] = useState<string>('');
 
   const navigate = useNavigate();
@@ -45,42 +53,125 @@ const Login: React.FC<loginProps> = ({ setIsAuthenticated }) => {
 
 
   return (
-    <div className="login-container">
-      <h2 className="login-title">Login</h2>
-      <form className="login-form" onSubmit={handleLogin}>
+    <div
+      className="login-container"
+      style={{
+        background: currentTheme['--background-color'],
+        color: currentTheme['--main-text-coloure'],
+        minHeight: '100vh',
+      }}
+    >
+      <h2 className="login-title" style={{ color: currentTheme['--main-text-coloure'] }}>Login</h2>
+      <form
+        className="login-form"
+        onSubmit={handleLogin}
+        style={{
+          background: currentTheme['--list-background-color'],
+          border: `1px solid ${currentTheme['--border-color']}`,
+          color: currentTheme['--main-text-coloure'],
+        }}
+      >
         <div className="form-group">
-          <label className="form-label">Email:</label>
+          <MdOutlineAlternateEmail className='login_icons' style={{ color: currentTheme['--main-text-coloure'] }} />
           <input
             className="form-input"
             type="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
+            placeholder='Enter your email'
+            style={{
+              background: currentTheme['--task-background-color'],
+              color: currentTheme['--main-text-coloure'],
+              border: `1px solid ${currentTheme['--border-color']}`,
+              ['--placeholder-color']: currentTheme['--due-date-color'],
+            } as React.CSSProperties}
+
+
           />
         </div>
         <div className="form-group">
-          <label className="form-label">Password:</label>
+          <PiPasswordBold className='login_icons' style={{ color: currentTheme['--main-text-coloure'] }} />
           <input
             className="form-input"
-            type="password"
+            type={showPassword ? "text" : "password"}
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
+            placeholder='Enter your password'
+            style={{
+              background: currentTheme['--task-background-color'],
+              color: currentTheme['--main-text-coloure'],
+              border: `1px solid ${currentTheme['--border-color']}`,
+              ['--placeholder-color']: currentTheme['--due-date-color'],
+            } as React.CSSProperties}
           />
         </div>
-        <button className="login-button" type="submit">
+
+        <div className="form-group">
+          {showPassword ? (
+            <FaEye className='login_icons showpassword' style={{ color: currentTheme['--main-text-coloure'] }} onClick={() => setShowPassword(false)} />
+          ) : (
+            <FaEyeSlash className='login_icons showpassword' style={{ color: currentTheme['--main-text-coloure'] }} onClick={() => setShowPassword(true)} />
+          )}
+          <p style={{ color: currentTheme['--main-text-coloure'], margin: '0px', marginLeft: '10px', cursor: 'pointer' }}
+            onClick={() => setShowPassword(!showPassword)}
+          >
+            {showPassword ? 'Hide password' : 'Show password'}
+          </p>
+        </div>
+
+        <button
+          className="login-button"
+          type="submit"
+          style={{
+            background: currentTheme['--hover-color'],
+            color: currentTheme['--main-text-coloure'],
+            border: `1px solid ${currentTheme['--border-color']}`,
+          }}
+        >
           Login
         </button>
       </form>
       <div className="google-signin-container">
         <GoogleSignIn setIsAuthenticated={setIsAuthenticated} />
       </div>
-      <button className="register-button" onClick={handleRegisterButtonClick}>
+      <button
+        className="register-button"
+        onClick={handleRegisterButtonClick}
+        style={{
+          background: currentTheme['--task-background-color'],
+          color: currentTheme['--main-text-coloure'],
+          border: `1px solid ${currentTheme['--border-color']}`,
+        }}
+      >
         Register
       </button>
-
-      <a href="/password-reset">forgot password?</a>
-      {error && <p className="error-message">{error}</p>}
+      <a
+        href="/password-reset"
+        style={{
+          color: currentTheme['--due-date-color'],
+          marginTop: '10px',
+          textDecoration: 'underline',
+        }}
+      >
+        forgot password?
+      </a>
+      {error && (
+        <p
+          className="error-message"
+          style={{
+            color: 'red',
+            background: currentTheme['--task-background-color'],
+            border: `1px solid ${currentTheme['--border-color']}`,
+            padding: '8px',
+            borderRadius: '4px',
+            marginTop: '10px',
+          }}
+        >
+          {error}
+        </p>
+      )}
     </div>
   );
 };

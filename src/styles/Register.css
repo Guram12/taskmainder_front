@@ -1,13 +1,20 @@
 /* Container for the entire register form */
+.main_register_container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  overflow: hidden;
+}
+
 .register_container {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   padding: 20px;
-  background-color: #f9f9f9;
   border-radius: 10px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   max-width: 500px;
   margin: 20px auto;
 }
@@ -20,13 +27,77 @@
   color: #333;
 }
 
-/* Form styles */
 .register_form {
-  width: 100%;
+  /* width: 100%; */
   display: flex;
   flex-direction: column;
   gap: 15px;
+  align-items: center;
+  padding: 20px 10px 20px 10px;
+  padding-bottom: 20px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+
 }
+
+.register_form_group {
+  margin-bottom: 15px;
+  display: flex;
+  align-items: center;
+  width: min-content;
+}
+
+.register_icons {
+  font-size: 25px;
+  margin-right: 10px;
+}
+
+.show_password_container {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 15px;
+}
+
+.show_password {
+  cursor: pointer;
+  font-size: 24px;
+}
+
+
+/* =============================== ant designe phone select styles ====================================== */
+
+.custom-phone-dropdown {
+  background: var(--task-background-color) !important;
+  color: var(--main-text-coloure) !important;
+  border: 1px solid var(--border-color) !important;
+}
+
+.custom-phone-dropdown .country {
+  color: var(--main-text-coloure) !important;
+  background: var(--task-background-color) !important;
+}
+
+.custom-phone-dropdown .country:hover,
+.custom-phone-dropdown .country.highlight {
+  background: var(--hover-color) !important;
+  color: var(--main-text-coloure) !important;
+}
+
+/* Change placeholder color for react-phone-input-2 */
+.custom-phone-container .form-control::placeholder {
+  color: var(--due-date-color) !important;
+  /* or any color you want */
+  opacity: 1 !important;
+}
+
+.custom-phone-container .arrow {
+  border-top: 4px solid var(--due-date-color) !important;
+  /* Use your theme variable or any color */
+}
+
+/* ====================================================================================================== */
 
 /* Label styles */
 .register_label {
@@ -38,15 +109,18 @@
 /* Input styles */
 .register_input {
   padding: 10px;
-  border: 1px solid #ccc;
+  border: 1px solid;
   border-radius: 5px;
   font-size: 14px;
-  width: 100%;
+  width: 300px;
 }
 
 .register_input:focus {
-  border-color: #007bff;
   outline: none;
+}
+
+.register_input::placeholder {
+  color: var(--placeholder-color, #aaa);
 }
 
 /* File input styles */
@@ -58,23 +132,35 @@
 /* Button styles */
 .register_button {
   padding: 10px 15px;
-  background-color: #007bff;
-  color: white;
   border: none;
   border-radius: 5px;
   font-size: 16px;
-  cursor: pointer;
   transition: background-color 0.3s ease;
+  width: 60%;
 }
 
 .register_button:hover {
-  background-color: #0056b3;
+  background-color: se;
 }
+
+.back_to_login_btn {
+  padding: 10px 15px;
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+  transition: background-color 0.3s ease;
+  width: 150px;
+  cursor: pointer;
+}
+
+.back_to_login_btn:hover {
+  background-color: seagreen !important;
+}
+
 
 /* Message styles */
 .register_message {
   font-size: 14px;
-  color: green;
   margin-top: 10px;
 }
 
@@ -85,7 +171,7 @@
 /* Country input container */
 .country_select_inputs_container {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   justify-content: center;
   align-items: center;
 }
@@ -97,8 +183,7 @@
   justify-content: center;
   align-items: center;
   margin-top: 5px;
-  border: 1px solid black;
-  background-color: #cecece;
+  border: 1px solid;
   width: 100%;
   border-radius: 10px;
   max-height: 200px;
@@ -124,4 +209,94 @@
 .highlight {
   font-weight: bold;
   color: tomato;
+}
+
+/* ================================== ant designe timezone selection styles ================================== */
+.ant-select-selector {
+  background: var(--task-background-color) !important;
+  color: var(--main-text-coloure) !important;
+  border: 1px solid var(--border-color) !important;
+}
+
+/* Style the placeholder text */
+.ant-select-selection-placeholder {
+  color: var(--main-text-coloure) !important;
+  opacity: 0.7;
+}
+
+.ant-select-item-option:hover {
+  background: var(--hover-color) !important;
+  color: var(--main-text-coloure) !important;
+}
+
+/* Style the Select dropdown panel */
+.ant-select-dropdown {
+  background: var(--list-background-color) !important;
+  color: var(--main-text-coloure) !important;
+  border: 1px solid var(--border-color) !important;
+}
+
+/* Style each dropdown item */
+.ant-select-item {
+  background: var(--list-background-color) !important;
+  color: var(--main-text-coloure) !important;
+}
+
+/* Style hovered and selected dropdown items */
+.ant-select-item-option-active,
+.ant-select-item-option-selected {
+  background: var(--hover-color) !important;
+  color: var(--main-text-coloure) !important;
+}
+
+/* Style the highlighted search text */
+.ant-select-item-option-content .ant-select-highlight {
+  color: tomato !important;
+  font-weight: bold;
+}
+
+.ant-select-dropdown {
+  min-width: 320px !important;
+  /* or your desired width */
+}
+
+.ant-select-item-option:hover {
+  background: seagreen !important;
+}
+
+/* ==================================   password validation container ================================= */
+
+
+.register_password_validations_container {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+  gap: 7px;
+  width: 100%;
+  padding-left: 80px;
+}
+
+.register_password_validations {
+  margin: 0px;
+  font-weight: 500;
+}
+
+
+/* ======================================================================================================== */
+
+@media screen and (max-width: 768px) {
+  /* 
+
+  .register_input {
+    padding: 10px;
+    border: 1px solid;
+    border-radius: 5px;
+    font-size: 14px;
+    width: 250px;
+  } */
+
+
+
+
 }

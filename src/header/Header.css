@@ -48,7 +48,7 @@
   height: 60px;
   gap: 30px;
   width: 100%;
-  
+
 }
 
 .header_coloure_child_container {
@@ -203,10 +203,9 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-right: 20px;
   gap: 10px;
   transition: background-color 0.3s ease, border-color 0.3s ease;
-
+  margin-right: 10px;
 }
 
 .header_profile_picture {
@@ -225,7 +224,6 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-right: 10px;
   gap: 10px;
 }
 
@@ -245,6 +243,30 @@
   outline: none;
 }
 
+
+.header_logout_icon_container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 30px;
+  height: 100%;
+  cursor: pointer;
+  margin-right: 10px;
+  transition: background-color 0.3s ease, border-color 0.3s ease;
+  cursor: pointer;
+}
+
+.header_logout_icon {
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+
+.header_profile_container:hover .header_logout_icon {
+  color: red !important;
+}
+
+
 @media screen and (max-width: 768px) {
   .main_Header_container {
     height: 70px;
@@ -262,6 +284,10 @@
     align-items: center;
     margin-left: 10px;
 
+  }
+
+  .hide_header {
+    display: none;
   }
 
   .language_dropdown {

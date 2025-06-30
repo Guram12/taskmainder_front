@@ -20,7 +20,7 @@ import SkeletonEachUser from "./Boards/SkeletonEachUser";
 import ReactDOM from 'react-dom';
 import { MdDeleteForever } from "react-icons/md";
 import { ProfileData } from "../utils/interface";
-
+import { PulseLoader } from "react-spinners";
 
 
 interface MembersProps {
@@ -74,10 +74,9 @@ const Members: React.FC<MembersProps> = ({
 
   const [newBoardName, setNewBoardName] = useState<string>('');
 
+  const [is_board_invitation_sent, setIs_board_invitation_sent] = useState<boolean>(false);
+  const [invitation_loading, setInvitation_loading] = useState<boolean>(false);
 
-  // useEffect(() => {
-  //   console.log("is_cur_Board_users_fetched", is_cur_Board_users_fetched);
-  // }, [is_cur_Board_users_fetched]);
 
 
   const is_current_user_owner = current_board_users.find(user => user.email === current_user_email)?.user_status === 'owner'
@@ -172,12 +171,12 @@ const Members: React.FC<MembersProps> = ({
       fetch_current_board_users();
     }
   }, [selectedBoard?.id]);
-  // -------------------------------------------- fetch current board users ------------------------------------------------
 
   // -------------------------------------------- add new users to board ------------------------------------------------
   // boards/<int:board_id>/send-invitation/
 
   const handleAddUsers = async () => {
+    setInvitation_loading(true);
     console.log('Sending invitations to:', selected_emails);
     try {
       const response = await axiosInstance.post(
@@ -193,6 +192,8 @@ const Members: React.FC<MembersProps> = ({
       if (response.status === 200) {
         console.log("Invitation sent successfully:", response.data);
         setSelected_emails([]); // Clear selected emails after sending invitations
+        setIs_board_invitation_sent(true);
+        setInvitation_loading(false);
       } else {
         console.error("Error sending invitation:", response.data);
         alert("Failed to send the invitation. Please try again.");
@@ -200,6 +201,10 @@ const Members: React.FC<MembersProps> = ({
     } catch (error) {
       console.error("Error sending invitation:", error);
       alert("An error occurred while sending the invitation.");
+    } finally {
+      setTimeout(() => {
+        setIs_board_invitation_sent(false);
+      }, 3000);
     }
   };
   // --------------------------------------------- email click --------------------------------------
@@ -653,6 +658,18 @@ const Members: React.FC<MembersProps> = ({
                     className="search_input"
                   />
 
+                  {is_board_invitation_sent && (
+                    <p
+                      style={{
+                        color: currentTheme['--main-text-coloure'],
+                        marginBottom: '0px',
+                        fontWeight: 'bold',
+                      }}>
+                      Invitation sent successfully!
+                    </p>
+                  )}
+
+
                   {/* suggested users conmtainer  */}
                   <div className="suggested_users_list"
 
@@ -712,19 +729,34 @@ const Members: React.FC<MembersProps> = ({
 
               {/* button for adding selected emails to board users  */}
               {is_current_user_admin_or_owner && selected_emails.length > 0 && (
-                <button
-                  onClick={() => handleAddUsers()}
-                  disabled={selected_emails.length === 0}
-                  className="invite_users_button"
-                  style={{
-                    cursor: `${selected_emails.length > 0 ? 'pointer' : 'not-allowed'}`,
-                    backgroundColor: `${currentTheme['--task-background-color']}`,
-                    color: `${currentTheme['--main-text-coloure']}`,
-                    border: `1px solid ${currentTheme['--border-color']}`
-                  }}
-                >
-                  Invite
-                </button>
+                <>
+                  {invitation_loading ?
+                    (
+                      <PulseLoader
+                        size={10}
+                        color={currentTheme['--due-date-color']}
+                        speedMultiplier={0.7}
+                        cssOverride={{
+                          marginTop: '10px',
+                        }}
+                      />
+                    ) : (
+                      <button
+                        onClick={() => handleAddUsers()}
+                        disabled={selected_emails.length === 0}
+                        className="invite_users_button"
+                        style={{
+                          cursor: `${selected_emails.length > 0 ? 'pointer' : 'not-allowed'}`,
+                          backgroundColor: `${currentTheme['--task-background-color']}`,
+                          color: `${currentTheme['--main-text-coloure']}`,
+                          border: `1px solid ${currentTheme['--border-color']}`
+                        }}
+                      >
+                        Invite
+                      </button>
+
+                    )}
+                </>
               )}
 
               <div className="each_user_child_container">

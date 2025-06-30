@@ -249,6 +249,8 @@ const ProfilePictureUpdate: React.FC<ProfilePictureUpdateProps> = ({ profileData
             className="custom_file_input_button"
             style={{
               color: currentTheme["--main-text-coloure"],
+              backgroundColor: currentTheme['--list-background-color'],
+              borderColor: currentTheme['--border-color'],
             }}
           >
             Change image
