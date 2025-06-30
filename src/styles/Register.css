@@ -5,6 +5,7 @@
   align-items: center;
   justify-content: center;
   height: 100vh;
+  overflow: hidden;
 }
 
 .register_container {
@@ -50,6 +51,21 @@
   margin-right: 10px;
 }
 
+.show_password_container {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 15px;
+}
+
+.show_password {
+  cursor: pointer;
+  font-size: 24px;
+}
+
+
 /* =============================== ant designe phone select styles ====================================== */
 
 .custom-phone-dropdown {
@@ -93,7 +109,7 @@
 /* Input styles */
 .register_input {
   padding: 10px;
-  border: 1px solid #ccc;
+  border: 1px solid;
   border-radius: 5px;
   font-size: 14px;
   width: 300px;
@@ -119,13 +135,28 @@
   border: none;
   border-radius: 5px;
   font-size: 16px;
-  cursor: pointer;
   transition: background-color 0.3s ease;
+  width: 60%;
 }
 
 .register_button:hover {
-  background-color: #0056b3;
+  background-color: se;
 }
+
+.back_to_login_btn {
+  padding: 10px 15px;
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+  transition: background-color 0.3s ease;
+  width: 150px;
+  cursor: pointer;
+}
+
+.back_to_login_btn:hover {
+  background-color: seagreen !important;
+}
+
 
 /* Message styles */
 .register_message {
@@ -233,4 +264,39 @@
   background: seagreen !important;
 }
 
-/* ============================================================================================ */
+/* ==================================   password validation container ================================= */
+
+
+.register_password_validations_container {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+  gap: 7px;
+  width: 100%;
+  padding-left: 80px;
+}
+
+.register_password_validations {
+  margin: 0px;
+  font-weight: 500;
+}
+
+
+/* ======================================================================================================== */
+
+@media screen and (max-width: 768px) {
+  /* 
+
+  .register_input {
+    padding: 10px;
+    border: 1px solid;
+    border-radius: 5px;
+    font-size: 14px;
+    width: 250px;
+  } */
+
+
+
+
+}

@@ -1,5 +1,5 @@
 import "../styles/Register.css";
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import axiosInstance from '../utils/axiosinstance';
 import { useNavigate } from 'react-router-dom';
 import timezone_data from "../utils/data.json";
@@ -12,6 +12,11 @@ import { IoEarth } from "react-icons/io5";
 import PhoneInput from 'react-phone-input-2';
 import 'react-phone-input-2/lib/style.css';
 import { Select } from 'antd';
+import { FaRegEye } from "react-icons/fa";
+import { FaRegEyeSlash } from "react-icons/fa";
+
+
+
 
 
 export interface FilteredCountry {
@@ -27,8 +32,19 @@ interface RegisterProps {
 const Register: React.FC<RegisterProps> = ({ currentTheme }) => {
   const [email, setEmail] = useState<string>('');
   const [username, setUsername] = useState<string>('');
+
   const [password, setPassword] = useState<string>('');
   const [confirmPassword, setConfirmPassword] = useState<string>('');
+  const [show_password, setShow_password] = useState<boolean>(false);
+
+
+  // password validation states 
+  const [isLongEnough, setIsLongEnough] = useState(false);
+  const [hasUppercase, setHasUppercase] = useState(false);
+  const [hasNumber, setHasNumber] = useState(false);
+  const [isPasswordValid, setIsPasswordValid] = useState(false);
+  const [isPasswordAcceptable, setIsPasswordAcceptable] = useState<boolean>(false);
+
   const [phoneNumber, setPhoneNumber] = useState<string>('');
   const [message, setMessage] = useState<string>('');
 
@@ -37,13 +53,39 @@ const Register: React.FC<RegisterProps> = ({ currentTheme }) => {
   const navigate = useNavigate();
 
 
+  // ===================================== validate password ============================
+
+  useEffect(() => {
+    setIsLongEnough(confirmPassword.length >= 8);
+    setHasUppercase(/[A-Z]/.test(confirmPassword));
+    setHasNumber(/\d/.test(confirmPassword));
+    if (confirmPassword.length > 0) {
+      if (confirmPassword === confirmPassword) {
+        setIsPasswordValid(true);
+      }
+      else {
+        setIsPasswordValid(false);
+      }
+    }
+  }, [confirmPassword, confirmPassword]);
+
+  useEffect(() => {
+    setIsPasswordAcceptable(validatePassword());
+  }, [isLongEnough, hasUppercase, hasNumber, isPasswordValid, confirmPassword, confirmPassword]);
+
+  const validatePassword = (): boolean => {
+    return isLongEnough && hasUppercase && hasNumber && isPasswordValid;
+  };
+
+
+
   // ===================================== register =====================================
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
     const formData = new FormData();
     formData.append('email', email);
     formData.append('username', username);
-    formData.append('password', password);
+    formData.append('password', confirmPassword);
     formData.append('phone_number', phoneNumber);
 
     if (selectedTimeZone !== undefined) {
@@ -202,7 +244,7 @@ const Register: React.FC<RegisterProps> = ({ currentTheme }) => {
           <div className="register_form_group" >
             <PiPasswordBold className='register_icons' style={{ color: currentTheme['--main-text-coloure'] }} />
             <input
-              type="password"
+              type={show_password ? "text" : "password"}
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
@@ -220,7 +262,7 @@ const Register: React.FC<RegisterProps> = ({ currentTheme }) => {
           <div className="register_form_group" >
             <PiPasswordBold className='register_icons' style={{ color: currentTheme['--main-text-coloure'] }} />
             <input
-              type="password"
+              type={show_password ? "text" : "password"}
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
               required
@@ -235,7 +277,43 @@ const Register: React.FC<RegisterProps> = ({ currentTheme }) => {
             />
           </div>
 
+          <div className="show_password_container" >
+            {show_password ? (
+              <FaRegEye className='show_password' onClick={() => setShow_password(!show_password)} />
+            ) : (
+              <FaRegEyeSlash className='show_password' onClick={() => setShow_password(!show_password)} />
+            )}
+            <p onClick={() => setShow_password(!show_password)}
+              style={{
+                cursor: 'pointer',
+                color: currentTheme['--main-text-coloure'],
+                margin: '0px',
+              }}
+            >
+              {show_password ? 'Hide Password' : 'Show Password'}
+            </p>
+          </div>
 
+
+          <div className='register_password_validations_container'>
+            <p className='register_password_validations' style={{ color: isLongEnough ? 'mediumseagreen' : 'red' }}>
+              {!isLongEnough && <span>*</span>} Minimum 8 symbols
+            </p>
+            <p className='register_password_validations' style={{ color: hasUppercase ? 'mediumseagreen' : 'red' }}>
+              {!hasUppercase && <span>*</span>} At least one uppercase letter
+            </p>
+            <p className='register_password_validations' style={{ color: hasNumber ? 'mediumseagreen' : 'red' }}>
+              {!hasNumber && <span>*</span>} At least one number
+            </p>
+
+            <p className='register_password_validations' style={{ color: isPasswordValid ? 'mediumseagreen' : 'red' }}>
+              {isPasswordValid ? (
+                <span>Passwords match</span>
+              ) : (
+                <span>* Passwords do not match</span>
+              )}
+            </p>
+          </div>
 
 
           {/* =======================  register button ======================= */}
@@ -243,10 +321,12 @@ const Register: React.FC<RegisterProps> = ({ currentTheme }) => {
             type="submit"
             className="register_button"
             style={{
-              background: currentTheme['--due-date-color'],
+              background: currentTheme['--task-background-color'],
               color: currentTheme['--main-text-coloure'],
               border: `1px solid ${currentTheme['--border-color']}`,
+              cursor: isPasswordAcceptable ? 'pointer' : 'not-allowed',
             }}
+            disabled={isPasswordAcceptable ? false : true}
           >
             Register
           </button>
@@ -283,7 +363,7 @@ const Register: React.FC<RegisterProps> = ({ currentTheme }) => {
         )}
         <button
           onClick={handleLogin}
-          className="register_button"
+          className="back_to_login_btn"
           style={{
             background: currentTheme['--hover-color'],
             color: currentTheme['--main-text-coloure'],
@@ -291,7 +371,7 @@ const Register: React.FC<RegisterProps> = ({ currentTheme }) => {
             marginTop: '10px',
           }}
         >
-          Go to login
+          Go back to login
         </button>
       </div>
     </div>

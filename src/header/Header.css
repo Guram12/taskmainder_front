@@ -286,6 +286,10 @@
 
   }
 
+  .hide_header {
+    display: none;
+  }
+
   .language_dropdown {
     min-width: 100px;
     padding: 12px 8px;
