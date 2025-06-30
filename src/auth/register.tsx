@@ -8,7 +8,9 @@ import { MdOutlineAlternateEmail } from "react-icons/md";
 import { PiPasswordBold } from "react-icons/pi";
 import { FaUser } from "react-icons/fa";
 import { FaPhone } from "react-icons/fa6";
-
+import { IoEarth } from "react-icons/io5";
+import PhoneInput from 'react-phone-input-2';
+import 'react-phone-input-2/lib/style.css';
 
 
 export interface FilteredCountry {
@@ -25,6 +27,7 @@ const Register: React.FC<RegisterProps> = ({ currentTheme }) => {
   const [email, setEmail] = useState<string>('');
   const [username, setUsername] = useState<string>('');
   const [password, setPassword] = useState<string>('');
+  const [confirmPassword, setConfirmPassword] = useState<string>('');
   const [phoneNumber, setPhoneNumber] = useState<string>('');
   const [message, setMessage] = useState<string>('');
   const [countryInput, setCountryInput] = useState<string>('');
@@ -133,6 +136,7 @@ const Register: React.FC<RegisterProps> = ({ currentTheme }) => {
               onChange={(e) => setEmail(e.target.value)}
               required
               className="register_input"
+              placeholder="Enter your email"
               style={{
                 background: currentTheme['--task-background-color'],
                 color: currentTheme['--main-text-coloure'],
@@ -148,7 +152,62 @@ const Register: React.FC<RegisterProps> = ({ currentTheme }) => {
               value={username}
               onChange={(e) => setUsername(e.target.value)}
               required
+              placeholder="Enter your username"
               className="register_input"
+              style={{
+                background: currentTheme['--task-background-color'],
+                color: currentTheme['--main-text-coloure'],
+                border: `1px solid ${currentTheme['--border-color']}`,
+              }}
+            />
+          </div>
+
+          <div className="register_form_group"  >
+            <FaPhone className='register_icons' style={{ color: currentTheme['--main-text-coloure'] }} />
+            {/* <input
+              type="text"
+              value={phoneNumber}
+              onChange={(e) => setPhoneNumber(e.target.value)}
+              className="register_input"
+              placeholder="Enter your phone number"
+              style={{
+                background: currentTheme['--task-background-color'],
+                color: currentTheme['--main-text-coloure'],
+                border: `1px solid ${currentTheme['--border-color']}`,
+              }}
+            /> */}
+            <PhoneInput
+              country={'us'}
+              value={phoneNumber}
+              onChange={setPhoneNumber}
+              inputStyle={{
+                background: currentTheme['--task-background-color'],
+                color: currentTheme['--main-text-coloure'],
+                border: `1px solid ${currentTheme['--border-color']}`,
+                width: '320px',
+              }}
+              buttonStyle={{
+                border: `1px solid ${currentTheme['--border-color']}`,
+                background: currentTheme['--task-background-color'],
+              }}
+              containerStyle={{
+                width: '320px',
+              }}
+              dropdownClass="custom-phone-dropdown"
+              containerClass="custom-phone-container"
+              placeholder="Enter your phone number"
+            />
+          </div>
+
+          <div className="register_form_group" >
+            <PiPasswordBold className='register_icons' style={{ color: currentTheme['--main-text-coloure'] }} />
+            <input
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+              className="register_input"
+              placeholder="Enter your password"
               style={{
                 background: currentTheme['--task-background-color'],
                 color: currentTheme['--main-text-coloure'],
@@ -161,10 +220,11 @@ const Register: React.FC<RegisterProps> = ({ currentTheme }) => {
             <PiPasswordBold className='register_icons' style={{ color: currentTheme['--main-text-coloure'] }} />
             <input
               type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
               required
               className="register_input"
+              placeholder="Confirm your password"
               style={{
                 background: currentTheme['--task-background-color'],
                 color: currentTheme['--main-text-coloure'],
@@ -173,23 +233,9 @@ const Register: React.FC<RegisterProps> = ({ currentTheme }) => {
             />
           </div>
 
-          <div className="register_form_group"  >
-            <FaPhone className='register_icons' style={{ color: currentTheme['--main-text-coloure'] }} />
-            <input
-              type="text"
-              value={phoneNumber}
-              onChange={(e) => setPhoneNumber(e.target.value)}
-              className="register_input"
-              style={{
-                background: currentTheme['--task-background-color'],
-                color: currentTheme['--main-text-coloure'],
-                border: `1px solid ${currentTheme['--border-color']}`,
-              }}
-            />
-          </div>
 
           <div className="country_select_inputs_container">
-            <label className="register_label" style={{ color: currentTheme['--main-text-coloure'] }}>Country:</label>
+            <IoEarth className='register_icons' style={{ color: currentTheme['--main-text-coloure'] }} />
             <input
               type="text"
               value={countryInput}

@@ -50,6 +50,24 @@
   margin-right: 10px;
 }
 
+.custom-phone-dropdown {
+  background: var(--task-background-color) !important;
+  color: var(--main-text-coloure) !important;
+  border: 1px solid var(--border-color) !important;
+}
+
+.custom-phone-dropdown .country {
+  color: var(--main-text-coloure) !important;
+  background: var(--task-background-color) !important;
+}
+
+.custom-phone-dropdown .country:hover,
+.custom-phone-dropdown .country.highlight {
+  background: var(--hover-color) !important;
+  color: var(--main-text-coloure) !important;
+}
+
+
 
 /* Label styles */
 .register_label {
@@ -104,7 +122,7 @@
 /* Country input container */
 .country_select_inputs_container {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   justify-content: center;
   align-items: center;
 }
