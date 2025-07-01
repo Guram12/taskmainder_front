@@ -20,7 +20,6 @@ import PulseLoader from "react-spinners/PulseLoader";
 
 
 
-
 export interface FilteredCountry {
   name: string;
   timezone: string;

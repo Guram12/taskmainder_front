@@ -63,6 +63,7 @@ const Header: React.FC<HeaderProps> = ({
       location.pathname === "/register" ||
       location.pathname === '/error' ||
       location.pathname === '/password-reset' ||
+      location.pathname.startsWith('/finish-profile') ||
       location.pathname.startsWith('/password-reset-confirm')
     ) {
       setShowHeader(false);

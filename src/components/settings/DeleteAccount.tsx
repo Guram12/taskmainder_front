@@ -27,7 +27,6 @@ const DeleteAccount: React.FC<DeleteAccountProps> = ({ currentTheme }) => {
       });
 
       console.log(response.data);
-      alert('Account deleted successfully.');
       navigate('/');
     } catch (error) {
       if (axios.isAxiosError(error)) { // Use axios.isAxiosError

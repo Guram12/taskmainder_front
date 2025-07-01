@@ -245,7 +245,7 @@ const Profile_Info_update: React.FC<Profile_Info_updateProps> = ({ profileData, 
                     setIsEditing({ ...isEditing, timezone: false })
                   }}
                 />
-                <HiMiniXMark className='cansel_icon' onClick={handleCansel_timezone_update} />
+                <HiMiniXMark className='cansel_icon' onClick={handleCansel_timezone_update}  />
               </div>
             </div>
           )}
