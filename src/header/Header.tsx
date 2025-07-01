@@ -57,17 +57,20 @@ const Header: React.FC<HeaderProps> = ({
   const navigate = useNavigate();
 
 
-  // 
   useEffect(() => {
-    if (location.pathname === "/" || location.pathname === "/register" || location.pathname === '/error' || 
-      location.pathname === '/password-reset' || location.pathname === '/password-reset-confirm/*') {
+    if (
+      location.pathname === "/" ||
+      location.pathname === "/register" ||
+      location.pathname === '/error' ||
+      location.pathname === '/password-reset' ||
+      location.pathname.startsWith('/password-reset-confirm')
+    ) {
       setShowHeader(false);
     }
     else {
       setShowHeader(true);
     }
   }, [location.pathname])
-
 
   // ======================================== language change function =========================================
   const handleLanguageChange = (lang: 'en' | 'ka') => {
@@ -90,7 +93,7 @@ const Header: React.FC<HeaderProps> = ({
   }
   // ===========================================================================================
 
-const handle_logout_icon_click = () => {
+  const handle_logout_icon_click = () => {
     setConfirmation_for_logout(true);
   }
 

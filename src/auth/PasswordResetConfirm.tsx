@@ -18,22 +18,22 @@ const PasswordResetConfirm: React.FC<PasswordResetConfirmProps> = ({ currentThem
   const { uid, token } = useParams<{ uid: string; token: string }>();
   const navigate = useNavigate();
 
-  const [newPassword, setNewPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
+  const [newPassword, setNewPassword] = useState<string>('');
+  const [confirmPassword, setConfirmPassword] = useState<string>('');
   const [show_password, setShow_password] = useState<boolean>(false);
 
 
   // password validation states 
-  const [isLongEnough, setIsLongEnough] = useState(false);
-  const [hasUppercase, setHasUppercase] = useState(false);
-  const [hasNumber, setHasNumber] = useState(false);
-  const [isPasswordValid, setIsPasswordValid] = useState(false);
+  const [isLongEnough, setIsLongEnough] = useState<boolean>(false);
+  const [hasUppercase, setHasUppercase] = useState<boolean>(false);
+  const [hasNumber, setHasNumber] = useState<boolean>(false);
+  const [isPasswordValid, setIsPasswordValid] = useState<boolean>(false);
   const [isPasswordAcceptable, setIsPasswordAcceptable] = useState<boolean>(false);
 
 
 
-  const [message, setMessage] = useState('');
-  const [error, setError] = useState('');
+  const [message, setMessage] = useState<string>('');
+  const [error, setError] = useState<string>('');
 
 
 
@@ -77,12 +77,12 @@ const PasswordResetConfirm: React.FC<PasswordResetConfirmProps> = ({ currentThem
         setIsPasswordValid(false);
       }
     }
-  }, [newPassword]);
+  }, [newPassword, confirmPassword]);
 
 
   useEffect(() => {
     setIsPasswordAcceptable(validatePassword());
-  }, [isLongEnough, hasUppercase, hasNumber, isPasswordValid, newPassword]);
+  }, [isLongEnough, hasUppercase, hasNumber, isPasswordValid, newPassword, confirmPassword]);
 
   const validatePassword = (): boolean => {
     return isLongEnough && hasUppercase && hasNumber && isPasswordValid;
@@ -176,6 +176,7 @@ const PasswordResetConfirm: React.FC<PasswordResetConfirmProps> = ({ currentThem
               backgroundColor: currentTheme['--list-background-color'],
               borderColor: currentTheme['--border-color'],
               color: currentTheme['--main-text-coloure'],
+              cursor: isLongEnough && hasUppercase && hasNumber && isPasswordValid ? 'pointer' : 'not-allowed',
             }}
             className='confirm_reset_button'
             disabled={!isPasswordAcceptable}
@@ -183,10 +184,10 @@ const PasswordResetConfirm: React.FC<PasswordResetConfirmProps> = ({ currentThem
             Confirm
           </button>
 
+          {message && <p style={{ color: 'seagreen', marginTop: '10px' }}>{message}</p>}
+          {error && <p style={{ color: 'red', marginTop: '10px' }}>{error}</p>}
         </form>
 
-        {message && <p style={{ color: 'seagreen', marginTop: '10px' }}>{message}</p>}
-        {error && <p style={{ color: 'red', marginTop: '10px' }}>{error}</p>}
 
       </div>
     </div>
