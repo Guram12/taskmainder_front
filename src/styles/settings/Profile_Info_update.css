@@ -10,7 +10,7 @@
   position: relative;
   margin-top: 40px;
   border-radius: 10px;
-  min-height: 100px;
+  min-height: 80px;
   background-color: rgba(0 0 0 / 0.14) !important;
 }
 
@@ -78,6 +78,7 @@
 
 .user_username {
   margin: 0px;
+  font-size: 26px;
 }
 
 .user_info_edit_icon {
@@ -167,11 +168,13 @@
 
 
 
-
-
-
-
-
+.tmz_input_and_save_icoin_cont{
+  display:  flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+}
 
 
 @media screen and (max-width: 768px) {
