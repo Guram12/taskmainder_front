@@ -77,6 +77,10 @@ const Profile_Info_update: React.FC<Profile_Info_updateProps> = ({ profileData, 
     setIsEditing({ ...isEditing, phone: false })
   }
 
+  const handleCansel_timezone_update = () => {
+    setIsEditing({ ...isEditing, timezone: false })
+  }
+
   // ============================================== timezone select options ================================
   const timezoneOptions = timezone_data.map((entry) => ({
     label: `${entry.country_name} (Timezone: ${entry.timezone}, ${entry.utc_offset})`,
@@ -241,7 +245,7 @@ const Profile_Info_update: React.FC<Profile_Info_updateProps> = ({ profileData, 
                     setIsEditing({ ...isEditing, timezone: false })
                   }}
                 />
-                <HiMiniXMark className='cansel_icon' onClick={handleCansel_username_update} />
+                <HiMiniXMark className='cansel_icon' onClick={handleCansel_timezone_update} />
               </div>
             </div>
           )}
