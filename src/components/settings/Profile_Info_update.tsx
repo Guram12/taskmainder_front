@@ -4,12 +4,12 @@ import { useState, useEffect } from 'react'
 import { ProfileData } from '../../utils/interface';
 import { ThemeSpecs } from '../../utils/theme';
 import { FaUser } from "react-icons/fa";
-// import axiosInstance from '../../utils/axiosinstance';
 import { TbEdit } from "react-icons/tb";
 import { MdPhoneIphone } from "react-icons/md";
 import { GrFormCheckmark } from "react-icons/gr";
 import { HiMiniXMark } from "react-icons/hi2";
 import axiosInstance from '../../utils/axiosinstance';
+import PhoneInput from 'react-phone-input-2';
 
 
 
@@ -17,9 +17,10 @@ interface Profile_Info_updateProps {
   profileData: ProfileData;
   FetchProfileData: () => Promise<void>;
   currentTheme: ThemeSpecs;
+  isMobile: boolean;
 }
 
-const Profile_Info_update: React.FC<Profile_Info_updateProps> = ({ profileData, FetchProfileData, currentTheme }) => {
+const Profile_Info_update: React.FC<Profile_Info_updateProps> = ({ profileData, FetchProfileData, currentTheme, isMobile }) => {
   const [isEditing, setIsEditing] = useState<{ username: boolean; phone: boolean }>({ username: false, phone: false });
   const [username, setUsername] = useState<string>(profileData.username);
   const [phoneNumber, setPhoneNumber] = useState<string>(profileData.phone_number);
@@ -95,7 +96,20 @@ const Profile_Info_update: React.FC<Profile_Info_updateProps> = ({ profileData, 
           </div>
           {isEditing.username && (
             <div className='input_and_save_icoin_cont' >
-              <input type="text" placeholder="Enter your username" value={username} onChange={(e) => setUsername(e.target.value)} />
+              <input
+                type="text"
+                placeholder="Enter username"
+                value={username}
+                className='username_input'
+                onChange={(e) => setUsername(e.target.value)}
+                style={{
+                  color: currentTheme["--main-text-coloure"],
+                  backgroundColor: currentTheme["--background-color"],
+                  borderColor: currentTheme["--border-color"],
+                  ['--placeholder-color']: currentTheme['--due-date-color']
+                } as React.CSSProperties}
+
+              />
               <div className='x_and_mark_icon_container' >
                 <GrFormCheckmark className='save_icon' onClick={handleUpdate} />
                 <HiMiniXMark className='cansel_icon' onClick={handleCansel_username_update} />
@@ -113,7 +127,26 @@ const Profile_Info_update: React.FC<Profile_Info_updateProps> = ({ profileData, 
           </div>
           {isEditing.phone && (
             <div className='input_and_save_icoin_cont' >
-              <input type="text" placeholder="Enter your phone number" value={phoneNumber} onChange={(e) => setPhoneNumber(e.target.value)} />
+              <PhoneInput
+                country={'us'}
+                value={phoneNumber}
+                onChange={setPhoneNumber}
+                inputStyle={{
+                  background: currentTheme['--list-background-color'],
+                  color: currentTheme['--main-text-coloure'],
+                  border: `1px solid ${currentTheme['--border-color']}`,
+                  width: isMobile ? '290px' : '320px',
+                  height: '44px',
+
+                }}
+                buttonStyle={{
+                  border: `1px solid ${currentTheme['--border-color']}`,
+                  background: currentTheme['--list-background-color'],
+                }}
+                dropdownClass="custom-phone-dropdown"
+                containerClass="custom-phone-container"
+                placeholder="Phone number"
+              />
               <div className='x_and_mark_icon_container' >
                 <GrFormCheckmark className='save_icon' onClick={handleUpdate} />
                 <HiMiniXMark className='cansel_icon' onClick={handleCansel_phone_update} />
@@ -124,7 +157,6 @@ const Profile_Info_update: React.FC<Profile_Info_updateProps> = ({ profileData, 
 
 
       </div>
-
     </div>
   )
 }

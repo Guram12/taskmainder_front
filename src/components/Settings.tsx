@@ -23,6 +23,7 @@ interface SettingsProps {
   boards: board[];
   setBoards: (boards: board[]) => void;
   current_user_email: string;
+  isMobile: boolean;
 
 }
 
@@ -36,6 +37,7 @@ const Settings: React.FC<SettingsProps> = ({
   boards,
   setBoards,
   current_user_email,
+  isMobile,
 }) => {
   // ================================================================================================================================
   const [isImageDeleting, setIsImageDeleting] = useState<boolean>(false);
@@ -120,11 +122,13 @@ const Settings: React.FC<SettingsProps> = ({
         profileData={profileData}
         FetchProfileData={FetchProfileData}
         currentTheme={currentTheme}
+        isMobile={isMobile}
       />
       <Profile_Info_update
         profileData={profileData}
         FetchProfileData={FetchProfileData}
         currentTheme={currentTheme}
+        isMobile={isMobile}
       />
       <ChangePassword
         profileData={profileData}
