@@ -14,6 +14,7 @@ import 'react-phone-input-2/lib/style.css';
 import { Select } from 'antd';
 import { FaRegEye } from "react-icons/fa";
 import { FaRegEyeSlash } from "react-icons/fa";
+import { TbArrowBackUp } from "react-icons/tb";
 
 
 
@@ -27,9 +28,10 @@ export interface FilteredCountry {
 
 interface RegisterProps {
   currentTheme: ThemeSpecs;
+  isMobile: boolean;
 }
 
-const Register: React.FC<RegisterProps> = ({ currentTheme }) => {
+const Register: React.FC<RegisterProps> = ({ currentTheme, isMobile }) => {
   const [email, setEmail] = useState<string>('');
   const [username, setUsername] = useState<string>('');
 
@@ -56,22 +58,22 @@ const Register: React.FC<RegisterProps> = ({ currentTheme }) => {
   // ===================================== validate password ============================
 
   useEffect(() => {
-    setIsLongEnough(confirmPassword.length >= 8);
-    setHasUppercase(/[A-Z]/.test(confirmPassword));
-    setHasNumber(/\d/.test(confirmPassword));
-    if (confirmPassword.length > 0) {
-      if (confirmPassword === confirmPassword) {
+    setIsLongEnough(password.length >= 8);
+    setHasUppercase(/[A-Z]/.test(password));
+    setHasNumber(/\d/.test(password));
+    if (password.length > 0) {
+      if (password === confirmPassword) {
         setIsPasswordValid(true);
       }
       else {
         setIsPasswordValid(false);
       }
     }
-  }, [confirmPassword, confirmPassword]);
+  }, [confirmPassword, password]);
 
   useEffect(() => {
     setIsPasswordAcceptable(validatePassword());
-  }, [isLongEnough, hasUppercase, hasNumber, isPasswordValid, confirmPassword, confirmPassword]);
+  }, [isLongEnough, hasUppercase, hasNumber, isPasswordValid, confirmPassword, password]);
 
   const validatePassword = (): boolean => {
     return isLongEnough && hasUppercase && hasNumber && isPasswordValid;
@@ -93,15 +95,30 @@ const Register: React.FC<RegisterProps> = ({ currentTheme }) => {
     }
 
     try {
-      await axiosInstance.post('/acc/register/', formData, {
+     await axiosInstance.post('/acc/register/', formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
       });
       setMessage('Registration successful!');
-
-    } catch (error) {
-      setMessage('Registration failed. Please try again.');
+    } catch (error: any) {
+      // Try to extract a detailed error message from the response
+      let errorMsg = 'Registration failed.';
+      if (error.response && error.response.data) {
+        // If the backend returns an object like { email: [...] }
+        const data = error.response.data;
+        if (typeof data === 'object') {
+          errorMsg += ' ' + Object.entries(data)
+            .map(([field, messages]) => `${field}: ${(Array.isArray(messages) ? messages.join(', ') : messages)}`)
+            .join(' | ');
+        } else {
+          errorMsg += ' ' + data;
+        }
+      } else if (error instanceof Error) {
+        errorMsg += ' ' + error.message;
+      }
+      setMessage(errorMsg);
+      console.error('Registration error:', error);
     }
   };
 
@@ -111,17 +128,15 @@ const Register: React.FC<RegisterProps> = ({ currentTheme }) => {
   };
 
 
-  // ============================================== hilight countri latters that match ================================
-
-
+  // ============================================== open email providcer ================================
 
   const openEmailProvider = () => {
     const emailDomain = email.split('@')[1];
     const emailProviderUrl = `https://${emailDomain}`;
-    window.open(emailProviderUrl, '_blank');
+    window.open(emailProviderUrl, '_self');   // i should select '_self' instead of '_blank' to open in the same tab
   };
 
-
+  // ============================================== timezone select options ================================
   const timezoneOptions = timezone_data.map((entry) => ({
     label: `${entry.country_name} (Timezone: ${entry.timezone}, ${entry.utc_offset})`,
     value: entry.timezone,
@@ -156,7 +171,7 @@ const Register: React.FC<RegisterProps> = ({ currentTheme }) => {
               onChange={(e) => setEmail(e.target.value)}
               required
               className="register_input"
-              placeholder="Enter your email"
+              placeholder="Email"
               style={{
                 background: currentTheme['--task-background-color'],
                 color: currentTheme['--main-text-coloure'],
@@ -173,7 +188,7 @@ const Register: React.FC<RegisterProps> = ({ currentTheme }) => {
               value={username}
               onChange={(e) => setUsername(e.target.value)}
               required
-              placeholder="Enter your username"
+              placeholder="Username"
               className="register_input"
               style={{
                 background: currentTheme['--task-background-color'],
@@ -195,18 +210,20 @@ const Register: React.FC<RegisterProps> = ({ currentTheme }) => {
                 background: currentTheme['--task-background-color'],
                 color: currentTheme['--main-text-coloure'],
                 border: `1px solid ${currentTheme['--border-color']}`,
-                width: '320px',
+                width: isMobile ? '290px' : '320px',
+                height: '40px',
+
               }}
               buttonStyle={{
                 border: `1px solid ${currentTheme['--border-color']}`,
                 background: currentTheme['--task-background-color'],
               }}
-              containerStyle={{
-                width: '320px',
-              }}
+              // containerStyle={{
+              //   width: '320px',
+              // }}
               dropdownClass="custom-phone-dropdown"
               containerClass="custom-phone-container"
-              placeholder="Enter your phone number"
+              placeholder="Phone number"
             />
           </div>
 
@@ -220,16 +237,11 @@ const Register: React.FC<RegisterProps> = ({ currentTheme }) => {
                 setSelectedTimeZone(value);
               }}
               options={timezoneOptions}
-              placeholder="Select your country for timezone"
+              placeholder="Select country for timezone"
               style={{
-                width: 320,
+                width: isMobile ? '290px' : '320px',
                 height: '40px',
                 background: currentTheme['--task-background-color'],
-                color: currentTheme['--main-text-coloure'],
-                border: `1px solid ${currentTheme['--border-color']}`,
-              }}
-              dropdownStyle={{
-                background: currentTheme['--list-background-color'],
                 color: currentTheme['--main-text-coloure'],
                 border: `1px solid ${currentTheme['--border-color']}`,
               }}
@@ -249,7 +261,7 @@ const Register: React.FC<RegisterProps> = ({ currentTheme }) => {
               onChange={(e) => setPassword(e.target.value)}
               required
               className="register_input"
-              placeholder="Enter your password"
+              placeholder="Password"
               style={{
                 background: currentTheme['--task-background-color'],
                 color: currentTheme['--main-text-coloure'],
@@ -267,7 +279,7 @@ const Register: React.FC<RegisterProps> = ({ currentTheme }) => {
               onChange={(e) => setConfirmPassword(e.target.value)}
               required
               className="register_input"
-              placeholder="Confirm your password"
+              placeholder="Confirm password"
               style={{
                 background: currentTheme['--task-background-color'],
                 color: currentTheme['--main-text-coloure'],
@@ -331,12 +343,13 @@ const Register: React.FC<RegisterProps> = ({ currentTheme }) => {
             Register
           </button>
         </form>
+
         {message && (
           <div>
             <p
               className={`register_message ${message.includes('failed') ? 'error' : ''}`}
               style={{
-                color: message.includes('failed') ? 'red' : 'green',
+                color: message.includes('failed') ? 'red' : 'seagreen',
                 background: currentTheme['--task-background-color'],
                 border: `1px solid ${currentTheme['--border-color']}`,
                 padding: '8px',
@@ -346,12 +359,13 @@ const Register: React.FC<RegisterProps> = ({ currentTheme }) => {
             >
               {message}
             </p>
+
             {message.includes('successful') && (
               <button
                 onClick={openEmailProvider}
-                className="register_button"
+                className="open_email_button"
                 style={{
-                  background: currentTheme['--hover-color'],
+                  background: currentTheme['--list-background-color'],
                   color: currentTheme['--main-text-coloure'],
                   border: `1px solid ${currentTheme['--border-color']}`,
                 }}
@@ -361,18 +375,20 @@ const Register: React.FC<RegisterProps> = ({ currentTheme }) => {
             )}
           </div>
         )}
-        <button
-          onClick={handleLogin}
-          className="back_to_login_btn"
-          style={{
-            background: currentTheme['--hover-color'],
-            color: currentTheme['--main-text-coloure'],
-            border: `1px solid ${currentTheme['--border-color']}`,
-            marginTop: '10px',
-          }}
-        >
-          Go back to login
-        </button>
+
+        {/* =======================  go back to login ======================= */}
+        <div className="back_to_login_container">
+          <p
+            onClick={handleLogin}
+            className="back_to_login_p"
+            style={{ color: currentTheme['--main-text-coloure'], }}
+          >
+            Go back to login
+          </p>
+          <TbArrowBackUp style={{ color: currentTheme['--main-text-coloure'] }} className="back_to_login_icon" />
+        </div>
+
+
       </div>
     </div>
 
