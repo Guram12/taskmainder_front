@@ -1,4 +1,4 @@
-.main_delete_acc_container{
+.main_delete_acc_container {
   display: flex;
   flex-direction: row;
   justify-content: flex-start;
@@ -40,9 +40,11 @@
   color: red;
 }
 
-.delete_aqq_h1{
+.delete_aqq_h1 {
   margin-left: 30px;
 }
+
+
 .main_delete_account_button {
   color: white;
   background-color: red;
@@ -64,8 +66,10 @@
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent black */
-  z-index: 999; /* Below the modal but above other content */
+  background-color: rgba(0, 0, 0, 0.5);
+  /* Semi-transparent black */
+  z-index: 999;
+  /* Below the modal but above other content */
 }
 
 .confirmation-modal {
@@ -80,6 +84,17 @@
   z-index: 1000;
 }
 
+.confirmation-input{
+  width: 200px;
+  padding: 5px;
+  border: 1px solid;
+  border-radius: 5px;
+}
+
+.confirmation-input::placeholder {
+  color: var(--placeholder-color, gray);
+}
+
 .confirmation-buttons {
   display: flex;
   justify-content: center;
@@ -92,11 +107,45 @@
   border: none;
   border-radius: 5px;
   cursor: pointer;
-  background-color: red;
 }
 
 .delete_acc_buutton:disabled {
-  background-color: lightgray;
-  color: darkgray;
   cursor: not-allowed;
+}
+
+.cancel_button{
+  padding: 5px 10px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.cancel_button:hover {
+ box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* ================================================================================================== */
+
+@media screen and (max-width: 768px) {
+  .main_delete_acc_container {
+    justify-content: center;
+  }
+
+  .delete_aqq_h1 {
+    margin-left: 0px;
+    font-size: 20px;
+  }
+
+  .confirmation-modal {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 80%;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+  }
+
 }
