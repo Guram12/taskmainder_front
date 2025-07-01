@@ -10,7 +10,7 @@ import { GrFormCheckmark } from "react-icons/gr";
 import { HiMiniXMark } from "react-icons/hi2";
 import axiosInstance from '../../utils/axiosinstance';
 import PhoneInput from 'react-phone-input-2';
-
+import SkeletonUserInfo from '../Boards/SkeletonUserInfo';
 
 
 interface Profile_Info_updateProps {
@@ -24,7 +24,7 @@ const Profile_Info_update: React.FC<Profile_Info_updateProps> = ({ profileData, 
   const [isEditing, setIsEditing] = useState<{ username: boolean; phone: boolean }>({ username: false, phone: false });
   const [username, setUsername] = useState<string>(profileData.username);
   const [phoneNumber, setPhoneNumber] = useState<string>(profileData.phone_number);
-
+  const [loading_user_data, setLoading_user_data] = useState<{ username: boolean; phone: boolean }>({ username: false, phone: false });
 
 
 
@@ -34,7 +34,6 @@ const Profile_Info_update: React.FC<Profile_Info_updateProps> = ({ profileData, 
   }, [profileData]);
 
   // ============================= send updated data to backend ======================================
-
 
   const handleUpdate = async () => {
     try {
@@ -56,6 +55,8 @@ const Profile_Info_update: React.FC<Profile_Info_updateProps> = ({ profileData, 
       }
     } catch (error) {
       console.error("Error updating profile:", error);
+    } finally {
+      setLoading_user_data({ username: false, phone: false });
     }
   };
 
@@ -91,7 +92,12 @@ const Profile_Info_update: React.FC<Profile_Info_updateProps> = ({ profileData, 
         <div className='names_with_input_cont' >
           <div className='each_input_cont' >
             <FaUser className="user_icon" style={{ color: currentTheme["--main-text-coloure"] }} />
-            <h1 className='user_username' >{profileData.username}</h1>
+            {loading_user_data.username ?
+              <SkeletonUserInfo currentTheme={currentTheme} height={35} width={220} />
+              :
+              <h1 className='user_username' >{profileData.username}</h1>
+            }
+
             <TbEdit className='user_info_edit_icon' onClick={() => setIsEditing({ ...isEditing, username: true })} />
           </div>
           {isEditing.username && (
@@ -111,7 +117,14 @@ const Profile_Info_update: React.FC<Profile_Info_updateProps> = ({ profileData, 
 
               />
               <div className='x_and_mark_icon_container' >
-                <GrFormCheckmark className='save_icon' onClick={handleUpdate} />
+                <GrFormCheckmark
+                  className='save_icon'
+                  onClick={() => {
+                    handleUpdate();
+                    setLoading_user_data({ username: true, phone: false });
+                    setIsEditing({ ...isEditing, username: false })
+                  }}
+                />
                 <HiMiniXMark className='cansel_icon' onClick={handleCansel_username_update} />
               </div>
             </div>
@@ -122,7 +135,11 @@ const Profile_Info_update: React.FC<Profile_Info_updateProps> = ({ profileData, 
         <div className='names_with_input_cont' >
           <div className='each_input_cont' >
             <MdPhoneIphone className="user_icon" style={{ color: currentTheme["--main-text-coloure"] }} />
-            <h1 className='user_username' >{profileData.phone_number}</h1>
+            {loading_user_data.phone ?
+              <SkeletonUserInfo currentTheme={currentTheme} height={35} width={250} />
+              :
+              <h1 className='user_username' >{profileData.phone_number}</h1>
+            }
             <TbEdit className='user_info_edit_icon' onClick={() => setIsEditing({ ...isEditing, phone: true })} />
           </div>
           {isEditing.phone && (
@@ -148,7 +165,15 @@ const Profile_Info_update: React.FC<Profile_Info_updateProps> = ({ profileData, 
                 placeholder="Phone number"
               />
               <div className='x_and_mark_icon_container' >
-                <GrFormCheckmark className='save_icon' onClick={handleUpdate} />
+                <GrFormCheckmark
+                  className='save_icon'
+                  onClick={() => {
+                    handleUpdate();
+                    setLoading_user_data({ username: false, phone: true });
+                    setIsEditing({ ...isEditing, phone: false })
+
+                  }}
+                />
                 <HiMiniXMark className='cansel_icon' onClick={handleCansel_phone_update} />
               </div>
             </div>
