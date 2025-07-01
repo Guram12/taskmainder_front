@@ -89,7 +89,7 @@ const ChangePassword: React.FC<ChangePasswordProps> = ({ currentTheme, profileDa
   };
 
   return (
-    <div className='main_password_container' style={{borderColor: currentTheme['--border-color']}} >
+    <div className='main_password_container' style={{ borderColor: currentTheme['--border-color'] }} >
       <div className="password_change_container"
         style={{
           backgroundColor: currentTheme["--background-color"],
@@ -112,6 +112,12 @@ const ChangePassword: React.FC<ChangePasswordProps> = ({ currentTheme, profileDa
               value={newPassword}
               onChange={(e) => setNewPassword(e.target.value)}
               className="password_input"
+              style={{
+                borderColor: currentTheme['--border-color'],
+                color: currentTheme['--main-text-coloure'],
+                backgroundColor: currentTheme['--list-background-color'],
+                ['--placeholder-color']: currentTheme['--due-date-color']
+              } as React.CSSProperties}
             />
             <input
               type={showPassword ? "text" : "password"}
@@ -119,37 +125,57 @@ const ChangePassword: React.FC<ChangePasswordProps> = ({ currentTheme, profileDa
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
               className="password_input"
+              style={{
+                borderColor: currentTheme['--border-color'],
+                color: currentTheme['--main-text-coloure'],
+                backgroundColor: currentTheme['--list-background-color'],
+                ['--placeholder-color']: currentTheme['--due-date-color']
+              } as React.CSSProperties}
             />
             {showPassword ? (
               <FaEye className='show_password' onClick={togglePasswordVisibility} />
             ) : (
               <FaEyeSlash className='show_password' onClick={togglePasswordVisibility} />
             )}
-            <button disabled={!isPasswordEccaptable} onClick={handlePasswordChange} className="password_change_button">
+
+            <button
+              disabled={!isPasswordEccaptable}
+              onClick={handlePasswordChange}
+              className="password_change_button"
+              style={{
+                color: currentTheme['--main-text-coloure'],
+                backgroundColor: currentTheme['--list-background-color'],
+                borderColor: currentTheme['--border-color'],
+              }}
+            >
               Change Password
             </button>
-            {error && <p className="error_message">{error}</p>}
-            {success && <p className="success_message">{success}</p>}
+
+
           </div>
+
           <div className='password_validations_container'>
-            <p className='password_validations' style={{ color: isLongEnough ? 'limegreen' : 'red' }}>
-              {!isLongEnough && <span>*</span>} hasUppercase Minimum 8 symbols
+            <p className='password_validations' style={{ color: isLongEnough ? 'seagreen' : 'red' }}>
+              {!isLongEnough && <span>*</span>} Minimum 8 symbols
             </p>
-            <p className='password_validations' style={{ color: hasUppercase ? 'limegreen' : 'red' }}>
+            <p className='password_validations' style={{ color: hasUppercase ? 'seagreen' : 'red' }}>
               {!hasUppercase && <span>*</span>} At least one uppercase letter
             </p>
-            <p className='password_validations' style={{ color: hasNumber ? 'limegreen' : 'red' }}>
+            <p className='password_validations' style={{ color: hasNumber ? 'seagreen' : 'red' }}>
               {!hasNumber && <span>*</span>} At least one number
             </p>
 
-            <p className='password_validations' style={{ color: isPasswordValid ? 'limegreen' : 'red' }}>
+            <p className='password_validations' style={{ color: isPasswordValid ? 'seagreen' : 'red' }}>
               {isPasswordValid ? (
                 <span>Passwords match</span>
               ) : (
                 <span>* Passwords do not match</span>
               )}
             </p>
+
           </div>
+          {error && <p className="error_message">{error}</p>}
+          {success && <p className="success_message">{success}</p>}
         </div>
       )}
     </div>
