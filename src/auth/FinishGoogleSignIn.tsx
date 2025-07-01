@@ -1,7 +1,6 @@
 import "../styles/FinishGoogleSignIn.css";
 import React, { useState, useEffect } from "react";
 import timezone_data from "../utils/data.json";
-import { FilteredCountry } from "./register";
 import axiosInstance from "../utils/axiosinstance";
 import { useNavigate } from "react-router-dom";
 import { ThemeSpecs } from "../utils/theme";
