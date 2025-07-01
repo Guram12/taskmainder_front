@@ -33,7 +33,6 @@ const DeleteAccount: React.FC<DeleteAccountProps> = ({ currentTheme }) => {
       if (axios.isAxiosError(error)) { // Use axios.isAxiosError
         // Handle Axios-specific error
         console.error(error.response?.data || error.message);
-        alert(error.response?.data?.message || 'Failed to delete account. Please try again.');
       } else {
         // Handle non-Axios errors
         console.error(error);

@@ -6,6 +6,8 @@ import { FaEyeSlash } from "react-icons/fa";
 import { FaEye } from "react-icons/fa";
 import axiosInstance from '../../utils/axiosinstance';
 import google_logo from "../../assets/google_logo.png";
+import PulseLoader from "react-spinners/PulseLoader";
+
 
 interface ChangePasswordProps {
   currentTheme: ThemeSpecs;
@@ -14,16 +16,21 @@ interface ChangePasswordProps {
 }
 
 const ChangePassword: React.FC<ChangePasswordProps> = ({ currentTheme, profileData, FetchProfileData }) => {
-  const [newPassword, setNewPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
-  const [error, setError] = useState('');
-  const [success, setSuccess] = useState('');
-  const [showPassword, setShowPassword] = useState(false);
+  const [oldPassword, setOldPassword] = useState<string>('');
+  const [isOldPasswordCorrect, setIsOldPasswordCorrect] = useState<boolean | undefined>(undefined);
+  const [oldPasswordLoading, setOldPasswordLoading] = useState<boolean | undefined>(undefined);
+
+
+  const [newPassword, setNewPassword] = useState<string>('');
+  const [confirmPassword, setConfirmPassword] = useState<string>('');
+  const [error, setError] = useState<string>('');
+  const [success, setSuccess] = useState<string>('');
+  const [showPassword, setShowPassword] = useState<boolean>(false);
 
   // States for validation rules
-  const [isLongEnough, setIsLongEnough] = useState(false);
-  const [hasUppercase, setHasUppercase] = useState(false);
-  const [hasNumber, setHasNumber] = useState(false);
+  const [isLongEnough, setIsLongEnough] = useState<boolean>(false);
+  const [hasUppercase, setHasUppercase] = useState<boolean>(false);
+  const [hasNumber, setHasNumber] = useState<boolean>(false);
   const [isPasswordValid, setIsPasswordValid] = useState(false);
   const [isPasswordEccaptable, setIsPasswordEccaptable] = useState<boolean>(false);
 
@@ -82,6 +89,50 @@ const ChangePassword: React.FC<ChangePasswordProps> = ({ currentTheme, profileDa
       setSuccess('');
     }
   };
+  // =====================================  check old password password ============================================
+
+
+
+  const checkOldPassword = async () => {
+    try {
+      const response = await axiosInstance.post("/acc/check-old-password/", {
+        old_password: oldPassword,
+      }, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+        },
+      });
+      if (response.status === 200) {
+        setIsOldPasswordCorrect(response.data.is_correct);
+        console.log("Old password is correct.", response.data);
+      } else {
+        setIsOldPasswordCorrect(false);
+      }
+    } catch (error) {
+      console.error("Error checking old password:", error);
+      setIsOldPasswordCorrect(false);
+    } finally {
+      setOldPasswordLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    setOldPasswordLoading(true);
+    if (!oldPassword) {
+      setIsOldPasswordCorrect(false);
+      return;
+    }
+
+    const handler = setTimeout(() => {
+      checkOldPassword();
+    }, 500); // 500ms debounce
+
+    return () => {
+      clearTimeout(handler);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [oldPassword, isOldPasswordCorrect]);
+
   // =============================================  show password =================================================
 
   const togglePasswordVisibility = () => {
@@ -106,6 +157,35 @@ const ChangePassword: React.FC<ChangePasswordProps> = ({ currentTheme, profileDa
       ) : (
         <div>
           <div className='password_change_inputs_cont'>
+            {/* old password check  */}
+            <input
+              type={showPassword ? "text" : "password"}
+              placeholder="Old Password"
+              value={oldPassword}
+              onChange={(e) => setOldPassword(e.target.value)}
+              className="password_input"
+              style={{
+                borderColor: currentTheme['--border-color'],
+                color: currentTheme['--main-text-coloure'],
+                backgroundColor: currentTheme['--list-background-color'],
+                ['--placeholder-color']: currentTheme['--due-date-color']
+              } as React.CSSProperties}
+            />
+
+            {oldPassword && !oldPasswordLoading && isOldPasswordCorrect === true && (
+              <p className='old_password_correct'>correct</p>
+            )}
+            {oldPassword && !oldPasswordLoading && isOldPasswordCorrect === false && (
+              <p className='old_password_incorrect'>incorrect</p>
+            )}
+
+            {oldPassword && oldPasswordLoading && (
+              <PulseLoader
+                className='old_password_loading'
+                color={currentTheme['--task-background-color']}
+                size={10} 
+              />
+            )}
             <input
               type={showPassword ? "text" : "password"}
               placeholder="New Password"
