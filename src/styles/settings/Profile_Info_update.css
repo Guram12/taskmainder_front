@@ -10,7 +10,7 @@
   position: relative;
   margin-top: 40px;
   border-radius: 10px;
-  min-height: 100px;
+  min-height: 80px;
   background-color: rgba(0 0 0 / 0.14) !important;
 }
 
@@ -78,11 +78,13 @@
 
 .user_username {
   margin: 0px;
+  font-size: 26px;
 }
 
 .user_info_edit_icon {
   width: 25px;
   height: 25px;
+  cursor: pointer;
 }
 
 .input_and_save_icoin_cont {
@@ -93,6 +95,53 @@
   gap: 10px;
 }
 
+.username_input {
+  width: 90%;
+  height: 40px;
+  border-radius: 5px;
+  padding-left: 10px;
+  font-size: 16px;
+  border: none;
+  outline: none;
+  border: 1px solid;
+}
+
+.username_input::placeholder {
+  color: var(--placeholder-color, #888);
+}
+
+/* =============================== ant designe phone select styles ====================================== */
+
+.pass_custom-phone-dropdown {
+  background: var(--task-background-color) !important;
+  color: var(--main-text-coloure) !important;
+  border: 1px solid var(--border-color) !important;
+}
+
+.pass_custom-phone-dropdown .country {
+  color: var(--main-text-coloure) !important;
+  background: var(--task-background-color) !important;
+}
+
+.pass_custom-phone-dropdown .country:hover,
+.pass_custom-phone-dropdown .country.highlight {
+  background: var(--hover-color) !important;
+  color: var(--main-text-coloure) !important;
+}
+
+/* Change placeholder color for react-phone-input-2 */
+.custom-phone-container .form-control::placeholder {
+  color: var(--due-date-color) !important;
+  /* or any color you want */
+  opacity: 1 !important;
+}
+
+.custom-phone-container .arrow {
+  border-top: 4px solid var(--due-date-color) !important;
+  /* Use your theme variable or any color */
+}
+
+/* ====================================================================================================== */
 .x_and_mark_icon_container {
   display: flex;
   flex-direction: row;
@@ -113,4 +162,34 @@
   height: 26px;
   color: red;
   cursor: pointer;
+}
+
+
+
+
+
+.tmz_input_and_save_icoin_cont{
+  display:  flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+}
+
+
+@media screen and (max-width: 768px) {
+
+  .user_info_input_container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 50px;
+    margin-left: 30px;
+    height: 100%;
+  }
+
+
+
+
 }

@@ -23,10 +23,11 @@ interface ProfilePictureUpdateProps {
   profileData: ProfileData;
   FetchProfileData: () => Promise<void>;
   currentTheme: ThemeSpecs;
+  isMobile: boolean;
 }
 
 
-const ProfilePictureUpdate: React.FC<ProfilePictureUpdateProps> = ({ profileData, FetchProfileData, currentTheme }) => {
+const ProfilePictureUpdate: React.FC<ProfilePictureUpdateProps> = ({ profileData, FetchProfileData, currentTheme, isMobile }) => {
 
   const [currentProfileImage, setCurrentProfileImage] = useState<string | null>(profileData.profile_picture || null);
   const [newProfileImage, setNewProfileImage] = useState<File | null>(null);
@@ -203,10 +204,10 @@ const ProfilePictureUpdate: React.FC<ProfilePictureUpdateProps> = ({ profileData
         ) : (
           <Avatar
             sx={{
-              width: 150, // Set the desired width
-              height: 150, // Set the desired height
-              fontSize: "2rem", // Optional: Adjust font size for the initials
-              marginLeft: "40px",
+              width: isMobile ? 100 : 150, 
+              height: isMobile ? 100 : 150, 
+              fontSize: "2rem", 
+              marginLeft: isMobile ? "0" : "40px", 
             }}
             style={{
               backgroundColor: getAvatarStyles(profileData.username.charAt(0)).backgroundColor,

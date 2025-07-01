@@ -131,30 +131,57 @@
 
 /* Button styles */
 .register_button {
-  padding: 10px 15px;
+  padding: 5px 15px;
   border: none;
   border-radius: 5px;
   font-size: 16px;
   transition: background-color 0.3s ease;
-  width: 60%;
+  width: 120px;
+  height: 35px;
 }
 
 .register_button:hover {
-  background-color: se;
+  background-color: seagreen !important;
 }
 
-.back_to_login_btn {
+.open_email_button {
   padding: 10px 15px;
   border: none;
   border-radius: 5px;
   font-size: 16px;
+  font-weight: 500;
   transition: background-color 0.3s ease;
-  width: 150px;
-  cursor: pointer;
+  width: 250px;
+  border: 1px solid;
 }
 
-.back_to_login_btn:hover {
-  background-color: seagreen !important;
+
+.back_to_login_container {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  gap: 10px;
+}
+
+.back_to_login_p {
+  font-size: 16px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin: 0px;
+}
+
+.back_to_login_p:hover {
+  text-shadow: 0 2px 8px rgba(0 0 0 / 0.54);
+}
+
+.back_to_login_icon {
+  font-size: 25px;
+
 }
 
 
@@ -249,11 +276,6 @@
   color: var(--main-text-coloure) !important;
 }
 
-/* Style the highlighted search text */
-.ant-select-item-option-content .ant-select-highlight {
-  color: tomato !important;
-  font-weight: bold;
-}
 
 .ant-select-dropdown {
   min-width: 320px !important;
@@ -272,7 +294,7 @@
   flex-direction: column;
   justify-content: flex-start;
   align-items: flex-start;
-  gap: 7px;
+  gap: 3px;
   width: 100%;
   padding-left: 80px;
 }
@@ -280,21 +302,23 @@
 .register_password_validations {
   margin: 0px;
   font-weight: 500;
+  font-size: 14px;
+  margin: 0px;
+  transition: all 0.3s ease;
 }
 
 
 /* ======================================================================================================== */
 
 @media screen and (max-width: 768px) {
-  /* 
 
   .register_input {
-    padding: 10px;
+    padding: 12px;
     border: 1px solid;
     border-radius: 5px;
     font-size: 14px;
-    width: 250px;
-  } */
+    width: 270px;
+  }
 
 
 

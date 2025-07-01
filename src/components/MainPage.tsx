@@ -156,6 +156,7 @@ const MainPage: React.FC<MainPageProps> = ({
           boards={boards}
           setBoards={setBoards}
           current_user_email={current_user_email}
+          isMobile={isMobile}
         />;
 
       case "Calendar":

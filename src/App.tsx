@@ -41,14 +41,14 @@ const App: React.FC = () => {
 
   const [isCustomThemeSelected, setIsCustomThemeSelected] = useState<boolean>(default_is_custom_theme_selected);
 
-useEffect(() => {
-  console.log('language changed to:', language);
-}, [language]);
+  useEffect(() => {
+    console.log('language changed to:', language);
+  }, [language]);
 
- useEffect(() => {  
-  console.log('isCustomThemeSelected changed to:', isCustomThemeSelected);
-  localStorage.setItem('isCustomThemeSelected', String(isCustomThemeSelected));
-    }, [isCustomThemeSelected]);
+  useEffect(() => {
+    console.log('isCustomThemeSelected changed to:', isCustomThemeSelected);
+    localStorage.setItem('isCustomThemeSelected', String(isCustomThemeSelected));
+  }, [isCustomThemeSelected]);
 
 
   const background_color = localStorage.getItem('background_color') || '#1A252F';
@@ -391,9 +391,9 @@ useEffect(() => {
       />
       <Routes>
         <Route path="/" element={<Login setIsAuthenticated={setIsAuthenticated} currentTheme={currentTheme} />} />
-        <Route path="/register" element={<Register currentTheme={currentTheme} />} />
-        <Route path="/password-reset" element={<PasswordReset />} />
-        <Route path="/password-reset-confirm/:uid/:token" element={<PasswordResetConfirm />} />
+        <Route path="/register" element={<Register currentTheme={currentTheme} isMobile={isMobile} />} />
+        <Route path="/password-reset" element={<PasswordReset currentTheme={currentTheme} />} />
+        <Route path="/password-reset-confirm/:uid/:token" element={<PasswordResetConfirm currentTheme={currentTheme} />} />
         <Route path="/error" element={<ErrorPage currentTheme={currentTheme} />} />
         <Route path="/finish-profile" element={<FinishGoogleSignIn setIsAuthenticated={setIsAuthenticated} />} />
         <Route path="/mainpage"
