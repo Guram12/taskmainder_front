@@ -89,7 +89,7 @@ const Calendar: React.FC<CalendarProps> = ({ boards, currentTheme, fetchBoards }
     return days;
   };
   const handleDayClick = (monthIndex: number, dayNumber: number, isHighlighted: boolean) => {
-    if (!isHighlighted ) {
+    if (!isHighlighted) {
       setShowCalendarTooltip(true);
       setTimeout(() => {
         setShowCalendarTooltip(false);
@@ -151,7 +151,7 @@ const Calendar: React.FC<CalendarProps> = ({ boards, currentTheme, fetchBoards }
         <h3>{months[monthIndex]}</h3>
         <div className="calendar_grid">
           {daysOfWeek.map((day) => (
-            <div key={day} className="calendar_day_header">
+            <div key={day} className="calendar_day_header" style={{ color: currentTheme["--main-text-coloure"] }}>
               {day}
             </div>
           ))}
@@ -202,16 +202,21 @@ const Calendar: React.FC<CalendarProps> = ({ boards, currentTheme, fetchBoards }
   return (
     <div className="main_calendar_container">
       <div className="calendar_year_controls">
-        < MdOutlineKeyboardDoubleArrowLeft onClick={() => handleYearChange('prev')} className='year_change_arrow_icon' />
-        <h2 className='currentyear_h2' >{currentYear}</h2>
-        <MdOutlineKeyboardDoubleArrowRight onClick={() => handleYearChange('next')} className='year_change_arrow_icon' />
+        < MdOutlineKeyboardDoubleArrowLeft onClick={() => handleYearChange('prev')} style={{ color: currentTheme["--main-text-coloure"] }} className='year_change_arrow_icon' />
+        <h2 className='currentyear_h2' style={{ color: currentTheme["--main-text-coloure"] }} >{currentYear}</h2>
+        <MdOutlineKeyboardDoubleArrowRight onClick={() => handleYearChange('next')} style={{ color: currentTheme["--main-text-coloure"] }} className='year_change_arrow_icon' />
         <div className="calendar_tooltip_cont">
 
           <Tooltip
             title="No Due Date Tasks.  Click on a highlighted day to see tasks due on that day."
             placement="right"
             color={currentTheme["--list-background-color"]}
-            overlayInnerStyle={{ color: currentTheme["--main-text-coloure"] }} // <-- set text color dynamically
+            styles={{
+              body: {
+                color: currentTheme["--main-text-coloure"],
+                background: currentTheme["--list-background-color"],
+              },
+            }}
             open={showCalendarTooltip}
           >
             <span style={{ marginLeft: 8, cursor: 'pointer', fontSize: 18, color: currentTheme["--main-text-coloure"] }}>🛈</span>
@@ -235,7 +240,7 @@ const Calendar: React.FC<CalendarProps> = ({ boards, currentTheme, fetchBoards }
             {tasksForSelectedDay.length > 0 ? (
               <div className="selected_day_container_list">
                 {tasksForSelectedDay.map((board, boardIndex) => (
-                  <div key={boardIndex} className="selected_day_task_container" style={{borderColor: currentTheme['--border-color']}}>
+                  <div key={boardIndex} className="selected_day_task_container" style={{ borderColor: currentTheme['--border-color'] }}>
                     <div className="selected_day_task_board_container" style={{ backgroundColor: `${currentTheme['--list-background-color']}` }}>
                       <div className="selected_day_task_board">
                         <FaClipboardList />
