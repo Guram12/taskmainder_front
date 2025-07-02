@@ -7,48 +7,49 @@ import { FaClipboardList } from "react-icons/fa";
 
 interface SkeletonMemberProps {
   currentTheme: ThemeSpecs;
+  isMobile: boolean;
 }
 
-const SkeletonMember: React.FC<SkeletonMemberProps> = ({ currentTheme }) => {
+const SkeletonMember: React.FC<SkeletonMemberProps> = ({ currentTheme, isMobile }) => {
 
 
   return (
     <div className="skeleton_member_container">
       <RiUserSettingsFill className='skeleton_user_icon' />
 
+      <Skeleton
+        circle
+        height={30}
+        width={30}
+        style={{ marginRight:  isMobile ?  '5px' : '10px'  }}
+        baseColor={currentTheme['--list-background-color']}
+        highlightColor={currentTheme['--main-text-coloure']}
+      />
+      <Skeleton
+        circle
+        height={30}
+        width={30}
+        style={{ marginRight: '10px', marginLeft: '-35px' }}
+        baseColor={currentTheme['--list-background-color']}
+        highlightColor={currentTheme['--main-text-coloure']}
+      />
+      <Skeleton
+        circle
+        height={30}
+        width={30}
+        style={{ marginRight: '10px', marginLeft: '-35px' }}
+        baseColor={currentTheme['--list-background-color']}
+        highlightColor={currentTheme['--main-text-coloure']}
+      />
 
-      <Skeleton
-        circle
-        height={30}
-        width={30}
-        style={{ marginRight: '10px' }}
-        baseColor={currentTheme['--list-background-color']}
-        highlightColor="#e0e0e0"
-      />
-      <Skeleton
-        circle
-        height={30}
-        width={30}
-        style={{ marginRight: '10px', marginLeft: '-35px' }}
-        baseColor={currentTheme['--list-background-color']}
-        highlightColor="#e0e0e0"
-      />
-      <Skeleton
-        circle
-        height={30}
-        width={30}
-        style={{ marginRight: '10px', marginLeft: '-35px' }}
-        baseColor={currentTheme['--list-background-color']}
-        highlightColor="#e0e0e0"
-      />
       <FaClipboardList className='skeleton_boardname_icon' />
 
       <Skeleton
         height={30}
-        width={300}
+        width={ isMobile ? 170 : 300}
         style={{ marginLeft: '10px' }}
         baseColor={currentTheme['--list-background-color']}
-        highlightColor="#e0e0e0"
+        highlightColor={currentTheme['--main-text-coloure']}
       />
 
     </div>

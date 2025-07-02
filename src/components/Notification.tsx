@@ -13,9 +13,10 @@ import { FetchedNotificationData } from "../utils/interface";
 interface NotificationProps {
   currentTheme: ThemeSpecs;
   setIsLoading: (isLoading: boolean) => void;
+  isMobile: boolean; 
 }
 
-const Notification: React.FC<NotificationProps> = ({ currentTheme, setIsLoading }) => {
+const Notification: React.FC<NotificationProps> = ({ currentTheme, setIsLoading, isMobile }) => {
   const [notifications, setNotifications] = useState<FetchedNotificationData[]>([]);
   const [isFetching, setIsFetching] = useState<boolean>(true); // New state to track fetching
 
@@ -133,10 +134,10 @@ const Notification: React.FC<NotificationProps> = ({ currentTheme, setIsLoading 
 
       {isFetching ? (
         <div className="imported_all_skeletons_cont">
-          <SkeletonNotification currentTheme={currentTheme} />
-          <SkeletonNotification currentTheme={currentTheme} />
-          <SkeletonNotification currentTheme={currentTheme} />
-          <SkeletonNotification currentTheme={currentTheme} />
+          <SkeletonNotification currentTheme={currentTheme} isMobile={isMobile} />
+          <SkeletonNotification currentTheme={currentTheme} isMobile={isMobile} />
+          <SkeletonNotification currentTheme={currentTheme} isMobile={isMobile} />
+          <SkeletonNotification currentTheme={currentTheme} isMobile={isMobile} />
         </div>
       ) : notifications.length === 0 ? (
         <div className="no_notification_container">

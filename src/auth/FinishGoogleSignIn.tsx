@@ -1,21 +1,31 @@
+import "../styles/FinishGoogleSignIn.css";
 import React, { useState, useEffect } from "react";
 import timezone_data from "../utils/data.json";
-import { FilteredCountry } from "./register";
 import axiosInstance from "../utils/axiosinstance";
 import { useNavigate } from "react-router-dom";
+import { ThemeSpecs } from "../utils/theme";
+import { FaUser } from "react-icons/fa";
+import { FaPhone } from "react-icons/fa6";
+import PhoneInput from 'react-phone-input-2';
+import { IoEarth } from "react-icons/io5";
+import { Select } from 'antd';
+import PulseLoader from "react-spinners/PulseLoader";
+
+
 
 interface FinishGoogleSignInProps {
   setIsAuthenticated: (value: boolean) => void;
+  currentTheme: ThemeSpecs;
+  isMobile: boolean;
 }
 
-const FinishGoogleSignIn: React.FC<FinishGoogleSignInProps> = ({ setIsAuthenticated }) => {
+const FinishGoogleSignIn: React.FC<FinishGoogleSignInProps> = ({ setIsAuthenticated, currentTheme, isMobile }) => {
   const [username, setUsername] = useState<string>('');
   const [phoneNumber, setPhoneNumber] = useState<string>('');
-  const [countryInput, setCountryInput] = useState<string>('');
-  const [filteredCountries, setFilteredCountries] = useState<FilteredCountry[]>([]);
   const [selectedTimeZone, setSelectedTimeZone] = useState<string>('');
   const [message, setMessage] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(false);
+
 
   const navigate = useNavigate();
 
@@ -30,7 +40,14 @@ const FinishGoogleSignIn: React.FC<FinishGoogleSignInProps> = ({ setIsAuthentica
     const formData = new FormData();
     formData.append('username', username);
     formData.append('phone_number', phoneNumber);
-    formData.append('timezone', selectedTimeZone);
+
+    if (selectedTimeZone === "Europe/Tbilisi") {
+      formData.append('timezone', 'Asia/Tbilisi');
+    } else {
+      formData.append('timezone', selectedTimeZone);
+    }
+
+
 
     try {
       await axiosInstance.patch('/acc/profile-finish/', formData, {
@@ -52,88 +69,124 @@ const FinishGoogleSignIn: React.FC<FinishGoogleSignInProps> = ({ setIsAuthentica
     }
   };
 
-  const handleCountryInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
-    setCountryInput(value);
-    if (value) {
-      const filtered: FilteredCountry[] = [];
-      timezone_data.forEach(entry => {
-        if (entry.country_name.toLowerCase().includes(value.toLowerCase())) {
-          filtered.push({ name: entry.country_name, timezone: entry.timezone, utc_offset: entry.utc_offset });
-        }
-      });
-      setFilteredCountries(filtered);
-    } else {
-      setFilteredCountries([]);
-    }
-  };
-
-  const handleTimeZoneClick = (country: FilteredCountry) => {
-    setSelectedTimeZone(country.timezone);
-    setCountryInput(country.timezone);
-    setFilteredCountries([]);
-  };
-
   useEffect(() => {
     console.log("selectedTimeZone:===>", selectedTimeZone);
   }, [selectedTimeZone]);
 
+
+  // ============================================== timezone select options ================================
+  const timezoneOptions = timezone_data.map((entry) => ({
+    label: `${entry.country_name} (Timezone: ${entry.timezone}, ${entry.utc_offset})`,
+    value: entry.timezone,
+  }));
+
+
   return (
-    <div>
-      <h1>Set Timezone</h1>
+    <div
+      className="main_finish_profile_container"
+    >
+      <div className="finish_profile_container">
 
-      <form onSubmit={handleSubmit}>
-        <div>
-          <label htmlFor="username">Username:</label>
-          <input
-            id="username"
-            type="text"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-            required
-          />
-        </div>
+        <h1 style={{ color: currentTheme['--main-text-coloure'] }}>Finish Profile</h1>
 
-        <div>
-          <label htmlFor="phoneNumber">Phone Number:</label>
-          <input
-            id="phoneNumber"
-            type="text"
-            value={phoneNumber}
-            onChange={(e) => setPhoneNumber(e.target.value)}
-          />
-        </div>
+        <form onSubmit={handleSubmit}
+          style={{
+            background: currentTheme['--list-background-color'],
+            border: `1px solid ${currentTheme['--border-color']}`,
+            color: currentTheme['--main-text-coloure'],
+            borderRadius: '10px',
 
-        <div className="country_select_inputs_container">
-          <label htmlFor="countryInput">Country:</label>
-          <input
-            id="countryInput"
-            type="text"
-            value={countryInput}
-            onChange={handleCountryInputChange}
-            aria-autocomplete="list"
-            aria-controls="country-list"
-          />
-          {filteredCountries.length > 0 && (
-            <div id="country-list" className='country_list'>
-              {filteredCountries.map((country, index) => (
-                <p
-                  className='country'
-                  key={index}
-                  onClick={() => handleTimeZoneClick(country)}
-                  role="option"
-                >
-                  {country.name} (Timezone: {country.timezone}, {country.utc_offset})
-                </p>
-              ))}
-            </div>
+          }}
+          className="finish_profile_form"
+        >
+          <div className="register_form_group" >
+            <FaUser className='register_icons' style={{ color: currentTheme['--main-text-coloure'] }} />
+            <input
+              type="text"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+              required
+              placeholder="Username"
+              className="register_input"
+              style={{
+                background: currentTheme['--task-background-color'],
+                color: currentTheme['--main-text-coloure'],
+                border: `1px solid ${currentTheme['--border-color']}`,
+                ['--placeholder-color']: currentTheme['--due-date-color'],
+
+              } as React.CSSProperties}
+            />
+          </div>
+
+          <div className="register_form_group"  >
+            <FaPhone className='register_icons' style={{ color: currentTheme['--main-text-coloure'] }} />
+            <PhoneInput
+              country={'us'}
+              value={phoneNumber}
+              onChange={setPhoneNumber}
+              inputStyle={{
+                background: currentTheme['--task-background-color'],
+                color: currentTheme['--main-text-coloure'],
+                border: `1px solid ${currentTheme['--border-color']}`,
+                width: isMobile ? '290px' : '320px',
+                height: '40px',
+
+              }}
+              buttonStyle={{
+                border: `1px solid ${currentTheme['--border-color']}`,
+                background: currentTheme['--task-background-color'],
+              }}
+              // containerStyle={{
+              //   width: '320px',
+              // }}
+              dropdownClass="custom-phone-dropdown"
+              containerClass="custom-phone-container"
+              placeholder="Phone number"
+            />
+          </div>
+
+          <div className="register_form_group">
+            <IoEarth className='register_icons' style={{ color: currentTheme['--main-text-coloure'] }} />
+            <Select
+              showSearch
+              value={selectedTimeZone || undefined} // <-- change here
+              onChange={(value) => {
+                setSelectedTimeZone(value);
+              }}
+              options={timezoneOptions}
+              placeholder="Select country for timezone"
+              style={{
+                width: isMobile ? '290px' : '320px',
+                height: '40px',
+                background: currentTheme['--task-background-color'],
+                color: currentTheme['--main-text-coloure'],
+                border: `1px solid ${currentTheme['--border-color']}`,
+              }}
+              filterOption={(input, option) =>
+                (option?.label ?? '').toLowerCase().includes(input.toLowerCase())
+              }
+            />
+          </div>
+
+          {loading ? (
+            <PulseLoader color={currentTheme['--list-background-color']} />
+          ) : (
+            <button
+              type="submit"
+              disabled={loading}
+              className="finish_btn"
+              style={{
+                color: currentTheme['--main-text-coloure'],
+                background: currentTheme['--task-background-color'],
+                border: `1px solid ${currentTheme['--border-color']}`,
+              }}
+            >
+              Finish
+            </button>
           )}
-        </div>
-        <button type="submit" disabled={loading}>
-          {loading ? 'Submitting...' : 'Finish'}
-        </button>
-      </form>
-      {message && <p>{message}</p>}
+        </form>
+        {message && <p>{message}</p>}
+      </div>
     </div>
   );
 };

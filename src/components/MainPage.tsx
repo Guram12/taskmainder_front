@@ -200,7 +200,7 @@ const MainPage: React.FC<MainPageProps> = ({
         return <Notification
           currentTheme={currentTheme}
           setIsLoading={setIsLoading}
-
+          isMobile={isMobile}
         />;
 
     }

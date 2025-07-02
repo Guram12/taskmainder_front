@@ -8,6 +8,7 @@ import { MdOutlineAlternateEmail } from "react-icons/md";
 import { PiPasswordBold } from "react-icons/pi";
 import { FaEye } from "react-icons/fa";
 import { FaEyeSlash } from "react-icons/fa";
+import PulseLoader from "react-spinners/PulseLoader";
 
 
 
@@ -21,11 +22,14 @@ const Login: React.FC<loginProps> = ({ setIsAuthenticated, currentTheme }) => {
   const [password, setPassword] = useState<string>('');
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const [error, setError] = useState<string>('');
+  const [login_loading, setLogin_loading] = useState<boolean>(false);
+
 
   const navigate = useNavigate();
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
+    setLogin_loading(true);
     try {
       const response = await axiosInstance.post(`/acc/login/`, {
         email,
@@ -43,6 +47,8 @@ const Login: React.FC<loginProps> = ({ setIsAuthenticated, currentTheme }) => {
     } catch (err: any) {
       console.error('Error during login:', err.response);
       setError(err.response.data.error || 'An error occurred during login.');
+    } finally {
+      setLogin_loading(false);
     }
   };
 
@@ -120,18 +126,25 @@ const Login: React.FC<loginProps> = ({ setIsAuthenticated, currentTheme }) => {
             {showPassword ? 'Hide password' : 'Show password'}
           </p>
         </div>
-
-        <button
-          className="login-button"
-          type="submit"
-          style={{
-            background: currentTheme['--hover-color'],
-            color: currentTheme['--main-text-coloure'],
-            border: `1px solid ${currentTheme['--border-color']}`,
-          }}
-        >
-          Login
-        </button>
+        {!login_loading ? (
+          <button
+            className="login-button"
+            type="submit"
+            style={{
+              background: currentTheme['--hover-color'],
+              color: currentTheme['--main-text-coloure'],
+              border: `1px solid ${currentTheme['--border-color']}`,
+            }}
+          >
+            Login
+          </button>
+        ) : (
+          <PulseLoader
+            className='register_loading'
+            color={currentTheme['--task-background-color']}
+            size={10}
+          />
+        )}
       </form>
       <div className="google-signin-container">
         <GoogleSignIn setIsAuthenticated={setIsAuthenticated} />

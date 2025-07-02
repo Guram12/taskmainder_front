@@ -7,9 +7,10 @@ import { RiDeleteBin4Fill } from "react-icons/ri";
 
 interface SkeletonNotificationProps {
   currentTheme: ThemeSpecs;
+  isMobile: boolean;
 }
 
-const SkeletonNotification: React.FC<SkeletonNotificationProps> = ({ currentTheme }) => {
+const SkeletonNotification: React.FC<SkeletonNotificationProps> = ({ currentTheme, isMobile }) => {
 
   return (
     <div
@@ -21,14 +22,14 @@ const SkeletonNotification: React.FC<SkeletonNotificationProps> = ({ currentThem
       <RiDeleteBin4Fill className='skeleton_notification_icon' />
       <Skeleton
         height={30}
-        width={200}
+        width={isMobile ? 230 : 300}
         style={{ marginLeft: '10px', marginTop: '10px' }}
         baseColor={currentTheme['--list-background-color']}
         highlightColor="#e0e0e0"
       />
       <Skeleton
         height={30}
-        width={500}
+        width={isMobile ? 70 : 500}
         style={{ marginLeft: '10px', marginTop: '30px' }}
         baseColor={currentTheme['--list-background-color']}
         highlightColor="#e0e0e0"

@@ -15,7 +15,7 @@ import { Select } from 'antd';
 import { FaRegEye } from "react-icons/fa";
 import { FaRegEyeSlash } from "react-icons/fa";
 import { TbArrowBackUp } from "react-icons/tb";
-
+import PulseLoader from "react-spinners/PulseLoader";
 
 
 
@@ -52,8 +52,16 @@ const Register: React.FC<RegisterProps> = ({ currentTheme, isMobile }) => {
 
   const [selectedTimeZone, setSelectedTimeZone] = useState<string | undefined>(undefined);
 
+  const [registration_loading, setRegistration_loading] = useState<boolean>(false);
+
+
+
   const navigate = useNavigate();
 
+
+  useEffect(() => {
+    console.log('selected timezone: ', selectedTimeZone);
+  }, [selectedTimeZone]);
 
   // ===================================== validate password ============================
 
@@ -84,6 +92,7 @@ const Register: React.FC<RegisterProps> = ({ currentTheme, isMobile }) => {
   // ===================================== register =====================================
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
+    setRegistration_loading(true);
     const formData = new FormData();
     formData.append('email', email);
     formData.append('username', username);
@@ -91,15 +100,21 @@ const Register: React.FC<RegisterProps> = ({ currentTheme, isMobile }) => {
     formData.append('phone_number', phoneNumber);
 
     if (selectedTimeZone !== undefined) {
-      formData.append('timezone', selectedTimeZone);
+      if (selectedTimeZone === 'Europe/Tbilisi') {
+        console.log('Selected timezone is Europe/Tbilisi');
+        formData.append('timezone', 'Asia/Tbilisi');
+      } else {
+        formData.append('timezone', selectedTimeZone);
+      }
     }
 
     try {
-     await axiosInstance.post('/acc/register/', formData, {
+      await axiosInstance.post('/acc/register/', formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
       });
+
       setMessage('Registration successful!');
     } catch (error: any) {
       // Try to extract a detailed error message from the response
@@ -119,6 +134,8 @@ const Register: React.FC<RegisterProps> = ({ currentTheme, isMobile }) => {
       }
       setMessage(errorMsg);
       console.error('Registration error:', error);
+    } finally {
+      setRegistration_loading(false);
     }
   };
 
@@ -329,19 +346,29 @@ const Register: React.FC<RegisterProps> = ({ currentTheme, isMobile }) => {
 
 
           {/* =======================  register button ======================= */}
-          <button
-            type="submit"
-            className="register_button"
-            style={{
-              background: currentTheme['--task-background-color'],
-              color: currentTheme['--main-text-coloure'],
-              border: `1px solid ${currentTheme['--border-color']}`,
-              cursor: isPasswordAcceptable ? 'pointer' : 'not-allowed',
-            }}
-            disabled={isPasswordAcceptable ? false : true}
-          >
-            Register
-          </button>
+          {!registration_loading ? (
+            <button
+              type="submit"
+              className="register_button"
+              style={{
+                background: currentTheme['--task-background-color'],
+                color: currentTheme['--main-text-coloure'],
+                border: `1px solid ${currentTheme['--border-color']}`,
+                cursor: isPasswordAcceptable ? 'pointer' : 'not-allowed',
+              }}
+              disabled={isPasswordAcceptable ? false : true}
+            >
+              Register
+            </button>
+          ) : (
+            <PulseLoader
+              className='register_loading'
+              color={currentTheme['--task-background-color']}
+              size={10}
+            />
+          )}
+
+
         </form>
 
         {message && (

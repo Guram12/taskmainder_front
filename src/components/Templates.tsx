@@ -99,7 +99,7 @@ const Templates: React.FC<TemplatesProps> = ({ handleTemplateSelect, currentThem
         {templates.map((template) => (
           <div key={template.id}>
             <div className="template_boardname_button_cont" >
-              <h1 className="template_boardname">{template.name}</h1>
+              <h1 className="template_boardname" style={{color: currentTheme['--main-text-coloure']}}>{template.name}</h1>
               <button
                 className="select_template_button"
                 onClick={() => handleTemplateClick(template.id)}

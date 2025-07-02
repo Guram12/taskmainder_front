@@ -27,13 +27,11 @@ const DeleteAccount: React.FC<DeleteAccountProps> = ({ currentTheme }) => {
       });
 
       console.log(response.data);
-      alert('Account deleted successfully.');
       navigate('/');
     } catch (error) {
       if (axios.isAxiosError(error)) { // Use axios.isAxiosError
         // Handle Axios-specific error
         console.error(error.response?.data || error.message);
-        alert(error.response?.data?.message || 'Failed to delete account. Please try again.');
       } else {
         // Handle non-Axios errors
         console.error(error);
@@ -80,8 +78,14 @@ const DeleteAccount: React.FC<DeleteAccountProps> = ({ currentTheme }) => {
           Danger Zone
         </p>
       </div>
-      <h1 className='delete_aqq_h1' >Delete Your Account</h1>
-      <button className='main_delete_account_button' onClick={handleDeleteClick}>Delete</button>
+      <h1 className='delete_aqq_h1' style={{ color: currentTheme['--main-text-coloure'] }} >Delete Your Account</h1>
+      <button
+        className='main_delete_account_button'
+        onClick={handleDeleteClick}
+        style={{ color: currentTheme['--main-text-coloure'] }}
+      >
+        Delete
+      </button>
 
       {isConfirmationOpen && (
         <>
@@ -93,10 +97,35 @@ const DeleteAccount: React.FC<DeleteAccountProps> = ({ currentTheme }) => {
               value={confirmationInput}
               onChange={(e) => setConfirmationInput(e.target.value)}
               placeholder="Type here..."
+              className='confirmation-input'
+              style={{
+                color: currentTheme['--main-text-coloure'],
+                backgroundColor: currentTheme['--list-background-color'],
+                borderColor: currentTheme['--border-color'],
+                ['--placeholder-color']: currentTheme['--due-date-color']
+              } as React.CSSProperties}
             />
             <div className="confirmation-buttons">
-              <button className='delete_acc_buutton' onClick={handleConfirmDelete} disabled={!isConfirmationCorrect}>Confirm</button>
-              <button onClick={handleCancel}>Cancel</button>
+              <button
+                className='delete_acc_buutton'
+                onClick={handleConfirmDelete}
+                disabled={!isConfirmationCorrect}
+                style={{
+                  color: currentTheme['--main-text-coloure'],
+                  backgroundColor: !isConfirmationCorrect ? currentTheme['--list-background-color'] : 'red',
+                  cursor: isConfirmationCorrect ? 'pointer' : 'not-allowed',
+                }}
+              >
+                Confirm</button>
+              <button
+                onClick={handleCancel}
+                className='cancel_button'
+                style={{
+                  color: currentTheme['--main-text-coloure'],
+                  backgroundColor: currentTheme['--list-background-color'],
+                }}
+
+              >Cancel</button>
             </div>
           </div>
         </>

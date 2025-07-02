@@ -395,7 +395,12 @@ const App: React.FC = () => {
         <Route path="/password-reset" element={<PasswordReset currentTheme={currentTheme} />} />
         <Route path="/password-reset-confirm/:uid/:token" element={<PasswordResetConfirm currentTheme={currentTheme} />} />
         <Route path="/error" element={<ErrorPage currentTheme={currentTheme} />} />
-        <Route path="/finish-profile" element={<FinishGoogleSignIn setIsAuthenticated={setIsAuthenticated} />} />
+        <Route path="/finish-profile" element={<FinishGoogleSignIn
+          setIsAuthenticated={setIsAuthenticated}
+          currentTheme={currentTheme}
+          isMobile={isMobile}
+        />}
+        />
         <Route path="/mainpage"
           element={<MainPage
             selectedBoard={selectedBoard}

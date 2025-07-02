@@ -25,7 +25,23 @@
 
 
 
+@media screen and (max-width: 768px) {
+.skeleton_notification_container {
+  border: 1px solid lime;
+  width: 85%;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  cursor: pointer;
+  align-items: flex-start;
+  padding: 15px;
+  border-radius: 8px;
+  height: 100px;
+  
+}
 
+  
+}
 
 
 
