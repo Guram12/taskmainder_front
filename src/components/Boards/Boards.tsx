@@ -824,11 +824,11 @@ const Boards: React.FC<BoardsProps> = ({
   return (
     <div className='members_container'
     >
-      {boards.length > 0 && (
-        <div>
+      {/* {boards.length > 0 && ( */}
+        <div >
           {!isBoardsLoaded ? (
             <div className='skeleton_in_board' >
-              <SkeletonMember currentTheme={currentTheme} />
+              <SkeletonMember currentTheme={currentTheme} isMobile={isMobile} />
             </div>
           ) : (
             <Members
@@ -851,7 +851,7 @@ const Boards: React.FC<BoardsProps> = ({
 
           )}
         </div>
-      )}
+      {/* )} */}
 
 
 
