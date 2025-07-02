@@ -59,12 +59,14 @@ TaskMinder is a modern, collaborative task management web application built with
 ### Installation
 
 1. **Clone the repository:**
+
    ```bash
    git clone https://github.com/yourusername/taskminder.git
    cd taskminder
    ```
 
 2. **Install dependencies:**
+
    ```bash
    npm install
    # or
@@ -74,12 +76,16 @@ TaskMinder is a modern, collaborative task management web application built with
 3. **Environment Variables:**
    - Copy `.env.example` to `.env` and set your API base URL and Google OAuth client ID.
 
+  ```
+  VITE_GOOGLE_CLIENT_ID=<Your google client id>
+  ```
+
 4. **Start the development server:**
    ```bash
    npm run dev
    # or
    yarn dev
-   ```
+  ```
 
 5. **Open in your browser:**
    ```

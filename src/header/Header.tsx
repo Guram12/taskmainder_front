@@ -16,6 +16,7 @@ import type { MenuProps } from 'antd';
 import { LuLogOut } from "react-icons/lu";
 import ConfirmationDialog from "../components/Boards/ConfirmationDialog";
 
+
 interface HeaderProps {
   profileData: ProfileData;
   isAuthenticated: boolean;
@@ -216,8 +217,9 @@ const Header: React.FC<HeaderProps> = ({
       }}
     >
       <div className='header_logo_container' >
-        <LogoComponent />
+        <LogoComponent  currentTheme={currentTheme} />
       </div>
+
 
       {/* theme and language dropdowns*/}
       <div className="header_all_dropdowns_container" >
