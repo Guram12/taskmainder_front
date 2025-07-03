@@ -284,7 +284,7 @@ const Calendar: React.FC<CalendarProps> = ({ boards, currentTheme, fetchBoards }
                 ))}
               </div>
             )}
-            <button onClick={closeModal} className='selected_day_close_button'>Close</button>
+            <button onClick={closeModal} className='selected_day_close_button'>{t('close')}</button>
           </div>
         </div>
       )}

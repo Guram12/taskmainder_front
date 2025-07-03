@@ -50,22 +50,30 @@ const resources = {
       "tvis": "",
       "due_date": "Due Date:",
       "no_tasks_due_on_this_day": "No Due Date Tasks on this day.  Click on a highlighted day to see tasks due on that day.",
+      'close': 'Close',
 
+      // notification component 
+      "board_invitation_accepted": "Board Invitation Accepted",
+      'left_board': 'Left Board',
+      'task_due_reminder': 'Task Due Reminder',
+      'board_member_left': 'Board Member Left',
+      'removed_from_board': 'Removed from Board',
+      'delete_all': 'Delete All',
 
-      // "due_date": "Due Date:",
-      // "close": "Close",
-      // "no_due_date_tasks": "No Due Date Tasks. Click on a highlighted day to see tasks due on that day."
-    
+      // notification body translations
+      "removed_from_board_body": "You have been removed from the board '{{boardName}}'.",
+      "board_member_left_body": "{{userName}} has left the board '{{boardName}}'.",
+      "task_due_reminder_body": "Task '{{taskName}}' is due on {{dueDate}} with priority {{priority}}.",
+      "board_invitation_accepted_body": "{{userName}} has joined your board \"{{boardName}}\".",
+      "left_board_body": "You have left the board '{{boardName}}'.",
+      "no_notifications": "No Notifications",
 
+      //NoBoards component
+      'no_boards_available': 'No Boards Available',
+      'please_create_a_new_board_to_get_started.': 'Please create a new board to get started.',
 
-
-
-
-
-
-
-  }
-},
+    }
+  },
   ka: {
     translation: {
       // header component
@@ -111,9 +119,28 @@ const resources = {
       // --
       'tasks_for': "",
       'tvis': '-ის დავალებები',
-      'due_date'  : "შესრულების ვადა: ",
-      'no_tasks_due_on_this_day': "ამ დღისთვის ვადიანი დავალებები არ არის. დააწკაპუნე მონიშნულ დღეზე, რომ ნახო იმ დღის დავალებები."
+      'due_date': "შესრულების ვადა: ",
+      'no_tasks_due_on_this_day': "ამ დღისთვის ვადიანი დავალებები არ არის. დააწკაპუნე მონიშნულ დღეზე, რომ ნახო იმ დღის დავალებები.",
+      'close': 'დახურვა',
 
+      // notification component
+      "board_invitation_accepted": "დაფის მოწვევა მიღებულია",
+      'left_board': 'დაფიდან გასვლა',
+      'task_due_reminder': 'დავალების ვადის გახსენება',
+      'board_member_left': 'დაფის წევრი გავიდა დაფიდან',
+      'removed_from_board': 'დაფიდან წაშლა',
+      'delete_all': 'ყველას წაშლა',
+
+      "removed_from_board_body": "თქვენ წაშლილი ხართ დაფიდან '{{boardName}}'.",
+      "board_member_left_body": "{{userName}} გავიდა დაფიდან '{{boardName}}'.",
+      "task_due_reminder_body": "დავალება '{{taskName}}' უნდა შესრულდეს {{dueDate}}-ზე პრიორიტეტით {{priority}}.",
+      "board_invitation_accepted_body": "{{userName}} შეუერთდა თქვენს დაფას \"{{boardName}}\".",
+      "left_board_body": "თქვენ გავხვდით დაფიდან '{{boardName}}'.",
+      "no_notifications": "შეტყობინებები არ არის",
+
+      //NoBoards component
+      'no_boards_available': 'დაფები არ არის ხელმისაწვდომი',
+      'please_create_a_new_board_to_get_started.': 'გთხოვთ, შექმნათ ახალი დაფა დასაწყებად',
 
     }
   },
