@@ -8,17 +8,80 @@ import SkeletonNotification from "./Boards/SkeletonNotification";
 import no_notification_image from "../assets/no_notification.png";
 import { NotificationPayload } from "../utils/interface";
 import { FetchedNotificationData } from "../utils/interface";
+import { useTranslation } from 'react-i18next';
 
 
 interface NotificationProps {
   currentTheme: ThemeSpecs;
   setIsLoading: (isLoading: boolean) => void;
-  isMobile: boolean; 
+  isMobile: boolean;
 }
 
 const Notification: React.FC<NotificationProps> = ({ currentTheme, setIsLoading, isMobile }) => {
   const [notifications, setNotifications] = useState<FetchedNotificationData[]>([]);
   const [isFetching, setIsFetching] = useState<boolean>(true); // New state to track fetching
+
+  // =============================  translate notification title and body  ================================
+  const { t } = useTranslation();
+
+  // Function to translate notification titles
+  const translateNotificationTitle = (title: string): string => {
+    // Convert title to translation key format
+    const key = title.toLowerCase().replace(/\s+/g, '_');
+
+    // Check if translation exists, otherwise return original title
+    const translated = t(key);
+    return translated !== key ? translated : title;
+  };
+  // Function to extract variables from notification body and translate
+  const translateNotificationBody = (body: string, title: string): string => {
+    const titleKey = title.toLowerCase().replace(/\s+/g, '_');
+
+    // Define patterns for each notification type
+    const patterns = {
+      'removed_from_board': /You have been removed from the board '(.+)'\./,
+      'board_member_left': /(.+) has left the board '(.+)'\./,
+      'task_due_reminder': /Task '(.+)' is due on (.+) with priority (.+)\./,
+      'board_invitation_accepted': /(.+) has joined your board "(.+)"\./,
+      'left_board': /You have left the board '(.+)'\./
+    };
+
+    const pattern = patterns[titleKey as keyof typeof patterns];
+    if (!pattern) return body;
+
+    const match = body.match(pattern);
+    if (!match) return body;
+
+    // Extract variables based on notification type
+    let variables = {};
+    switch (titleKey) {
+      case 'removed_from_board':
+        variables = { boardName: match[1] };
+        break;
+      case 'board_member_left':
+        variables = { userName: match[1], boardName: match[2] };
+        break;
+      case 'task_due_reminder':
+        variables = { taskName: match[1], dueDate: match[2], priority: match[3] };
+        break;
+      case 'board_invitation_accepted':
+        variables = { userName: match[1], boardName: match[2] };
+        break;
+      case 'left_board':
+        variables = { boardName: match[1] };
+        break;
+    }
+
+    // Try to get translated template
+    const translationKey = `${titleKey}_body`;
+    const translated = t(translationKey, variables);
+
+    // If translation exists, return it; otherwise return original
+    return translated !== translationKey ? translated : body;
+  };
+
+// ==================================================================================================
+
 
   useEffect(() => {
     const fetchNotifications = async () => {
@@ -126,8 +189,12 @@ const Notification: React.FC<NotificationProps> = ({ currentTheme, setIsLoading,
     <div className="main_notification_container">
       <div className="delete_all_buttion_container">
         {showDeleteAllButton &&
-          <button className="delete_all_notification" onClick={handleDeleteAllNotifications}>
-            Delete All
+          <button
+            className="delete_all_notification"
+            onClick={handleDeleteAllNotifications}
+            style={{ backgroundColor: currentTheme['--task-background-color'] }}
+          >
+            {t('delete_all')}
           </button>
         }
       </div>
@@ -142,7 +209,7 @@ const Notification: React.FC<NotificationProps> = ({ currentTheme, setIsLoading,
       ) : notifications.length === 0 ? (
         <div className="no_notification_container">
           <img src={no_notification_image} alt="No Notifications" className="no_notification_image" />
-          <h3 className="no_notification_text">No Notifications</h3>
+          <h3 className="no_notification_text">{t('no_notifications')}</h3>
         </div>
       ) : (
         <>
@@ -163,8 +230,13 @@ const Notification: React.FC<NotificationProps> = ({ currentTheme, setIsLoading,
                   handleDeleteNotification(notification.id);
                 }}
               />
-              <h3 className="notification_title">{notification.title}</h3>
-              <p className="notification_body_text">{notification.body}</p>
+              <h3 className="notification_title">
+                {translateNotificationTitle(notification.title)}
+
+              </h3>
+              <p className="notification_body_text">
+                {translateNotificationBody(notification.body, notification.title)}
+              </p>
               <p className="notification_date" style={{ color: currentTheme['--due-date-color'] }}>
                 {new Date(notification.created_at).toLocaleString()}
               </p>

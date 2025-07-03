@@ -7,6 +7,7 @@ import { ThemeSpecs } from '../utils/theme';
 import { FaClipboardList } from "react-icons/fa";
 import { IoMdListBox } from "react-icons/io";
 import { Tooltip } from 'antd';
+import { useTranslation } from 'react-i18next';
 
 
 
@@ -25,12 +26,19 @@ interface TaskInfo {
 }
 
 const Calendar: React.FC<CalendarProps> = ({ boards, currentTheme, fetchBoards }) => {
+  const { t } = useTranslation();
+
+
   const months = [
-    'January', 'February', 'March', 'April', 'May', 'June',
-    'July', 'August', 'September', 'October', 'November', 'December',
+    t('january'), t('february'), t('march'), t('april'),
+    t('may'), t('june'), t('july'), t('august'),
+    t('september'), t('october'), t('november'), t('december')
   ];
 
-  const daysOfWeek = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+  const daysOfWeek = [
+    t('sun'), t('mon'), t('tue'), t('wed'), t('thu'), t('fri'), t('sat')
+  ];
+
 
   const [highlightedDays, setHighlightedDays] = useState<Record<number, number[]>>({});
   const [selectedDay, setSelectedDay] = useState<string | null>(null);
@@ -40,6 +48,8 @@ const Calendar: React.FC<CalendarProps> = ({ boards, currentTheme, fetchBoards }
 
 
   const [showCalendarTooltip, setShowCalendarTooltip] = useState<boolean>(false);
+
+
 
 
   useEffect(() => {
@@ -208,7 +218,7 @@ const Calendar: React.FC<CalendarProps> = ({ boards, currentTheme, fetchBoards }
         <div className="calendar_tooltip_cont">
 
           <Tooltip
-            title="No Due Date Tasks.  Click on a highlighted day to see tasks due on that day."
+            title={t('no_tasks_due_on_this_day')}
             placement="right"
             color={currentTheme["--list-background-color"]}
             styles={{
@@ -233,11 +243,11 @@ const Calendar: React.FC<CalendarProps> = ({ boards, currentTheme, fetchBoards }
           <div
             className="selected_day_info"
             style={{ backgroundColor: `${currentTheme['--list-background-color']}` }}
-            onClick={(e) => e.stopPropagation()} // Prevent closing when clicking inside the modal
+            onClick={(e) => e.stopPropagation()}
           >
-            <h3 style={{ color: currentTheme['--main-text-coloure'] }} >Tasks for {selectedDay}</h3>
+            <h3 style={{ color: currentTheme['--main-text-coloure'] }} >{t('tasks_for')} {selectedDay} {t('tvis')}</h3>
 
-            {tasksForSelectedDay.length > 0 ? (
+            {tasksForSelectedDay.length > 0 && (
               <div className="selected_day_container_list">
                 {tasksForSelectedDay.map((board, boardIndex) => (
                   <div key={boardIndex} className="selected_day_task_container" style={{ borderColor: currentTheme['--border-color'] }}>
@@ -245,7 +255,6 @@ const Calendar: React.FC<CalendarProps> = ({ boards, currentTheme, fetchBoards }
                       <div className="selected_day_task_board">
                         <FaClipboardList />
                         <h2 className='selected_day_boardname_h2'>{board.boardName}</h2>
-
                       </div>
                     </div>
                     {Object.entries(board.lists).map(([listName, tasks], listIndex) => (
@@ -262,7 +271,7 @@ const Calendar: React.FC<CalendarProps> = ({ boards, currentTheme, fetchBoards }
                             )}
                             <p className='selected_day_each_task_title' style={{ color: currentTheme['--main-text-coloure'] }} >{task.taskTitle}</p>
                             <p className='selected_day_each_task_due_date' style={{ color: currentTheme['--due-date-color'] }}>
-                              Due Date:
+                              {t('due_date')}
                               {task.dueDate ? new Date(task.dueDate).toLocaleTimeString([],
                                 { hour: '2-digit', minute: '2-digit' }) : ''}
                             </p>
@@ -274,10 +283,8 @@ const Calendar: React.FC<CalendarProps> = ({ boards, currentTheme, fetchBoards }
                   </div>
                 ))}
               </div>
-            ) : (
-              <p>No tasks due on this day.</p>
             )}
-            <button onClick={closeModal} className='selected_day_close_button'>Close</button>
+            <button onClick={closeModal} className='selected_day_close_button'>{t('close')}</button>
           </div>
         </div>
       )}

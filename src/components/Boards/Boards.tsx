@@ -141,6 +141,8 @@ const Boards: React.FC<BoardsProps> = ({
 
     const token = localStorage.getItem('access_token');
     const newSocket = new WebSocket(`wss://api.shemaxsene.space/ws/boards/${selectedBoard.id}/?token=${token}`);
+    // const newSocket = new WebSocket(`ws://localhost:8000/ws/boards/${selectedBoard.id}/?token=${token}`);
+
     socketRef.current = newSocket;
 
 
@@ -849,7 +851,7 @@ const Boards: React.FC<BoardsProps> = ({
         </div>
       )}
       </div>
-
+      
       {/* Show skeleton only when boards are not loaded */}
       {!isBoardsLoaded && (
         <div className='skeleton_in_board'>

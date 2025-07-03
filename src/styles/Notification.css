@@ -21,15 +21,15 @@
 .delete_all_notification {
   width: 200px;
   height: 40px;
-  background-color: red;
   border: none;
   border-radius: 5px;
   cursor: pointer;
   transition: background-color 0.3s;
+  font-weight: 600;
 }
 
 .delete_all_notification:hover {
-  background-color: #FF000073;
+  background-color: #FF0000B6 !important;
 }
 
 .no_notification_container{

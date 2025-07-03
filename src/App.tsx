@@ -17,13 +17,46 @@ import subscribeToPushNotifications from './utils/supbscription';
 import { Board_Users } from './utils/interface';
 import { NotificationPayload } from './utils/interface';
 import ErrorPage from './components/ErrorPage';
-
-
+import { useTranslation } from 'react-i18next';
 
 
 
 const App: React.FC = () => {
-  const [language, setLanguage] = useState<'en' | 'ka'>('en');
+  const { i18n } = useTranslation();
+
+  // Initialize language properly from localStorage or i18n
+  const [language, setLanguage] = useState<'en' | 'ka'>(() => {
+    const savedLang = localStorage.getItem('language') as 'en' | 'ka';
+    return savedLang || 'en';
+  });
+
+  // ==================================== change language =========================================
+
+  useEffect(() => {
+    console.log('language changed to:', language);
+    if (i18n.isInitialized) {
+      i18n.changeLanguage(language);
+    }
+    localStorage.setItem('language', language);
+  }, [language, i18n]);
+
+  // Initialize language on app start
+  useEffect(() => {
+    const initializeLanguage = async () => {
+      await i18n.loadLanguages(['en', 'ka']);
+      const savedLang = localStorage.getItem('language') as 'en' | 'ka';
+      if (savedLang && savedLang !== language) {
+        setLanguage(savedLang);
+      }
+      if (i18n.isInitialized) {
+        i18n.changeLanguage(language);
+      }
+    };
+
+    initializeLanguage();
+  }, [i18n]);
+
+  // ==============================================================================================
   const [selectedComponent, setSelectedComponent] = useState<string>("Boards");
 
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
@@ -133,6 +166,7 @@ const App: React.FC = () => {
 
 
 
+  // =================================================================================================
 
   const accessToken: string | null = localStorage.getItem('access_token');
   const refreshToken: string | null = localStorage.getItem('refresh_token');

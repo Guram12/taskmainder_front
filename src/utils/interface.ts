@@ -23,7 +23,7 @@ export interface board {
   members: string[];
   board_users: Board_Users[];
   background_image: string | null;
-  creation_date : string;
+  creation_date: string;
 }
 
 export interface Board_Users {
@@ -84,7 +84,7 @@ export interface UserBoardStatuses {
   user_status: 'owner' | 'member' | 'admin';
 
 }
-  
+
 export interface NotificationPayload {
   type: 'USER_REMOVED_FROM_BOARD' | 'BOARD_INVITATION_ACCEPTED' | 'TASK_DUE_REMINDER' | 'BOARD_USER_UPDATE';
   title: string;
@@ -100,7 +100,7 @@ export interface NotificationPayload {
   invitedUserEmail?: string;
   invitedUserName?: string;
   board_id?: number;
-  
+
   // Fields specific to TASK_DUE_REMINDER
   taskName?: string;
   dueDate?: string;
@@ -116,4 +116,6 @@ export interface FetchedNotificationData {
   created_at: string;
   is_read: boolean;
   title: string;
+  title_ka: string;
+  body_ka: string;
 }

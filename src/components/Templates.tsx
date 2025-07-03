@@ -6,6 +6,7 @@ import axiosInstance from "../utils/axiosinstance";
 import { templates } from "../utils/Templates";
 import { ThemeSpecs } from "../utils/theme";
 import ConfirmationDialog from "./Boards/ConfirmationDialog";
+import { useTranslation } from 'react-i18next';
 
 
 interface TemplatesProps {
@@ -19,6 +20,8 @@ const Templates: React.FC<TemplatesProps> = ({ handleTemplateSelect, currentThem
 
   const [dialogTemplateId, setDialogTemplateId] = useState<number | null>(null);
 
+  const { t } = useTranslation();
+
   const handleTemplateClick = (templateId: number) => {
     setDialogTemplateId(templateId);
   };
@@ -26,7 +29,7 @@ const Templates: React.FC<TemplatesProps> = ({ handleTemplateSelect, currentThem
 
   const handle_select_template = async (template: Template) => {
     setIsLoading(true);
-
+    setDialogTemplateId(null); // Close the dialog after confirmation
     try {
       const accessToken = localStorage.getItem("access_token");
       if (!accessToken) {
@@ -94,12 +97,12 @@ const Templates: React.FC<TemplatesProps> = ({ handleTemplateSelect, currentThem
 
   return (
     <div className="templates_container"   >
-      <h2>Choose a Template</h2>
+      <h2>{t("choose_a_template")}</h2>
       <div className="templates-list">
         {templates.map((template) => (
           <div key={template.id}>
             <div className="template_boardname_button_cont" >
-              <h1 className="template_boardname" style={{color: currentTheme['--main-text-coloure']}}>{template.name}</h1>
+              <h1 className="template_boardname" style={{ color: currentTheme['--main-text-coloure'] }}>{template.name}</h1>
               <button
                 className="select_template_button"
                 onClick={() => handleTemplateClick(template.id)}
@@ -109,7 +112,7 @@ const Templates: React.FC<TemplatesProps> = ({ handleTemplateSelect, currentThem
                   borderColor: currentTheme['--background-color'],
                 }}
               >
-                Select Template
+                {t("select_template")}
               </button>
             </div>
 
