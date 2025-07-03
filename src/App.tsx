@@ -24,6 +24,7 @@ import ErrorPage from './components/ErrorPage';
 
 const App: React.FC = () => {
   const [language, setLanguage] = useState<'en' | 'ka'>('en');
+  const [selectedComponent, setSelectedComponent] = useState<string>("Boards");
 
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -387,6 +388,7 @@ const App: React.FC = () => {
         isMobile={isMobile}
         setLanguage={setLanguage}
         language={language}
+        setSelectedComponent={setSelectedComponent}
 
       />
       <Routes>
@@ -429,6 +431,8 @@ const App: React.FC = () => {
             setSaved_custom_theme={setSaved_custom_theme}
             isMobile={isMobile}
             setIsAuthenticated={setIsAuthenticated}
+            setSelectedComponent={setSelectedComponent}
+            selectedComponent={selectedComponent}
           />} />
       </Routes>
     </Router>

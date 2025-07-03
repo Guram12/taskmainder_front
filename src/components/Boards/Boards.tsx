@@ -147,7 +147,7 @@ const Boards: React.FC<BoardsProps> = ({
     newSocket.onopen = () => {
       console.log('WebSocket connection established');
     };
-    
+
     newSocket.onerror = (error) => console.log('WebSocket error:', error);
 
     newSocket.onmessage = (event) => {
@@ -827,11 +827,8 @@ const Boards: React.FC<BoardsProps> = ({
     >
       {/* {boards.length > 0 && ( */}
       <div >
-        {!isBoardsLoaded ? (
-          <div className='skeleton_in_board' >
-            <SkeletonMember currentTheme={currentTheme} isMobile={isMobile} />
-          </div>
-        ) : (
+      {isBoardsLoaded && boards.length > 0 && (
+        <div>
           <Members
             selectedBoard={selectedBoard}
             socketRef={socketRef}
@@ -849,12 +846,16 @@ const Boards: React.FC<BoardsProps> = ({
             isMobile={isMobile}
             profileData={profileData}
           />
-
-        )}
+        </div>
+      )}
       </div>
-      {/* )} */}
 
-
+      {/* Show skeleton only when boards are not loaded */}
+      {!isBoardsLoaded && (
+        <div className='skeleton_in_board'>
+          <SkeletonMember currentTheme={currentTheme} isMobile={isMobile} />
+        </div>
+      )}
 
       {isBoardsLoaded && boards.length === 0 && (
         <NoBoards currentTheme={currentTheme} />
