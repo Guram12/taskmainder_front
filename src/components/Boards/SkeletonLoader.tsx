@@ -19,7 +19,17 @@ const SkeletonLoader: React.FC<SkeletonLoaderProps> = ({ currentTheme }) => {
           style={{ backgroundColor: `${currentTheme['--list-background-color']}` }}
         >
           {/* Skeleton for list title */}
-          <Skeleton height={30} width={'100%'} style={{ marginBottom: '10px' }} />
+          <div
+            style={{
+              height: 30,
+              width: '100%',
+              marginBottom: '10px',
+              marginTop: '10px',
+              borderRadius: 6,
+              background: currentTheme['--main-text-coloure'],
+              opacity: 0.15,
+            }}
+          />
 
           {/* Skeletons for tasks */}
           {Array.from({ length: taskCount }).map((_, taskIndex) => (
@@ -29,7 +39,7 @@ const SkeletonLoader: React.FC<SkeletonLoaderProps> = ({ currentTheme }) => {
               width={'100%'}
               style={{ marginBottom: '15px' }}
               baseColor={currentTheme['--list-background-color']}
-              highlightColor="#e0e0e0"
+              highlightColor={currentTheme['--main-text-coloure']}
             />
           ))}
         </div>
