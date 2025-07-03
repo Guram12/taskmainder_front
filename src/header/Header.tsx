@@ -15,6 +15,7 @@ import { GlobalOutlined } from '@ant-design/icons';
 import type { MenuProps } from 'antd';
 import { LuLogOut } from "react-icons/lu";
 import ConfirmationDialog from "../components/Boards/ConfirmationDialog";
+import { useTranslation } from 'react-i18next';
 
 
 interface HeaderProps {
@@ -59,6 +60,7 @@ const Header: React.FC<HeaderProps> = ({
   const location = useLocation();
   const navigate = useNavigate();
 
+  const { t, i18n } = useTranslation();
 
   useEffect(() => {
     if (
@@ -77,12 +79,13 @@ const Header: React.FC<HeaderProps> = ({
   }, [location.pathname])
 
   // ======================================== language change function =========================================
-  const handleLanguageChange = (lang: 'en' | 'ka') => {
-    setLanguage(lang);
-    // Optionally, persist language selection:
-    localStorage.setItem('language', lang);
-    // Add your i18n logic here if needed
-  };
+
+
+const handleLanguageChange = (selectedLanguage: 'en' | 'ka') => {
+  setLanguage(selectedLanguage);
+  localStorage.setItem('language', selectedLanguage);
+  i18n.changeLanguage(selectedLanguage);
+};
 
 
   // ============================== theme change function ======================================
@@ -138,7 +141,7 @@ const Header: React.FC<HeaderProps> = ({
     'sky_breeze',
   ];
 
-// ===================================== handle user image click =========================================
+  // ===================================== handle user image click =========================================
   const handleUserImageClick = () => {
     setSelectedComponent('Settings');
   };
@@ -169,7 +172,7 @@ const Header: React.FC<HeaderProps> = ({
             onClick={handle_return_to_custom_theme}
           >
 
-            Custom Theme
+            {t('customTheme')}
           </div>
         ),
       },
@@ -194,7 +197,6 @@ const Header: React.FC<HeaderProps> = ({
           </div>
         ),
       },
-
       {
         key: 'ka',
         label: (
@@ -225,7 +227,7 @@ const Header: React.FC<HeaderProps> = ({
       }}
     >
       <div className='header_logo_container' >
-        <LogoComponent  currentTheme={currentTheme} />
+        <LogoComponent currentTheme={currentTheme} />
       </div>
 
 
@@ -264,7 +266,7 @@ const Header: React.FC<HeaderProps> = ({
               }}
               onClick={handle_return_to_custom_theme}
             >
-              Custom Theme
+              {t('customTheme')}
             </div>
           </div>
 
@@ -320,7 +322,7 @@ const Header: React.FC<HeaderProps> = ({
 
         <div className="header_profile_container"
           onClick={handleUserImageClick}
-          
+
         >
           <h3 className="header_profile_username">{profileData.username}</h3>
           {profileData?.profile_picture ? (

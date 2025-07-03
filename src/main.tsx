@@ -3,6 +3,7 @@ import { createRoot } from 'react-dom/client'
 import './index.css'
 import App from './App.tsx'
 import themes from './utils/theme.ts'
+import './utils/i18n.ts' 
 
 if (!localStorage.getItem('theme')) {
   const deepAquaTheme = themes.deep_aqua;

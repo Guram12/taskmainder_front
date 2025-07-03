@@ -22,6 +22,7 @@ import SkeletonBoardName from './Boards/SkeletonBoardName';
 import { IoIosAddCircleOutline } from "react-icons/io";
 import { GrFormCheckmark } from "react-icons/gr";
 import { HiXMark } from "react-icons/hi2";
+import { useTranslation } from 'react-i18next';
 
 
 interface SidebarProps {
@@ -76,6 +77,8 @@ const SidebarComponent: React.FC<SidebarProps> = ({
   const [isNewBoardSaving, setIsNewBoardSaving] = useState<boolean>(false);
 
   const navigate = useNavigate();
+
+  const { t } = useTranslation();
 
   // useEffect(() => {
   //   console.log('boards----------', boards);
@@ -384,7 +387,7 @@ const SidebarComponent: React.FC<SidebarProps> = ({
                 {/* dashboard  */}
                 <MenuItem icon={<MdSpaceDashboard className="dashboard_icon" />}>
                   <div className="for_dashboard_child_container">
-                    <p> Dashboard</p>
+                    <p> {t('dashboard')}</p>
                     {isMobile ?
                       (
                         <div
@@ -406,7 +409,7 @@ const SidebarComponent: React.FC<SidebarProps> = ({
                 </MenuItem>
 
                 {/* other menu items  */}
-                <SubMenu label="Boards" id="board" icon={<GrTasks className="sidebar_big_icon" />} defaultOpen={true}
+                <SubMenu label={t('boards')} id="board" icon={<GrTasks className="sidebar_big_icon" />} defaultOpen={true}
 
                 >
                   {isOpen && (
@@ -450,7 +453,7 @@ const SidebarComponent: React.FC<SidebarProps> = ({
                         fontWeight: 'bold',
                       }}
                     >
-                      Add New Board
+                      {t('add_new_board')}
                     </MenuItem>
                   )}
 
@@ -474,7 +477,7 @@ const SidebarComponent: React.FC<SidebarProps> = ({
                               borderColor: currentTheme['--border-color'],
                               ['--placeholder-color']: currentTheme['--due-date-color'],
                             } as React.CSSProperties}
-                            
+
                           />
                           <div className='add_board_button_container' >
                             <GrFormCheckmark onClick={() => handle_create_new_board()} className='add_board_icon' />
@@ -495,7 +498,8 @@ const SidebarComponent: React.FC<SidebarProps> = ({
                     fontWeight: 'bold',
                     transition: 'all 0.3s',
                   }}
-                >Templates
+                >
+                  {t('templates')}
                 </MenuItem>
 
 
@@ -507,7 +511,7 @@ const SidebarComponent: React.FC<SidebarProps> = ({
                   }}
                   icon={<FaCalendarAlt className='sidebar_big_icon' />}
                   onClick={() => handel_sidebar_page_click("Calendar")}
-                >Calendar</MenuItem>
+                >{t('calendar')}</MenuItem>
                 <MenuItem
                   style={{
                     color: selectedComponent === "Notification" ? 'seagreen' : 'white',
@@ -535,7 +539,7 @@ const SidebarComponent: React.FC<SidebarProps> = ({
                   }
                   onClick={() => handle_nnotification_page_click()}
                 >
-                  Notification
+                  {t('notification')}
                 </MenuItem>
               </Menu>
             </div>
@@ -569,7 +573,7 @@ const SidebarComponent: React.FC<SidebarProps> = ({
                     fontWeight: 'bold',
                     transition: 'all 0.3s',
                   }}
-                >Settings
+                > {t('settings')}
                 </MenuItem>
 
                 {isMobile && (
@@ -577,7 +581,7 @@ const SidebarComponent: React.FC<SidebarProps> = ({
                     icon={<MdOutlineLogout className='sidebar_big_icon' />}
                     onClick={handleLogOutIconClick}
                     style={{ color: 'red', fontWeight: 'bold' }}
-                  > Log Out
+                  > {t('log_out')}
                   </MenuItem>
                 )}
 
