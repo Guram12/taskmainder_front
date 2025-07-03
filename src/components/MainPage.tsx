@@ -44,6 +44,8 @@ interface MainPageProps {
   setSaved_custom_theme: (theme: ThemeSpecs) => void;
   isMobile: boolean; // Optional prop for mobile view
   setIsAuthenticated: (isAuthenticated: boolean) => void;
+  setSelectedComponent: (selectedComponent: string) => void;
+  selectedComponent: string;
 }
 
 const MainPage: React.FC<MainPageProps> = ({
@@ -73,8 +75,9 @@ const MainPage: React.FC<MainPageProps> = ({
   setSaved_custom_theme,
   isMobile,
   setIsAuthenticated,
+  setSelectedComponent,
+  selectedComponent
 }) => {
-  const [selectedComponent, setSelectedComponent] = useState<string>("Boards");
 
 
   const accessToken: string | null = localStorage.getItem('access_token');

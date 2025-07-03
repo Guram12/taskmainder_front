@@ -30,6 +30,7 @@ interface HeaderProps {
   isMobile: boolean; // Optional prop for mobile view
   setLanguage: (language: 'en' | 'ka') => void;
   language: 'en' | 'ka';
+  setSelectedComponent: (selectedComponent: string) => void;
 }
 
 
@@ -46,7 +47,8 @@ const Header: React.FC<HeaderProps> = ({
   saved_custom_theme,
   isMobile,
   setLanguage,
-  language
+  language,
+  setSelectedComponent
 }) => {
 
 
@@ -135,6 +137,12 @@ const Header: React.FC<HeaderProps> = ({
     'spring_cloud',
     'sky_breeze',
   ];
+
+// ===================================== handle user image click =========================================
+  const handleUserImageClick = () => {
+    setSelectedComponent('Settings');
+  };
+
 
   const themeMenu: MenuProps = {
     items: [
@@ -310,7 +318,10 @@ const Header: React.FC<HeaderProps> = ({
           </Dropdown>
         </div>
 
-        <div className="header_profile_container">
+        <div className="header_profile_container"
+          onClick={handleUserImageClick}
+          
+        >
           <h3 className="header_profile_username">{profileData.username}</h3>
           {profileData?.profile_picture ? (
             <img

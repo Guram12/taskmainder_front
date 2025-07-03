@@ -7,8 +7,33 @@ import wal_3 from "../assets/wal-3.webp";
 
 
 export const templates: Template[] = [
+
   {
     id: 1,
+    name: "Personal Goals",
+    board: {
+      name: "Self-Improvement Board",
+    },
+    background_image: wal_2,
+    lists: [
+      {
+        name: "Health Goals",
+        tasks: [
+          { title: "Morning workout", description: "30-minute cardio and strength training routine.", due_date: null, priority: 'orange' },
+          { title: "Meal prep", description: "Prepare healthy lunches for the week.", due_date: null, priority: 'red' },
+        ],
+      },
+      {
+        name: "Learning Goals",
+        tasks: [
+          { title: "Complete TypeScript course", description: "Finish all modules and quizzes on the online platform.", due_date: null, priority: 'green' },
+          { title: "Read a book", description: "", due_date: null, priority: null },
+        ],
+      },
+    ],
+  },
+  {
+    id: 2,
     name: "Project Management",
     board: {
       name: "Development Sprint Board",
@@ -38,30 +63,6 @@ export const templates: Template[] = [
         name: "Done",
         tasks: [
           { title: "Set up project repository", description: "Initialized GitHub repository and added README.", due_date: null, priority: 'green' },
-        ],
-      },
-    ],
-  },
-  {
-    id: 2,
-    name: "Personal Goals",
-    board: {
-      name: "Self-Improvement Board",
-    },
-    background_image: wal_2,
-    lists: [
-      {
-        name: "Health Goals",
-        tasks: [
-          { title: "Morning workout", description: "30-minute cardio and strength training routine.", due_date: null, priority: 'orange' },
-          { title: "Meal prep", description: "Prepare healthy lunches for the week.", due_date: null, priority: 'red' },
-        ],
-      },
-      {
-        name: "Learning Goals",
-        tasks: [
-          { title: "Complete TypeScript course", description: "Finish all modules and quizzes on the online platform.", due_date: null, priority: 'green' },
-          { title: "Read a book", description: "", due_date: null, priority: null },
         ],
       },
     ],

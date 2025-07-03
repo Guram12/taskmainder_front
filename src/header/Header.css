@@ -209,6 +209,8 @@
   gap: 10px;
   transition: background-color 0.3s ease, border-color 0.3s ease;
   margin-right: 10px;
+  width: fit-content;
+  cursor: pointer;
 }
 
 .header_profile_picture {
@@ -220,7 +222,11 @@
 .header_profile_username {
   color: var(--main-text-coloure);
   transition: color 0.3s ease, color 0.3s ease;
-
+  font-size: 16px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 150px; /* Adjust this value based on your design needs */
 }
 
 .language_and_user_in_header {
