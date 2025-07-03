@@ -140,14 +140,15 @@ const Boards: React.FC<BoardsProps> = ({
 
 
     const token = localStorage.getItem('access_token');
-    const newSocket = new WebSocket(`wss://${window.location.hostname}:8000/ws/boards/${selectedBoard.id}/?token=${token}`);
+    const newSocket = new WebSocket(`wss://api.shemaxsene.space/ws/boards/${selectedBoard.id}/?token=${token}`);
     socketRef.current = newSocket;
 
 
     newSocket.onopen = () => {
       console.log('WebSocket connection established');
     };
-
+    
+    newSocket.onerror = (error) => console.log('WebSocket error:', error);
 
     newSocket.onmessage = (event) => {
       const data = JSON.parse(event.data);
@@ -825,32 +826,32 @@ const Boards: React.FC<BoardsProps> = ({
     <div className='members_container'
     >
       {/* {boards.length > 0 && ( */}
-        <div >
-          {!isBoardsLoaded ? (
-            <div className='skeleton_in_board' >
-              <SkeletonMember currentTheme={currentTheme} isMobile={isMobile} />
-            </div>
-          ) : (
-            <Members
-              selectedBoard={selectedBoard}
-              socketRef={socketRef}
-              current_user_email={current_user_email}
-              currentTheme={currentTheme}
-              update_board_name={update_board_name}
-              deleteBoard={deleteBoard}
-              setCurrent_board_users={setCurrent_board_users}
-              current_board_users={current_board_users}
-              is_cur_Board_users_fetched={is_cur_Board_users_fetched}
-              fetch_current_board_users={fetch_current_board_users}
-              setBoards={setBoards}
-              boards={boards}
-              is_members_refreshing={is_members_refreshing}
-              isMobile={isMobile}
-              profileData={profileData}
-            />
+      <div >
+        {!isBoardsLoaded ? (
+          <div className='skeleton_in_board' >
+            <SkeletonMember currentTheme={currentTheme} isMobile={isMobile} />
+          </div>
+        ) : (
+          <Members
+            selectedBoard={selectedBoard}
+            socketRef={socketRef}
+            current_user_email={current_user_email}
+            currentTheme={currentTheme}
+            update_board_name={update_board_name}
+            deleteBoard={deleteBoard}
+            setCurrent_board_users={setCurrent_board_users}
+            current_board_users={current_board_users}
+            is_cur_Board_users_fetched={is_cur_Board_users_fetched}
+            fetch_current_board_users={fetch_current_board_users}
+            setBoards={setBoards}
+            boards={boards}
+            is_members_refreshing={is_members_refreshing}
+            isMobile={isMobile}
+            profileData={profileData}
+          />
 
-          )}
-        </div>
+        )}
+      </div>
       {/* )} */}
 
 
