@@ -21,6 +21,9 @@ import {
   useSensors,
 } from '@dnd-kit/core';
 import Task from './Tasks';
+import { useTranslation } from 'react-i18next';
+import { GrFormCheckmark } from "react-icons/gr";
+import { HiXMark } from "react-icons/hi2";
 
 
 
@@ -98,7 +101,7 @@ const Boards: React.FC<BoardsProps> = ({
   const [reordering, setReordering] = useState(false); // Add this state
 
 
-
+  const { t } = useTranslation();
 
   useEffect(() => {
     if (selectedBoard?.board_users) {
@@ -282,8 +285,8 @@ const Boards: React.FC<BoardsProps> = ({
                   description: payload.description,
                   due_date: payload.due_date,
                   completed: payload.completed,
-                  priority: payload.priority
-
+                  priority: payload.priority,
+                  task_associated_users_id: payload.task_associated_users_id, // Add this line
                 } : task
               ),
             }));
@@ -517,7 +520,9 @@ const Boards: React.FC<BoardsProps> = ({
       prevBoardData.lists[targetListIndex].tasks.push(movedTask);
 
       const newBoardData = { ...prevBoardData };
-      setSelectedBoard(newBoardData);
+      setTimeout(() => {
+        setSelectedBoard(newBoardData);
+      }, 10);
 
       if (socketRef.current && socketRef.current.readyState === WebSocket.OPEN) {
         console.log('Sending move_task message:', {
@@ -829,29 +834,29 @@ const Boards: React.FC<BoardsProps> = ({
     >
       {/* {boards.length > 0 && ( */}
       <div >
-      {isBoardsLoaded && boards.length > 0 && (
-        <div>
-          <Members
-            selectedBoard={selectedBoard}
-            socketRef={socketRef}
-            current_user_email={current_user_email}
-            currentTheme={currentTheme}
-            update_board_name={update_board_name}
-            deleteBoard={deleteBoard}
-            setCurrent_board_users={setCurrent_board_users}
-            current_board_users={current_board_users}
-            is_cur_Board_users_fetched={is_cur_Board_users_fetched}
-            fetch_current_board_users={fetch_current_board_users}
-            setBoards={setBoards}
-            boards={boards}
-            is_members_refreshing={is_members_refreshing}
-            isMobile={isMobile}
-            profileData={profileData}
-          />
-        </div>
-      )}
+        {isBoardsLoaded && boards.length > 0 && (
+          <div>
+            <Members
+              selectedBoard={selectedBoard}
+              socketRef={socketRef}
+              current_user_email={current_user_email}
+              currentTheme={currentTheme}
+              update_board_name={update_board_name}
+              deleteBoard={deleteBoard}
+              setCurrent_board_users={setCurrent_board_users}
+              current_board_users={current_board_users}
+              is_cur_Board_users_fetched={is_cur_Board_users_fetched}
+              fetch_current_board_users={fetch_current_board_users}
+              setBoards={setBoards}
+              boards={boards}
+              is_members_refreshing={is_members_refreshing}
+              isMobile={isMobile}
+              profileData={profileData}
+            />
+          </div>
+        )}
       </div>
-      
+
       {/* Show skeleton only when boards are not loaded */}
       {!isBoardsLoaded && (
         <div className='skeleton_in_board'>
@@ -920,7 +925,7 @@ const Boards: React.FC<BoardsProps> = ({
 
                         }}
                       >
-                        Create List
+                        {t('create_List')}
                       </button>
                     )
                     :
@@ -928,7 +933,7 @@ const Boards: React.FC<BoardsProps> = ({
                       <div className='add_new_list_cont' >
                         <input
                           type="text"
-                          placeholder='List Name'
+                          placeholder={t('list_name')}
                           value={ListName}
                           onChange={(e) => setListName(e.target.value)}
                           required
@@ -951,7 +956,8 @@ const Boards: React.FC<BoardsProps> = ({
                           className='save_new_list_btn'
                           disabled={ListName.trim() === ''}
                         >
-                          Add
+                          <GrFormCheckmark className='add_list_button_2_icon' />
+
                         </button>
                         <button
                           onClick={() => {
@@ -966,7 +972,7 @@ const Boards: React.FC<BoardsProps> = ({
                           className='cancel_new_list_btn'
 
                         >
-                          Cancel
+                          <HiXMark className='cancel_list_button_icon' />
                         </button>
                       </div>
                     )

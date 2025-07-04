@@ -2,6 +2,10 @@ import React from 'react';
 import '../../styles/Board Styles/ConfirmationDialog.css';
 import ReactDOM from 'react-dom';
 import { ThemeSpecs } from '../../utils/theme';
+import { useTranslation } from 'react-i18next';
+
+
+
 
 interface ConfirmationDialogProps {
   message: string;
@@ -11,7 +15,7 @@ interface ConfirmationDialogProps {
 }
 
 const ConfirmationDialog: React.FC<ConfirmationDialogProps> = ({ message, onConfirm, onCancel, currentTheme }) => {
-
+  const { t } = useTranslation();
 
   return (
     <>
@@ -32,7 +36,7 @@ const ConfirmationDialog: React.FC<ConfirmationDialogProps> = ({ message, onConf
                   backgroundColor: currentTheme['--task-background-color']
                 }}
                 onClick={onConfirm}
-              >Yes
+              >{t('yes')}
               </button>
               <button
                 className="cancel-button"
@@ -41,7 +45,7 @@ const ConfirmationDialog: React.FC<ConfirmationDialogProps> = ({ message, onConf
                   backgroundColor: currentTheme['--task-background-color']
                 }}
                 onClick={onCancel}
-              >No
+              >{t('no')}
               </button>
             </div>
           </div>

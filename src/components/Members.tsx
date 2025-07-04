@@ -21,6 +21,7 @@ import ReactDOM from 'react-dom';
 import { MdDeleteForever } from "react-icons/md";
 import { ProfileData } from "../utils/interface";
 import { PulseLoader } from "react-spinners";
+import { useTranslation } from 'react-i18next';
 
 
 interface MembersProps {
@@ -77,7 +78,7 @@ const Members: React.FC<MembersProps> = ({
   const [is_board_invitation_sent, setIs_board_invitation_sent] = useState<boolean>(false);
   const [invitation_loading, setInvitation_loading] = useState<boolean>(false);
 
-
+  const { t } = useTranslation();
 
   const is_current_user_owner = current_board_users.find(user => user.email === current_user_email)?.user_status === 'owner'
   const is_current_user_admin = current_board_users.find(user => user.email === current_user_email)?.user_status === 'admin'
@@ -495,13 +496,13 @@ const Members: React.FC<MembersProps> = ({
             <div>
               <div className="dark_mobile_background" ></div>
               <div className="board_name_update_modal_on_mobile" style={{ backgroundColor: `${currentTheme['--list-background-color']}` }} >
-                <p className="update_board_name_text" style={{ color: currentTheme['--main-text-coloure'] }}>Update Board Name</p>
+                <p className="update_board_name_text" style={{ color: currentTheme['--main-text-coloure'] }}>{t('Update_Board_Name_onmobile')}</p>
                 <input
                   type="text"
                   value={newBoardName}
                   onChange={(e) => setNewBoardName(e.target.value)}
                   className="board_name_input"
-                  placeholder="Edit Name.(Max 25 characters)"
+                  placeholder={t('edit_board_name')}
                   style={{
                     backgroundColor: `${currentTheme['--list-background-color']}`,
                     color: `${currentTheme['--main-text-coloure']}`,
@@ -520,7 +521,7 @@ const Members: React.FC<MembersProps> = ({
                     }}
                     className="save_btn_onmobile"
                   >
-                    Save
+                    {t('save')}
                   </button>
 
                   <button
@@ -535,7 +536,7 @@ const Members: React.FC<MembersProps> = ({
                     }}
                     className="cancel_btn_onmobile"
                   >
-                    Cancel
+                    {t('cancel')}
                   </button>
 
                 </div>
@@ -551,7 +552,7 @@ const Members: React.FC<MembersProps> = ({
                 value={newBoardName}
                 onChange={(e) => setNewBoardName(e.target.value)}
                 className="board_name_input"
-                placeholder="Edit Name.(Max 25 characters)"
+                placeholder={t('edit_board_name')}
                 style={{
                   backgroundColor: `${currentTheme['--list-background-color']}`,
                   color: `${currentTheme['--main-text-coloure']}`,
@@ -578,8 +579,8 @@ const Members: React.FC<MembersProps> = ({
                 {isMobile
                   ? (
                     <p className="board_name_text" >
-                      {selectedBoard?.name && selectedBoard?.name.length > 10
-                        ? `${selectedBoard?.name.slice(0, 10)}...`
+                      {selectedBoard?.name && selectedBoard?.name.length > 7
+                        ? `${selectedBoard?.name.slice(0, 7)}...`
                         : selectedBoard?.name}
                     </p>
                   )
@@ -609,7 +610,7 @@ const Members: React.FC<MembersProps> = ({
               )}
               {isBoardDeleting && (
                 <ConfirmationDialog
-                  message={`Are you sure you want to delete the board "${selectedBoard?.name}"?`}
+                  message={`${t('are_you_sure_you_want_to_delete_the_board')} "${selectedBoard?.name}"?`}
                   onConfirm={delete_board}
                   onCancel={canselBoardDelete}
                   currentTheme={currentTheme}
@@ -630,7 +631,9 @@ const Members: React.FC<MembersProps> = ({
             <div className="each_user_container" style={{ backgroundColor: `${currentTheme['--list-background-color']}` }} >
 
               <div className="close_icon_cont">
-                <p className="manage_users_text" >Manage Users</p>
+                <p className="manage_users_text" 
+                  style={{ color: currentTheme['--main-text-coloure'] }}
+                >{t('manage_users')}</p>
                 <div className="refresh_and_close_icons_cont" >
                   {!is_members_refreshing && (
                     <TbRefresh className="refresh_users_icon" onClick={fetch_current_board_users} style={{ color: currentTheme['--main-text-coloure'] }} />
@@ -648,7 +651,7 @@ const Members: React.FC<MembersProps> = ({
                     type="text"
                     value={searchInput}
                     onChange={handleSearchInputChange}
-                    placeholder="Search users by email"
+                    placeholder= {t('search_users_by_email')}
                     style={{
                       backgroundColor: currentTheme['--task-background-color'],
                       color: currentTheme['--main-text-coloure'],
@@ -665,7 +668,7 @@ const Members: React.FC<MembersProps> = ({
                         marginBottom: '0px',
                         fontWeight: 'bold',
                       }}>
-                      Invitation sent successfully!
+                      {t('invitation_sent_successfully')}
                     </p>
                   )}
 
@@ -817,7 +820,7 @@ const Members: React.FC<MembersProps> = ({
                           )}
                           {is_current_user_admin_or_owner ? (
                             boardUser.user_status === 'owner' ? (
-                              <p className="owner_status" >{boardUser.user_status}</p> // Owner cannot change their status
+                              <p className="owner_status" >{t('owner')}</p> // Owner cannot change their status
                             ) : (
                               <select
                                 className="select_status"
@@ -830,8 +833,8 @@ const Members: React.FC<MembersProps> = ({
 
                                 }}
                               >
-                                <option value="admin">admin</option>
-                                <option value="member">member</option>
+                                <option value="admin">{t('admin')}</option>
+                                <option value="member">{t('member')}</option>
                               </select>
                             )
                           ) : (
@@ -862,7 +865,7 @@ const Members: React.FC<MembersProps> = ({
 
               {isDeletingSelectedUser && (
                 <ConfirmationDialog
-                  message={`Are you sure you want to delete the user "${current_board_user_to_delete.username}" from the board "${selectedBoard?.name}"?`}
+                  message={`${t('are_you_sure_you_want_to_delete_the_user')} "${current_board_user_to_delete.username}" ${t('from the board')} "${selectedBoard?.name}"?`}
                   onConfirm={() => handleDeleteUser(current_board_user_to_delete.id)}
                   onCancel={() => setIsDeletingSelectedUser(false)}
                   currentTheme={currentTheme}

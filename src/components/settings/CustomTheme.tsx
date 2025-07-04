@@ -11,6 +11,7 @@ import { MdDeleteForever } from "react-icons/md";
 import { ConfigProvider } from 'antd';
 import { Tooltip } from 'antd';
 import { UserBoardStatuses } from '../../utils/interface';
+import { useTranslation } from 'react-i18next';
 
 
 
@@ -61,6 +62,7 @@ const CustomTheme: React.FC<CustomThemeProps> = ({
 
   const [userBoardStatuses, setUserBoardStatuses] = useState<UserBoardStatuses[]>([]);
 
+  const { t } = useTranslation();
 
   const fileInputRefs = boards.reduce((acc, board) => {
     acc[board.id] = React.createRef<HTMLInputElement>();
@@ -284,16 +286,16 @@ const CustomTheme: React.FC<CustomThemeProps> = ({
           borderColor: currentTheme["--border-color"]
         }}
       >
-        <p className="customtheme_p" style={{ color: currentTheme["--main-text-coloure"] }}> Create Custom Theme </p>
+        <p className="customtheme_p" style={{ color: currentTheme["--main-text-coloure"] }}> {t('create_custom_theme')} </p>
 
       </div>
 
 
       {boards.length !== 0 && (
         <div className='background_image_tooltip_container'>
-          <h1 className='background_image_set_h1'>Click image to select new background</h1>
+          <h1 className='background_image_set_h1'>{t('click_image_to_select_new_background')}</h1>
           <Tooltip
-            title="You can change board background images if you are the owner or admin of this board."
+            title= {t('you_can_change_board_background')}
             placement="right"
             color={currentTheme["--list-background-color"]}
             open={showToolTip || undefined} // Show on hover and when showToolTip is true
@@ -306,7 +308,7 @@ const CustomTheme: React.FC<CustomThemeProps> = ({
         {boards.length === 0 && (
           <div className='no_boards_container_customtheme'>
             <img src={no_boards_image} alt="No Boards" className='no_boards_image_customtheme' />
-            <p className='no_boards_text'>No boards available. Please create a board first.</p>
+            <p className='no_boards_text'>{t('no_boards_available_for_theme')}</p>
 
           </div>
         )}
@@ -425,8 +427,8 @@ const CustomTheme: React.FC<CustomThemeProps> = ({
             </div>
             {boardItem.id === new_image_for_board.boardId && new_image_for_board.NewImage && (
               <div className='save_image_btn_container' >
-                <button onClick={() => handleSaveImageClick(boardItem.id)} className='save_backg_img' >Save Image</button>
-                <button onClick={handleCancelClick} className='cansel_backg_img' >Cancel</button>
+                <button onClick={() => handleSaveImageClick(boardItem.id)} className='save_backg_img' >{t('save_image')}</button>
+                <button onClick={handleCancelClick} className='cansel_backg_img' >{t('cancel_image_save')}</button>
 
               </div>
             )}
@@ -440,7 +442,7 @@ const CustomTheme: React.FC<CustomThemeProps> = ({
       {/* <div className='division_line' ></div> */}
 
       <div className='second_h1_and_tooltip_container' >
-        <h1 className='second_h1' >Select Colors</h1>
+        <h1 className='second_h1' >{t('select_colors')}</h1>
         <Tooltip
           title="Your selected colors will be saved as a custom theme.  
                 To apply your custom theme, select it from the header.  
@@ -665,7 +667,7 @@ const CustomTheme: React.FC<CustomThemeProps> = ({
       </div>
 
       <div className='save_coolore_btn_container' >
-        <button onClick={handleColoresSavce} className='save_colour_btn'>Save Theme</button>
+        <button onClick={handleColoresSavce} className='save_colour_btn'>{t('save_theme')}</button>
       </div>
 
     </div>

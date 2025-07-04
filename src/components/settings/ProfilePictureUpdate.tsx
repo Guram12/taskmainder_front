@@ -16,6 +16,7 @@ import avatar_3 from "../../assets/avatar-3.png";
 import avatar_4 from "../../assets/avatar-4.png";
 import avatar_5 from "../../assets/avatar-5.jpg";
 import avatar_6 from "../../assets/avatar-6.jpg";
+import { useTranslation } from 'react-i18next';
 
 
 
@@ -36,13 +37,12 @@ const ProfilePictureUpdate: React.FC<ProfilePictureUpdateProps> = ({ profileData
   const [isUploading, setIsUploading] = useState<boolean>(false);
   const [IsDeletingWindow, setIsDeletingWindow] = useState<boolean>(false);
 
-
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 
-  useEffect(() => {
+  const { t } = useTranslation();
 
-    console.log("Profile data update from child ===>>>> :", profileData);
-  }, [profileData]);
+
+
 
   //========================== Synchronize currentProfileImage with profileData.profile_picture   ============================
   useEffect(() => {
@@ -194,7 +194,7 @@ const ProfilePictureUpdate: React.FC<ProfilePictureUpdateProps> = ({ profileData
             borderColor: currentTheme["--border-color"]
           }}
         >
-          Profile Picture update
+          {t('profile_picture_update')}
         </p>
       </div>
 
@@ -204,10 +204,10 @@ const ProfilePictureUpdate: React.FC<ProfilePictureUpdateProps> = ({ profileData
         ) : (
           <Avatar
             sx={{
-              width: isMobile ? 100 : 150, 
-              height: isMobile ? 100 : 150, 
-              fontSize: "2rem", 
-              marginLeft: isMobile ? "0" : "40px", 
+              width: isMobile ? 100 : 150,
+              height: isMobile ? 100 : 150,
+              fontSize: "2rem",
+              marginLeft: isMobile ? "0" : "40px",
             }}
             style={{
               backgroundColor: getAvatarStyles(profileData.username.charAt(0)).backgroundColor,
@@ -222,7 +222,7 @@ const ProfilePictureUpdate: React.FC<ProfilePictureUpdateProps> = ({ profileData
 
 
         {previewImage && (
-          <div className="preview_container">
+          <div className="preview_container" style={{ borderColor: currentTheme["--border-color"] }}>
             <MdOutlineCancel className="close_preview" onClick={() => { setPreviewImage(null); setSelectedFileName(null); }} />
             <img src={previewImage} alt="Preview" className="preview_image" />
 
@@ -254,7 +254,7 @@ const ProfilePictureUpdate: React.FC<ProfilePictureUpdateProps> = ({ profileData
               borderColor: currentTheme['--border-color'],
             }}
           >
-            Change image
+            { }{t('change_image')}
           </button>
 
           {previewImage && (
@@ -265,16 +265,17 @@ const ProfilePictureUpdate: React.FC<ProfilePictureUpdateProps> = ({ profileData
               style={{
                 cursor: previewImage ? "pointer" : "not-allowed",
                 color: currentTheme["--main-text-coloure"],
+                backgroundColor: currentTheme['--list-background-color'],
               }}
             >
-              {isUploading ? "Saving..." : "Save"}
+              {isUploading ? t('saving') : t('save')}
             </button>
           )}
         </div>
       </div>
 
       <div className='avatar_main_container' style={{ color: currentTheme["--main-text-coloure"] }}>
-        <h1 className='select_avatar_h1'>Select Avatar</h1>
+        <h1 className='select_avatar_h1'>{t('select_avatar')}</h1>
         <div className='avatars_container'>
           <img
             src={avatar_1}

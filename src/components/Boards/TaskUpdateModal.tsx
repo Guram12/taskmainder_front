@@ -21,6 +21,7 @@ import { MdOutlineRemoveCircleOutline } from "react-icons/md";
 import { FaUser } from "react-icons/fa";
 import { MdDeleteForever } from "react-icons/md";
 import { PiTextAlignLeft } from "react-icons/pi";
+// import { useTranslation } from 'react-i18next';
 
 
 interface TaskUpdateModalProps {
@@ -67,6 +68,8 @@ const TaskUpdateModal: React.FC<TaskUpdateModalProps> = ({
   const [selectedUsers, setSelectedUsers] = useState<number[]>(
     associatedUsers.map((user) => user.id) // Initialize with existing associated user IDs
   );
+
+  // const { t } = useTranslation();
 
 
   const handleUpdate = () => {
@@ -306,7 +309,8 @@ const TaskUpdateModal: React.FC<TaskUpdateModalProps> = ({
                   borderColor: caracter_limit === 1000 ? 'red' : currentTheme['--border-color'],
                   outline: 'none',
                   transition: 'border-color 0.2s',
-                }}
+                  ['--placeholder-color']: currentTheme['--due-date-color']
+                } as React.CSSProperties}
               />
               <GrFormCheckmark
                 className='title_checkmark_icon'
@@ -343,7 +347,8 @@ const TaskUpdateModal: React.FC<TaskUpdateModalProps> = ({
                     borderColor: currentTheme['--border-color'],
                     outline: 'none',
                     transition: 'border-color 0.2s',
-                  }}
+                    ['--placeholder-color']: currentTheme['--due-date-color']
+                  } as React.CSSProperties}
                 />
                 <GrFormCheckmark className='title_checkmark_icon' onClick={() => setIsDescriptionUpdating(false)} />
                 <HiXMark className='title_close_icon' onClick={handleCancelDescriptionUpdate} />
@@ -369,7 +374,7 @@ const TaskUpdateModal: React.FC<TaskUpdateModalProps> = ({
         <div className="priority_container"
           style={{ borderColor: currentTheme['--border-color'] }}
         >
-          <p className='priority_p' >Select Priority:</p>
+          <p className='priority_p' > Priority:</p>
           <div
             className='each_priority none'
             onClick={() => setUpdatedPriority(null)}

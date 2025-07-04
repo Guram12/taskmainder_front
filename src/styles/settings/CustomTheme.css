@@ -207,7 +207,7 @@
 
 
 .cansel_backg_img {
-  width: 60px;
+  width: min-content;
   height: 30px;
   font-weight: bold;
   background-color: #F7382B;
@@ -349,20 +349,33 @@
     width: 100%;
   }
 
-.no_boards_container_customtheme {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: flex-start;
-  margin-top: 70px;
-  padding: 0px;
-  overflow: hidden;
-  width: 100%;
+  .no_boards_container_customtheme {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    margin-top: 70px;
+    padding: 0px;
+    overflow: hidden;
+    width: 100%;
+  }
+
+  .no_boards_image_customtheme {
+    width: 260px;
+  }
+
+.background_image_set_h1 {
+  font-size: 17px;
+  font-weight: bold;
+  margin: 0px;
+
 }
 
-.no_boards_image_customtheme {
-  width: 260px;
-}
-
+  .customtheme_p {
+    top: 0px;
+    margin: 0px;
+    font-size: 15px;
+    font-weight: bold;
+  }
 
 }

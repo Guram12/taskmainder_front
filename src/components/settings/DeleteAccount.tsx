@@ -4,6 +4,7 @@ import { ThemeSpecs } from '../../utils/theme';
 import axiosInstance from '../../utils/axiosinstance';
 import axios from 'axios'; // Import axios
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 
 
 interface DeleteAccountProps {
@@ -14,6 +15,8 @@ const DeleteAccount: React.FC<DeleteAccountProps> = ({ currentTheme }) => {
   const [isConfirmationOpen, setIsConfirmationOpen] = useState(false);
   const [confirmationInput, setConfirmationInput] = useState('');
   const [isConfirmationCorrect, setIsConfirmationCorrect] = useState<boolean>(false);
+
+  const { t } = useTranslation();
 
   const navigate = useNavigate();
   // ============================================   delete account    ============================================
@@ -60,13 +63,14 @@ const DeleteAccount: React.FC<DeleteAccountProps> = ({ currentTheme }) => {
   };
 
   useEffect(() => {
-    if (confirmationInput === 'delete my account') {
+    if (confirmationInput === 'delete my account' || confirmationInput === 'წავშალე ჩემი ანგარიში') {
       setIsConfirmationCorrect(true);
     } else {
       setIsConfirmationCorrect(false);
     }
   }, [confirmationInput]);
 
+  
   return (
     <div className='main_delete_acc_container' style={{ color: currentTheme['--main-text-coloure'] }}>
       <div className="delete_acc_header_cont"
@@ -75,28 +79,28 @@ const DeleteAccount: React.FC<DeleteAccountProps> = ({ currentTheme }) => {
         }}
       >
         <p className="delete_acc_header_p">
-          Danger Zone
+          {t('danger_zone')}
         </p>
       </div>
-      <h1 className='delete_aqq_h1' style={{ color: currentTheme['--main-text-coloure'] }} >Delete Your Account</h1>
+      <h1 className='delete_aqq_h1' style={{ color: currentTheme['--main-text-coloure'] }} >{t('delete_account')}</h1>
       <button
         className='main_delete_account_button'
         onClick={handleDeleteClick}
         style={{ color: currentTheme['--main-text-coloure'] }}
       >
-        Delete
+        {t('delete')}
       </button>
 
       {isConfirmationOpen && (
         <>
           <div className="modal-overlay"></div> {/* Dark overlay */}
           <div className="confirmation-modal" style={{ backgroundColor: currentTheme["--background-color"] }}>
-            <h2 style={{ color: currentTheme['--main-text-coloure'] }}>Type "delete my account" to confirm:</h2>
+            <h2 style={{ color: currentTheme['--main-text-coloure'] }}>{t('type_delete_confirmation')}</h2>
             <input
               type="text"
               value={confirmationInput}
               onChange={(e) => setConfirmationInput(e.target.value)}
-              placeholder="Type here..."
+              placeholder={t('type_here')}
               className='confirmation-input'
               style={{
                 color: currentTheme['--main-text-coloure'],
@@ -116,7 +120,8 @@ const DeleteAccount: React.FC<DeleteAccountProps> = ({ currentTheme }) => {
                   cursor: isConfirmationCorrect ? 'pointer' : 'not-allowed',
                 }}
               >
-                Confirm</button>
+                {t('confirm')}
+              </button>
               <button
                 onClick={handleCancel}
                 className='cancel_button'
@@ -125,7 +130,7 @@ const DeleteAccount: React.FC<DeleteAccountProps> = ({ currentTheme }) => {
                   backgroundColor: currentTheme['--list-background-color'],
                 }}
 
-              >Cancel</button>
+              >{t('cancel')}</button>
             </div>
           </div>
         </>

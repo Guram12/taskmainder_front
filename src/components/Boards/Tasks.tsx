@@ -18,6 +18,7 @@ import ReactDOM from 'react-dom';
 import SkeletonEachTask from './SkeletonEachTask';
 import { PiTextAlignLeft } from "react-icons/pi";
 import PuffLoader from 'react-spinners/PuffLoader';
+import { useTranslation } from 'react-i18next';
 
 
 interface TaskProps {
@@ -48,7 +49,7 @@ const Task: React.FC<TaskProps> = ({ task,
   const [showUpdateModal, setShowUpdateModal] = useState(false);
   const [associatedUsers, setAssociatedUsers] = useState<ProfileData[]>([]);
 
-
+  const { t } = useTranslation();
 
 
   useEffect(() => {
@@ -84,17 +85,21 @@ const Task: React.FC<TaskProps> = ({ task,
     if (!dateString) return ''; // Return an empty string if no due_date
     const date = new Date(dateString);
 
-    // Format the date to exclude the year and include hours and minutes
-    const formattedDate = new Intl.DateTimeFormat('en-US', {
-      month: 'long',
-      day: 'numeric',
-    }).format(date);
+    // Get month name using translation
+    const monthNames = [
+      t('january'), t('february'), t('march'), t('april'),
+      t('may'), t('june'), t('july'), t('august'),
+      t('september'), t('october'), t('november'), t('december')
+    ];
+
+    const monthName = monthNames[date.getMonth()];
+    const day = date.getDate();
 
     // Extract hours and minutes
     const hours = date.getHours().toString().padStart(2, '0'); // Ensure 2-digit format
     const minutes = date.getMinutes().toString().padStart(2, '0');
 
-    return `${formattedDate}, ${hours}:${minutes}`;
+    return `${monthName} ${day}, ${hours}:${minutes}`;
   };
 
 
@@ -192,7 +197,7 @@ const Task: React.FC<TaskProps> = ({ task,
 
 
               {task.priority && (
-                <div className={`priority_div  ${task.description ? '' : 'move_if_description'}`} style={getPriorityStyle(task.priority)} />
+                <div onClick={handleTaskClick} className={`priority_div  ${task.description ? '' : 'move_if_description'}`} style={getPriorityStyle(task.priority)} />
               )}
 
               <div className='edit_drag_icon_container'>
@@ -217,16 +222,16 @@ const Task: React.FC<TaskProps> = ({ task,
               </div>
             </div>
 
-            <div className={`conteiner_for_task_title ${task.completed ? 'task_completed' : ''}`} >
+            <div className={`conteiner_for_task_title ${task.completed ? 'task_completed' : ''}`} onClick={handleTaskClick} >
               <p className='task_title'>{task.title}</p>
             </div>
 
 
             <div className='task_description_and_due_date_container' >
               {task.due_date ? (
-                <p className='due_Date_p' style={{ color: currentTheme["--due-date-color"] }}>Due Date: {formatDate(task.due_date)}</p>
+                <p className='due_Date_p' style={{ color: currentTheme["--due-date-color"] }}>{t("task_due_date")} {formatDate(task.due_date)}</p>
               ) : (
-                <p className='due_Date_p' style={{ color: currentTheme["--due-date-color"] }}>No due date</p>
+                <p className='due_Date_p' style={{ color: currentTheme["--due-date-color"] }}>{t("no_due_date")}</p>
               )}
 
               <div className='associated_users_imgs_container'>
@@ -263,7 +268,7 @@ const Task: React.FC<TaskProps> = ({ task,
                     </div>
                   ))
                 ) : (
-                  <p className='no_associated_users_p' style={{ color: currentTheme["--due-date-color"] }} >No associated users</p> // Fallback if no associated users
+                  <p className='no_associated_users_p' style={{ color: currentTheme["--due-date-color"] }} >{t("no_associated_users")}</p> // Fallback if no associated users
                 )}
               </div>
 

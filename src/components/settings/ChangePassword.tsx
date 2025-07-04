@@ -7,6 +7,9 @@ import { FaEye } from "react-icons/fa";
 import axiosInstance from '../../utils/axiosinstance';
 import google_logo from "../../assets/google_logo.png";
 import PulseLoader from "react-spinners/PulseLoader";
+import { useTranslation } from 'react-i18next';
+
+
 
 
 interface ChangePasswordProps {
@@ -35,7 +38,7 @@ const ChangePassword: React.FC<ChangePasswordProps> = ({ currentTheme, profileDa
   const [isPasswordEccaptable, setIsPasswordEccaptable] = useState<boolean>(false);
 
 
-
+  const { t } = useTranslation();
   const is_social_account = profileData.is_social_account;
   // =========================================================================================================
   useEffect(() => {
@@ -147,12 +150,12 @@ const ChangePassword: React.FC<ChangePasswordProps> = ({ currentTheme, profileDa
           borderColor: currentTheme["--border-color"]
         }}
       >
-        <p className="password_change_p" style={{ color: currentTheme["--main-text-coloure"] }}>Change Password </p>
+        <p className="password_change_p" style={{ color: currentTheme["--main-text-coloure"] }}>{t('change_Password')}</p>
       </div>
       {is_social_account ? (
         <div className='social_account_case'>
           <img src={google_logo} alt="Google logo" className='google_logo' />
-          <p className='social_account_case_p'>You are logged in using a social account. Password changes are not applicable.</p>
+          <p className='social_account_case_p'>{t('you_are_logged_in_using_a_social')}</p>
         </div>
       ) : (
         <div>
@@ -160,7 +163,7 @@ const ChangePassword: React.FC<ChangePasswordProps> = ({ currentTheme, profileDa
             {/* old password check  */}
             <input
               type={showPassword ? "text" : "password"}
-              placeholder="Old Password"
+              placeholder={t('old_Password')}
               value={oldPassword}
               onChange={(e) => setOldPassword(e.target.value)}
               className="password_input"
@@ -173,10 +176,10 @@ const ChangePassword: React.FC<ChangePasswordProps> = ({ currentTheme, profileDa
             />
 
             {oldPassword && !oldPasswordLoading && isOldPasswordCorrect === true && (
-              <p className='old_password_correct'>correct</p>
+              <p className='old_password_correct'>{t('correct')}</p>
             )}
             {oldPassword && !oldPasswordLoading && isOldPasswordCorrect === false && (
-              <p className='old_password_incorrect'>incorrect</p>
+              <p className='old_password_incorrect'>{t('incorrect')}</p>
             )}
 
             {oldPassword && oldPasswordLoading && (
@@ -188,7 +191,7 @@ const ChangePassword: React.FC<ChangePasswordProps> = ({ currentTheme, profileDa
             )}
             <input
               type={showPassword ? "text" : "password"}
-              placeholder="New Password"
+              placeholder={t('new_Password')}
               value={newPassword}
               onChange={(e) => setNewPassword(e.target.value)}
               className="password_input"
@@ -201,7 +204,7 @@ const ChangePassword: React.FC<ChangePasswordProps> = ({ currentTheme, profileDa
             />
             <input
               type={showPassword ? "text" : "password"}
-              placeholder="Confirm New Password"
+              placeholder={t('confirm_new_Password')}
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
               className="password_input"
@@ -219,16 +222,17 @@ const ChangePassword: React.FC<ChangePasswordProps> = ({ currentTheme, profileDa
             )}
 
             <button
-              disabled={!isPasswordEccaptable}
+              disabled={!isPasswordEccaptable || isOldPasswordCorrect === false}
               onClick={handlePasswordChange}
               className="password_change_button"
               style={{
                 color: currentTheme['--main-text-coloure'],
                 backgroundColor: currentTheme['--list-background-color'],
                 borderColor: currentTheme['--border-color'],
+                cursor: isPasswordEccaptable && isOldPasswordCorrect ? 'pointer' : 'not-allowed'
               }}
             >
-              Change Password
+              {t('change_Password')}
             </button>
 
 
@@ -236,20 +240,20 @@ const ChangePassword: React.FC<ChangePasswordProps> = ({ currentTheme, profileDa
 
           <div className='password_validations_container'>
             <p className='password_validations' style={{ color: isLongEnough ? 'seagreen' : 'red' }}>
-              {!isLongEnough && <span>*</span>} Minimum 8 symbols
+              {!isLongEnough && <span>*</span>} {t('minimum_8_symbols')}
             </p>
             <p className='password_validations' style={{ color: hasUppercase ? 'seagreen' : 'red' }}>
-              {!hasUppercase && <span>*</span>} At least one uppercase letter
+              {!hasUppercase && <span>*</span>} {t('at_least_one_uppercase_letter')}
             </p>
             <p className='password_validations' style={{ color: hasNumber ? 'seagreen' : 'red' }}>
-              {!hasNumber && <span>*</span>} At least one number
+              {!hasNumber && <span>*</span>} {t('at_least_one_number')}
             </p>
 
             <p className='password_validations' style={{ color: isPasswordValid ? 'seagreen' : 'red' }}>
               {isPasswordValid ? (
-                <span>Passwords match</span>
+                <span>{t('passwords_match')}</span>
               ) : (
-                <span>* Passwords do not match</span>
+                <span>{t('Passwords_do_not_match')}</span>
               )}
             </p>
 
