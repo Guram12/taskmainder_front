@@ -130,14 +130,14 @@ const handleLanguageChange = (selectedLanguage: 'en' | 'ka') => {
   const themeKeys = [
     'dark_gray',
     'forest_night',
-    'ocean_teal',
+    'neon_void',
     'deep_aqua',
     'ink_cobalt',
     'charcoal_rose',
-    'velvet_moss',
-    'arctic_alice',
+    'hologram_glow',
+    'glacier_bite',
     'mint_ice',
-    'spring_cloud',
+    'sage_paper',
     'sky_breeze',
   ];
 
@@ -240,7 +240,7 @@ const handleLanguageChange = (selectedLanguage: 'en' | 'ka') => {
             <div className='header_coloure_child_container example3'
               onClick={() => changeTheme(themes.forest_night)}></div>
             <div className='header_coloure_child_container example4'
-              onClick={() => changeTheme(themes.ocean_teal)}></div>
+              onClick={() => changeTheme(themes.neon_void)}></div>
             <div className='header_coloure_child_container example5'
               onClick={() => changeTheme(themes.deep_aqua)}></div>
             <div className='header_coloure_child_container example6'
@@ -248,15 +248,16 @@ const handleLanguageChange = (selectedLanguage: 'en' | 'ka') => {
             <div className='header_coloure_child_container example7'
               onClick={() => changeTheme(themes.blue_steel)}></div>
             <div className='header_coloure_child_container example8'
-              onClick={() => changeTheme(themes.velvet_moss)}></div>
+              onClick={() => changeTheme(themes.hologram_glow)}></div>
             <div className='header_coloure_child_container example9'
-              onClick={() => changeTheme(themes.arctic_alice)}></div>
+              onClick={() => changeTheme(themes.glacier_bite)}></div>
             <div className='header_coloure_child_container example10'
               onClick={() => changeTheme(themes.mint_ice)}></div>
             <div className='header_coloure_child_container example11'
-              onClick={() => changeTheme(themes.spring_cloud)}></div>
+              onClick={() => changeTheme(themes.sage_paper)}></div>
             <div className='header_coloure_child_container example12'
               onClick={() => changeTheme(themes.sky_breeze)}></div>
+
 
 
             <div className='custom_theme_container_in_header'

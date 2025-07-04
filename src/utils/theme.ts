@@ -33,16 +33,17 @@ const themes = {
     '--hover-color': '#22342B',           // Slightly lighter forest green
     '--due-date-color': '#8FC7A1',
   },
-  ocean_teal: {
-    '--background-color': '#1A252F',           // Deep slate blue/teal
-    '--main-text-coloure': '#EAF6FB',          // Soft, very light blue for high contrast
-    '--border-color': '#274357',               // Muted blue-gray for subtle borders
-    '--scrollbar-thumb-color': '#3B6E7A',      // Muted teal for scrollbars
-    '--list-background-color': '#22313F',      // Slightly lighter slate for lists
-    '--task-background-color': '#2B4D5C',  // Distinct teal for cards/tasks
-    '--hover-color': '#22313F',           // Lighter slate blue
-    '--due-date-color': '#7FC6D7'         // Soft teal for due dates
+  neon_void: {
+    '--background-color': '#0A0A12',            // Deep midnight blue-black
+    '--main-text-coloure': '#F2F2F2',           // Bright off-white for strong readability
+    '--border-color': '#1F1F2E',                // Subtle, soft midnight border
+    '--scrollbar-thumb-color': '#7F00FF',       // Vivid purple neon
+    '--list-background-color': '#141421',       // Slightly lighter void blue
+    '--task-background-color': '#1C1C2E',       // Distinct neon-dark slate
+    '--hover-color': '#261C3A',                 // Purple-tinted dark hover
+    '--due-date-color': '#00FFE7'               // Vibrant aqua-cyan neon for dates
   },
+
 
   deep_aqua: {
     '--background-color': '#16222A',           // Deep blue-aqua, darker than ocean_teal
@@ -75,27 +76,27 @@ const themes = {
     '--hover-color': '#263445',                // Slightly lighter blue for hover
     '--due-date-color': '#7FA6C9'              // Muted blue for due dates
   },
-  velvet_moss: {
-    '--background-color': '#1A1F1B',           // Dark earthy green-black
-    '--main-text-coloure': '#E5F4DC',          // Soft leafy green
-    '--border-color': '#2D3B2F',               // Olive-gray
-    '--scrollbar-thumb-color': '#506E5B',      // Mossy green
-    '--list-background-color': '#232A24',      // Slightly lighter forest
-    '--task-background-color': '#364739',   // Natural tone for cards
-    '--hover-color': '#232A24',           // Lighter moss green
-    '--due-date-color': '#A3C9A8'
+  hologram_glow: {
+    '--background-color': '#111114',            // Very dark slate with violet undertones
+    '--main-text-coloure': '#E0E7FF',           // Soft holographic bluish white
+    '--border-color': '#393B4F',                // Faint purple-gray border
+    '--scrollbar-thumb-color': '#A67EFF',       // Lavender neon glow
+    '--list-background-color': '#1B1C26',       // Dim glassy violet
+    '--task-background-color': '#2C2E3E',       // Muted holo-purple
+    '--hover-color': '#232436',                 // Slightly glowing hover
+    '--due-date-color': '#8BD3FF'               // Light electric blue
   },
-
-  arctic_alice: {
-    '--background-color': '#EAF6FB',           // AliceBlue, very light and airy
-    '--main-text-coloure': '#223040',          // Deep slate for contrast
-    '--border-color': '#B5C9D6',               // Soft blue-gray border
-    '--scrollbar-thumb-color': '#CFE3F2',      // Muted blue for scrollbars
-    '--list-background-color': '#DCE8F1',      // Slightly lighter for lists
-    '--task-background-color': '#D6EAF8',   // Gentle blue for cards/tasks
-    '--hover-color': '#D6EAF8',           // Gentle blue for hover
-    '--due-date-color': '#7FB3D5'
-  },
+  glacier_bite: {
+    '--background-color': '#F9FBFD',            // Frost white with a touch of blue
+    '--main-text-coloure': '#1A2634',           // Cold deep navy for high readability
+    '--border-color': '#CBDDEB',                // Cool ice-gray border
+    '--scrollbar-thumb-color': '#A3BED4',       // Frozen blue-gray
+    '--list-background-color': '#E6EFF7',       // Pale icy blue for list panels
+    '--task-background-color': '#D8E7F2',       // Light glacial blue for task cards
+    '--hover-color': '#E2EDF5',                 // Hover tint with soft sharpness
+    '--due-date-color': '#4080BF'               // Strong glacier blue for accents
+  }
+  ,
 
   mint_ice: {
     '--background-color': '#E6FAF7',           // Very light minty blue-green
@@ -107,18 +108,20 @@ const themes = {
     '--hover-color': '#D6F5F0',           // Soft mint for hover
     '--due-date-color': '#7ED6C1'     // Soft mint for due dates
   },
-  spring_cloud: {
-    '--background-color': '#F5FCF9',           // Very light, almost white with a hint of green
-    '--main-text-coloure': '#234040',          // Deep teal-gray for contrast
-    '--border-color': '#C3E6DF',               // Soft pastel green-blue border
-    '--scrollbar-thumb-color': '#D6ECE7',      // Gentle mint for scrollbars
-    '--list-background-color': '#E6F6F2',      // Light mint for lists
-    '--task-background-color': '#D9F3EC',   // Slightly deeper mint for cards/tasks
-    '--hover-color': '#E6F6F2',           // Light mint for hover
-    '--due-date-color': '#81B4AA'
-  },
 
-// ...existing code...
+  sage_paper: {
+    '--background-color': '#DDE3DC',            // Pale desaturated green-gray
+    '--main-text-coloure': '#2B332F',           // Deep charcoal green
+    '--border-color': '#B4BFB6',                // Soft sage-gray
+    '--scrollbar-thumb-color': '#A1B3A5',       // Calm green-gray
+    '--list-background-color': '#CAD3CC',       // Slightly deeper paper sage
+    '--task-background-color': '#B6C4BA',       // Gentle muted sage for tasks
+    '--hover-color': '#C5CEC7',                 // Slight tint shift on hover
+    '--due-date-color': '#6A8777'               // Muted forest tone for due dates
+  }
+  ,
+
+
   sky_breeze: {
     '--background-color': '#B3D8F6',           // Soft sky blue
     '--main-text-coloure': '#234060',          // Deep blue for contrast
@@ -129,7 +132,9 @@ const themes = {
     '--hover-color': '#C6E2FA',                // Lighter blue for hover
     '--due-date-color': '#4A90E2'              // Vivid sky blue for due dates
   },
-// ...existing code...
+
+
+
 };
 
 export default themes;
