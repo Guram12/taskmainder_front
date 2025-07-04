@@ -147,13 +147,9 @@ const resources = {
       'task_title': 'Task Title',
 
       // task component 
-
-
-
-
-
-
-
+      "task_due_date": "Due Date:",
+      'no_associated_users': 'No associated users',
+      'no_due_date': 'No due date'
 
 
 
@@ -303,11 +299,10 @@ const resources = {
       'add_task': 'დავალების დამატება',
       'task_title': 'დავალების სათაური',
 
-
-
-
-
-
+      // task component
+      "task_due_date": "ვადა:",
+      "no_associated_users": "არავინ",
+      "no_due_date": "ვადის გარეშე"
 
 
 

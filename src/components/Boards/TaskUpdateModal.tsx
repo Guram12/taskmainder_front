@@ -21,6 +21,7 @@ import { MdOutlineRemoveCircleOutline } from "react-icons/md";
 import { FaUser } from "react-icons/fa";
 import { MdDeleteForever } from "react-icons/md";
 import { PiTextAlignLeft } from "react-icons/pi";
+// import { useTranslation } from 'react-i18next';
 
 
 interface TaskUpdateModalProps {
@@ -67,6 +68,8 @@ const TaskUpdateModal: React.FC<TaskUpdateModalProps> = ({
   const [selectedUsers, setSelectedUsers] = useState<number[]>(
     associatedUsers.map((user) => user.id) // Initialize with existing associated user IDs
   );
+
+  // const { t } = useTranslation();
 
 
   const handleUpdate = () => {
