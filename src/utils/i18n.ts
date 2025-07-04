@@ -26,6 +26,7 @@ const resources = {
       //template component
       "choose_a_template": "Choose a Template",
       'select_template': "Select Template",
+      'are_you_sure_you_want_to_select_the_template': "Are you sure you want to select the template:",
 
       // Calendar component
       //  - months
@@ -124,6 +125,37 @@ const resources = {
       //members component
       'Update_Board_Name_onmobile': 'Update Board Name',
       'edit_board_name': 'Edit Name.(Max 25 characters)',
+      'manage_users': 'Manage Users',
+      'search_users_by_email': 'Search users by email',
+      'invitation_sent_successfully': 'Invitation sent successfully!',
+      "are_you_sure_you_want_to_delete_the_board": "Are you sure you want to delete the board:",
+      'admin': 'admin',
+      'member': 'member',
+      'owner': 'owner',
+      "are_you_sure_you_want_to_delete_the_user": "Are you sure you want to delete the user: ",
+      'from the board': " from the board: ",
+
+      //board component
+      'create_List': 'Create List',
+      'add': 'Add',
+      'list_Name': 'List Name',
+
+      // list component 
+      'list_name': 'List Name',
+      'are_you_sure_you_want_to_delete_the_list': 'Are you sure you want to delete the task',
+      'add_task': 'Add Task',
+      'task_title': 'Task Title',
+
+      // task component 
+
+
+
+
+
+
+
+
+
 
 
 
@@ -151,6 +183,8 @@ const resources = {
       //template component
       "choose_a_template": "შეარჩიე შაბლონი",
       "select_template": "შაბლონის არჩევა",
+      'are_you_sure_you_want_to_select_the_template': "დარწმუნებული ხართ, რომ გსურთ აირჩიოთ შაბლონი:",
+
 
       // Calendar component
       //  - months
@@ -248,6 +282,35 @@ const resources = {
       //members component
       'Update_Board_Name_onmobile': 'დაფის სახელის განახლება',
       'edit_board_name': 'სახელი (მაქს 25 სიმბოლო)',
+      "manage_users": 'მომხმარებლების მართვა',
+      "search_users_by_email": 'ძებნა ელფოსტით',
+      "invitation_sent_successfully": 'მოწვევა წარმატებით გაიგზავნა!',
+      'are_you_sure_you_want_to_delete_the_board': "დარწმუნებული ხართ, რომ გსურთ წაშალოთ დაფა:",
+      'admin': 'ადმინი',
+      'member': 'წევრი',
+      'owner': 'მფლობელი',
+      "are_you_sure_you_want_to_delete_the_user": "დარწმუნებული ხართ, რომ გსურთ წაშალოთ მომხმარებელი: ",
+      'from the board': " დაფიდან: ",
+
+      //board component
+      'create_List': 'სიის დამატება',
+      'add': 'დამატება',
+      'list_Name': 'სიის სახელი',
+      
+      // list component
+      'list_name': 'სიის სახელი',
+      'are_you_sure_you_want_to_delete_the_list': 'დარწმუნებული ხართ, რომ გსურთ წაშალოთ სია:',
+      'add_task': 'დავალების დამატება',
+      'task_title': 'დავალების სათაური',
+
+
+
+
+
+
+
+
+
 
 
 

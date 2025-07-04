@@ -30,6 +30,9 @@
   border: 1px solid;
 }
 
+.list_name_input::placeholder {
+  color: var(--placeholder-color, #888);
+}
 
 .list_title {
   margin: 0px;
@@ -137,7 +140,7 @@
   cursor: pointer;
   transition: background 0.2s, box-shadow 0.2s;
   transition: all 0.3s ease;
-  height: 42px;
+  height: 36px;
   width: 52px !important;
   display: flex;
   align-items: center;
@@ -146,7 +149,7 @@
 
 .add_task_button_2:hover {
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  background-color: rgb(21, 207, 138) !important;
+  background-color:seagreen !important;
 
 }
 
@@ -161,7 +164,7 @@
   cursor: pointer;
   transition: background 0.2s, box-shadow 0.2s;
   transition: all 0.3s ease;
-  height: 42px;
+  height: 36px;
   width: 52px !important;
   display: flex;
   align-items: center;

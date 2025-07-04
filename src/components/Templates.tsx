@@ -149,7 +149,7 @@ const Templates: React.FC<TemplatesProps> = ({ handleTemplateSelect, currentThem
                 <ConfirmationDialog
                   onConfirm={() => handle_select_template(template)}
                   onCancel={() => setDialogTemplateId(null)}
-                  message={`Are you sure you want to select the template "${template.name}"?`}
+                  message={`${t('are_you_sure_you_want_to_select_the_template')} "${template.name}"?`}
                   currentTheme={currentTheme}
                 />
               )}

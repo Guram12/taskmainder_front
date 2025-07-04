@@ -21,6 +21,9 @@ import {
   useSensors,
 } from '@dnd-kit/core';
 import Task from './Tasks';
+import { useTranslation } from 'react-i18next';
+import { GrFormCheckmark } from "react-icons/gr";
+import { HiXMark } from "react-icons/hi2";
 
 
 
@@ -98,7 +101,7 @@ const Boards: React.FC<BoardsProps> = ({
   const [reordering, setReordering] = useState(false); // Add this state
 
 
-
+  const { t } = useTranslation();
 
   useEffect(() => {
     if (selectedBoard?.board_users) {
@@ -922,7 +925,7 @@ const Boards: React.FC<BoardsProps> = ({
 
                         }}
                       >
-                        Create List
+                        {t('create_List')}
                       </button>
                     )
                     :
@@ -930,7 +933,7 @@ const Boards: React.FC<BoardsProps> = ({
                       <div className='add_new_list_cont' >
                         <input
                           type="text"
-                          placeholder='List Name'
+                          placeholder={t('list_name')}
                           value={ListName}
                           onChange={(e) => setListName(e.target.value)}
                           required
@@ -953,7 +956,8 @@ const Boards: React.FC<BoardsProps> = ({
                           className='save_new_list_btn'
                           disabled={ListName.trim() === ''}
                         >
-                          Add
+                          <GrFormCheckmark className='add_list_button_2_icon' />
+
                         </button>
                         <button
                           onClick={() => {
@@ -968,7 +972,7 @@ const Boards: React.FC<BoardsProps> = ({
                           className='cancel_new_list_btn'
 
                         >
-                          Cancel
+                          <HiXMark className='cancel_list_button_icon' />
                         </button>
                       </div>
                     )

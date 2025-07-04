@@ -17,6 +17,7 @@ import Sortable from 'sortablejs';
 import type { SortableEvent } from 'sortablejs';
 import Skeleton from 'react-loading-skeleton';
 import { HiXMark } from "react-icons/hi2";
+import { useTranslation } from 'react-i18next';
 
 
 
@@ -75,7 +76,7 @@ const List: React.FC<ListProps> = ({
   const tasksContainerRef = useRef<HTMLDivElement | null>(null);
   const reorderTimeoutRef = useRef<NodeJS.Timeout | null>(null); // debounce ref
 
-
+  const { t } = useTranslation();
   // ==============================================  drag and drop ==========================================
 
   // DND-KIT: Make this list a droppable area
@@ -207,10 +208,12 @@ const List: React.FC<ListProps> = ({
               borderColor: listInputNameErrorMessage ? 'red' : currentTheme['--border-color'],
               outline: listInputNameErrorMessage ? 'none' : '',
               backgroundColor: currentTheme['--task-background-color'],
-            }}
+              ['--placeholder-color']: currentTheme['--due-date-color'] || '#888',
+            }as React.CSSProperties}
             onKeyDown={handleKeyDown}
-            placeholder="List Name"
+            placeholder= {t('list_name')}
             className='list_name_input'
+
           />
         ) : (
           <>
@@ -248,7 +251,7 @@ const List: React.FC<ListProps> = ({
         </div>
         {isListDeleting && (
           <ConfirmationDialog
-            message={`Are you sure you want to delete the task "${list.name}"?`}
+            message={`${t('are_you_sure_you_want_to_delete_the_list')} "${list.name}"?`}
             onConfirm={confirmDelete}
             onCancel={cancelListDelete}
             currentTheme={currentTheme}
@@ -287,7 +290,7 @@ const List: React.FC<ListProps> = ({
                 color: currentTheme['--main-text-coloure'],
               }}
             >
-              Add Task
+              {t('add_task')}
             </button>
             }
           </>
@@ -295,7 +298,7 @@ const List: React.FC<ListProps> = ({
           <div className='newtask_adding_buttons'>
             <input
               type="text"
-              placeholder="Task Title"
+              placeholder= {t('task_title')}
               value={newTaskTitle}
               onChange={(e) => setNewTaskTitle(e.target.value)}
               disabled={isLoading}

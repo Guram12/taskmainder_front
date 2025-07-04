@@ -610,7 +610,7 @@ const Members: React.FC<MembersProps> = ({
               )}
               {isBoardDeleting && (
                 <ConfirmationDialog
-                  message={`Are you sure you want to delete the board "${selectedBoard?.name}"?`}
+                  message={`${t('are_you_sure_you_want_to_delete_the_board')} "${selectedBoard?.name}"?`}
                   onConfirm={delete_board}
                   onCancel={canselBoardDelete}
                   currentTheme={currentTheme}
@@ -631,7 +631,9 @@ const Members: React.FC<MembersProps> = ({
             <div className="each_user_container" style={{ backgroundColor: `${currentTheme['--list-background-color']}` }} >
 
               <div className="close_icon_cont">
-                <p className="manage_users_text" >Manage Users</p>
+                <p className="manage_users_text" 
+                  style={{ color: currentTheme['--main-text-coloure'] }}
+                >{t('manage_users')}</p>
                 <div className="refresh_and_close_icons_cont" >
                   {!is_members_refreshing && (
                     <TbRefresh className="refresh_users_icon" onClick={fetch_current_board_users} style={{ color: currentTheme['--main-text-coloure'] }} />
@@ -649,7 +651,7 @@ const Members: React.FC<MembersProps> = ({
                     type="text"
                     value={searchInput}
                     onChange={handleSearchInputChange}
-                    placeholder="Search users by email"
+                    placeholder= {t('search_users_by_email')}
                     style={{
                       backgroundColor: currentTheme['--task-background-color'],
                       color: currentTheme['--main-text-coloure'],
@@ -666,7 +668,7 @@ const Members: React.FC<MembersProps> = ({
                         marginBottom: '0px',
                         fontWeight: 'bold',
                       }}>
-                      Invitation sent successfully!
+                      {t('invitation_sent_successfully')}
                     </p>
                   )}
 
@@ -818,7 +820,7 @@ const Members: React.FC<MembersProps> = ({
                           )}
                           {is_current_user_admin_or_owner ? (
                             boardUser.user_status === 'owner' ? (
-                              <p className="owner_status" >{boardUser.user_status}</p> // Owner cannot change their status
+                              <p className="owner_status" >{t('owner')}</p> // Owner cannot change their status
                             ) : (
                               <select
                                 className="select_status"
@@ -831,8 +833,8 @@ const Members: React.FC<MembersProps> = ({
 
                                 }}
                               >
-                                <option value="admin">admin</option>
-                                <option value="member">member</option>
+                                <option value="admin">{t('admin')}</option>
+                                <option value="member">{t('member')}</option>
                               </select>
                             )
                           ) : (
@@ -863,7 +865,7 @@ const Members: React.FC<MembersProps> = ({
 
               {isDeletingSelectedUser && (
                 <ConfirmationDialog
-                  message={`Are you sure you want to delete the user "${current_board_user_to_delete.username}" from the board "${selectedBoard?.name}"?`}
+                  message={`${t('are_you_sure_you_want_to_delete_the_user')} "${current_board_user_to_delete.username}" ${t('from the board')} "${selectedBoard?.name}"?`}
                   onConfirm={() => handleDeleteUser(current_board_user_to_delete.id)}
                   onCancel={() => setIsDeletingSelectedUser(false)}
                   currentTheme={currentTheme}
