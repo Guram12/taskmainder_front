@@ -14,6 +14,8 @@ import SkeletonUserInfo from '../Boards/SkeletonUserInfo';
 import { IoEarth } from "react-icons/io5";
 import { Select } from 'antd';
 import timezone_data from '../../utils/data.json';
+import { useTranslation } from 'react-i18next';
+
 
 interface Profile_Info_updateProps {
   profileData: ProfileData;
@@ -29,10 +31,9 @@ const Profile_Info_update: React.FC<Profile_Info_updateProps> = ({ profileData, 
   const [loading_user_data, setLoading_user_data] = useState<{ username: boolean; phone: boolean; timezone: boolean }>({ username: false, phone: false, timezone: false });
   const [selectedTimeZone, setSelectedTimeZone] = useState<string | undefined>(undefined);
 
+  const { t } = useTranslation();
 
-  useEffect(() => {
-    console.log('tmz', selectedTimeZone);
-  }, [selectedTimeZone]);
+
 
   useEffect(() => {
     setUsername(profileData.username);
@@ -43,11 +44,19 @@ const Profile_Info_update: React.FC<Profile_Info_updateProps> = ({ profileData, 
   // ============================= send updated data to backend ======================================
 
   const handleUpdate = async () => {
+    const validated_timezone = () => {
+      if (selectedTimeZone === 'Europe/Tbilisi') {
+        return 'Asia/Tbilisi';
+      } else {
+        return selectedTimeZone;
+      }
+    }
+
     try {
       const response = await axiosInstance.patch("/acc/update-username-phone/", {
         username: username,
         phone_number: phoneNumber,
-        timezone: selectedTimeZone,
+        timezone: validated_timezone(),
       }, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("access_token")}`,
@@ -88,6 +97,11 @@ const Profile_Info_update: React.FC<Profile_Info_updateProps> = ({ profileData, 
   }));
 
 
+  useEffect(() => {
+    console.log('timezone:===>>>', profileData.phone_number);
+
+  }, [profileData]);
+
 
   return (
     <div className='main_profilinfo_cont' style={{ borderColor: currentTheme['--border-color'] }} >
@@ -103,7 +117,7 @@ const Profile_Info_update: React.FC<Profile_Info_updateProps> = ({ profileData, 
             borderColor: currentTheme["--border-color"]
           }}
         >
-          User information update
+          {t("user_information_update")}
         </p>
       </div>
 
@@ -125,7 +139,7 @@ const Profile_Info_update: React.FC<Profile_Info_updateProps> = ({ profileData, 
             <div className='input_and_save_icoin_cont' >
               <input
                 type="text"
-                placeholder="Enter username"
+                placeholder={t('enter_username')}
                 value={username}
                 className='username_input'
                 onChange={(e) => setUsername(e.target.value)}
@@ -183,7 +197,7 @@ const Profile_Info_update: React.FC<Profile_Info_updateProps> = ({ profileData, 
                 }}
                 dropdownClass="custom-phone-dropdown"
                 containerClass="custom-phone-container"
-                placeholder="Phone number"
+                placeholder={t('phone_number')}
               />
               <div className='x_and_mark_icon_container' >
                 <GrFormCheckmark
@@ -245,7 +259,7 @@ const Profile_Info_update: React.FC<Profile_Info_updateProps> = ({ profileData, 
                     setIsEditing({ ...isEditing, timezone: false })
                   }}
                 />
-                <HiMiniXMark className='cansel_icon' onClick={handleCansel_timezone_update}  />
+                <HiMiniXMark className='cansel_icon' onClick={handleCansel_timezone_update} />
               </div>
             </div>
           )}

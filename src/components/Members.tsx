@@ -21,6 +21,7 @@ import ReactDOM from 'react-dom';
 import { MdDeleteForever } from "react-icons/md";
 import { ProfileData } from "../utils/interface";
 import { PulseLoader } from "react-spinners";
+import { useTranslation } from 'react-i18next';
 
 
 interface MembersProps {
@@ -77,7 +78,7 @@ const Members: React.FC<MembersProps> = ({
   const [is_board_invitation_sent, setIs_board_invitation_sent] = useState<boolean>(false);
   const [invitation_loading, setInvitation_loading] = useState<boolean>(false);
 
-
+  const { t } = useTranslation();
 
   const is_current_user_owner = current_board_users.find(user => user.email === current_user_email)?.user_status === 'owner'
   const is_current_user_admin = current_board_users.find(user => user.email === current_user_email)?.user_status === 'admin'
@@ -495,13 +496,13 @@ const Members: React.FC<MembersProps> = ({
             <div>
               <div className="dark_mobile_background" ></div>
               <div className="board_name_update_modal_on_mobile" style={{ backgroundColor: `${currentTheme['--list-background-color']}` }} >
-                <p className="update_board_name_text" style={{ color: currentTheme['--main-text-coloure'] }}>Update Board Name</p>
+                <p className="update_board_name_text" style={{ color: currentTheme['--main-text-coloure'] }}>{t('Update_Board_Name_onmobile')}</p>
                 <input
                   type="text"
                   value={newBoardName}
                   onChange={(e) => setNewBoardName(e.target.value)}
                   className="board_name_input"
-                  placeholder="Edit Name.(Max 25 characters)"
+                  placeholder={t('edit_board_name')}
                   style={{
                     backgroundColor: `${currentTheme['--list-background-color']}`,
                     color: `${currentTheme['--main-text-coloure']}`,
@@ -520,7 +521,7 @@ const Members: React.FC<MembersProps> = ({
                     }}
                     className="save_btn_onmobile"
                   >
-                    Save
+                    {t('save')}
                   </button>
 
                   <button
@@ -535,7 +536,7 @@ const Members: React.FC<MembersProps> = ({
                     }}
                     className="cancel_btn_onmobile"
                   >
-                    Cancel
+                    {t('cancel')}
                   </button>
 
                 </div>
@@ -551,7 +552,7 @@ const Members: React.FC<MembersProps> = ({
                 value={newBoardName}
                 onChange={(e) => setNewBoardName(e.target.value)}
                 className="board_name_input"
-                placeholder="Edit Name.(Max 25 characters)"
+                placeholder={t('edit_board_name')}
                 style={{
                   backgroundColor: `${currentTheme['--list-background-color']}`,
                   color: `${currentTheme['--main-text-coloure']}`,

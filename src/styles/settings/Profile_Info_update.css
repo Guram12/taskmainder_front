@@ -78,7 +78,7 @@
 
 .user_username {
   margin: 0px;
-  font-size: 26px;
+  font-size: 24px;
 }
 
 .user_info_edit_icon {
@@ -203,23 +203,36 @@
     flex-direction: column;
     justify-content: center;
     align-items: flex-start;
-    gap: 20px;
+    gap: 10px;
     margin-left: 0px;
+    margin-top: 20px;
     height: 100%;
   }
 
-.names_with_input_cont {
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  align-items: center;
-  align-content: flex-start;
-  gap: 10px;
-  margin-top: 20px;
-  min-width: 300px;
-  height: 100%;
-}
+  .names_with_input_cont {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    align-content: flex-start;
+    gap: 10px;
+    margin-top: 15px;
+    min-width: 300px;
+    height: 100%;
+  }
 
+  .user_info_update_p {
+    top: 0px;
+    margin: 0px;
+    font-size: 15px;
+    font-weight: bold;
+    max-width: 250px;
+  }
+
+  .user_username {
+    margin: 0px;
+    font-size: 18px;
+  }
 
 
 }

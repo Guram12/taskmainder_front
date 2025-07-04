@@ -84,7 +84,7 @@
   z-index: 1000;
 }
 
-.confirmation-input{
+.confirmation-input {
   width: 200px;
   padding: 5px;
   border: 1px solid;
@@ -113,7 +113,7 @@
   cursor: not-allowed;
 }
 
-.cancel_button{
+.cancel_button {
   padding: 5px 10px;
   border: none;
   border-radius: 5px;
@@ -121,7 +121,7 @@
 }
 
 .cancel_button:hover {
- box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 /* ================================================================================================== */
@@ -146,6 +146,10 @@
     padding: 20px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     z-index: 1000;
+  }
+
+  .delete_acc_header_p {
+    font-size: 15px;
   }
 
 }

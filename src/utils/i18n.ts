@@ -7,6 +7,10 @@ const resources = {
     translation: {
       // header component
       "customTheme": "Custom Theme",
+      'are_you_sure_you_want_to_log_out?': 'Are you sure you want to log out?',
+      'yes': 'Yes',
+      'no': 'No',
+
 
       // sidebar component
       "dashboard": "Dashboard",
@@ -72,12 +76,66 @@ const resources = {
       'no_boards_available': 'No Boards Available',
       'please_create_a_new_board_to_get_started.': 'Please create a new board to get started.',
 
+      // ================ settings ==============
+      // profile picture update component
+      'profile_picture_update': 'Profile Picture Update',
+      'change_image': 'Change Image',
+      'save': 'Save',
+      'saving': 'Saving...',
+      'select_avatar': 'Select Avatar',
+      //profile info update component
+      "user_information_update": "User Information Update",
+      'enter_username': 'Enter Username',
+      'phone_number': 'Phone Number',
+      // password change component
+      'change_Password': 'Change Password',
+      'you_are_logged_in_using_a_social': "You are logged in using a social account. Password changes are not applicable.",
+      'old_Password': 'Old Password',
+      'new_Password': 'New Password',
+      'confirm_new_Password': 'Confirm New Password',
+      'correct': 'correct',
+      'incorrect': 'incorrect',
+      // ---------------- password validation text ------------
+      'minimum_8_symbols': 'Minimum 8 symbols',
+      'at_least_one_uppercase_letter': 'At least one uppercase letter',
+      'at_least_one_number': 'At least one number',
+      'passwords_match': 'Passwords match',
+      'Passwords_do_not_match': '* Passwords do not match',
+
+      // customtheme component
+      'create_custom_theme': 'Create Custom Theme',
+      'click_image_to_select_new_background': 'Click image to select new background',
+      'you_can_change_board_background': 'You can change board background images if you are the owner or admin of this board.',
+      "no_boards_available_for_theme": "No boards available. Please create a board first.",
+      "save_image": "Save Image",
+      'cancel_image_save': 'Cancel',
+      'select_colors': 'Select Colors',
+      'save_theme': 'Save Theme',
+
+      // deleteAccount component
+      'danger_zone': 'Danger Zone',
+      'delete_account': 'Delete Account',
+      'delete': 'Delete',
+      'type_delete_confirmation': 'Type "delete my account" to confirm!',
+      'type_here': 'Type here...',
+      'confirm': 'Confirm',
+      'cancel': 'Cancel',
+
+      //members component
+      'Update_Board_Name_onmobile': 'Update Board Name',
+      'edit_board_name': 'Edit Name.(Max 25 characters)',
+
+
+
     }
   },
   ka: {
     translation: {
       // header component
       "customTheme": "მორგებული თემა",
+      'are_you_sure_you_want_to_log_out?': 'დარწმუნებული ხართ, რომ გსურთ გასვლა?',
+      'yes': 'კი',
+      'no': 'არა',
 
       // sidebar component
       "dashboard": "პანელი",
@@ -141,6 +199,61 @@ const resources = {
       //NoBoards component
       'no_boards_available': 'დაფები არ არის ხელმისაწვდომი',
       'please_create_a_new_board_to_get_started.': 'გთხოვთ, შექმნათ ახალი დაფა დასაწყებად',
+
+      // ================ settings ==============
+      // profile picture update component
+      'profile_picture_update': 'პროფილის სურათის განახლება',
+      'change_image': 'სურათის შეცვლა',
+      'save': 'შენახვა',
+      'saving': 'შენახვა...',
+      'select_avatar': 'აირჩიეთ ავატარი',
+      //profile info update component
+      "user_information_update": "მომხმარებლის ინფორმაციის განახლება",
+      'enter_username': 'მომხმარებლის სახელი',
+      'phone_number': 'ტელეფონის ნომერი',
+      // password change component
+      'change_Password': 'პაროლის შეცვლა',
+      'you_are_logged_in_using_a_social': "თქვენ სისტემაში სოციალური ანგარიშით ხართ შესული. პაროლის შეცვლა ამ შემთხვევაში მიუწვდომელია.",
+      'old_Password': 'ძველი პაროლი',
+      'new_Password': 'ახალი პაროლი',
+      'confirm_new_Password': 'ახალი პაროლის დადასტურება',
+      'correct': 'სწორია',
+      'incorrect': 'არასწორია',
+      // ---------------- password validation text ------------
+      'minimum_8_symbols': 'მინიმუმ 8 სიმბოლო',
+      'at_least_one_uppercase_letter': 'მინიმუმ ერთი დიდი ასო',
+      'at_least_one_number': 'მინიმუმ ერთი რიცხვი',
+      'passwords_match': 'პაროლები ემთხვევა',
+      'Passwords_do_not_match': '* პაროლები არ ემთხვევა',
+
+      // customtheme component
+      'create_custom_theme': 'შექმენი მორგებული თემა',
+      'click_image_to_select_new_background': 'დააწკაპუნე სურათზე ახალი ფონის შესარჩევად',
+      'you_can_change_board_background': 'დაფის ფონის სურათების შეცვლა შეგიძლიათ მხოლოდ იმ შემთხვევაში, თუ თქვენ ხართ ამ დაფის მფლობელი ან ადმინი.',
+      "no_boards_available_for_theme": "დაფები არ არის ხელმისაწვდომი. გთხოვთ, ჯერ შექმნათ დაფა.",
+      "save_image": "შენახვა",
+      'cancel_image_save': 'გაუქმება',
+      'select_colors': 'აირჩიე ფერები',
+      'save_theme': 'თემის შენახვა',
+
+      // deleteAccount component
+      'danger_zone': 'საფრთხის ზონა',
+      'delete_account': 'ანგარიშის წაშლა',
+      'delete': 'წაშლა',
+      'type_delete_confirmation': 'დასადასტურებლად ჩაწერეთ „წავშალე ჩემი ანგარიში“!',
+      'type_here': 'ჩაწერე აქ...',
+      'confirm': 'დადასტურება',
+      'cancel': 'გაუქმება',
+
+      //members component
+      'Update_Board_Name_onmobile': 'დაფის სახელის განახლება',
+      'edit_board_name': 'სახელი (მაქს 25 სიმბოლო)',
+
+
+
+
+
+
 
     }
   },

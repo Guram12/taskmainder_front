@@ -306,7 +306,8 @@ const TaskUpdateModal: React.FC<TaskUpdateModalProps> = ({
                   borderColor: caracter_limit === 1000 ? 'red' : currentTheme['--border-color'],
                   outline: 'none',
                   transition: 'border-color 0.2s',
-                }}
+                  ['--placeholder-color']: currentTheme['--due-date-color']
+                } as React.CSSProperties}
               />
               <GrFormCheckmark
                 className='title_checkmark_icon'
@@ -343,7 +344,8 @@ const TaskUpdateModal: React.FC<TaskUpdateModalProps> = ({
                     borderColor: currentTheme['--border-color'],
                     outline: 'none',
                     transition: 'border-color 0.2s',
-                  }}
+                    ['--placeholder-color']: currentTheme['--due-date-color']
+                  } as React.CSSProperties}
                 />
                 <GrFormCheckmark className='title_checkmark_icon' onClick={() => setIsDescriptionUpdating(false)} />
                 <HiXMark className='title_close_icon' onClick={handleCancelDescriptionUpdate} />

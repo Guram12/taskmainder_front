@@ -359,7 +359,7 @@ const handleLanguageChange = (selectedLanguage: 'en' | 'ka') => {
 
         {confirmation_for_logout && (
           <ConfirmationDialog
-            message="Are you sure you want to log out?"
+            message={t('are_you_sure_you_want_to_log_out?')}
             onConfirm={handleLogOut}
             onCancel={() => setConfirmation_for_logout(false)}
             currentTheme={currentTheme}
