@@ -86,6 +86,18 @@ const themes = {
     '--hover-color': '#232436',                 // Slightly glowing hover
     '--due-date-color': '#8BD3FF'               // Light electric blue
   },
+
+  sky_breeze: {
+    '--background-color': '#B3D8F6',           // Soft sky blue
+    '--main-text-coloure': '#234060',          // Deep blue for contrast
+    '--border-color': '#8CB4D9',               // Muted blue border
+    '--scrollbar-thumb-color': '#A5C7E8',      // Gentle blue for scrollbars
+    '--list-background-color': '#C6E2FA',      // Lighter sky for lists
+    '--task-background-color': '#D6ECFB',      // Very light blue for cards/tasks
+    '--hover-color': '#C6E2FA',                // Lighter blue for hover
+    '--due-date-color': '#4A90E2'              // Vivid sky blue for due dates
+  },
+
   glacier_bite: {
     '--background-color': '#F9FBFD',            // Frost white with a touch of blue
     '--main-text-coloure': '#1A2634',           // Cold deep navy for high readability
@@ -120,18 +132,6 @@ const themes = {
     '--due-date-color': '#6A8777'               // Muted forest tone for due dates
   }
   ,
-
-
-  sky_breeze: {
-    '--background-color': '#B3D8F6',           // Soft sky blue
-    '--main-text-coloure': '#234060',          // Deep blue for contrast
-    '--border-color': '#8CB4D9',               // Muted blue border
-    '--scrollbar-thumb-color': '#A5C7E8',      // Gentle blue for scrollbars
-    '--list-background-color': '#C6E2FA',      // Lighter sky for lists
-    '--task-background-color': '#D6ECFB',      // Very light blue for cards/tasks
-    '--hover-color': '#C6E2FA',                // Lighter blue for hover
-    '--due-date-color': '#4A90E2'              // Vivid sky blue for due dates
-  },
 
 
 

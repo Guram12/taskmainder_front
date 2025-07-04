@@ -140,8 +140,8 @@ const Boards: React.FC<BoardsProps> = ({
 
 
     const token = localStorage.getItem('access_token');
-    const newSocket = new WebSocket(`wss://api.shemaxsene.space/ws/boards/${selectedBoard.id}/?token=${token}`);
-    // const newSocket = new WebSocket(`ws://localhost:8000/ws/boards/${selectedBoard.id}/?token=${token}`);
+    // const newSocket = new WebSocket(`wss://api.shemaxsene.space/ws/boards/${selectedBoard.id}/?token=${token}`);
+    const newSocket = new WebSocket(`ws://localhost:8000/ws/boards/${selectedBoard.id}/?token=${token}`);
 
     socketRef.current = newSocket;
 
@@ -282,8 +282,8 @@ const Boards: React.FC<BoardsProps> = ({
                   description: payload.description,
                   due_date: payload.due_date,
                   completed: payload.completed,
-                  priority: payload.priority
-
+                  priority: payload.priority,
+                  task_associated_users_id: payload.task_associated_users_id, // Add this line
                 } : task
               ),
             }));
@@ -517,7 +517,9 @@ const Boards: React.FC<BoardsProps> = ({
       prevBoardData.lists[targetListIndex].tasks.push(movedTask);
 
       const newBoardData = { ...prevBoardData };
-      setSelectedBoard(newBoardData);
+      setTimeout(() => {
+        setSelectedBoard(newBoardData);
+      }, 10);
 
       if (socketRef.current && socketRef.current.readyState === WebSocket.OPEN) {
         console.log('Sending move_task message:', {
@@ -829,29 +831,29 @@ const Boards: React.FC<BoardsProps> = ({
     >
       {/* {boards.length > 0 && ( */}
       <div >
-      {isBoardsLoaded && boards.length > 0 && (
-        <div>
-          <Members
-            selectedBoard={selectedBoard}
-            socketRef={socketRef}
-            current_user_email={current_user_email}
-            currentTheme={currentTheme}
-            update_board_name={update_board_name}
-            deleteBoard={deleteBoard}
-            setCurrent_board_users={setCurrent_board_users}
-            current_board_users={current_board_users}
-            is_cur_Board_users_fetched={is_cur_Board_users_fetched}
-            fetch_current_board_users={fetch_current_board_users}
-            setBoards={setBoards}
-            boards={boards}
-            is_members_refreshing={is_members_refreshing}
-            isMobile={isMobile}
-            profileData={profileData}
-          />
-        </div>
-      )}
+        {isBoardsLoaded && boards.length > 0 && (
+          <div>
+            <Members
+              selectedBoard={selectedBoard}
+              socketRef={socketRef}
+              current_user_email={current_user_email}
+              currentTheme={currentTheme}
+              update_board_name={update_board_name}
+              deleteBoard={deleteBoard}
+              setCurrent_board_users={setCurrent_board_users}
+              current_board_users={current_board_users}
+              is_cur_Board_users_fetched={is_cur_Board_users_fetched}
+              fetch_current_board_users={fetch_current_board_users}
+              setBoards={setBoards}
+              boards={boards}
+              is_members_refreshing={is_members_refreshing}
+              isMobile={isMobile}
+              profileData={profileData}
+            />
+          </div>
+        )}
       </div>
-      
+
       {/* Show skeleton only when boards are not loaded */}
       {!isBoardsLoaded && (
         <div className='skeleton_in_board'>

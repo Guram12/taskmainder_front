@@ -135,10 +135,10 @@ const handleLanguageChange = (selectedLanguage: 'en' | 'ka') => {
     'ink_cobalt',
     'charcoal_rose',
     'hologram_glow',
-    'glacier_bite',
+    'sky_breeze',
     'mint_ice',
     'sage_paper',
-    'sky_breeze',
+    'glacier_bite',
   ];
 
   // ===================================== handle user image click =========================================
@@ -250,13 +250,13 @@ const handleLanguageChange = (selectedLanguage: 'en' | 'ka') => {
             <div className='header_coloure_child_container example8'
               onClick={() => changeTheme(themes.hologram_glow)}></div>
             <div className='header_coloure_child_container example9'
-              onClick={() => changeTheme(themes.glacier_bite)}></div>
+              onClick={() => changeTheme(themes.sky_breeze)}></div>
             <div className='header_coloure_child_container example10'
               onClick={() => changeTheme(themes.mint_ice)}></div>
             <div className='header_coloure_child_container example11'
               onClick={() => changeTheme(themes.sage_paper)}></div>
             <div className='header_coloure_child_container example12'
-              onClick={() => changeTheme(themes.sky_breeze)}></div>
+              onClick={() => changeTheme(themes.glacier_bite)}></div>
 
 
 

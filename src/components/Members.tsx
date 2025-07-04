@@ -578,8 +578,8 @@ const Members: React.FC<MembersProps> = ({
                 {isMobile
                   ? (
                     <p className="board_name_text" >
-                      {selectedBoard?.name && selectedBoard?.name.length > 10
-                        ? `${selectedBoard?.name.slice(0, 10)}...`
+                      {selectedBoard?.name && selectedBoard?.name.length > 7
+                        ? `${selectedBoard?.name.slice(0, 7)}...`
                         : selectedBoard?.name}
                     </p>
                   )

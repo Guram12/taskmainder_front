@@ -369,7 +369,7 @@ const TaskUpdateModal: React.FC<TaskUpdateModalProps> = ({
         <div className="priority_container"
           style={{ borderColor: currentTheme['--border-color'] }}
         >
-          <p className='priority_p' >Select Priority:</p>
+          <p className='priority_p' > Priority:</p>
           <div
             className='each_priority none'
             onClick={() => setUpdatedPriority(null)}
