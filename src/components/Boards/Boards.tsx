@@ -140,9 +140,11 @@ const Boards: React.FC<BoardsProps> = ({
 
     const sortable = Sortable.create(listsContainerRef.current, {
       animation: 150,
-      handle: '.drag_handle', // Use the existing class from your MdOutlineDragIndicator
-      draggable: '.sortable-list', // We'll add this class to lists
-      direction: 'horizontal', // Lists are arranged horizontally
+      handle: '.drag_handle', // Use the BiMoveHorizontal icon
+      draggable: '.list', // Target the list class directly
+      direction: 'horizontal',
+      scroll: false, // Disable auto-scroll for list reordering
+      ghostClass: 'sortable-ghost', // Add ghost class for visual feedback
       onEnd: (evt: SortableEvent) => {
         if (
           evt.oldIndex === undefined ||
@@ -162,9 +164,9 @@ const Boards: React.FC<BoardsProps> = ({
           const [removed] = updatedLists.splice(evt.oldIndex!, 1);
           updatedLists.splice(evt.newIndex!, 0, removed);
 
-        // Console log the new order
-        console.log('Lists reordered:', updatedLists.map(l => ({ id: l.id, name: l.name })));
-        console.log('List order IDs:', updatedLists.map(l => l.id));
+          // Console log the new order
+          console.log('Lists reordered:', updatedLists.map(l => ({ id: l.id, name: l.name })));
+          console.log('List order IDs:', updatedLists.map(l => l.id));
 
 
           // Update local state immediately
@@ -209,8 +211,8 @@ const Boards: React.FC<BoardsProps> = ({
 
 
     const token = localStorage.getItem('access_token');
-    const newSocket = new WebSocket(`wss://api.shemaxsene.space/ws/boards/${selectedBoard.id}/?token=${token}`);
-    // const newSocket = new WebSocket(`ws://localhost:8000/ws/boards/${selectedBoard.id}/?token=${token}`);
+    // const newSocket = new WebSocket(`wss://api.shemaxsene.space/ws/boards/${selectedBoard.id}/?token=${token}`);
+    const newSocket = new WebSocket(`ws://localhost:8000/ws/boards/${selectedBoard.id}/?token=${token}`);
 
     socketRef.current = newSocket;
 
@@ -954,31 +956,30 @@ const Boards: React.FC<BoardsProps> = ({
             <div className='lists_container' ref={listsContainerRef}>
 
               {boardData.lists.map((list) => (
-                <div key={list.id} className="sortable-list"> 
-                  <List
-                    key={list.id}
-                    list={list}
-                    moveTask={moveTask}
-                    addTask={addTask}
-                    deleteTask={deleteTask}
-                    updateTask={updateTask}
-                    setUpdatingListNameId={setUpdatingListNameId}
-                    updatingListNameId={updatingListNameId}
-                    socketRef={socketRef}
-                    currentTheme={currentTheme}
-                    deleteList={deleteList}
-                    updateListName={updateListName}
-                    allCurrentBoardUsers={allCurrentBoardUsers}
-                    isLoading={loadingLists[list.id] || false}
-                    setBoardData={setBoardData}
-                    boardData={boardData}
-                    dndListId={list.id}
-                    setUpdatingTaskId={setUpdatingTaskId}
-                    updatingTaskId={updatingTaskId}
-                    setCompletingTaskId={setCompletingTaskId}
-                    completingTaskId={completingTaskId}
-                  />
-                </div>
+                <List
+                  key={list.id}
+                  list={list}
+                  moveTask={moveTask}
+                  addTask={addTask}
+                  deleteTask={deleteTask}
+                  updateTask={updateTask}
+                  setUpdatingListNameId={setUpdatingListNameId}
+                  updatingListNameId={updatingListNameId}
+                  socketRef={socketRef}
+                  currentTheme={currentTheme}
+                  deleteList={deleteList}
+                  updateListName={updateListName}
+                  allCurrentBoardUsers={allCurrentBoardUsers}
+                  isLoading={loadingLists[list.id] || false}
+                  setBoardData={setBoardData}
+                  boardData={boardData}
+                  dndListId={list.id}
+                  setUpdatingTaskId={setUpdatingTaskId}
+                  updatingTaskId={updatingTaskId}
+                  setCompletingTaskId={setCompletingTaskId}
+                  completingTaskId={completingTaskId}
+                />
+
               ))}
               {isAddingList && (
                 <SkeletonListLoader currentTheme={currentTheme} />
