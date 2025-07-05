@@ -24,6 +24,8 @@ import Task from './Tasks';
 import { useTranslation } from 'react-i18next';
 import { GrFormCheckmark } from "react-icons/gr";
 import { HiXMark } from "react-icons/hi2";
+import Sortable from 'sortablejs';
+import type { SortableEvent } from 'sortablejs';
 
 
 
@@ -130,6 +132,70 @@ const Boards: React.FC<BoardsProps> = ({
   }, [selectedBoard]);
 
 
+  // ==================================================== list reordering =========================================================
+  const listReorderTimeoutRef = useRef<NodeJS.Timeout | null>(null); // Add this
+
+  useEffect(() => {
+    if (!listsContainerRef.current) return;
+
+    const sortable = Sortable.create(listsContainerRef.current, {
+      animation: 150,
+      handle: '.drag_handle', // Use the existing class from your MdOutlineDragIndicator
+      draggable: '.sortable-list', // We'll add this class to lists
+      direction: 'horizontal', // Lists are arranged horizontally
+      onEnd: (evt: SortableEvent) => {
+        if (
+          evt.oldIndex === undefined ||
+          evt.newIndex === undefined ||
+          evt.oldIndex === evt.newIndex
+        )
+          return;
+
+        // Debounce: clear previous timeout if exists
+        if (listReorderTimeoutRef.current) {
+          clearTimeout(listReorderTimeoutRef.current);
+        }
+
+        // Use a short timeout to batch rapid onEnd calls
+        listReorderTimeoutRef.current = setTimeout(() => {
+          const updatedLists = [...boardData.lists];
+          const [removed] = updatedLists.splice(evt.oldIndex!, 1);
+          updatedLists.splice(evt.newIndex!, 0, removed);
+
+        // Console log the new order
+        console.log('Lists reordered:', updatedLists.map(l => ({ id: l.id, name: l.name })));
+        console.log('List order IDs:', updatedLists.map(l => l.id));
+
+
+          // Update local state immediately
+          setBoardData(prevData => ({
+            ...prevData,
+            lists: updatedLists
+          }));
+
+          // Send to backend
+          if (socketRef.current && socketRef.current.readyState === WebSocket.OPEN) {
+            socketRef.current.send(
+              JSON.stringify({
+                action: 'reorder_lists',
+                payload: {
+                  board_id: selectedBoard?.id,
+                  list_order: updatedLists.map(l => l.id)
+                },
+              })
+            );
+          }
+        }, 50); // 50ms debounce
+      },
+    });
+
+    return () => {
+      sortable.destroy();
+      if (listReorderTimeoutRef.current) {
+        clearTimeout(listReorderTimeoutRef.current);
+      }
+    };
+  }, [boardData.lists, selectedBoard?.id]);
 
   // ======================================   Main useEffect for websocket connection  =========================================
 
@@ -160,16 +226,6 @@ const Boards: React.FC<BoardsProps> = ({
       const { action, payload } = data;
 
       switch (action) {
-        // case 'full_board_state':
-        //   console.log('Received full board state:', payload);
-        //   setBoardData(payload); // Update the board data with the full state
-        //   setSelectedBoard(payload); // Update the selected board with the full state
-        //   setIsBoardsLoaded(true);
-        //   console.log('board loader after receiving full_board_state ==>>', isBoardsLoaded);
-
-        //   break;
-
-
         case 'move_task':
           const { task_id, source_list_id, target_list_id } = payload;
           setBoardData((prevData) => {
@@ -234,6 +290,22 @@ const Boards: React.FC<BoardsProps> = ({
             );
             setUpdatingListNameId(null);
             return { ...prevData, lists: updatedLists };
+          });
+          break;
+
+        case 'reorder_lists':
+          console.log('Received reorder_lists:', payload);
+          setBoardData((prevData) => {
+            const reorderedLists = payload.list_order.map((listId: number) =>
+              prevData.lists.find((list) => list.id === listId)
+            ).filter(Boolean); // Remove undefined
+
+            // Also add any lists that are in prevData.lists but not in list_order (to avoid losing lists)
+            const missingLists = prevData.lists.filter(
+              (list) => !payload.list_order.includes(list.id)
+            );
+
+            return { ...prevData, lists: [...reorderedLists, ...missingLists] };
           });
           break;
 
@@ -880,31 +952,33 @@ const Boards: React.FC<BoardsProps> = ({
             onDragEnd={handleDragEnd}
           >
             <div className='lists_container' ref={listsContainerRef}>
+
               {boardData.lists.map((list) => (
-                <List
-                  key={list.id}
-                  list={list}
-                  moveTask={moveTask}
-                  addTask={addTask}
-                  deleteTask={deleteTask}
-                  updateTask={updateTask}
-                  setUpdatingListNameId={setUpdatingListNameId}
-                  updatingListNameId={updatingListNameId}
-                  socketRef={socketRef}
-                  currentTheme={currentTheme}
-                  deleteList={deleteList}
-                  updateListName={updateListName}
-                  allCurrentBoardUsers={allCurrentBoardUsers}
-                  isLoading={loadingLists[list.id] || false}
-                  setBoardData={setBoardData}
-                  boardData={boardData}
-                  // DND-KIT: Pass listId for droppable
-                  dndListId={list.id}
-                  setUpdatingTaskId={setUpdatingTaskId}
-                  updatingTaskId={updatingTaskId}
-                  setCompletingTaskId={setCompletingTaskId}
-                  completingTaskId={completingTaskId}
-                />
+                <div key={list.id} className="sortable-list"> 
+                  <List
+                    key={list.id}
+                    list={list}
+                    moveTask={moveTask}
+                    addTask={addTask}
+                    deleteTask={deleteTask}
+                    updateTask={updateTask}
+                    setUpdatingListNameId={setUpdatingListNameId}
+                    updatingListNameId={updatingListNameId}
+                    socketRef={socketRef}
+                    currentTheme={currentTheme}
+                    deleteList={deleteList}
+                    updateListName={updateListName}
+                    allCurrentBoardUsers={allCurrentBoardUsers}
+                    isLoading={loadingLists[list.id] || false}
+                    setBoardData={setBoardData}
+                    boardData={boardData}
+                    dndListId={list.id}
+                    setUpdatingTaskId={setUpdatingTaskId}
+                    updatingTaskId={updatingTaskId}
+                    setCompletingTaskId={setCompletingTaskId}
+                    completingTaskId={completingTaskId}
+                  />
+                </div>
               ))}
               {isAddingList && (
                 <SkeletonListLoader currentTheme={currentTheme} />

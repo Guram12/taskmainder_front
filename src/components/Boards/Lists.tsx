@@ -18,6 +18,7 @@ import type { SortableEvent } from 'sortablejs';
 import Skeleton from 'react-loading-skeleton';
 import { HiXMark } from "react-icons/hi2";
 import { useTranslation } from 'react-i18next';
+import { BiMoveHorizontal } from "react-icons/bi";
 
 
 
@@ -161,6 +162,10 @@ const List: React.FC<ListProps> = ({
       setlistInputNameErrorMessage('List name must be at least 3 characters long.');
       return;
     }
+    if (newListName.trim().length > 21) {
+      setlistInputNameErrorMessage('List name cannot exceed 21 characters.');
+      return;
+    }
     // if user push enter key than update the list name
     setUpdatingListNameId(list.id);
     setlistInputNameErrorMessage(''); // Clear the error message if validation passes
@@ -209,10 +214,11 @@ const List: React.FC<ListProps> = ({
               outline: listInputNameErrorMessage ? 'none' : '',
               backgroundColor: currentTheme['--task-background-color'],
               ['--placeholder-color']: currentTheme['--due-date-color'] || '#888',
-            }as React.CSSProperties}
+            } as React.CSSProperties}
             onKeyDown={handleKeyDown}
-            placeholder= {t('list_name')}
+            placeholder={t('list_name')}
             className='list_name_input'
+            maxLength={21}
 
           />
         ) : (
@@ -248,6 +254,7 @@ const List: React.FC<ListProps> = ({
               <MdDeleteForever className='delete_list_icon' onClick={() => handle_delete_list_click()} />
             </>
           }
+          <BiMoveHorizontal className='drag_handle' id='list_reorder_icon' />
         </div>
         {isListDeleting && (
           <ConfirmationDialog
@@ -298,7 +305,7 @@ const List: React.FC<ListProps> = ({
           <div className='newtask_adding_buttons'>
             <input
               type="text"
-              placeholder= {t('task_title')}
+              placeholder={t('task_title')}
               value={newTaskTitle}
               onChange={(e) => setNewTaskTitle(e.target.value)}
               disabled={isLoading}
@@ -314,7 +321,7 @@ const List: React.FC<ListProps> = ({
               }}
 
             />
-            
+
             <div
               className='add_task_button_2'
               onClick={handleAddTask}
@@ -347,3 +354,4 @@ const List: React.FC<ListProps> = ({
 };
 
 export default List;
+

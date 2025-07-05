@@ -226,6 +226,16 @@
   transition: all 0.3s ease;
 }
 
+#list_reorder_icon {
+  width: 26px;
+  height: 26px;
+}
+
+#list_reorder_icon:hover {
+  color: #2e78d8 !important;
+  transform: scale(1.1);
+}
+
 .reorder_container {
   display: flex;
   flex-direction: row;
@@ -240,6 +250,11 @@
   transition: all 0.3s ease;
 }
 
+.reorder_icon:hover {
+  color: #2e78d8 !important;
+  transform: scale(1.1);
+}
+
 .drag_icon {
   width: 25px;
   height: 25px;
@@ -248,7 +263,7 @@
 
 .drag_icon:hover {
   color: #2e78d8;
-
+  transform: scale(1.1);
 }
 
 
@@ -262,7 +277,7 @@
   border-radius: 30px;
 }
 
-.move_if_description{
+.move_if_description {
   margin-left: 30px;
 }
 

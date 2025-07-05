@@ -138,10 +138,9 @@ const resources = {
       //board component
       'create_List': 'Create List',
       'add': 'Add',
-      'list_Name': 'List Name',
 
       // list component 
-      'list_name': 'List Name',
+      'list_name': 'List Name(max 21)',
       'are_you_sure_you_want_to_delete_the_list': 'Are you sure you want to delete the task',
       'add_task': 'Add Task',
       'task_title': 'Task Title',
@@ -291,10 +290,9 @@ const resources = {
       //board component
       'create_List': 'სიის დამატება',
       'add': 'დამატება',
-      'list_Name': 'სიის სახელი',
       
       // list component
-      'list_name': 'სიის სახელი',
+      'list_name': 'სიის სახელი(მაქს. 21)',
       'are_you_sure_you_want_to_delete_the_list': 'დარწმუნებული ხართ, რომ გსურთ წაშალოთ სია:',
       'add_task': 'დავალების დამატება',
       'task_title': 'დავალების სათაური',
