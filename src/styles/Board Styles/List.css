@@ -37,11 +37,13 @@
 .list_title {
   margin: 0px;
   margin-left: 2px;
+  font-size: 15px;
 }
 
 /* ---------------------------------- edit and delete icon styles ----------------------------- */
 .list_buttons {
   display: flex;
+  align-items: center;
   gap: 5px;
   font-size: 20px;
   min-height: 20px;

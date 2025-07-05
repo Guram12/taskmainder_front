@@ -40,6 +40,8 @@ export interface lists {
   created_at: string;
   board: number;
   tasks: tasks[];
+  order: number; // Add this field
+
 }
 
 
