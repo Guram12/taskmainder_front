@@ -11,8 +11,6 @@ interface GoogleSignInProps {
 }
 
 const GoogleSignIn: React.FC<GoogleSignInProps> = ({ setIsAuthenticated }) => {
-
-
   const navigate = useNavigate();
 
 
