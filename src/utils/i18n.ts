@@ -150,8 +150,28 @@ const resources = {
       // task component 
       "task_due_date": "Due Date:",
       'no_associated_users': 'No associated users',
-      'no_due_date': 'No due date'
+      'no_due_date': 'No due date',
 
+      // authentication component
+      'login': 'Login',
+      'enter_your_email': 'Enter your email',
+      'enter_your_password': 'Enter your password',
+      'register': 'Register',
+      'forgot_password': 'Forgot password?',
+      'hide_password': 'Hide password',
+      'show_password': 'Show password',
+      'email': 'Email',
+      'username': 'Username',
+      'select_timezone': 'Select Timezone',
+      'password': 'Password',
+      'confirm_password': 'Confirm Password',
+      'go_back_to_login': 'Go back to login',
+      'password_reset': 'Password Reset',
+      'send_reset_link': 'Send Reset Link',
+      'open_email_provider': 'Open Email Provider',
+      'password_reset_link_sent_to_your_email_address.': 'Password reset link sent to your email address.',
+      'failed_to_send_password_reset_link': 'Failed to send password reset link. Please try again.',
+      'create_new_password': 'Create New Password'
 
 
 
@@ -294,7 +314,7 @@ const resources = {
       //board component
       'create_List': 'სიის დამატება',
       'add': 'დამატება',
-      
+
       // list component
       'list_name': 'სიის სახელი(მაქს. 21)',
       'are_you_sure_you_want_to_delete_the_list': 'დარწმუნებული ხართ, რომ გსურთ წაშალოთ სია:',
@@ -304,11 +324,28 @@ const resources = {
       // task component
       "task_due_date": "ვადა:",
       "no_associated_users": "არავინ",
-      "no_due_date": "ვადის გარეშე"
+      "no_due_date": "ვადის გარეშე",
 
-
-
-
+      // authentication component
+      'login': 'შესვლა',
+      'enter_your_email': 'შეიყვანე ელ. ფოსტა',
+      'enter_your_password': 'შეიყვანე პაროლი',
+      'register': 'რეგისტრაცია',
+      'forgot_password': 'დაგავიწყდა პაროლი?',
+      'hide_password': 'პაროლის დამალვა',
+      'show_password': 'პაროლის ჩვენება',
+      'email': 'ელ. ფოსტა',
+      'username': 'მომხმარებლის სახელი',
+      'select_timezone': 'აირჩიეთ დროის სარტყელი',
+      'password': 'პაროლი',
+      'confirm_password': 'პაროლის დადასტურება',
+      'go_back_to_login': 'შესვლის გვერდზე დაბრუნება',
+      'password_reset': 'პაროლის აღდგენა',
+      'send_reset_link': 'გაგზავნე აღდგენის ბმული',
+      'open_email_provider': 'ელფოსტის გახსნა',
+      'password_reset_link_sent_to_your_email_address.': 'პაროლის აღდგენის ბმული გაგზავნილია თქვენს ელფოსტაზე.',
+      'failed_to_send_password_reset_link': 'პაროლის აღდგენის ბმულის გაგზავნა ვერ მოხერხდა. გთხოვთ, სცადოთ თავიდან.',
+      'create_new_password': 'შექმენით ახალი პაროლი'
 
 
 

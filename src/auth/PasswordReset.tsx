@@ -6,6 +6,7 @@ import { ThemeSpecs } from '../utils/theme';
 import { MdOutlineAlternateEmail } from "react-icons/md";
 import { useNavigate } from 'react-router-dom';
 import { TbArrowBackUp } from "react-icons/tb";
+import { useTranslation } from 'react-i18next';
 
 
 interface PasswordResetProps {
@@ -18,7 +19,7 @@ const PasswordReset: React.FC<PasswordResetProps> = ({ currentTheme }) => {
   const [message, setMessage] = useState<string>('');
   const [error, setError] = useState<string>('');
 
-
+  const { t } = useTranslation();
 
   const navigate = useNavigate();
 
@@ -34,16 +35,16 @@ const PasswordReset: React.FC<PasswordResetProps> = ({ currentTheme }) => {
 
       // Check if the response status is 200
       if (response.status === 200) {
-        setMessage('Password reset link sent to your email address.');
+        setMessage(t('password_reset_link_sent_to_your_email_address.'));
         setShow_reset_button(false);
       } else {
-        setError('Failed to send password reset link. Please try again.');
+        setError(t('failed_to_send_password_reset_link'));
       }
     } catch (err) {
       if (axios.isAxiosError(err)) {
         console.log('Error:', err);
         if (err.response) {
-          setError(err.response.data?.error || 'Failed to send password reset link. Please try again.');
+          setError(err.response.data?.error || t('failed_to_send_password_reset_link'));
         } else {
           setError('Network error. Please check your connection.');
         }
@@ -68,8 +69,8 @@ const PasswordReset: React.FC<PasswordResetProps> = ({ currentTheme }) => {
 
   return (
     <div className='main_reset_container' >
+      <h2 style={{ color: currentTheme['--main-text-coloure'] }} >{t('password_reset')}</h2>
       <div className='send_reset_email_container' style={{ borderColor: currentTheme['--border-color'] }} >
-        <h2 style={{ color: currentTheme['--main-text-coloure'] }} >Password Reset</h2>
 
         <form onSubmit={handleSubmit}>
 
@@ -81,7 +82,7 @@ const PasswordReset: React.FC<PasswordResetProps> = ({ currentTheme }) => {
               onChange={(e) => setEmail(e.target.value)}
               required
               className='reset_email_input'
-              placeholder='Enter your email address'
+              placeholder={t('enter_your_email')}
               style={{
                 borderColor: currentTheme['--border-color'],
                 color: currentTheme['--main-text-coloure'],
@@ -103,7 +104,7 @@ const PasswordReset: React.FC<PasswordResetProps> = ({ currentTheme }) => {
               disabled={email.trim() === '' || email.includes('@') === false}
               className='send_reset_email_button'
             >
-              Send Reset Link
+              {t('send_reset_link')}
             </button>
           ) : (
             <button
@@ -115,15 +116,15 @@ const PasswordReset: React.FC<PasswordResetProps> = ({ currentTheme }) => {
               }}
               className='open_email_prov_open_btn'
             >
-              Open Email Provider
+              {t('open_email_provider')}
             </button>
           )}
 
 
 
         </form>
-        {message && <p style={{ color: 'seagreen', marginTop: '10px' }}>{message}</p>}
-        {error && <p style={{ color: 'red', marginTop: '10px' }}>{error}</p>}
+        {message && <p style={{ color: 'seagreen', marginTop: '10px', fontWeight: 'bold' }}>{message}</p>}
+        {error && <p style={{ color: 'red', marginTop: '10px', fontWeight: 'bold' }}>{error}</p>}
 
         {/* =======================  go back to login ======================= */}
         <div className="back_to_login_container">
@@ -132,7 +133,7 @@ const PasswordReset: React.FC<PasswordResetProps> = ({ currentTheme }) => {
             className="back_to_login_p"
             style={{ color: currentTheme['--main-text-coloure'], }}
           >
-            Go back to login
+            {t('go_back_to_login')}
           </p>
           <TbArrowBackUp style={{ color: currentTheme['--main-text-coloure'] }} className="back_to_login_icon" />
         </div>

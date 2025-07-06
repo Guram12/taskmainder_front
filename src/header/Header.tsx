@@ -182,7 +182,7 @@ const handleLanguageChange = (selectedLanguage: 'en' | 'ka') => {
 
 
   // Language dropdown menu
-  const languageMenu: MenuProps = {
+ const languageMenu: MenuProps = {
     items: [
       {
         key: 'en',

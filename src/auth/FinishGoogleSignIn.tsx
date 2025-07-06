@@ -25,6 +25,7 @@ const FinishGoogleSignIn: React.FC<FinishGoogleSignInProps> = ({ setIsAuthentica
   const [selectedTimeZone, setSelectedTimeZone] = useState<string>('');
   const [message, setMessage] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(false);
+  const [isSuccessful, setIsSuccessful] = useState<boolean>(false);
 
 
   const navigate = useNavigate();
@@ -37,6 +38,11 @@ const FinishGoogleSignIn: React.FC<FinishGoogleSignInProps> = ({ setIsAuthentica
     }
 
     setLoading(true);
+    setMessage(''); // Clear any previous messages
+    
+    // Add a small delay to ensure the loader renders
+    await new Promise(resolve => setTimeout(resolve, 100));
+
     const formData = new FormData();
     formData.append('username', username);
     formData.append('phone_number', phoneNumber);
@@ -47,8 +53,6 @@ const FinishGoogleSignIn: React.FC<FinishGoogleSignInProps> = ({ setIsAuthentica
       formData.append('timezone', selectedTimeZone);
     }
 
-
-
     try {
       await axiosInstance.patch('/acc/profile-finish/', formData, {
         headers: {
@@ -58,6 +62,7 @@ const FinishGoogleSignIn: React.FC<FinishGoogleSignInProps> = ({ setIsAuthentica
       });
 
       setMessage('Registration successful!');
+      setIsSuccessful(true);
       setTimeout(() => {
         setIsAuthenticated(true);
         navigate('/mainpage');
@@ -169,20 +174,24 @@ const FinishGoogleSignIn: React.FC<FinishGoogleSignInProps> = ({ setIsAuthentica
           </div>
 
           {loading ? (
-            <PulseLoader color={currentTheme['--list-background-color']} />
+            <div style={{ display: 'flex', justifyContent: 'center', padding: '10px' }}>
+              <PulseLoader color={currentTheme['--main-text-coloure']} size={8} />
+            </div>
           ) : (
-            <button
-              type="submit"
-              disabled={loading}
-              className="finish_btn"
-              style={{
-                color: currentTheme['--main-text-coloure'],
-                background: currentTheme['--task-background-color'],
-                border: `1px solid ${currentTheme['--border-color']}`,
-              }}
-            >
-              Finish
-            </button>
+            !isSuccessful && (
+              <button
+                type="submit"
+                disabled={loading}
+                className="finish_btn"
+                style={{
+                  color: currentTheme['--main-text-coloure'],
+                  background: currentTheme['--task-background-color'],
+                  border: `1px solid ${currentTheme['--border-color']}`,
+                }}
+              >
+                Finish
+              </button>
+            )
           )}
         </form>
         {message && <p>{message}</p>}

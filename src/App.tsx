@@ -430,7 +430,14 @@ const App: React.FC = () => {
 
       />
       <Routes>
-        <Route path="/" element={<Login setIsAuthenticated={setIsAuthenticated} currentTheme={currentTheme} />} />
+        <Route path="/"
+          element={<Login
+            setIsAuthenticated={setIsAuthenticated}
+            currentTheme={currentTheme}
+            language={language}
+            setLanguage={setLanguage}
+          />}
+        />
         <Route path="/register" element={<Register currentTheme={currentTheme} isMobile={isMobile} />} />
         <Route path="/password-reset" element={<PasswordReset currentTheme={currentTheme} />} />
         <Route path="/password-reset-confirm/:uid/:token" element={<PasswordResetConfirm currentTheme={currentTheme} />} />

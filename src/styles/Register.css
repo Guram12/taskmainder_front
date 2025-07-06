@@ -136,7 +136,7 @@
   border-radius: 5px;
   font-size: 16px;
   transition: background-color 0.3s ease;
-  width: 120px;
+  width: fit-content;
   height: 35px;
 }
 
@@ -247,8 +247,13 @@
 
 /* Style the placeholder text */
 .ant-select-selection-placeholder {
-  color: var(--main-text-coloure) !important;
-  opacity: 0.7;
+  color: var(--due-date-color) !important;
+  opacity: 1 !important;
+}
+
+/* Style the Select arrow */
+.ant-select-arrow {
+  color: var(--due-date-color) !important;
 }
 
 .ant-select-item-option:hover {

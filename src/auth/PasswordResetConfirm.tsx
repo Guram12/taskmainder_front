@@ -6,6 +6,7 @@ import { ThemeSpecs } from '../utils/theme';
 import { PiPassword } from "react-icons/pi";
 import { FaRegEye } from "react-icons/fa";
 import { FaRegEyeSlash } from "react-icons/fa";
+import { useTranslation } from 'react-i18next';
 
 
 
@@ -35,7 +36,7 @@ const PasswordResetConfirm: React.FC<PasswordResetConfirmProps> = ({ currentThem
   const [message, setMessage] = useState<string>('');
   const [error, setError] = useState<string>('');
 
-
+  const { t } = useTranslation();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -92,7 +93,7 @@ const PasswordResetConfirm: React.FC<PasswordResetConfirmProps> = ({ currentThem
   return (
     <div className='confirm_reset_container' >
 
-      <h2 style={{ color: currentTheme['--main-text-coloure'] }}>Create New Password</h2>
+      <h2 style={{ color: currentTheme['--main-text-coloure'] }}>{t('create_new_password')}</h2>
       <div className='confirm_reset_child_container' style={{ borderColor: currentTheme['--border-color'] }}>
         <form onSubmit={handleSubmit} className='confirm_reset_form'>
 
@@ -104,7 +105,7 @@ const PasswordResetConfirm: React.FC<PasswordResetConfirmProps> = ({ currentThem
               value={newPassword}
               onChange={(e) => setNewPassword(e.target.value)}
               required
-              placeholder='Enter new password'
+              placeholder={t('new_Password')}
               style={{
                 borderColor: currentTheme['--border-color'],
                 color: currentTheme['--main-text-coloure'],
@@ -122,7 +123,7 @@ const PasswordResetConfirm: React.FC<PasswordResetConfirmProps> = ({ currentThem
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
               required
-              placeholder='Confirm new password'
+              placeholder={t('confirm_new_Password')}
               style={{
                 borderColor: currentTheme['--border-color'],
                 color: currentTheme['--main-text-coloure'],
@@ -145,7 +146,7 @@ const PasswordResetConfirm: React.FC<PasswordResetConfirmProps> = ({ currentThem
                 margin: '0px',
               }}
             >
-              {show_password ? 'Hide Password' : 'Show Password'}
+              {show_password ? t('hide_password') : t('show_password')}
             </p>
           </div>
 
@@ -153,19 +154,19 @@ const PasswordResetConfirm: React.FC<PasswordResetConfirmProps> = ({ currentThem
           {/* password validations  */}
           <div className='register_password_validations_container'>
             <p className='register_password_validations' style={{ color: isLongEnough ? 'mediumseagreen' : 'red' }}>
-              {!isLongEnough && <span>*</span>} Minimum 8 symbols
+              {!isLongEnough && <span>*</span>} {t('minimum_8_symbols')}
             </p>
             <p className='register_password_validations' style={{ color: hasUppercase ? 'mediumseagreen' : 'red' }}>
-              {!hasUppercase && <span>*</span>} At least one uppercase letter
+              {!hasUppercase && <span>*</span>} {t('at_least_one_uppercase_letter')}
             </p>
             <p className='register_password_validations' style={{ color: hasNumber ? 'mediumseagreen' : 'red' }}>
-              {!hasNumber && <span>*</span>} At least one number
+              {!hasNumber && <span>*</span>} {t('at_least_one_number')}
             </p>
             <p className='register_password_validations' style={{ color: isPasswordValid ? 'mediumseagreen' : 'red' }}>
               {isPasswordValid ? (
-                <span>Passwords match</span>
+                <span>{t('passwords_match')}</span>
               ) : (
-                <span>* Passwords do not match</span>
+                <span> {t('Passwords_do_not_match')}</span>
               )}
             </p>
           </div>
@@ -181,7 +182,7 @@ const PasswordResetConfirm: React.FC<PasswordResetConfirmProps> = ({ currentThem
             className='confirm_reset_button'
             disabled={!isPasswordAcceptable}
           >
-            Confirm
+            {t('confirm')}
           </button>
 
           {message && <p style={{ color: 'seagreen', marginTop: '10px' }}>{message}</p>}

@@ -143,7 +143,7 @@ const Boards: React.FC<BoardsProps> = ({
       handle: '.list_reorder_icon', // Use the BiMoveHorizontal icon
       draggable: '.list', // Target the list class directly
       direction: 'horizontal',
-      scroll: false, // Disable auto-scroll for list reordering
+      scroll: true, // Disable auto-scroll for list reordering
       ghostClass: 'sortable-ghost', // Add ghost class for visual feedback
       filter: '.add_new_list_big_container', // Ignore the add new list container
       onEnd: (evt: SortableEvent) => {

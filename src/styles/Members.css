@@ -591,12 +591,26 @@
     font-weight: bold;
     font-size: 18px;
   }
-.manage_users_text {
-  font-size: 20px;
-  font-weight: bold;
-  margin-top: 50px;
-}
 
+  .manage_users_text {
+    margin-top: 60px;
+  }
+
+  .search_input {
+    margin-top: 20px;
+  }
+
+  .selected_emails_cont {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-content: center;
+
+  }
+
+  .each_user_child_container {
+    overflow-x: hidden;
+  }
 
   .refresh_and_close_icons_cont {
     position: absolute;
