@@ -1,7 +1,8 @@
 import axios from 'axios';
+import { environment_urls } from './URLS';
 
-const baseURL = "http://localhost:8000"
-// const baseURL = "https://api.shemaxsene.space"
+
+const baseURL = environment_urls.URLS.baseURL;
 
 
 

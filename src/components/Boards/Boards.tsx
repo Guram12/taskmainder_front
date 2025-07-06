@@ -26,7 +26,7 @@ import { GrFormCheckmark } from "react-icons/gr";
 import { HiXMark } from "react-icons/hi2";
 import Sortable from 'sortablejs';
 import type { SortableEvent } from 'sortablejs';
-
+import { environment_urls } from '../../utils/URLS';
 
 
 export interface BoardsProps {
@@ -212,7 +212,7 @@ const Boards: React.FC<BoardsProps> = ({
 
 
     const token = localStorage.getItem('access_token');
-    const newSocket = new WebSocket(`wss://api.shemaxsene.space/ws/boards/${selectedBoard.id}/?token=${token}`);
+    const newSocket = new WebSocket(`${environment_urls.URLS.websockersURL}${selectedBoard.id}/?token=${token}`);
     // const newSocket = new WebSocket(`ws://localhost:8000/ws/boards/${selectedBoard.id}/?token=${token}`);
 
     socketRef.current = newSocket;
