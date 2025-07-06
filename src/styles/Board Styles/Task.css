@@ -226,15 +226,7 @@
   transition: all 0.3s ease;
 }
 
-#list_reorder_icon {
-  width: 26px;
-  height: 26px;
-}
 
-#list_reorder_icon:hover {
-  color: #2e78d8 !important;
-  transform: scale(1.1);
-}
 
 .reorder_container {
   display: flex;

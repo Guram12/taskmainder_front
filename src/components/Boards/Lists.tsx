@@ -254,7 +254,13 @@ const List: React.FC<ListProps> = ({
               <MdDeleteForever className='delete_list_icon' onClick={() => handle_delete_list_click()} />
             </>
           }
-          <BiMoveHorizontal className='drag_handle' id='list_reorder_icon' />
+          <BiMoveHorizontal className='list_reorder_icon' 
+            style={{
+              color: currentTheme['--main-text-coloure'],
+              cursor: 'w-resize',
+              transition: 'color 0.3s ease',
+            }}
+          />
         </div>
         {isListDeleting && (
           <ConfirmationDialog

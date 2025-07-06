@@ -74,6 +74,12 @@
 
 /* --------------------------------------------------------------------------------------------------- */
 
+.list_reorder_icon {
+  transition: color 0.3s ease;
+  width: 25px;
+  height: 25px;
+}
+
 
 .margin_element {
   margin-top: 50px;
