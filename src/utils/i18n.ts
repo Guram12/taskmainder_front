@@ -78,6 +78,8 @@ const resources = {
       'please_create_a_new_board_to_get_started.': 'Please create a new board to get started.',
 
       // ================ settings ==============
+      // settings  component
+      "are_you_sure_you_want_to_delete_this_background_image": "Are you sure you want to delete this background image?",
       // profile picture update component
       'profile_picture_update': 'Profile Picture Update',
       'change_image': 'Change Image',
@@ -230,6 +232,8 @@ const resources = {
       'please_create_a_new_board_to_get_started.': 'გთხოვთ, შექმნათ ახალი დაფა დასაწყებად',
 
       // ================ settings ==============
+      // settings  component
+      "are_you_sure_you_want_to_delete_this_background_image": "დარწმუნებული ხართ, რომ გსურთ ამ ფონური სურათის წაშლა?",
       // profile picture update component
       'profile_picture_update': 'პროფილის სურათის განახლება',
       'change_image': 'სურათის შეცვლა',

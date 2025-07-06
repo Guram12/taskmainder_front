@@ -11,6 +11,7 @@ import { board } from "../utils/interface";
 import ConfirmationDialog from "./Boards/ConfirmationDialog";
 import axiosInstance from "../utils/axiosinstance";
 import { useState } from "react";
+import { useTranslation } from 'react-i18next';
 
 
 interface SettingsProps {
@@ -50,6 +51,8 @@ const Settings: React.FC<SettingsProps> = ({
     boardId: 0,
     isLoading: false
   });
+
+  const { t } = useTranslation();
 
 
   // =================================================== delete board backgrownd image  ============================================
@@ -108,7 +111,7 @@ const Settings: React.FC<SettingsProps> = ({
       {/* confirmation dialog  */}
       {isImageDeleting && (
         <ConfirmationDialog
-          message="Are you sure you want to delete this background image?"
+          message={t("are_you_sure_you_want_to_delete_this_background_image")}
           onConfirm={() => handle_image_delete(deleting_image_boardId)}
           onCancel={() => {
             setIsImageDeleting(false);

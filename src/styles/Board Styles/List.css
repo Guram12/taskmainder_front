@@ -157,7 +157,7 @@
 
 .add_task_button_2:hover {
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  background-color:seagreen !important;
+  background-color: seagreen !important;
 
 }
 
@@ -187,4 +187,29 @@
 .cancel_task_button_icon {
   width: 70%;
   height: 70%;
+}
+
+
+/* ============================ mobile styles ============================ */
+@media screen and (max-width: 768px) {
+  .list_title_and_buttons {
+    width: 250px;
+
+  }
+
+  .list {
+    width: 200px;
+    min-width: 250px;
+
+  }
+
+  .list_title {
+    margin: 0px;
+    margin-left: 2px;
+    font-size: 13px;
+  }
+
+  .add_new_task_button {
+    font-size: 13px;
+  }
 }
