@@ -16,6 +16,7 @@ import { FaRegEye } from "react-icons/fa";
 import { FaRegEyeSlash } from "react-icons/fa";
 import { TbArrowBackUp } from "react-icons/tb";
 import PulseLoader from "react-spinners/PulseLoader";
+import { useTranslation } from 'react-i18next';
 
 
 
@@ -54,7 +55,7 @@ const Register: React.FC<RegisterProps> = ({ currentTheme, isMobile }) => {
 
   const [registration_loading, setRegistration_loading] = useState<boolean>(false);
 
-
+  const { t } = useTranslation();
 
   const navigate = useNavigate();
 
@@ -167,7 +168,7 @@ const Register: React.FC<RegisterProps> = ({ currentTheme, isMobile }) => {
           className="register_header"
           style={{ color: currentTheme['--main-text-coloure'] }}
         >
-          Register
+          {t('register')}
         </h2>
         <form
           onSubmit={handleRegister}
@@ -188,7 +189,7 @@ const Register: React.FC<RegisterProps> = ({ currentTheme, isMobile }) => {
               onChange={(e) => setEmail(e.target.value)}
               required
               className="register_input"
-              placeholder="Email"
+              placeholder={t('email')}
               style={{
                 background: currentTheme['--task-background-color'],
                 color: currentTheme['--main-text-coloure'],
@@ -205,7 +206,7 @@ const Register: React.FC<RegisterProps> = ({ currentTheme, isMobile }) => {
               value={username}
               onChange={(e) => setUsername(e.target.value)}
               required
-              placeholder="Username"
+              placeholder= {t('username')}
               className="register_input"
               style={{
                 background: currentTheme['--task-background-color'],
@@ -240,12 +241,14 @@ const Register: React.FC<RegisterProps> = ({ currentTheme, isMobile }) => {
               // }}
               dropdownClass="custom-phone-dropdown"
               containerClass="custom-phone-container"
-              placeholder="Phone number"
+              placeholder={t('phone_number')}
             />
           </div>
 
           {/* =============== timezone select ================= */}
-          <div className="register_form_group">
+          <div className="register_form_group"
+
+          >
             <IoEarth className='register_icons' style={{ color: currentTheme['--main-text-coloure'] }} />
             <Select
               showSearch
@@ -254,13 +257,10 @@ const Register: React.FC<RegisterProps> = ({ currentTheme, isMobile }) => {
                 setSelectedTimeZone(value);
               }}
               options={timezoneOptions}
-              placeholder="Select country for timezone"
+              placeholder={t('select_timezone')}
               style={{
                 width: isMobile ? '290px' : '320px',
                 height: '40px',
-                background: currentTheme['--task-background-color'],
-                color: currentTheme['--main-text-coloure'],
-                border: `1px solid ${currentTheme['--border-color']}`,
               }}
               filterOption={(input, option) =>
                 (option?.label ?? '').toLowerCase().includes(input.toLowerCase())
@@ -278,7 +278,7 @@ const Register: React.FC<RegisterProps> = ({ currentTheme, isMobile }) => {
               onChange={(e) => setPassword(e.target.value)}
               required
               className="register_input"
-              placeholder="Password"
+              placeholder= {t('password')}
               style={{
                 background: currentTheme['--task-background-color'],
                 color: currentTheme['--main-text-coloure'],
@@ -296,7 +296,7 @@ const Register: React.FC<RegisterProps> = ({ currentTheme, isMobile }) => {
               onChange={(e) => setConfirmPassword(e.target.value)}
               required
               className="register_input"
-              placeholder="Confirm password"
+              placeholder={t('confirm_password')}
               style={{
                 background: currentTheme['--task-background-color'],
                 color: currentTheme['--main-text-coloure'],
@@ -319,27 +319,27 @@ const Register: React.FC<RegisterProps> = ({ currentTheme, isMobile }) => {
                 margin: '0px',
               }}
             >
-              {show_password ? 'Hide Password' : 'Show Password'}
+              {show_password ? <>{t('hide_password')}</> : <>{t('show_password')}</>}
             </p>
           </div>
 
 
           <div className='register_password_validations_container'>
             <p className='register_password_validations' style={{ color: isLongEnough ? 'mediumseagreen' : 'red' }}>
-              {!isLongEnough && <span>*</span>} Minimum 8 symbols
+              {!isLongEnough && <span>*</span>} {t('minimum_8_symbols')}
             </p>
             <p className='register_password_validations' style={{ color: hasUppercase ? 'mediumseagreen' : 'red' }}>
-              {!hasUppercase && <span>*</span>} At least one uppercase letter
+              {!hasUppercase && <span>*</span>} {t('at_least_one_uppercase_letter')}
             </p>
             <p className='register_password_validations' style={{ color: hasNumber ? 'mediumseagreen' : 'red' }}>
-              {!hasNumber && <span>*</span>} At least one number
+              {!hasNumber && <span>*</span>} {t('at_least_one_number')}
             </p>
 
             <p className='register_password_validations' style={{ color: isPasswordValid ? 'mediumseagreen' : 'red' }}>
               {isPasswordValid ? (
-                <span>Passwords match</span>
+                <span>{t('passwords_match')}</span>
               ) : (
-                <span>* Passwords do not match</span>
+                <span>{t('Passwords_do_not_match')}</span>
               )}
             </p>
           </div>
@@ -358,7 +358,7 @@ const Register: React.FC<RegisterProps> = ({ currentTheme, isMobile }) => {
               }}
               disabled={isPasswordAcceptable ? false : true}
             >
-              Register
+              <>{t('register')}</>
             </button>
           ) : (
             <PulseLoader
@@ -410,7 +410,7 @@ const Register: React.FC<RegisterProps> = ({ currentTheme, isMobile }) => {
             className="back_to_login_p"
             style={{ color: currentTheme['--main-text-coloure'], }}
           >
-            Go back to login
+            {t('go_back_to_login')}
           </p>
           <TbArrowBackUp style={{ color: currentTheme['--main-text-coloure'] }} className="back_to_login_icon" />
         </div>

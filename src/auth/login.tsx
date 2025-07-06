@@ -9,22 +9,28 @@ import { PiPasswordBold } from "react-icons/pi";
 import { FaEye } from "react-icons/fa";
 import { FaEyeSlash } from "react-icons/fa";
 import PulseLoader from "react-spinners/PulseLoader";
+import type { MenuProps } from 'antd';
+import { Dropdown } from 'antd';
+import { useTranslation } from 'react-i18next';
+import { GlobalOutlined } from '@ant-design/icons';
 
 
 
 interface loginProps {
   setIsAuthenticated: (value: boolean) => void;
   currentTheme: ThemeSpecs;
+  language: 'en' | 'ka';
+  setLanguage: (language: 'en' | 'ka') => void;
 }
 
-const Login: React.FC<loginProps> = ({ setIsAuthenticated, currentTheme }) => {
+const Login: React.FC<loginProps> = ({ setIsAuthenticated, currentTheme, language, setLanguage }) => {
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const [error, setError] = useState<string>('');
   const [login_loading, setLogin_loading] = useState<boolean>(false);
 
-
+  const { t, i18n } = useTranslation();
   const navigate = useNavigate();
 
   const handleLogin = async (e: React.FormEvent) => {
@@ -58,6 +64,44 @@ const Login: React.FC<loginProps> = ({ setIsAuthenticated, currentTheme }) => {
 
 
 
+  // =================================== Language dropdown menu ===================================
+  const languageMenu: MenuProps = {
+    items: [
+      {
+        key: 'en',
+        label: (
+          <div
+            className={`language_option${language === 'en' ? ' selected' : ''}`}
+            onClick={() => handleLanguageChange('en')}
+          >
+            <p style={{ color: currentTheme['--main-text-coloure'], margin: 0 }}>
+              🇬🇧 English
+            </p>
+          </div>
+        ),
+      },
+      {
+        key: 'ka',
+        label: (
+          <div
+            className={`language_option${language === 'ka' ? ' selected' : ''}`}
+            onClick={() => handleLanguageChange('ka')}
+          >
+            <p style={{ color: currentTheme['--main-text-coloure'], margin: 0 }}>
+              🇬🇪 ქართული
+            </p>
+          </div>
+        ),
+      },
+    ],
+  };
+
+  const handleLanguageChange = (selectedLanguage: 'en' | 'ka') => {
+    setLanguage(selectedLanguage);
+    localStorage.setItem('language', selectedLanguage);
+    i18n.changeLanguage(selectedLanguage);
+  };
+
   return (
     <div
       className="login-container"
@@ -67,7 +111,31 @@ const Login: React.FC<loginProps> = ({ setIsAuthenticated, currentTheme }) => {
         minHeight: '100vh',
       }}
     >
-      <h2 className="login-title" style={{ color: currentTheme['--main-text-coloure'] }}>Login</h2>
+      <h2 className="login-title" style={{ color: currentTheme['--main-text-coloure'] }}>{t('login')}</h2>
+
+      {/* Language Dropdown */}
+      <div className="mobile_language_dropdown_wrapper onloginpage">
+        <Dropdown
+          menu={languageMenu}
+          placement="bottomLeft"
+          arrow
+          overlayClassName="custom-centered-dropdown"
+
+        >
+          <button className="mobile_language_dropdown_btn"
+            style={{
+              backgroundColor: currentTheme['--list-background-color'],
+              borderColor: currentTheme['--border-color'],
+            }}
+          >
+            <GlobalOutlined style={{ marginRight: 6, color: currentTheme['--main-text-coloure'] }} />
+            <p style={{ color: currentTheme['--main-text-coloure'], margin: 0 }}>
+              {language === 'en' ? 'EN' : 'KA'}
+            </p>
+          </button>
+        </Dropdown>
+      </div>
+
       <form
         className="login-form"
         onSubmit={handleLogin}
@@ -85,7 +153,7 @@ const Login: React.FC<loginProps> = ({ setIsAuthenticated, currentTheme }) => {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
-            placeholder='Enter your email'
+            placeholder={t('enter_your_email')}
             style={{
               background: currentTheme['--task-background-color'],
               color: currentTheme['--main-text-coloure'],
@@ -104,7 +172,7 @@ const Login: React.FC<loginProps> = ({ setIsAuthenticated, currentTheme }) => {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
-            placeholder='Enter your password'
+            placeholder={t('enter_your_password')}
             style={{
               background: currentTheme['--task-background-color'],
               color: currentTheme['--main-text-coloure'],
@@ -123,7 +191,7 @@ const Login: React.FC<loginProps> = ({ setIsAuthenticated, currentTheme }) => {
           <p style={{ color: currentTheme['--main-text-coloure'], margin: '0px', marginLeft: '10px', cursor: 'pointer' }}
             onClick={() => setShowPassword(!showPassword)}
           >
-            {showPassword ? 'Hide password' : 'Show password'}
+            {showPassword ? <>{t('hide_password')}</> : <>{t('show_password')}</>}
           </p>
         </div>
         {!login_loading ? (
@@ -136,7 +204,7 @@ const Login: React.FC<loginProps> = ({ setIsAuthenticated, currentTheme }) => {
               border: `1px solid ${currentTheme['--border-color']}`,
             }}
           >
-            Login
+            {t('login')}
           </button>
         ) : (
           <PulseLoader
@@ -158,7 +226,7 @@ const Login: React.FC<loginProps> = ({ setIsAuthenticated, currentTheme }) => {
           border: `1px solid ${currentTheme['--border-color']}`,
         }}
       >
-        Register
+        {t('register')}
       </button>
       <a
         href="/password-reset"
@@ -168,7 +236,7 @@ const Login: React.FC<loginProps> = ({ setIsAuthenticated, currentTheme }) => {
           textDecoration: 'underline',
         }}
       >
-        forgot password?
+        {t('forgot_password')}
       </a>
       {error && (
         <p

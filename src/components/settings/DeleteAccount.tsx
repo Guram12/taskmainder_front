@@ -15,6 +15,8 @@ const DeleteAccount: React.FC<DeleteAccountProps> = ({ currentTheme }) => {
   const [isConfirmationOpen, setIsConfirmationOpen] = useState(false);
   const [confirmationInput, setConfirmationInput] = useState('');
   const [isConfirmationCorrect, setIsConfirmationCorrect] = useState<boolean>(false);
+  const [delete_error, setDelete_error] = useState<boolean>(false);
+  
 
   const { t } = useTranslation();
 
@@ -38,7 +40,7 @@ const DeleteAccount: React.FC<DeleteAccountProps> = ({ currentTheme }) => {
       } else {
         // Handle non-Axios errors
         console.error(error);
-        alert('An unexpected error occurred. Please try again.');
+        setDelete_error(true);
       }
     }
   };
@@ -49,11 +51,11 @@ const DeleteAccount: React.FC<DeleteAccountProps> = ({ currentTheme }) => {
   };
 
   const handleConfirmDelete = () => {
-    if (confirmationInput === 'delete my account') {
+    if (confirmationInput === 'delete my account' || confirmationInput === 'წავშალე ჩემი ანგარიში') {
       deleteAccount();
       setIsConfirmationOpen(false);
     } else {
-      alert('You must type "delete my account" to confirm.');
+      alert('You must type "delete my account" or "წავშალე ჩემი ანგარიში" to confirm.');
     }
   };
 
@@ -70,7 +72,7 @@ const DeleteAccount: React.FC<DeleteAccountProps> = ({ currentTheme }) => {
     }
   }, [confirmationInput]);
 
-  
+
   return (
     <div className='main_delete_acc_container' style={{ color: currentTheme['--main-text-coloure'] }}>
       <div className="delete_acc_header_cont"
@@ -132,6 +134,7 @@ const DeleteAccount: React.FC<DeleteAccountProps> = ({ currentTheme }) => {
 
               >{t('cancel')}</button>
             </div>
+            {delete_error && <p style={{ color: 'red' , fontWeight: 'bold'}}>Error deleting account. Please try again.</p>}
           </div>
         </>
       )}
