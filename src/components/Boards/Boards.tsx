@@ -26,7 +26,7 @@ import { GrFormCheckmark } from "react-icons/gr";
 import { HiXMark } from "react-icons/hi2";
 import Sortable from 'sortablejs';
 import type { SortableEvent } from 'sortablejs';
-
+import { environment_urls } from '../../utils/URLS';
 
 
 export interface BoardsProps {
@@ -140,11 +140,12 @@ const Boards: React.FC<BoardsProps> = ({
 
     const sortable = Sortable.create(listsContainerRef.current, {
       animation: 150,
-      handle: '.drag_handle', // Use the BiMoveHorizontal icon
+      handle: '.list_reorder_icon', // Use the BiMoveHorizontal icon
       draggable: '.list', // Target the list class directly
       direction: 'horizontal',
       scroll: false, // Disable auto-scroll for list reordering
       ghostClass: 'sortable-ghost', // Add ghost class for visual feedback
+      filter: '.add_new_list_big_container', // Ignore the add new list container
       onEnd: (evt: SortableEvent) => {
         if (
           evt.oldIndex === undefined ||
@@ -211,7 +212,7 @@ const Boards: React.FC<BoardsProps> = ({
 
 
     const token = localStorage.getItem('access_token');
-    const newSocket = new WebSocket(`wss://api.shemaxsene.space/ws/boards/${selectedBoard.id}/?token=${token}`);
+    const newSocket = new WebSocket(`${environment_urls.URLS.websockersURL}${selectedBoard.id}/?token=${token}`);
     // const newSocket = new WebSocket(`ws://localhost:8000/ws/boards/${selectedBoard.id}/?token=${token}`);
 
     socketRef.current = newSocket;
@@ -984,76 +985,80 @@ const Boards: React.FC<BoardsProps> = ({
               {isAddingList && (
                 <SkeletonListLoader currentTheme={currentTheme} />
               )}
-              {is_any_board_selected && (
-                <div className='list'
-                  style={{ backgroundColor: `${currentTheme['--list-background-color']}` }}
-                >
-                  {!Adding_new_list ?
-                    (
-                      <button
-                        onClick={() => setAdding_new_list(true)}
-                        className='add_new_list_btn'
-                        style={{
-                          backgroundColor: currentTheme['--task-background-color'],
-                          color: currentTheme['--main-text-coloure'],
-                          borderColor: currentTheme['--border-color'],
 
-                        }}
-                      >
-                        {t('create_List')}
-                      </button>
-                    )
-                    :
-                    (
-                      <div className='add_new_list_cont' >
-                        <input
-                          type="text"
-                          placeholder={t('list_name')}
-                          value={ListName}
-                          onChange={(e) => setListName(e.target.value)}
-                          required
-                          style={{
-                            background: currentTheme['--task-background-color'],
-                            color: currentTheme['--main-text-coloure'],
-                            borderColor: currentTheme['--border-color'],
-                            ['--placeholder-color' as any]: currentTheme['--due-date-color'] || '#888',
-                          } as React.CSSProperties}
-                          className='add_new_list_input'
-                        />
+              <div className='add_new_list_big_container'>
+                {is_any_board_selected && (
+                  <div className='list'
+                    style={{ backgroundColor: `${currentTheme['--list-background-color']}` }}
+                  >
+                    {!Adding_new_list ?
+                      (
                         <button
-                          onClick={() => addList()}
+                          onClick={() => setAdding_new_list(true)}
+                          className='add_new_list_btn'
                           style={{
                             backgroundColor: currentTheme['--task-background-color'],
                             color: currentTheme['--main-text-coloure'],
                             borderColor: currentTheme['--border-color'],
-                            cursor: ListName.trim() === '' ? 'not-allowed' : 'pointer',
-                          }}
-                          className='save_new_list_btn'
-                          disabled={ListName.trim() === ''}
-                        >
-                          <GrFormCheckmark className='add_list_button_2_icon' />
 
-                        </button>
-                        <button
-                          onClick={() => {
-                            setAdding_new_list(false);
-                            setListName('');
                           }}
-                          style={{
-                            backgroundColor: currentTheme['--task-background-color'],
-                            color: currentTheme['--main-text-coloure'],
-                            borderColor: currentTheme['--border-color'],
-                          }}
-                          className='cancel_new_list_btn'
-
                         >
-                          <HiXMark className='cancel_list_button_icon' />
+                          {t('create_List')}
                         </button>
-                      </div>
-                    )
-                  }
-                </div>
-              )}
+                      )
+                      :
+                      (
+                        <div className='add_new_list_cont' >
+                          <input
+                            type="text"
+                            placeholder={t('list_name')}
+                            value={ListName}
+                            onChange={(e) => setListName(e.target.value)}
+                            required
+                            style={{
+                              background: currentTheme['--task-background-color'],
+                              color: currentTheme['--main-text-coloure'],
+                              borderColor: currentTheme['--border-color'],
+                              ['--placeholder-color' as any]: currentTheme['--due-date-color'] || '#888',
+                            } as React.CSSProperties}
+                            className='add_new_list_input'
+                          />
+                          <button
+                            onClick={() => addList()}
+                            style={{
+                              backgroundColor: currentTheme['--task-background-color'],
+                              color: currentTheme['--main-text-coloure'],
+                              borderColor: currentTheme['--border-color'],
+                              cursor: ListName.trim() === '' ? 'not-allowed' : 'pointer',
+                            }}
+                            className='save_new_list_btn'
+                            disabled={ListName.trim() === ''}
+                          >
+                            <GrFormCheckmark className='add_list_button_2_icon' />
+
+                          </button>
+                          <button
+                            onClick={() => {
+                              setAdding_new_list(false);
+                              setListName('');
+                            }}
+                            style={{
+                              backgroundColor: currentTheme['--task-background-color'],
+                              color: currentTheme['--main-text-coloure'],
+                              borderColor: currentTheme['--border-color'],
+                            }}
+                            className='cancel_new_list_btn'
+
+                          >
+                            <HiXMark className='cancel_list_button_icon' />
+                          </button>
+                        </div>
+                      )
+                    }
+                  </div>
+                )}
+              </div>
+
             </div>
             {/* DND-KIT: DragOverlay for ghost */}
             <DragOverlay>

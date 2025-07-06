@@ -206,7 +206,13 @@ const Task: React.FC<TaskProps> = ({ task,
 
                   {/* ============  for reordering  tasks within list =======================*/}
                   <div className='reorder_container' >
-                    <BiMoveVertical className='reorder_icon' />
+                    <BiMoveVertical className='reorder_icon'
+                      style={{
+                        color: currentTheme['--main-text-coloure'],
+                        cursor: 'ns-resize',
+                        transition: 'color 0.3s ease',
+                      }}
+                    />
                   </div>
 
                   {/*============= for drag and drop from list to list =======================*/}

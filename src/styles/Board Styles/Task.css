@@ -159,7 +159,6 @@
 
 .due_Date_p {
   font-size: 12px;
-  color: rgb(83, 83, 83);
   margin: 0px;
   bottom: 1px;
   right: 5px;
@@ -185,8 +184,6 @@
 }
 
 .no_associated_users_p {
-
-  color: rgb(83, 83, 83);
   font-size: 12px;
   margin: 0;
 }
@@ -226,15 +223,7 @@
   transition: all 0.3s ease;
 }
 
-#list_reorder_icon {
-  width: 26px;
-  height: 26px;
-}
 
-#list_reorder_icon:hover {
-  color: #2e78d8 !important;
-  transform: scale(1.1);
-}
 
 .reorder_container {
   display: flex;
@@ -296,4 +285,40 @@
 .new_task_input::placeholder {
   color: var(--placeholder-color);
   opacity: 1;
+}
+
+/* ==================================== mobile styles ==================================== */
+
+
+@media screen and (max-width: 768px) {
+  .each_task {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: flex-start;
+
+    padding: 5px;
+    margin-bottom: 5px;
+    border-radius: 3px;
+    cursor: pointer;
+    height: auto;
+    min-height: 60px;
+
+    transition: margin 0.3s ease, transform 0.3s ease;
+  }
+
+  .task_title {
+    font-size: 12px;
+
+  }
+
+  .due_Date_p {
+    font-size: 10px;
+
+  }
+
+  .no_associated_users_p {
+    font-size: 10px;
+
+  }
 }
