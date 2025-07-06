@@ -127,3 +127,12 @@
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   background-color:red !important;
 }
+
+
+@media screen and (max-width: 768px) {
+.lists_container {
+  gap: 5px;
+
+}
+
+}
