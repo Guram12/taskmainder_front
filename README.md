@@ -85,7 +85,7 @@ TaskMinder is a modern, collaborative task management web application built with
    npm run dev
    # or
    yarn dev
-  ```
+   ```
 
 5. **Open in your browser:**
    ```
@@ -94,25 +94,139 @@ TaskMinder is a modern, collaborative task management web application built with
 
 ---
 
+## Sitemap
+
+### Public Routes (Unauthenticated)
+- **`/`** - Login page with email/password and Google OAuth
+- **`/register`** - User registration with email verification
+- **`/password-reset`** - Password reset request form
+- **`/password-reset-confirm/:uid/:token`** - Password reset confirmation
+- **`/finish-profile`** - Complete Google OAuth profile setup
+- **`/error`** - Error page for authentication/invitation failures
+
+### Protected Routes (Authenticated)
+- **`/mainpage`** - Main application dashboard with sidebar navigation
+
+#### Main Application Components (accessible via sidebar)
+- **Boards** - Default view, board and task management
+  - Board creation and management
+  - Drag & drop task organization
+  - List management
+  - Task creation, editing, and assignment
+  - Member management and invitations
+  - Board background customization
+- **Calendar** - Calendar view of tasks and due dates
+  - Yearly calendar with task highlights
+  - Daily task overview
+  - Due date management
+- **Templates** - Pre-built board templates
+  - Template selection and board creation
+  - Quick project setup
+- **Notifications** - Notification center
+  - Real-time notifications
+  - Board invitations and updates
+  - Task reminders and due dates
+- **Settings** - User preferences and account management
+  - Profile information update
+  - Profile picture management
+  - Password change
+  - Custom theme editor
+  - Board background management
+  - Account deletion
+  - Language preferences (English/Georgian)
+
+### Component Hierarchy
+```
+App.tsx
+├── Header.tsx (Global navigation and user menu)
+├── MainPage.tsx (Main dashboard container)
+│   ├── SideBar.tsx (Navigation sidebar)
+│   ├── Boards/ (Board management components)
+│   │   ├── Boards.tsx
+│   │   ├── Lists.tsx
+│   │   ├── Tasks.tsx
+│   │   ├── TaskUpdateModal.tsx
+│   │   ├── ConfirmationDialog.tsx
+│   │   └── Skeleton components for loading states
+│   ├── Calendar.tsx
+│   ├── Templates.tsx
+│   ├── Notification.tsx
+│   ├── Settings.tsx
+│   │   ├── ProfilePictureUpdate.tsx
+│   │   ├── Profile_Info_update.tsx
+│   │   ├── ChangePassword.tsx
+│   │   ├── CustomTheme.tsx
+│   │   └── DeleteAccount.tsx
+│   ├── Members.tsx
+│   ├── NoBoards.tsx (Empty state)
+│   └── ErrorPage.tsx
+└── Auth Components (Login, Register, etc.)
+```
+
+---
+
 ## Project Structure
 
 ```
 src/
-  ├── auth/                # Authentication (login, register, Google, password reset)
-  ├── components/
-  │     ├── Boards/        # Board, List, Task, DnD, Members, Skeletons, etc.
-  │     ├── settings/      # Profile, Theme, Password, DeleteAccount
-  │     ├── Calendar.tsx
-  │     ├── Templates.tsx
-  │     ├── Notification.tsx
-  │     ├── MainPage.tsx
-  │     ├── SideBar.tsx
-  │     ├── Settings.tsx
-  │     └── ErrorPage.tsx
-  ├── header/              # Header bar with theme/language/profile
-  ├── utils/               # Theme, API, avatars, interfaces, etc.
-  ├── styles/              # CSS filesmarkdow
-  └── App.tsx              # Main app entry
+
+├── assets/                    # Images, icons, logos, and wallpapers
+├── auth/                      # Authentication components
+│   ├── FinishGoogleSignIn.tsx
+│   ├── GoogleSignIn.tsx
+│   ├── login.tsx
+│   ├── PasswordResetConfirm.tsx
+│   ├── PasswordReset.tsx
+│   └── register.tsx
+├── components/                # Main application components
+│   ├── Boards/               # Board, List, Task management
+│   │   ├── Boards.tsx
+│   │   ├── ConfirmationDialog.tsx
+│   │   ├── Lists.tsx
+│   │   ├── Tasks.tsx
+│   │   ├── TaskUpdateModal.tsx
+│   │   ├── SkeletonBoardName.tsx
+│   │   ├── SkeletonEachTask.tsx
+│   │   ├── SkeletonEachUser.tsx
+│   │   ├── SkeletonListLoader.tsx
+│   │   ├── SkeletonLoader.tsx
+│   │   ├── SkeletonMember.tsx
+│   │   ├── SkeletonNotification.tsx
+│   │   └── SkeletonUserInfo.tsx
+│   ├── settings/             # User settings and profile
+│   │   ├── ChangePassword.tsx
+│   │   ├── CustomTheme.tsx
+│   │   ├── DeleteAccount.tsx
+│   │   ├── Profile_Info_update.tsx
+│   │   └── ProfilePictureUpdate.tsx
+│   ├── Calendar.tsx
+│   ├── ErrorPage.tsx
+│   ├── LogoComponent.tsx
+│   ├── MainPage.tsx
+│   ├── Members.tsx
+│   ├── NoBoards.tsx
+│   ├── Notification.tsx
+│   ├── Settings.tsx
+│   ├── SideBar.tsx
+│   └── Templates.tsx
+├── header/                   # Header bar components
+│   ├── Header.css
+│   └── Header.tsx
+├── styles/                   # CSS files
+│   ├── Board Styles/        # Board-related styles
+│   ├── settings/            # Settings-related styles
+│   ├── # other component styles
+└── utils/                        # Utilities and configurations
+    ├── axiosinstance.ts      # Axios HTTP client configuration
+    ├── CustomTheme.ts        # Custom theme creation and management
+    ├── data.json            # Static data for user timezone
+    ├── i18n.ts              # Internationalization (English/Georgian)
+    ├── interface.ts         # TypeScript interfaces and types
+    ├── SetRandomColor.ts    # Random color generation utilities
+    ├── supbscription.ts     # Push notification subscription handling
+    ├── Templates.ts         # Board templates 
+    ├── theme.ts             # Theme configuration and presets
+    └── URLS.ts              # API endpoint URLs
 ```
 
 ---
@@ -135,6 +249,8 @@ src/
 ---
 
 ## Screenshots
+
+- Board voew with background
 
 ![Board View](./src/assets/screen_text.png)
 
