@@ -541,7 +541,21 @@ const SidebarComponent: React.FC<SidebarProps> = ({
                 >
                   {t('notification')}
                 </MenuItem>
+
+
+                <MenuItem
+                  style={{
+                    color: selectedComponent === "MindMap" ? 'seagreen' : 'white',
+                    fontWeight: 'bold',
+                    transition: 'all 0.3s',
+                  }}
+                  icon={<FaCalendarAlt className='sidebar_big_icon' />}
+                  onClick={() => handel_sidebar_page_click("MindMap")}
+                >mindmap</MenuItem>
+
               </Menu>
+
+
             </div>
 
 
