@@ -520,8 +520,6 @@ const MainPage: React.FC<MainPageProps> = ({
             setIsLoading={setIsLoading}
             isMobile={isMobile}
             boards={boards}
-            selectedBoard={selectedBoard}
-            setSelectedBoard={setSelectedBoard}
           />
         );
 

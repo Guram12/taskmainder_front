@@ -1,5 +1,5 @@
 import '../styles/MindMap.css';
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useState, useRef } from 'react';
 import ReactFlow, {
   MiniMap,
   Controls,
@@ -21,6 +21,9 @@ import 'reactflow/dist/style.css';
 import { ThemeSpecs } from '../utils/theme';
 import { useEffect } from 'react';
 import { board, lists, tasks } from '../utils/interface';
+import axiosInstance from '../utils/axiosinstance';
+import { environment_urls } from '../utils/URLS';
+
 
 const initialNodes: Node[] = [
   {
@@ -38,7 +41,7 @@ const initialNodes: Node[] = [
       width: '300px',
     },
   },
-  
+
 ];
 
 
@@ -48,22 +51,103 @@ interface MindMapProps {
   setIsLoading: (isLoading: boolean) => void;
   isMobile: boolean;
   boards: board[];
-  selectedBoard: board | null;
-  setSelectedBoard: (board: board | null) => void;
 }
 
 const MindMap: React.FC<MindMapProps> = ({
   currentTheme,
-  setIsLoading,
-  isMobile,
+  // setIsLoading,
+  // isMobile,
   boards,
-  selectedBoard,
-  setSelectedBoard
 }) => {
+
+
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
   const [selectedElements, setSelectedElements] = useState<string[]>([]);
   const [viewMode, setViewMode] = useState<'custom' | 'board'>('custom');
+
+  const [maindmap_selected_board_data, setMaindmap_selected_board_data] = useState<board>({
+    id: 0,
+    name: '',
+    created_at: '',
+    lists: [],
+    owner: '',
+    owner_email: '',
+    members: [],
+    board_users: [],
+    background_image: null,
+    creation_date: '',
+  });
+
+
+  const mindMapSocketRef = useRef<WebSocket | null>(null);
+
+
+  useEffect(() => {
+
+    if (!maindmap_selected_board_data?.id) return;
+
+    // Clean up previous socket connection
+    if (mindMapSocketRef.current) {
+      mindMapSocketRef.current.close();
+    }
+
+    const token = localStorage.getItem('access_token');
+    const newSocket = new WebSocket(`${environment_urls.URLS.websockersURL}${maindmap_selected_board_data.id}/?token=${token}`);
+
+    mindMapSocketRef.current = newSocket;
+
+    newSocket.onopen = () => {
+      console.log('WebSocket connection established for board:', maindmap_selected_board_data.id);
+    };
+
+    newSocket.onmessage = (event) => {
+      const data = JSON.parse(event.data);
+      const { action, payload } = data;
+
+      switch (action) {
+        case 'update_task':
+          console.log('Received update_task:', payload);
+          // first create board object and than set it 
+          const updatedBoard = {
+            ...maindmap_selected_board_data,
+            lists: maindmap_selected_board_data.lists.map((list) => ({
+              ...list,
+              tasks: list.tasks.map((task) =>
+                task.id === payload.id ? {
+                  ...task,
+                  title: payload.title,
+                  description: payload.description,
+                  due_date: payload.due_date,
+                  completed: payload.completed,
+                  priority: payload.priority,
+                  task_associated_users_id: payload.task_associated_users_id,
+                } : task
+              ),
+            }))
+          };
+          setMaindmap_selected_board_data(updatedBoard);
+          break;
+        default:
+          console.log('Unknown action:', action);
+      }
+    };
+
+    newSocket.onerror = (error) => {
+      console.error('WebSocket error:', error);
+    };
+
+    newSocket.onclose = (event) => {
+      console.log('WebSocket connection closed:', event);
+    };
+
+    return () => {
+      if (newSocket) {
+        newSocket.close();
+      }
+    };
+  }, [maindmap_selected_board_data]);
+
 
   // Helper function to check if two nodes overlap
   const checkNodeOverlap = (pos1: { x: number; y: number }, pos2: { x: number; y: number }, minDistance: number = 150) => {
@@ -82,7 +166,7 @@ const MindMap: React.FC<MindMapProps> = ({
     let attempts = 0;
 
     while (attempts < maxAttempts) {
-      const hasOverlap = existingPositions.some(existingPos => 
+      const hasOverlap = existingPositions.some(existingPos =>
         checkNodeOverlap(position, existingPos, minDistance)
       );
 
@@ -108,16 +192,16 @@ const MindMap: React.FC<MindMapProps> = ({
     const newNodes: Node[] = [];
     const newEdges: Edge[] = [];
     const occupiedPositions: { x: number; y: number }[] = [];
-    
+
     // Calculate dynamic spacing based on content
     const totalLists = board.lists.length;
     const totalTasks = board.lists.reduce((acc, list) => acc + list.tasks.length, 0);
-    
+
     // Dynamic spacing calculations
     const listSpacing = Math.max(300, 200 + (totalTasks > 20 ? 100 : 0));
     const taskSpacing = Math.max(120, 100 + (totalTasks > 10 ? 20 : 0));
     const verticalSpacing = Math.max(100, 80 + (totalTasks > 15 ? 30 : 0));
-    
+
     // Main board node - centered
     const boardPosition = { x: (totalLists * listSpacing) / 2, y: 50 };
     const boardNode: Node = {
@@ -141,13 +225,13 @@ const MindMap: React.FC<MindMapProps> = ({
 
     // Create list nodes with improved positioning
     board.lists.forEach((list: lists, listIndex: number) => {
-      const baseListPosition = { 
-        x: 100 + (listIndex * listSpacing), 
-        y: 250 
+      const baseListPosition = {
+        x: 100 + (listIndex * listSpacing),
+        y: 250
       };
-      
+
       const listPosition = findNonOverlappingPosition(baseListPosition, occupiedPositions);
-      
+
       const listNode: Node = {
         id: `list-${list.id}`,
         data: { label: list.name },
@@ -179,22 +263,22 @@ const MindMap: React.FC<MindMapProps> = ({
       // Create task nodes with improved grid layout
       const tasksPerRow = Math.min(3, Math.ceil(Math.sqrt(list.tasks.length)));
       const taskStartY = listPosition.y + 150;
-      
+
       list.tasks.forEach((task: tasks, taskIndex: number) => {
         const row = Math.floor(taskIndex / tasksPerRow);
         const col = taskIndex % tasksPerRow;
-        
+
         // Calculate base position for task
-        const baseTaskPosition = { 
+        const baseTaskPosition = {
           x: listPosition.x - ((tasksPerRow - 1) * taskSpacing / 2) + (col * taskSpacing),
           y: taskStartY + (row * verticalSpacing)
         };
-        
+
         const taskPosition = findNonOverlappingPosition(baseTaskPosition, occupiedPositions, 130);
-        
+
         const taskNode: Node = {
           id: `task-${task.id}`,
-          data: { 
+          data: {
             label: task.title.length > 20 ? task.title.substring(0, 20) + '...' : task.title,
             completed: task.completed,
             priority: task.priority,
@@ -202,15 +286,15 @@ const MindMap: React.FC<MindMapProps> = ({
           },
           position: taskPosition,
           style: {
-            background: task.completed ? '#6b7280' : 
-                       task.priority === 'red' ? '#ef4444' :
-                       task.priority === 'orange' ? '#f59e0b' :
-                       task.priority === 'green' ? '#22c55e' : '#8b5cf6',
+            background: task.completed ? '#6b7280' :
+              task.priority === 'red' ? '#ef4444' :
+                task.priority === 'orange' ? '#f59e0b' :
+                  task.priority === 'green' ? '#22c55e' : '#8b5cf6',
             color: 'white',
-            border: `2px solid ${task.completed ? '#4b5563' : 
-                                task.priority === 'red' ? '#dc2626' :
-                                task.priority === 'orange' ? '#d97706' :
-                                task.priority === 'green' ? '#16a34a' : '#7c3aed'}`,
+            border: `2px solid ${task.completed ? '#4b5563' :
+              task.priority === 'red' ? '#dc2626' :
+                task.priority === 'orange' ? '#d97706' :
+                  task.priority === 'green' ? '#16a34a' : '#7c3aed'}`,
             borderRadius: '8px',
             fontSize: '11px',
             padding: '6px',
@@ -228,8 +312,8 @@ const MindMap: React.FC<MindMapProps> = ({
           id: `e-list-${list.id}-task-${task.id}`,
           source: `list-${list.id}`,
           target: `task-${task.id}`,
-          style: { 
-            stroke: '#10b981', 
+          style: {
+            stroke: '#10b981',
             strokeWidth: 2,
             strokeDasharray: task.completed ? '5,5' : undefined
           },
@@ -241,29 +325,42 @@ const MindMap: React.FC<MindMapProps> = ({
     return { nodes: newNodes, edges: newEdges };
   }, []);
 
-  // Handle board selection change
-  const handleBoardChange = useCallback((boardId: string) => {
-    if (boardId === '') {
-      setViewMode('custom');
-      setNodes(initialNodes);
-      setEdges([]);
-      return;
+  // ================================  Handle board selection change ==========================================================
+
+
+  const fetchBoardData = async (selectedBoardId: string) => {
+    try {
+      // Fix: Use selectedBoard.id instead of mindMapSelectedBoard.id
+      const response = await axiosInstance.get(`/api/boards/${selectedBoardId}/`);
+      const boardData = response.data;
+      setMaindmap_selected_board_data(boardData);
+      setViewMode('board');
+    } catch (error) {
+      console.error('Error fetching board data:', error);
     }
+  };
+
+
+  const handleBoardChange = useCallback((boardId: string) => {
+
+    fetchBoardData(boardId);
 
     const board = boards.find(b => b.id === parseInt(boardId));
     if (board) {
-      // setSelectedBoard(board);
+      setMaindmap_selected_board_data(board); // Add this line to trigger WebSocket connection
       setViewMode('board');
       const { nodes: boardNodes, edges: boardEdges } = convertBoardToMindMap(board);
       setNodes(boardNodes);
       setEdges(boardEdges);
     }
-  }, [boards, setSelectedBoard, convertBoardToMindMap, setNodes, setEdges]);
+  }, [boards, convertBoardToMindMap, setNodes, setEdges]);
 
+
+  // ========================================================================================================================
 
   // Check if edge already exists between two nodes
   const edgeExists = useCallback((source: string, target: string) => {
-    return edges.some(edge => 
+    return edges.some(edge =>
       (edge.source === source && edge.target === target) ||
       (edge.source === target && edge.target === source)
     );
@@ -273,7 +370,7 @@ const MindMap: React.FC<MindMapProps> = ({
   const onConnect: OnConnect = useCallback(
     (params: Connection) => {
       console.log('Connection created:', params);
-      
+
       // Allow connection even if nodes are already connected to other nodes
       // Only prevent if the exact same connection already exists
       if (!edgeExists(params.source!, params.target!)) {
@@ -340,7 +437,7 @@ const MindMap: React.FC<MindMapProps> = ({
 
   // Auto-layout function for better organization
   const autoLayout = useCallback(() => {
-    const layoutedNodes = nodes.map((node, index) => {
+    const layoutedNodes = nodes.map((node) => {
       if (node.id.startsWith('board-')) {
         // Keep board nodes at the top center
         return {
@@ -361,7 +458,7 @@ const MindMap: React.FC<MindMapProps> = ({
       }
       return node;
     });
-    
+
     setNodes(layoutedNodes);
   }, [nodes, setNodes]);
 
@@ -405,7 +502,7 @@ const MindMap: React.FC<MindMapProps> = ({
           Select Board:
         </label>
         <select
-          value={selectedBoard?.id || ''}
+          value={maindmap_selected_board_data?.id || ''}
           onChange={(e) => handleBoardChange(e.target.value)}
           style={{
             background: currentTheme['--task-background-color'],
@@ -453,20 +550,7 @@ const MindMap: React.FC<MindMapProps> = ({
         >
           Add Node (Ctrl+N)
         </button>
-        <button
-          disabled={selectedElements.filter(id => nodes.some(n => n.id === id)).length !== 2}
-          style={{
-            background: selectedElements.filter(id => nodes.some(n => n.id === id)).length === 2 ? '#10b981' : '#64748b',
-            color: 'white',
-            border: 'none',
-            padding: '5px 10px',
-            borderRadius: '4px',
-            cursor: 'pointer',
-            fontSize: '12px'
-          }}
-        >
-          Connect Nodes (Ctrl+C)
-        </button>
+
         <button
           onClick={removeSelectedConnections}
           disabled={selectedElements.filter(id => edges.some(e => e.id === id)).length === 0}
@@ -497,10 +581,10 @@ const MindMap: React.FC<MindMapProps> = ({
         >
           Delete Selected (Del)
         </button>
-        {viewMode === 'board' && selectedBoard && (
+        {viewMode === 'board' && maindmap_selected_board_data && (
           <button
             onClick={() => {
-              const { nodes: boardNodes, edges: boardEdges } = convertBoardToMindMap(selectedBoard);
+              const { nodes: boardNodes, edges: boardEdges } = convertBoardToMindMap(maindmap_selected_board_data);
               setNodes(boardNodes);
               setEdges(boardEdges);
             }}
@@ -534,7 +618,7 @@ const MindMap: React.FC<MindMapProps> = ({
       </div>
 
       {/* Info Panel for Board Mode */}
-      {viewMode === 'board' && selectedBoard && (
+      {viewMode === 'board' && maindmap_selected_board_data && (
         <div style={{
           zIndex: 1000,
           background: currentTheme['--background-color'],
@@ -545,10 +629,10 @@ const MindMap: React.FC<MindMapProps> = ({
           color: currentTheme['--main-text-coloure'],
           fontSize: '12px'
         }}>
-          <strong>Board View:</strong> {selectedBoard.name} | 
+          <strong>Board View:</strong> {maindmap_selected_board_data.name} |
           <span style={{ marginLeft: '10px' }}>
-            Lists: {selectedBoard.lists.length} | 
-            Tasks: {selectedBoard.lists.reduce((acc, list) => acc + list.tasks.length, 0)}
+            Lists: {maindmap_selected_board_data.lists.length} |
+            Tasks: {maindmap_selected_board_data.lists.reduce((acc, list) => acc + list.tasks.length, 0)}
           </span>
           <span style={{ marginLeft: '10px', fontStyle: 'italic' }}>
             You can modify this board-based mind map by adding nodes, connections, and rearranging elements.
@@ -574,7 +658,7 @@ const MindMap: React.FC<MindMapProps> = ({
         }}
       >
         <Controls />
-        <MiniMap 
+        <MiniMap
           nodeColor={(node) => {
             if (node.id.startsWith('board-')) return '#6366f1';
             if (node.id.startsWith('list-')) return '#10b981';
@@ -593,9 +677,9 @@ const MindMap: React.FC<MindMapProps> = ({
           pannable
           maskColor="rgba(30, 41, 59, 0.8)"
         />
-        <Background 
-          variant={BackgroundVariant.Dots} 
-          gap={20} 
+        <Background
+          variant={BackgroundVariant.Dots}
+          gap={20}
           size={1}
           color={currentTheme['--due-date-color']}
         />
