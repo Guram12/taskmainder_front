@@ -66,6 +66,8 @@ export interface BoardsProps {
   ListName: string;
   setAllCurrentBoardUsers: (allCurrentBoardUsers: ProfileData[]) => void;
   allCurrentBoardUsers: ProfileData[];
+  setAdding_new_task_loader: (adding_new_task_loader: { listId: number | null }) => void;
+  adding_new_task_loader: { listId: number | null };
 }
 
 const Boards: React.FC<BoardsProps> = ({
@@ -104,6 +106,8 @@ const Boards: React.FC<BoardsProps> = ({
   ListName,
   allCurrentBoardUsers,
   setAllCurrentBoardUsers,
+  setAdding_new_task_loader,
+  adding_new_task_loader,
 }) => {
 
 
@@ -222,7 +226,6 @@ const Boards: React.FC<BoardsProps> = ({
 
 
   // =================================================  Add task =========================================================
-
   const addTask = (listId: number, taskTitle: string) => {
     console.log('Adding task:', { listId, taskTitle });
     const updatedLoadingLists = { ...loadingLists, [listId]: true };
@@ -247,11 +250,14 @@ const Boards: React.FC<BoardsProps> = ({
         payload: newTask,
       }));
 
+
     } else {
       console.error('WebSocket is not open. Cannot send add_task message.');
       const resetLoadingLists = { ...loadingLists, [listId]: false };
       setLoadingLists(resetLoadingLists);
+      setAdding_new_task_loader({ listId: null });
     }
+
   };
 
   // ================================================== delete task =========================================================
@@ -282,8 +288,6 @@ const Boards: React.FC<BoardsProps> = ({
       }));
     }
   };
-
-  // ...existing code...
 
   // ================================================== Update task =========================================================
 
@@ -765,6 +769,8 @@ const Boards: React.FC<BoardsProps> = ({
                   updatingTaskId={updatingTaskId}
                   setCompletingTaskId={setCompletingTaskId}
                   completingTaskId={completingTaskId}
+                  setAdding_new_task_loader={setAdding_new_task_loader}
+                  adding_new_task_loader={adding_new_task_loader}
                 />
 
               ))}

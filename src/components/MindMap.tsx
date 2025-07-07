@@ -80,6 +80,20 @@ const MindMap: React.FC<MindMapProps> = ({
   const [viewMode, setViewMode] = useState<'custom' | 'board'>('custom');
   const [editingTask, setEditingTask] = useState<tasks | null>(null);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  // Add new state for naming new items
+  const [newItemModal, setNewItemModal] = useState<{
+    isOpen: boolean;
+    type: 'task' | 'list';
+    name: string;
+    targetId: string;
+    tempNodeId: string;
+  }>({
+    isOpen: false,
+    type: 'task',
+    name: '',
+    targetId: '',
+    tempNodeId: ''
+  });
 
   const [maindmap_selected_board_data, setMaindmap_selected_board_data] = useState<board>({
     id: 0,
@@ -520,13 +534,108 @@ const MindMap: React.FC<MindMapProps> = ({
     );
   }, [edges]);
 
-  // Handle new connections
+  // Send WebSocket message for creating new task
+  const sendCreateTask = useCallback((listId: number, taskName: string) => {
+    if (mindMapSocketRef.current && mindMapSocketRef.current.readyState === WebSocket.OPEN) {
+      const message = {
+        action: 'add_task',
+        payload: {
+          list: listId, 
+          title: taskName,
+
+        }
+      };
+
+      try {
+        mindMapSocketRef.current.send(JSON.stringify(message));
+        console.log('Successfully sent create task:', message);
+      } catch (error) {
+        console.error('Error sending create task message:', error);
+      }
+    } else {
+      console.error('WebSocket is not connected for creating task');
+    }
+  }, []);
+
+  // Send WebSocket message for creating new list
+  const sendCreateList = useCallback((boardId: number, listName: string) => {
+    if (mindMapSocketRef.current && mindMapSocketRef.current.readyState === WebSocket.OPEN) {
+      const message = {
+        action: 'add_list',
+        payload: {
+          name: listName, // Changed from 'list_name' to 'name'
+          board: boardId, // Changed from 'board_id' to 'board'
+        }
+      };
+
+      try {
+        mindMapSocketRef.current.send(JSON.stringify(message));
+        console.log('Successfully sent create list:', message);
+      } catch (error) {
+        console.error('Error sending create list message:', error);
+      }
+    } else {
+      console.error('WebSocket is not connected for creating list');
+    }
+  }, []);
+
+
+  // Handle new connections with smart detection
   const onConnect: OnConnect = useCallback(
     (params: Connection) => {
       console.log('Connection created:', params);
 
-      // Allow connection even if nodes are already connected to other nodes
-      // Only prevent if the exact same connection already exists
+      if (viewMode === 'board' && params.source && params.target) {
+        const sourceNode = nodes.find(n => n.id === params.source);
+        const targetNode = nodes.find(n => n.id === params.target);
+
+        // Check if we're connecting a new node to an existing structure
+        const isNewNodeConnection = sourceNode?.data.label?.includes('New Node') ||
+          targetNode?.data.label?.includes('New Node');
+
+        if (isNewNodeConnection) {
+          let newItemType: 'task' | 'list' = 'task';
+          let targetId = '';
+          let tempNodeId = '';
+
+          // Determine what type of item to create based on the connection
+          if (sourceNode?.data.label?.includes('New Node')) {
+            // New node is source
+            tempNodeId = params.source;
+            if (params.target?.startsWith('board-')) {
+              newItemType = 'list';
+              targetId = params.target;
+            } else if (params.target?.startsWith('list-')) {
+              newItemType = 'task';
+              targetId = params.target;
+            }
+          } else if (targetNode?.data.label?.includes('New Node')) {
+            // New node is target
+            tempNodeId = params.target;
+            if (params.source?.startsWith('board-')) {
+              newItemType = 'list';
+              targetId = params.source;
+            } else if (params.source?.startsWith('list-')) {
+              newItemType = 'task';
+              targetId = params.source;
+            }
+          }
+
+          if (targetId && tempNodeId) {
+            // Open modal to name the new item
+            setNewItemModal({
+              isOpen: true,
+              type: newItemType,
+              name: '',
+              targetId: targetId,
+              tempNodeId: tempNodeId
+            });
+            return; // Don't create the edge yet
+          }
+        }
+      }
+
+      // Regular connection handling
       if (!edgeExists(params.source!, params.target!)) {
         setEdges((eds) => addEdge({
           ...params,
@@ -537,39 +646,70 @@ const MindMap: React.FC<MindMapProps> = ({
         console.log('Connection already exists between these nodes');
       }
     },
-    [setEdges, edgeExists]
+    [setEdges, edgeExists, viewMode, nodes]
   );
 
-  // Handle element selection
-  const onSelectionChange = useCallback(
-    ({ nodes: selectedNodes, edges: selectedEdges }: { nodes: Node[]; edges: Edge[] }) => {
-      const selected = [
-        ...selectedNodes.map(node => node.id),
-        ...selectedEdges.map(edge => edge.id)
-      ];
-      setSelectedElements(selected);
-      console.log('Selected elements:', selected);
-    },
-    []
-  );
+  // Handle new item creation
+  const handleCreateNewItem = useCallback(() => {
+    if (!newItemModal.name.trim()) return;
 
-  // Add new node
+    const { type, targetId, tempNodeId, name } = newItemModal;
+
+    if (type === 'task' && targetId.startsWith('list-')) {
+      const listId = parseInt(targetId.replace('list-', ''));
+      sendCreateTask(listId, name.trim());
+    } else if (type === 'list' && targetId.startsWith('board-')) {
+      const boardId = parseInt(targetId.replace('board-', ''));
+      sendCreateList(boardId, name.trim());
+    }
+
+    // Remove the temporary node
+    setNodes((nds) => nds.filter(node => node.id !== tempNodeId));
+
+    // Close modal
+    setNewItemModal({
+      isOpen: false,
+      type: 'task',
+      name: '',
+      targetId: '',
+      tempNodeId: ''
+    });
+  }, [newItemModal, sendCreateTask, sendCreateList, setNodes]);
+
+  // Cancel new item creation
+  const handleCancelNewItem = useCallback(() => {
+    // Remove the temporary node
+    setNodes((nds) => nds.filter(node => node.id !== newItemModal.tempNodeId));
+
+    // Close modal
+    setNewItemModal({
+      isOpen: false,
+      type: 'task',
+      name: '',
+      targetId: '',
+      tempNodeId: ''
+    });
+  }, [newItemModal.tempNodeId, setNodes]);
+
+  // Add new node with better labeling
   const addNewNode = useCallback(() => {
-    const newNodeId = `${nodes.length + 1}`;
+    const newNodeId = `temp-${Date.now()}`;
     const newNode: Node = {
       id: newNodeId,
-      data: { label: `New Node ${newNodeId}` },
-      position: { x: Math.random() * 500, y: Math.random() * 300 },
+      data: { label: `New Node (Connect to create)` },
+      position: { x: Math.random() * 500 + 200, y: Math.random() * 300 + 200 },
       style: {
         background: '#64748b',
         color: 'white',
         border: '2px solid #475569',
         borderRadius: '8px',
         fontSize: '12px',
+        padding: '8px',
+        minWidth: '150px',
       },
     };
     setNodes((nds) => [...nds, newNode]);
-  }, [nodes.length, setNodes]);
+  }, [setNodes]);
 
 
   // Remove selected connections
@@ -748,6 +888,94 @@ const MindMap: React.FC<MindMapProps> = ({
         />
       )}
 
+      {/* New Item Creation Modal */}
+      {newItemModal.isOpen && (
+        <div style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          backgroundColor: 'rgba(0, 0, 0, 0.7)',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          zIndex: 10000
+        }}>
+          <div style={{
+            background: currentTheme['--background-color'],
+            padding: '20px',
+            borderRadius: '8px',
+            border: `1px solid ${currentTheme['--border-color']}`,
+            minWidth: '300px',
+            maxWidth: '400px'
+          }}>
+            <h3 style={{
+              color: currentTheme['--main-text-coloure'],
+              marginBottom: '15px',
+              fontSize: '16px'
+            }}>
+              Create New {newItemModal.type === 'task' ? 'Task' : 'List'}
+            </h3>
+
+            <input
+              type="text"
+              placeholder={`Enter ${newItemModal.type} name...`}
+              value={newItemModal.name}
+              onChange={(e) => setNewItemModal(prev => ({ ...prev, name: e.target.value }))}
+              onKeyPress={(e) => {
+                if (e.key === 'Enter' && newItemModal.name.trim()) {
+                  handleCreateNewItem();
+                }
+              }}
+              style={{
+                width: '100%',
+                padding: '8px',
+                border: `1px solid ${currentTheme['--border-color']}`,
+                borderRadius: '4px',
+                background: currentTheme['--task-background-color'],
+                color: currentTheme['--main-text-coloure'],
+                fontSize: '14px',
+                marginBottom: '15px'
+              }}
+              autoFocus
+            />
+
+            <div style={{ display: 'flex', gap: '10px', justifyContent: 'flex-end' }}>
+              <button
+                onClick={handleCancelNewItem}
+                style={{
+                  background: '#64748b',
+                  color: 'white',
+                  border: 'none',
+                  padding: '8px 16px',
+                  borderRadius: '4px',
+                  cursor: 'pointer',
+                  fontSize: '12px'
+                }}
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleCreateNewItem}
+                disabled={!newItemModal.name.trim()}
+                style={{
+                  background: newItemModal.name.trim() ? '#6366f1' : '#64748b',
+                  color: 'white',
+                  border: 'none',
+                  padding: '8px 16px',
+                  borderRadius: '4px',
+                  cursor: newItemModal.name.trim() ? 'pointer' : 'not-allowed',
+                  fontSize: '12px'
+                }}
+              >
+                Create {newItemModal.type === 'task' ? 'Task' : 'List'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Board Selection Panel */}
       <div style={{
         zIndex: 1000,
@@ -809,7 +1037,7 @@ const MindMap: React.FC<MindMapProps> = ({
             fontSize: '12px'
           }}
         >
-          Add Node (Ctrl+N)
+          Add Node (Connect to Board/List)
         </button>
 
         <button
@@ -908,7 +1136,7 @@ const MindMap: React.FC<MindMapProps> = ({
             Tasks: {maindmap_selected_board_data.lists.reduce((acc, list) => acc + list.tasks.length, 0)}
           </span>
           <span style={{ marginLeft: '10px', fontStyle: 'italic' }}>
-            Click on task nodes to edit them. Changes will be synchronized with other users.
+            Click task nodes to edit. Add new node and connect to board (for lists) or lists (for tasks) to create new items.
           </span>
         </div>
       )}
@@ -919,7 +1147,7 @@ const MindMap: React.FC<MindMapProps> = ({
         onNodesChange={handleNodesChange}
         onEdgesChange={onEdgesChange}
         onConnect={onConnect}
-        onSelectionChange={onSelectionChange}
+        // onSelectionChange={onSelectionChange}
         onNodeClick={onNodeClick}
         fitView
         multiSelectionKeyCode="Shift"

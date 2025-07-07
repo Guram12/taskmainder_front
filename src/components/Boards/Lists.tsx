@@ -46,6 +46,8 @@ interface ListProps {
   updatingTaskId: number | null;
   setCompletingTaskId: (completingTaskId: number | null) => void;
   completingTaskId: number | null;
+  setAdding_new_task_loader: (adding_new_task_loader: { listId: number | null }) => void;
+  adding_new_task_loader: { listId: number | null };
 }
 
 const List: React.FC<ListProps> = ({
@@ -65,6 +67,8 @@ const List: React.FC<ListProps> = ({
   updatingTaskId,
   setCompletingTaskId,
   completingTaskId,
+  setAdding_new_task_loader,
+  adding_new_task_loader,
 }) => {
 
   const [isListEditing, setIsListEditing] = useState<boolean>(false);
@@ -134,6 +138,7 @@ const List: React.FC<ListProps> = ({
   const handleAddTask = () => {
     if (newTaskTitle.trim()) {
       addTask(list.id, newTaskTitle);
+      setAdding_new_task_loader({ listId: list.id });
       setNewTaskTitle('');
       setIsAddingTask(false);
     }
@@ -292,7 +297,9 @@ const List: React.FC<ListProps> = ({
       </div>
 
       <div className='add_task_cont'>
-        {isLoading && <SkeletonEachTask currentTheme={currentTheme} />}
+        {adding_new_task_loader.listId === list.id && <SkeletonEachTask currentTheme={currentTheme} />}
+
+
         {!isAddingTask ? (
           <>
             {!isLoading && <button

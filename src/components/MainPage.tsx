@@ -178,6 +178,7 @@ const MainPage: React.FC<MainPageProps> = ({
   const [loadingLists, setLoadingLists] = useState<{ [listId: number]: boolean }>({});
   const [updatingTaskId, setUpdatingTaskId] = useState<number | null>(null);
   const [completingTaskId, setCompletingTaskId] = useState<number | null>(null);
+  const [adding_new_task_loader, setAdding_new_task_loader] = useState<{ listId: number | null }>({ listId: null });
 
 
 
@@ -311,6 +312,7 @@ const MainPage: React.FC<MainPageProps> = ({
             return { ...prevData, lists: updatedLists };
           });
           setLoadingLists((prev) => ({ ...prev, [payload.list]: false }));
+          setAdding_new_task_loader({ listId: null }); // Clear the skeleton loader
           break;
 
         case 'delete_task':
@@ -510,6 +512,9 @@ const MainPage: React.FC<MainPageProps> = ({
             ListName={ListName}
             setAllCurrentBoardUsers={setAllCurrentBoardUsers}
             allCurrentBoardUsers={allCurrentBoardUsers}
+            setAdding_new_task_loader={setAdding_new_task_loader}
+            adding_new_task_loader={adding_new_task_loader}
+            
           />
         );
       case "Notification":
@@ -538,7 +543,7 @@ const MainPage: React.FC<MainPageProps> = ({
     socketRef, isAddingList, setIsAddingList, updatingListNameId, setUpdatingListNameId,
     setUpdatingTaskId, updatingTaskId, setCompletingTaskId, completingTaskId,
     boardData, setBoardData, setAdding_new_list, Adding_new_list, setListName, ListName,
-    listsContainerRef, allCurrentBoardUsers , setAllCurrentBoardUsers
+    listsContainerRef, allCurrentBoardUsers , setAllCurrentBoardUsers, adding_new_task_loader, setAdding_new_task_loader
   ]);
 
 
