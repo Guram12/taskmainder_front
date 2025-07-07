@@ -107,7 +107,7 @@ const MindMap: React.FC<MindMapProps> = ({
     if (saveTimeoutRef.current) {
       clearTimeout(saveTimeoutRef.current);
     }
-    
+
     saveTimeoutRef.current = setTimeout(() => {
       try {
         const key = getPositionStorageKey(boardId);
@@ -136,12 +136,12 @@ const MindMap: React.FC<MindMapProps> = ({
   // Custom onNodesChange handler that saves positions
   const handleNodesChange: OnNodesChange = useCallback((changes: NodeChange[]) => {
     onNodesChange(changes);
-    
+
     // Check if any position changes occurred and we're in board mode
-    const hasPositionChange = changes.some(change => 
+    const hasPositionChange = changes.some(change =>
       change.type === 'position' && change.position
     );
-    
+
     if (hasPositionChange && viewMode === 'board' && maindmap_selected_board_data?.id) {
       // Get current positions after the change
       setTimeout(() => {
@@ -153,7 +153,7 @@ const MindMap: React.FC<MindMapProps> = ({
               y: node.position.y
             };
           });
-          
+
           savePositionsToStorage(maindmap_selected_board_data.id, positions);
           return currentNodes;
         });
@@ -178,7 +178,7 @@ const MindMap: React.FC<MindMapProps> = ({
 
     const wsUrl = `${environment_urls.URLS.websockersURL}${maindmap_selected_board_data.id}/?token=${token}`;
     console.log('Connecting to WebSocket:', wsUrl);
-    
+
     const newSocket = new WebSocket(wsUrl);
     mindMapSocketRef.current = newSocket;
 
@@ -214,8 +214,57 @@ const MindMap: React.FC<MindMapProps> = ({
               return { ...prevData, lists: updatedLists };
             });
             break;
-          default:
-            console.log('Unknown action:', action);
+
+
+          case 'move_task':
+            const { task_id, source_list_id, target_list_id } = payload;
+            setMaindmap_selected_board_data((prevData: board) => {
+              const newBoardData = { ...prevData };
+              const sourceListIndex = newBoardData.lists.findIndex(list => list.id === source_list_id);
+              const targetListIndex = newBoardData.lists.findIndex(list => list.id === target_list_id);
+
+              if (sourceListIndex === -1 || targetListIndex === -1) return newBoardData;
+
+              const taskIndex = newBoardData.lists[sourceListIndex].tasks.findIndex(task => task.id === task_id);
+              if (taskIndex === -1) return newBoardData;
+
+              const [movedTask] = newBoardData.lists[sourceListIndex].tasks.splice(taskIndex, 1);
+              movedTask.list = target_list_id;
+              newBoardData.lists[targetListIndex].tasks.push(movedTask);
+
+              return newBoardData;
+            });
+            break;
+
+          case 'add_task':
+            console.log('Received add_task:', payload);
+            setMaindmap_selected_board_data((prevData: board) => {
+              const updatedLists = prevData.lists.map((list) => {
+                if (list.id === payload.list) {
+                  return { ...list, tasks: [...list.tasks, payload] };
+                }
+                return list;
+              });
+
+              return { ...prevData, lists: updatedLists };
+            });
+            break;
+
+          // ================================= list cases ===================================================
+          case 'delete_list':
+            setMaindmap_selected_board_data((prevData: board) => ({
+              ...prevData,
+              lists: prevData.lists.filter((list) => list.id !== payload.list_id),
+            }));
+            break;
+
+          case 'add_list':
+            setMaindmap_selected_board_data((prevData: board) => ({
+              ...prevData,
+              lists: [...prevData.lists, payload],
+            }));
+
+            break;
         }
       } catch (error) {
         console.error('Error parsing WebSocket message:', error);
@@ -302,7 +351,7 @@ const MindMap: React.FC<MindMapProps> = ({
     const boardNodeId = `board-${board.id}`;
     const defaultBoardPosition = { x: (totalLists * listSpacing) / 2, y: 50 };
     const boardPosition = savedPositions[boardNodeId] || defaultBoardPosition;
-    
+
     const boardNode: Node = {
       id: boardNodeId,
       type: 'input',
@@ -331,7 +380,7 @@ const MindMap: React.FC<MindMapProps> = ({
       };
 
       // Use saved position if available, otherwise find non-overlapping position
-      const listPosition = savedPositions[listNodeId] || 
+      const listPosition = savedPositions[listNodeId] ||
         findNonOverlappingPosition(baseListPosition, occupiedPositions);
 
       const listNode: Node = {
@@ -378,7 +427,7 @@ const MindMap: React.FC<MindMapProps> = ({
         };
 
         // Use saved position if available, otherwise find non-overlapping position
-        const taskPosition = savedPositions[taskNodeId] || 
+        const taskPosition = savedPositions[taskNodeId] ||
           findNonOverlappingPosition(baseTaskPosition, occupiedPositions, 130);
 
         const taskNode: Node = {
@@ -568,7 +617,7 @@ const MindMap: React.FC<MindMapProps> = ({
   const sendTaskUpdate = useCallback((taskData: any) => {
     console.log('Attempting to send task update:', taskData);
     console.log('WebSocket state:', mindMapSocketRef.current?.readyState);
-    
+
     if (mindMapSocketRef.current && mindMapSocketRef.current.readyState === WebSocket.OPEN) {
       const message = {
         action: 'update_task',
@@ -583,7 +632,7 @@ const MindMap: React.FC<MindMapProps> = ({
           user_timezone: Intl.DateTimeFormat().resolvedOptions().timeZone
         }
       };
-      
+
       try {
         mindMapSocketRef.current.send(JSON.stringify(message));
         console.log('Successfully sent task update:', message);
@@ -591,10 +640,10 @@ const MindMap: React.FC<MindMapProps> = ({
         console.error('Error sending WebSocket message:', error);
       }
     } else {
-      console.error('WebSocket is not connected. Current state:', 
+      console.error('WebSocket is not connected. Current state:',
         mindMapSocketRef.current?.readyState === WebSocket.CONNECTING ? 'CONNECTING' :
-        mindMapSocketRef.current?.readyState === WebSocket.CLOSING ? 'CLOSING' :
-        mindMapSocketRef.current?.readyState === WebSocket.CLOSED ? 'CLOSED' : 'UNKNOWN'
+          mindMapSocketRef.current?.readyState === WebSocket.CLOSING ? 'CLOSING' :
+            mindMapSocketRef.current?.readyState === WebSocket.CLOSED ? 'CLOSED' : 'UNKNOWN'
       );
     }
   }, []);
@@ -611,7 +660,7 @@ const MindMap: React.FC<MindMapProps> = ({
     task_associated_users_id: number[],
     priority: 'green' | 'orange' | 'red' | null
   ) => {
-    
+
     const updatedTaskData = {
       id: taskId,
       title: updatedTitle,
@@ -640,7 +689,6 @@ const MindMap: React.FC<MindMapProps> = ({
   // Handle task node click for editing
   const onNodeClick = useCallback((event: React.MouseEvent, node: Node) => {
     console.log('Node clicked:', node);
-
     // Only allow editing task nodes in board mode
     if (viewMode === 'board' && node.id.startsWith('task-')) {
       const taskId = parseInt(node.id.replace('task-', ''));
