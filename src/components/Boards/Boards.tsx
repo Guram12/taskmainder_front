@@ -179,10 +179,16 @@ const Boards: React.FC<BoardsProps> = ({
             order: index + 1
           }));
 
-          setBoardData(prevData => ({
-            ...prevData,
+
+
+
+          // Create the updated board data object
+          const updatedBoardData: board = {
+            ...boardData,
             lists: reorderedLists
-          }));
+          };
+
+          setBoardData(updatedBoardData);
 
           // Send updated order to backend
           if (socketRef.current && socketRef.current.readyState === WebSocket.OPEN) {
@@ -216,9 +222,9 @@ const Boards: React.FC<BoardsProps> = ({
 
   const addTask = (listId: number, taskTitle: string) => {
     console.log('Adding task:', { listId, taskTitle });
+    const updatedLoadingLists = { ...loadingLists, [listId]: true };
 
-    setLoadingLists((prev) => ({ ...prev, [listId]: true }));
-
+    setLoadingLists(updatedLoadingLists);
 
     if (socketRef.current && socketRef.current.readyState === WebSocket.OPEN) {
       const newTask = {
@@ -240,39 +246,41 @@ const Boards: React.FC<BoardsProps> = ({
 
     } else {
       console.error('WebSocket is not open. Cannot send add_task message.');
-      setLoadingLists((prev) => ({ ...prev, [listId]: false }));
-
+      const resetLoadingLists = { ...loadingLists, [listId]: false };
+      setLoadingLists(resetLoadingLists);
     }
   };
 
   // ================================================== delete task =========================================================
 
   const deleteTask = (taskId: number, listId: number) => {
-    setBoardData((prevBoardData) => {
-      const updatedLists = prevBoardData.lists.map((list) => {
-        if (list.id === listId) {
-          return {
-            ...list,
-            tasks: list.tasks.filter((task) => task.id !== taskId),
-          };
-        }
-        return list;
-      });
-
-      const newBoardData = { ...prevBoardData, lists: updatedLists };
-      setSelectedBoard(newBoardData);
-
-      if (socketRef.current && socketRef.current.readyState === WebSocket.OPEN) {
-        socketRef.current.send(JSON.stringify({
-          action: 'delete_task',
-          payload: { task_id: taskId, list_id: listId },
-        }));
+    const updatedLists = boardData.lists.map((list) => {
+      if (list.id === listId) {
+        return {
+          ...list,
+          tasks: list.tasks.filter((task) => task.id !== taskId),
+        };
       }
-
-      return newBoardData;
+      return list;
     });
+
+    const updatedBoardData: board = {
+      ...boardData,
+      lists: updatedLists
+    };
+
+    setBoardData(updatedBoardData);
+    setSelectedBoard(updatedBoardData);
+
+    if (socketRef.current && socketRef.current.readyState === WebSocket.OPEN) {
+      socketRef.current.send(JSON.stringify({
+        action: 'delete_task',
+        payload: { task_id: taskId, list_id: listId },
+      }));
+    }
   };
 
+  // ...existing code...
 
   // ================================================== Update task =========================================================
 
@@ -286,96 +294,101 @@ const Boards: React.FC<BoardsProps> = ({
     task_associated_users_id: number[],
     priority: 'green' | 'orange' | 'red' | null,
   ) => {
-
     console.log('Updating task:', { taskId, updatedTitle, due_date, completed, task_associated_users_id, priority });
 
-    setBoardData((prevBoardData) => {
-      const updatedLists = prevBoardData.lists.map((list) => ({
-        ...list,
-        tasks: list.tasks.map((task) =>
-          task.id === taskId ? { ...task, title: updatedTitle, due_date: due_date, completed: completed, task_associated_users_id: task_associated_users_id, priority: priority } : task
-        ),
-      }));
-
-      const newBoardData = { ...prevBoardData, lists: updatedLists };
-      setSelectedBoard(newBoardData);
-
-      if (socketRef.current && socketRef.current.readyState === WebSocket.OPEN) {
-        socketRef.current.send(JSON.stringify({
-          action: 'update_task',
-          payload: {
-            task_id: taskId,
+    // Create the updated board data object directly
+    const updatedLists = boardData.lists.map((list) => ({
+      ...list,
+      tasks: list.tasks.map((task) =>
+        task.id === taskId
+          ? {
+            ...task,
             title: updatedTitle,
             due_date: due_date,
-            description: description,
             completed: completed,
             task_associated_users_id: task_associated_users_id,
-            priority: priority,
-          },
-        }));
-      }
+            priority: priority
+          }
+          : task
+      ),
+    }));
 
-      return newBoardData;
-    });
+    const updatedBoardData: board = {
+      ...boardData,
+      lists: updatedLists
+    };
+
+    setBoardData(updatedBoardData);
+    setSelectedBoard(updatedBoardData);
+
+    if (socketRef.current && socketRef.current.readyState === WebSocket.OPEN) {
+      socketRef.current.send(JSON.stringify({
+        action: 'update_task',
+        payload: {
+          task_id: taskId,
+          title: updatedTitle,
+          due_date: due_date,
+          description: description,
+          completed: completed,
+          task_associated_users_id: task_associated_users_id,
+          priority: priority,
+        },
+      }));
+    }
   };
-
 
 
 
   // =================================================  move task =========================================================
 
 
+
   const moveTask = (taskId: number, sourceListId: number, targetListId: number) => {
-    if (reordering) {
-      // Prevent moveTask if a reorder is in progress
-      console.warn('moveTask blocked: reorder in progress');
-      return;
-    }
-    setBoardData((prevBoardData) => {
-      const sourceListIndex = prevBoardData.lists.findIndex(list => list.id === sourceListId);
-      const targetListIndex = prevBoardData.lists.findIndex(list => list.id === targetListId);
+    if (reordering) return;
 
-      if (sourceListIndex === -1 || targetListIndex === -1) return prevBoardData;
+    // Find the task to move
+    const sourceList = boardData.lists.find(list => list.id === sourceListId);
+    const taskToMove = sourceList?.tasks.find(task => task.id === taskId);
 
-      const taskIndex = prevBoardData.lists[sourceListIndex].tasks.findIndex(task => task.id === taskId);
-      if (taskIndex === -1) {
-        // Prevent crash if task is missing
-        // console.warn(`moveTask: Task ${taskId} not found in list ${sourceListId}`);
-        return prevBoardData;
+    if (!taskToMove) return;
+
+    // Create the updated lists
+    const updatedLists = boardData.lists.map((list) => {
+      if (list.id === sourceListId) {
+        // Remove task from source list
+        return {
+          ...list,
+          tasks: list.tasks.filter(task => task.id !== taskId),
+        };
+      } else if (list.id === targetListId) {
+        // Add task to target list
+        return {
+          ...list,
+          tasks: [...list.tasks, { ...taskToMove, list: targetListId }],
+        };
       }
-
-      const [movedTask] = prevBoardData.lists[sourceListIndex].tasks.splice(taskIndex, 1);
-      movedTask.list = targetListId;
-      prevBoardData.lists[targetListIndex].tasks.push(movedTask);
-
-      const newBoardData = { ...prevBoardData };
-      setTimeout(() => {
-        setSelectedBoard(newBoardData);
-      }, 10);
-
-      if (socketRef.current && socketRef.current.readyState === WebSocket.OPEN) {
-        console.log('Sending move_task message:', {
-          action: 'move_task',
-          payload: {
-            task_id: taskId,
-            source_list_id: sourceListId,
-            target_list_id: targetListId
-          }
-        });
-        socketRef.current.send(JSON.stringify({
-          action: 'move_task',
-          payload: {
-            task_id: taskId,
-            source_list_id: sourceListId,
-            target_list_id: targetListId
-          }
-        }));
-      }
-
-      return newBoardData;
+      return list;
     });
-  };
 
+    const updatedBoardData: board = {
+      ...boardData,
+      lists: updatedLists
+    };
+
+    setBoardData(updatedBoardData);
+    setSelectedBoard(updatedBoardData);
+
+    if (socketRef.current && socketRef.current.readyState === WebSocket.OPEN) {
+      socketRef.current.send(JSON.stringify({
+        action: 'move_task',
+        payload: {
+          task_id: taskId,
+          source_list_id: sourceListId,
+          target_list_id: targetListId,
+        },
+      }));
+    }
+  };
 
   // =================================================== add list =========================================================
 
@@ -605,41 +618,49 @@ const Boards: React.FC<BoardsProps> = ({
       tolerance: 5,
     },
   });
-  const sensors = useSensors(pointerSensor, touchSensor);
 
+
+  const sensors = useSensors(pointerSensor, touchSensor);
   const reorderDebounceRef = useRef<NodeJS.Timeout | null>(null);
 
-  // --- Handle reorder-tasks event from SortableJS ---
+
+
+
   const handleReorderTasks = useCallback((event: any) => {
     const { listId, taskOrder } = event.detail;
 
     setReordering(true); // Block moveTask during reorder
 
-    setBoardData((prevData) => {
-      const updatedLists = prevData.lists.map((list) => {
-        if (list.id === listId) {
-          // Only include tasks that exist in list.tasks
-          const reorderedTasks = taskOrder
-            .map((taskId: number) => {
-              const found = list.tasks.find((task) => task.id === taskId);
-              // Optional: warn if not found
-              if (!found) {
-                console.warn(`Task with id ${taskId} not found in list ${listId}`);
-              }
-              return found;
-            })
-            .filter(Boolean); // Remove undefined
+    // Create the updated board data object directly
+    const updatedLists = boardData.lists.map((list) => {
+      if (list.id === listId) {
+        // Only include tasks that exist in list.tasks
+        const reorderedTasks = taskOrder
+          .map((taskId: number) => {
+            const found = list.tasks.find((task) => task.id === taskId);
+            // Optional: warn if not found
+            if (!found) {
+              console.warn(`Task with id ${taskId} not found in list ${listId}`);
+            }
+            return found;
+          })
+          .filter(Boolean); // Remove undefined
 
-          // Also add any tasks that are in list.tasks but not in taskOrder (to avoid losing tasks)
-          const missingTasks = list.tasks.filter(
-            (task) => !taskOrder.includes(task.id)
-          );
-          return { ...list, tasks: [...reorderedTasks, ...missingTasks] };
-        }
-        return list;
-      });
-      return { ...prevData, lists: updatedLists };
+        // Also add any tasks that are in list.tasks but not in taskOrder (to avoid losing tasks)
+        const missingTasks = list.tasks.filter(
+          (task) => !taskOrder.includes(task.id)
+        );
+        return { ...list, tasks: [...reorderedTasks, ...missingTasks] };
+      }
+      return list;
     });
+
+    const updatedBoardData: board = {
+      ...boardData,
+      lists: updatedLists
+    };
+
+    setBoardData(updatedBoardData);
 
     // Immediately send backend request (no debounce)
     if (socketRef.current && socketRef.current.readyState === WebSocket.OPEN) {
@@ -651,7 +672,8 @@ const Boards: React.FC<BoardsProps> = ({
       );
     }
     setReordering(false); // Allow moveTask after reorder
-  }, [setBoardData]);
+  }, [boardData]);
+
 
   useEffect(() => {
     window.addEventListener('reorder-tasks', handleReorderTasks as EventListener);

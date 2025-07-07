@@ -207,7 +207,7 @@ const MainPage: React.FC<MainPageProps> = ({
       switch (action) {
         case 'move_task':
           const { task_id, source_list_id, target_list_id } = payload;
-          setBoardData((prevData) => {
+          setBoardData((prevData: board) => {
             const newBoardData = { ...prevData };
             const sourceListIndex = newBoardData.lists.findIndex(list => list.id === source_list_id);
             const targetListIndex = newBoardData.lists.findIndex(list => list.id === target_list_id);
@@ -225,10 +225,9 @@ const MainPage: React.FC<MainPageProps> = ({
           });
           break;
 
-
         case 'set_status':
           console.log('Received set_status:', payload);
-          setBoardData((prevData) => {
+          setBoardData((prevData: board) => {
             const newBoardData = { ...prevData };
             const userIndex = newBoardData.board_users.findIndex(user => user.id === payload.user_id);
             if (userIndex !== -1) {
@@ -246,14 +245,14 @@ const MainPage: React.FC<MainPageProps> = ({
 
         case 'create':
         case 'update':
-          setBoardData((prevData) => ({
+          setBoardData((prevData: board) => ({
             ...prevData,
             ...payload,
           }));
           break;
 
         case 'add_list':
-          setBoardData((prevData) => ({
+          setBoardData((prevData: board) => ({
             ...prevData,
             lists: [...prevData.lists, payload],
           }));
@@ -263,7 +262,7 @@ const MainPage: React.FC<MainPageProps> = ({
 
         case 'edit_list_name':
           console.log('Received edit_list_name:', payload);
-          setBoardData((prevData) => {
+          setBoardData((prevData: board) => {
             const updatedLists = prevData.lists.map((list) =>
               list.id === payload.list_id ? { ...list, name: payload.new_name } : list
             );
@@ -274,7 +273,7 @@ const MainPage: React.FC<MainPageProps> = ({
 
         case 'reorder_lists':
           console.log('Received reorder_lists:', payload);
-          setBoardData((prevData) => {
+          setBoardData((prevData: board) => {
             const reorderedLists = payload.list_order.map((listId: number) =>
               prevData.lists.find((list) => list.id === listId)
             ).filter(Boolean); // Remove undefined
@@ -290,7 +289,7 @@ const MainPage: React.FC<MainPageProps> = ({
 
         case 'delete_list':
           setIsLoading(false);
-          setBoardData((prevData) => ({
+          setBoardData((prevData: board) => ({
             ...prevData,
             lists: prevData.lists.filter((list) => list.id !== payload.list_id),
           }));
@@ -298,7 +297,7 @@ const MainPage: React.FC<MainPageProps> = ({
 
         case 'add_task':
           console.log('Received add_task:', payload);
-          setBoardData((prevData) => {
+          setBoardData((prevData: board) => {
             const updatedLists = prevData.lists.map((list) => {
               if (list.id === payload.list) {
                 return { ...list, tasks: [...list.tasks, payload] };
@@ -313,7 +312,7 @@ const MainPage: React.FC<MainPageProps> = ({
 
         case 'delete_task':
           console.log('Received delete_task:', payload);
-          setBoardData((prevData) => {
+          setBoardData((prevData: board) => {
             const updatedLists = prevData.lists.map((list) => {
               if (list.id === payload.list_id) {
                 return { ...list, tasks: list.tasks.filter((task) => task.id !== payload.task_id) };
@@ -326,7 +325,7 @@ const MainPage: React.FC<MainPageProps> = ({
 
         case 'update_task':
           console.log('Received update_task:', payload);
-          setBoardData((prevData) => {
+          setBoardData((prevData: board) => {
             const updatedLists = prevData.lists.map((list) => ({
               ...list,
               tasks: list.tasks.map((task) =>
@@ -350,7 +349,7 @@ const MainPage: React.FC<MainPageProps> = ({
 
         case 'reorder_task':
           console.log('Received reorder_task:', payload);
-          setBoardData((prevData) => {
+          setBoardData((prevData: board) => {
             const updatedLists = prevData.lists.map((list) => {
               if (list.id === payload.list_id) {
                 const reorderedTasks = payload.task_order.map((taskId: number) =>
@@ -389,7 +388,7 @@ const MainPage: React.FC<MainPageProps> = ({
         case 'delete_board':
           console.log('Received delete_board:', payload);
           // Handle board deletion
-          setBoardData((prevData) => ({ ...prevData, lists: [] }));
+          setBoardData((prevData: board) => ({ ...prevData, lists: [] }));
           setSelectedBoard({
             id: 0,
             name: '',
@@ -430,11 +429,6 @@ const MainPage: React.FC<MainPageProps> = ({
       }
     };
   }, [selectedBoard?.id]);
-
-
-
-
-
 
 
 
@@ -536,16 +530,16 @@ const MainPage: React.FC<MainPageProps> = ({
     currentTheme, profileData, current_board_users,
     is_cur_Board_users_fetched, isLoading, setIsLoading,
     notificationData, isBoardsLoaded, setCurrent_board_users, setCurrentTheme,
-    socketRef,isAddingList, setIsAddingList, updatingListNameId , setUpdatingListNameId,
-    setUpdatingTaskId, updatingTaskId, setCompletingTaskId, completingTaskId, 
-    boardData , setBoardData, setAdding_new_list, Adding_new_list, setListName , ListName,
+    socketRef, isAddingList, setIsAddingList, updatingListNameId, setUpdatingListNameId,
+    setUpdatingTaskId, updatingTaskId, setCompletingTaskId, completingTaskId,
+    boardData, setBoardData, setAdding_new_list, Adding_new_list, setListName, ListName,
     listsContainerRef
   ]);
 
 
   useEffect(() => {
     console.log("listname changed:", ListName);
-  },[ListName])
+  }, [ListName])
 
   // const [isAddingList, setIsAddingList] = useState<boolean>(false);
   // const [updatingListNameId, setUpdatingListNameId] = useState<number | null>(null);
