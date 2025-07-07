@@ -76,12 +76,12 @@ const TaskUpdateModal: React.FC<TaskUpdateModalProps> = ({
     if (updatedTitle.trim() === '') {
       return;
     }
-    // If setUpdatingTaskId is provided, call it with the task ID
-    if (setUpdatingTaskId === undefined) {
-       return;
+    
+    // Only call setUpdatingTaskId if it's provided (optional)
+    if (setUpdatingTaskId) {
+      setUpdatingTaskId(task.id);
     }
     
-    setUpdatingTaskId(task.id);
     if (updatedTitle.trim()) {
       const combinedDueDateTime =
         updatedDueDate && updatedDueTime

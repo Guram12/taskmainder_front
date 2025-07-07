@@ -171,8 +171,15 @@ const MindMap: React.FC<MindMapProps> = ({
     }
 
     const token = localStorage.getItem('access_token');
-    const newSocket = new WebSocket(`${environment_urls.URLS.websockersURL}${maindmap_selected_board_data.id}/?token=${token}`);
+    if (!token) {
+      console.error('No access token found');
+      return;
+    }
 
+    const wsUrl = `${environment_urls.URLS.websockersURL}${maindmap_selected_board_data.id}/?token=${token}`;
+    console.log('Connecting to WebSocket:', wsUrl);
+    
+    const newSocket = new WebSocket(wsUrl);
     mindMapSocketRef.current = newSocket;
 
     newSocket.onopen = () => {
@@ -180,34 +187,38 @@ const MindMap: React.FC<MindMapProps> = ({
     };
 
     newSocket.onmessage = (event) => {
-      const data = JSON.parse(event.data);
-      const { action, payload } = data;
+      try {
+        const data = JSON.parse(event.data);
+        const { action, payload } = data;
+        console.log('Received WebSocket message:', { action, payload });
 
-      switch (action) {
-        case 'update_task':
-          console.log('Received update_task:', payload);
+        switch (action) {
+          case 'update_task':
+            console.log('Processing update_task:', payload);
 
-          setMaindmap_selected_board_data((prevData: board) => {
-            const updatedLists = prevData.lists.map((list) => ({
-              ...list,
-              tasks: list.tasks.map((task) =>
-                task.id === payload.id ? {
-                  ...task,
-                  title: payload.title,
-                  description: payload.description,
-                  due_date: payload.due_date,
-                  completed: payload.completed,
-                  priority: payload.priority,
-                  task_associated_users_id: payload.task_associated_users_id, // Add this line
-                } : task
-              ),
-            }));
-            return { ...prevData, lists: updatedLists };
-          });
-
-          break;
-        default:
-          console.log('Unknown action:', action);
+            setMaindmap_selected_board_data((prevData: board) => {
+              const updatedLists = prevData.lists.map((list) => ({
+                ...list,
+                tasks: list.tasks.map((task) =>
+                  task.id === payload.id ? {
+                    ...task,
+                    title: payload.title,
+                    description: payload.description,
+                    due_date: payload.due_date,
+                    completed: payload.completed,
+                    priority: payload.priority,
+                    task_associated_users_id: payload.task_associated_users_id,
+                  } : task
+                ),
+              }));
+              return { ...prevData, lists: updatedLists };
+            });
+            break;
+          default:
+            console.log('Unknown action:', action);
+        }
+      } catch (error) {
+        console.error('Error parsing WebSocket message:', error);
       }
     };
 
@@ -216,12 +227,16 @@ const MindMap: React.FC<MindMapProps> = ({
     };
 
     newSocket.onclose = (event) => {
-      console.log('WebSocket connection closed:', event);
+      console.log('WebSocket connection closed:', event.code, event.reason);
+      if (event.code !== 1000) { // Not a normal closure
+        console.log('WebSocket closed unexpectedly, attempting to reconnect...');
+        // Optionally implement reconnection logic here
+      }
     };
 
     return () => {
-      if (newSocket) {
-        newSocket.close();
+      if (newSocket && newSocket.readyState === WebSocket.OPEN) {
+        newSocket.close(1000, 'Component unmounting');
       }
     };
   }, [maindmap_selected_board_data]);
@@ -507,13 +522,6 @@ const MindMap: React.FC<MindMapProps> = ({
     setNodes((nds) => [...nds, newNode]);
   }, [nodes.length, setNodes]);
 
-  // Delete selected elements
-  const deleteSelectedElements = useCallback(() => {
-    setNodes((nds) => nds.filter(node => !selectedElements.includes(node.id)));
-    setEdges((eds) => eds.filter(edge => !selectedElements.includes(edge.id)));
-    setSelectedElements([]);
-  }, [selectedElements, setNodes, setEdges]);
-
 
   // Remove selected connections
   const removeSelectedConnections = useCallback(() => {
@@ -552,49 +560,46 @@ const MindMap: React.FC<MindMapProps> = ({
     setNodes(layoutedNodes);
   }, [nodes, setNodes]);
 
-  // Keyboard shortcuts
-  useEffect(() => {
-    const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === 'Delete' || event.key === 'Backspace') {
-        deleteSelectedElements();
-      } else if (event.key === 'n' && event.ctrlKey) {
-        event.preventDefault();
-        addNewNode();
-      } else if (event.key === 'c' && event.ctrlKey) {
-        event.preventDefault();
-      } else if (event.key === 'r' && event.ctrlKey) {
-        event.preventDefault();
-        removeSelectedConnections();
-      }
-    };
-
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [deleteSelectedElements, addNewNode, removeSelectedConnections]);
 
   // ======================================= task update ================================================
 
 
   // Send WebSocket message for task update
   const sendTaskUpdate = useCallback((taskData: any) => {
+    console.log('Attempting to send task update:', taskData);
+    console.log('WebSocket state:', mindMapSocketRef.current?.readyState);
+    
     if (mindMapSocketRef.current && mindMapSocketRef.current.readyState === WebSocket.OPEN) {
       const message = {
         action: 'update_task',
         payload: {
-          task_id: taskData.id, // Change from 'id' to 'task_id'
+          task_id: taskData.id,
           title: taskData.title,
           description: taskData.description,
           priority: taskData.priority,
           due_date: taskData.due_date,
           completed: taskData.completed,
           task_associated_users_id: taskData.task_associated_users_id,
-          user_timezone: Intl.DateTimeFormat().resolvedOptions().timeZone // Add user timezone
+          user_timezone: Intl.DateTimeFormat().resolvedOptions().timeZone
         }
       };
-      mindMapSocketRef.current.send(JSON.stringify(message));
-      console.log('Sent task update:', message);
+      
+      try {
+        mindMapSocketRef.current.send(JSON.stringify(message));
+        console.log('Successfully sent task update:', message);
+      } catch (error) {
+        console.error('Error sending WebSocket message:', error);
+      }
+    } else {
+      console.error('WebSocket is not connected. Current state:', 
+        mindMapSocketRef.current?.readyState === WebSocket.CONNECTING ? 'CONNECTING' :
+        mindMapSocketRef.current?.readyState === WebSocket.CLOSING ? 'CLOSING' :
+        mindMapSocketRef.current?.readyState === WebSocket.CLOSED ? 'CLOSED' : 'UNKNOWN'
+      );
     }
   }, []);
+
+
 
   // Handle task update using the existing modal's format
   const handleTaskUpdate = useCallback((
@@ -606,6 +611,7 @@ const MindMap: React.FC<MindMapProps> = ({
     task_associated_users_id: number[],
     priority: 'green' | 'orange' | 'red' | null
   ) => {
+    
     const updatedTaskData = {
       id: taskId,
       title: updatedTitle,
@@ -773,21 +779,8 @@ const MindMap: React.FC<MindMapProps> = ({
         >
           Remove Connections (Ctrl+R)
         </button>
-        <button
-          onClick={deleteSelectedElements}
-          disabled={selectedElements.length === 0}
-          style={{
-            background: selectedElements.length > 0 ? '#ef4444' : '#64748b',
-            color: 'white',
-            border: 'none',
-            padding: '5px 10px',
-            borderRadius: '4px',
-            cursor: 'pointer',
-            fontSize: '12px'
-          }}
-        >
-          Delete Selected (Del)
-        </button>
+
+
         {viewMode === 'board' && maindmap_selected_board_data && (
           <>
             <button
@@ -882,7 +875,7 @@ const MindMap: React.FC<MindMapProps> = ({
         onNodeClick={onNodeClick}
         fitView
         multiSelectionKeyCode="Shift"
-        deleteKeyCode="Delete"
+        deleteKeyCode={null} // This disables deletion with Delete key
         nodesDraggable={true}
         nodesConnectable={true}
         elementsSelectable={true}
