@@ -20,9 +20,10 @@ import ReactFlow, {
 import 'reactflow/dist/style.css';
 import { ThemeSpecs } from '../utils/theme';
 import { useEffect } from 'react';
-import { board, lists, tasks } from '../utils/interface';
+import { board, lists, tasks, ProfileData } from '../utils/interface';
 import axiosInstance from '../utils/axiosinstance';
 import { environment_urls } from '../utils/URLS';
+import TaskUpdateModal from './Boards/TaskUpdateModal';
 
 
 const initialNodes: Node[] = [
@@ -51,6 +52,17 @@ interface MindMapProps {
   setIsLoading: (isLoading: boolean) => void;
   isMobile: boolean;
   boards: board[];
+  allCurrentBoardUsers: ProfileData[];
+  setAllCurrentBoardUsers: (allCurrentBoardUsers: ProfileData[]) => void;
+}
+
+interface NodePosition {
+  x: number;
+  y: number;
+}
+
+interface SavedPositions {
+  [nodeId: string]: NodePosition;
 }
 
 const MindMap: React.FC<MindMapProps> = ({
@@ -58,13 +70,16 @@ const MindMap: React.FC<MindMapProps> = ({
   // setIsLoading,
   // isMobile,
   boards,
+  allCurrentBoardUsers,
+  setAllCurrentBoardUsers,
 }) => {
-
 
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
   const [selectedElements, setSelectedElements] = useState<string[]>([]);
   const [viewMode, setViewMode] = useState<'custom' | 'board'>('custom');
+  const [editingTask, setEditingTask] = useState<tasks | null>(null);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
 
   const [maindmap_selected_board_data, setMaindmap_selected_board_data] = useState<board>({
     id: 0,
@@ -79,9 +94,72 @@ const MindMap: React.FC<MindMapProps> = ({
     creation_date: '',
   });
 
-
   const mindMapSocketRef = useRef<WebSocket | null>(null);
+  const saveTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
+  // Function to get localStorage key for board positions
+  const getPositionStorageKey = useCallback((boardId: number) => {
+    return `mindmap_positions_board_${boardId}`;
+  }, []);
+
+  // Function to save positions to localStorage with debouncing
+  const savePositionsToStorage = useCallback((boardId: number, positions: SavedPositions) => {
+    if (saveTimeoutRef.current) {
+      clearTimeout(saveTimeoutRef.current);
+    }
+    
+    saveTimeoutRef.current = setTimeout(() => {
+      try {
+        const key = getPositionStorageKey(boardId);
+        localStorage.setItem(key, JSON.stringify(positions));
+        console.log('Saved positions for board:', boardId);
+      } catch (error) {
+        console.error('Error saving positions to localStorage:', error);
+      }
+    }, 500); // Debounce for 500ms
+  }, [getPositionStorageKey]);
+
+  // Function to load positions from localStorage
+  const loadPositionsFromStorage = useCallback((boardId: number): SavedPositions => {
+    try {
+      const key = getPositionStorageKey(boardId);
+      const savedData = localStorage.getItem(key);
+      if (savedData) {
+        return JSON.parse(savedData);
+      }
+    } catch (error) {
+      console.error('Error loading positions from localStorage:', error);
+    }
+    return {};
+  }, [getPositionStorageKey]);
+
+  // Custom onNodesChange handler that saves positions
+  const handleNodesChange: OnNodesChange = useCallback((changes: NodeChange[]) => {
+    onNodesChange(changes);
+    
+    // Check if any position changes occurred and we're in board mode
+    const hasPositionChange = changes.some(change => 
+      change.type === 'position' && change.position
+    );
+    
+    if (hasPositionChange && viewMode === 'board' && maindmap_selected_board_data?.id) {
+      // Get current positions after the change
+      setTimeout(() => {
+        setNodes((currentNodes) => {
+          const positions: SavedPositions = {};
+          currentNodes.forEach(node => {
+            positions[node.id] = {
+              x: node.position.x,
+              y: node.position.y
+            };
+          });
+          
+          savePositionsToStorage(maindmap_selected_board_data.id, positions);
+          return currentNodes;
+        });
+      }, 0);
+    }
+  }, [onNodesChange, viewMode, maindmap_selected_board_data?.id, savePositionsToStorage, setNodes]);
 
   useEffect(() => {
 
@@ -108,10 +186,9 @@ const MindMap: React.FC<MindMapProps> = ({
       switch (action) {
         case 'update_task':
           console.log('Received update_task:', payload);
-          // first create board object and than set it 
-          const updatedBoard = {
-            ...maindmap_selected_board_data,
-            lists: maindmap_selected_board_data.lists.map((list) => ({
+
+          setMaindmap_selected_board_data((prevData: board) => {
+            const updatedLists = prevData.lists.map((list) => ({
               ...list,
               tasks: list.tasks.map((task) =>
                 task.id === payload.id ? {
@@ -121,12 +198,13 @@ const MindMap: React.FC<MindMapProps> = ({
                   due_date: payload.due_date,
                   completed: payload.completed,
                   priority: payload.priority,
-                  task_associated_users_id: payload.task_associated_users_id,
+                  task_associated_users_id: payload.task_associated_users_id, // Add this line
                 } : task
               ),
-            }))
-          };
-          setMaindmap_selected_board_data(updatedBoard);
+            }));
+            return { ...prevData, lists: updatedLists };
+          });
+
           break;
         default:
           console.log('Unknown action:', action);
@@ -193,6 +271,9 @@ const MindMap: React.FC<MindMapProps> = ({
     const newEdges: Edge[] = [];
     const occupiedPositions: { x: number; y: number }[] = [];
 
+    // Load saved positions for this board
+    const savedPositions = loadPositionsFromStorage(board.id);
+
     // Calculate dynamic spacing based on content
     const totalLists = board.lists.length;
     const totalTasks = board.lists.reduce((acc, list) => acc + list.tasks.length, 0);
@@ -202,10 +283,13 @@ const MindMap: React.FC<MindMapProps> = ({
     const taskSpacing = Math.max(120, 100 + (totalTasks > 10 ? 20 : 0));
     const verticalSpacing = Math.max(100, 80 + (totalTasks > 15 ? 30 : 0));
 
-    // Main board node - centered
-    const boardPosition = { x: (totalLists * listSpacing) / 2, y: 50 };
+    // Main board node - centered or use saved position
+    const boardNodeId = `board-${board.id}`;
+    const defaultBoardPosition = { x: (totalLists * listSpacing) / 2, y: 50 };
+    const boardPosition = savedPositions[boardNodeId] || defaultBoardPosition;
+    
     const boardNode: Node = {
-      id: `board-${board.id}`,
+      id: boardNodeId,
       type: 'input',
       data: { label: board.name },
       position: boardPosition,
@@ -225,15 +309,18 @@ const MindMap: React.FC<MindMapProps> = ({
 
     // Create list nodes with improved positioning
     board.lists.forEach((list: lists, listIndex: number) => {
+      const listNodeId = `list-${list.id}`;
       const baseListPosition = {
         x: 100 + (listIndex * listSpacing),
         y: 250
       };
 
-      const listPosition = findNonOverlappingPosition(baseListPosition, occupiedPositions);
+      // Use saved position if available, otherwise find non-overlapping position
+      const listPosition = savedPositions[listNodeId] || 
+        findNonOverlappingPosition(baseListPosition, occupiedPositions);
 
       const listNode: Node = {
-        id: `list-${list.id}`,
+        id: listNodeId,
         data: { label: list.name },
         position: listPosition,
         style: {
@@ -265,6 +352,7 @@ const MindMap: React.FC<MindMapProps> = ({
       const taskStartY = listPosition.y + 150;
 
       list.tasks.forEach((task: tasks, taskIndex: number) => {
+        const taskNodeId = `task-${task.id}`;
         const row = Math.floor(taskIndex / tasksPerRow);
         const col = taskIndex % tasksPerRow;
 
@@ -274,10 +362,12 @@ const MindMap: React.FC<MindMapProps> = ({
           y: taskStartY + (row * verticalSpacing)
         };
 
-        const taskPosition = findNonOverlappingPosition(baseTaskPosition, occupiedPositions, 130);
+        // Use saved position if available, otherwise find non-overlapping position
+        const taskPosition = savedPositions[taskNodeId] || 
+          findNonOverlappingPosition(baseTaskPosition, occupiedPositions, 130);
 
         const taskNode: Node = {
-          id: `task-${task.id}`,
+          id: taskNodeId,
           data: {
             label: task.title.length > 20 ? task.title.substring(0, 20) + '...' : task.title,
             completed: task.completed,
@@ -323,7 +413,7 @@ const MindMap: React.FC<MindMapProps> = ({
     });
 
     return { nodes: newNodes, edges: newEdges };
-  }, []);
+  }, [loadPositionsFromStorage]);
 
   // ================================  Handle board selection change ==========================================================
 
@@ -482,9 +572,128 @@ const MindMap: React.FC<MindMapProps> = ({
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [deleteSelectedElements, addNewNode, removeSelectedConnections]);
 
+  // ======================================= task update ================================================
+
+
+  // Send WebSocket message for task update
+  const sendTaskUpdate = useCallback((taskData: any) => {
+    if (mindMapSocketRef.current && mindMapSocketRef.current.readyState === WebSocket.OPEN) {
+      const message = {
+        action: 'update_task',
+        payload: {
+          task_id: taskData.id, // Change from 'id' to 'task_id'
+          title: taskData.title,
+          description: taskData.description,
+          priority: taskData.priority,
+          due_date: taskData.due_date,
+          completed: taskData.completed,
+          task_associated_users_id: taskData.task_associated_users_id,
+          user_timezone: Intl.DateTimeFormat().resolvedOptions().timeZone // Add user timezone
+        }
+      };
+      mindMapSocketRef.current.send(JSON.stringify(message));
+      console.log('Sent task update:', message);
+    }
+  }, []);
+
+  // Handle task update using the existing modal's format
+  const handleTaskUpdate = useCallback((
+    taskId: number,
+    updatedTitle: string,
+    due_date: string | null,
+    description: string,
+    completed: boolean,
+    task_associated_users_id: number[],
+    priority: 'green' | 'orange' | 'red' | null
+  ) => {
+    const updatedTaskData = {
+      id: taskId,
+      title: updatedTitle,
+      description: description,
+      priority: priority,
+      due_date: due_date,
+      completed: completed,
+      task_associated_users_id: task_associated_users_id
+    };
+
+    // Send WebSocket message
+    sendTaskUpdate(updatedTaskData);
+
+    // Reset updating task ID
+  }, [sendTaskUpdate]);
+
+  // Handle task deletion (if needed)
+  const handleTaskDelete = useCallback((taskId: number, listId: number) => {
+    // You can implement task deletion via WebSocket if needed
+    console.log('Delete task:', taskId, 'from list:', listId);
+    // For now, just close the modal
+    setIsEditModalOpen(false);
+    setEditingTask(null);
+  }, []);
+
+  // Handle task node click for editing
+  const onNodeClick = useCallback((event: React.MouseEvent, node: Node) => {
+    console.log('Node clicked:', node);
+
+    // Only allow editing task nodes in board mode
+    if (viewMode === 'board' && node.id.startsWith('task-')) {
+      const taskId = parseInt(node.id.replace('task-', ''));
+
+      // Find the task in the current board data
+      let foundTask: tasks | null = null;
+      for (const list of maindmap_selected_board_data.lists) {
+        foundTask = list.tasks.find(task => task.id === taskId) || null;
+        if (foundTask) break;
+      }
+
+      if (foundTask) {
+        setEditingTask(foundTask);
+        setIsEditModalOpen(true);
+      }
+    }
+  }, [viewMode, maindmap_selected_board_data]);
+
+  // ============================ Get associated users for the current task============================
+  const getAssociatedUsers = useCallback((task: tasks): ProfileData[] => {
+    if (!task.task_associated_users_id) return [];
+
+    return allCurrentBoardUsers.filter(user =>
+      task.task_associated_users_id.includes(user.id)
+    );
+  }, [allCurrentBoardUsers]);
+
+
+
+  // ============== Update the convertBoardToMindMap function to regenerate nodes when board data changes==============
+  useEffect(() => {
+    if (viewMode === 'board' && maindmap_selected_board_data?.id) {
+      const { nodes: boardNodes, edges: boardEdges } = convertBoardToMindMap(maindmap_selected_board_data);
+      setNodes(boardNodes);
+      setEdges(boardEdges);
+    }
+  }, [maindmap_selected_board_data, viewMode, convertBoardToMindMap, setNodes, setEdges]);
+
+
+
 
   return (
     <div className='mindmap_main_container'>
+      {/* Task Update Modal */}
+      {isEditModalOpen && editingTask && (
+        <TaskUpdateModal
+          task={editingTask}
+          onClose={() => {
+            setIsEditModalOpen(false);
+            setEditingTask(null);
+          }}
+          updateTask={handleTaskUpdate}
+          deleteTask={handleTaskDelete}
+          currentTheme={currentTheme}
+          allCurrentBoardUsers={allCurrentBoardUsers}
+          associatedUsers={getAssociatedUsers(editingTask)}
+        />
+      )}
+
       {/* Board Selection Panel */}
       <div style={{
         zIndex: 1000,
@@ -521,8 +730,6 @@ const MindMap: React.FC<MindMapProps> = ({
             </option>
           ))}
         </select>
-
-
       </div>
 
       {/* Control Panel - Show for both modes */}
@@ -582,24 +789,49 @@ const MindMap: React.FC<MindMapProps> = ({
           Delete Selected (Del)
         </button>
         {viewMode === 'board' && maindmap_selected_board_data && (
-          <button
-            onClick={() => {
-              const { nodes: boardNodes, edges: boardEdges } = convertBoardToMindMap(maindmap_selected_board_data);
-              setNodes(boardNodes);
-              setEdges(boardEdges);
-            }}
-            style={{
-              background: '#059669',
-              color: 'white',
-              border: 'none',
-              padding: '5px 10px',
-              borderRadius: '4px',
-              cursor: 'pointer',
-              fontSize: '12px'
-            }}
-          >
-            Reset Board Layout
-          </button>
+          <>
+            <button
+              onClick={() => {
+                const { nodes: boardNodes, edges: boardEdges } = convertBoardToMindMap(maindmap_selected_board_data);
+                setNodes(boardNodes);
+                setEdges(boardEdges);
+              }}
+              style={{
+                background: '#059669',
+                color: 'white',
+                border: 'none',
+                padding: '5px 10px',
+                borderRadius: '4px',
+                cursor: 'pointer',
+                fontSize: '12px'
+              }}
+            >
+              Reset Board Layout
+            </button>
+            <button
+              onClick={() => {
+                if (window.confirm('Are you sure you want to clear all saved positions for this board?')) {
+                  const key = getPositionStorageKey(maindmap_selected_board_data.id);
+                  localStorage.removeItem(key);
+                  // Reload the board with default positions
+                  const { nodes: boardNodes, edges: boardEdges } = convertBoardToMindMap(maindmap_selected_board_data);
+                  setNodes(boardNodes);
+                  setEdges(boardEdges);
+                }
+              }}
+              style={{
+                background: '#ef4444',
+                color: 'white',
+                border: 'none',
+                padding: '5px 10px',
+                borderRadius: '4px',
+                cursor: 'pointer',
+                fontSize: '12px'
+              }}
+            >
+              Clear Saved Positions
+            </button>
+          </>
         )}
         <button
           onClick={autoLayout}
@@ -635,7 +867,7 @@ const MindMap: React.FC<MindMapProps> = ({
             Tasks: {maindmap_selected_board_data.lists.reduce((acc, list) => acc + list.tasks.length, 0)}
           </span>
           <span style={{ marginLeft: '10px', fontStyle: 'italic' }}>
-            You can modify this board-based mind map by adding nodes, connections, and rearranging elements.
+            Click on task nodes to edit them. Changes will be synchronized with other users.
           </span>
         </div>
       )}
@@ -643,10 +875,11 @@ const MindMap: React.FC<MindMapProps> = ({
       <ReactFlow
         nodes={nodes}
         edges={edges}
-        onNodesChange={onNodesChange}
+        onNodesChange={handleNodesChange}
         onEdgesChange={onEdgesChange}
         onConnect={onConnect}
         onSelectionChange={onSelectionChange}
+        onNodeClick={onNodeClick}
         fitView
         multiSelectionKeyCode="Shift"
         deleteKeyCode="Delete"

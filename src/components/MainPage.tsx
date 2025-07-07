@@ -170,6 +170,9 @@ const MainPage: React.FC<MainPageProps> = ({
   const [Adding_new_list, setAdding_new_list] = useState<boolean>(false);
   const [ListName, setListName] = useState<string>('');
 
+  const [allCurrentBoardUsers, setAllCurrentBoardUsers] = useState<ProfileData[]>([]);
+
+
   const [isAddingList, setIsAddingList] = useState<boolean>(false);
   const [updatingListNameId, setUpdatingListNameId] = useState<number | null>(null);
   const [loadingLists, setLoadingLists] = useState<{ [listId: number]: boolean }>({});
@@ -505,6 +508,8 @@ const MainPage: React.FC<MainPageProps> = ({
             Adding_new_list={Adding_new_list}
             setListName={setListName}
             ListName={ListName}
+            setAllCurrentBoardUsers={setAllCurrentBoardUsers}
+            allCurrentBoardUsers={allCurrentBoardUsers}
           />
         );
       case "Notification":
@@ -520,6 +525,8 @@ const MainPage: React.FC<MainPageProps> = ({
             setIsLoading={setIsLoading}
             isMobile={isMobile}
             boards={boards}
+            allCurrentBoardUsers={allCurrentBoardUsers}
+            setAllCurrentBoardUsers={setAllCurrentBoardUsers}
           />
         );
 
@@ -531,7 +538,7 @@ const MainPage: React.FC<MainPageProps> = ({
     socketRef, isAddingList, setIsAddingList, updatingListNameId, setUpdatingListNameId,
     setUpdatingTaskId, updatingTaskId, setCompletingTaskId, completingTaskId,
     boardData, setBoardData, setAdding_new_list, Adding_new_list, setListName, ListName,
-    listsContainerRef
+    listsContainerRef, allCurrentBoardUsers , setAllCurrentBoardUsers
   ]);
 
 

@@ -32,7 +32,7 @@ interface TaskUpdateModalProps {
   currentTheme: ThemeSpecs;
   allCurrentBoardUsers: ProfileData[];
   associatedUsers: ProfileData[];
-  setUpdatingTaskId: (updatingTaskId: number | null) => void;
+  setUpdatingTaskId?: (updatingTaskId: number | null) => void;
 
 }
 
@@ -76,7 +76,11 @@ const TaskUpdateModal: React.FC<TaskUpdateModalProps> = ({
     if (updatedTitle.trim() === '') {
       return;
     }
-
+    // If setUpdatingTaskId is provided, call it with the task ID
+    if (setUpdatingTaskId === undefined) {
+       return;
+    }
+    
     setUpdatingTaskId(task.id);
     if (updatedTitle.trim()) {
       const combinedDueDateTime =

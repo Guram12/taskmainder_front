@@ -64,6 +64,8 @@ export interface BoardsProps {
   Adding_new_list: boolean;
   setListName: (ListName: string) => void;
   ListName: string;
+  setAllCurrentBoardUsers: (allCurrentBoardUsers: ProfileData[]) => void;
+  allCurrentBoardUsers: ProfileData[];
 }
 
 const Boards: React.FC<BoardsProps> = ({
@@ -100,10 +102,11 @@ const Boards: React.FC<BoardsProps> = ({
   setAdding_new_list,
   setListName,
   ListName,
+  allCurrentBoardUsers,
+  setAllCurrentBoardUsers,
 }) => {
 
 
-  const [allCurrentBoardUsers, setAllCurrentBoardUsers] = useState<ProfileData[]>([]);
 
 
   const scrollRef = useRef<{ direction: 'left' | 'right' | null, speed: number }>({ direction: null, speed: 2 }); // Reduced speed
