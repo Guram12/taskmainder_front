@@ -1,5 +1,5 @@
 import "../styles/MainPage.css";
-import React, { useState, useMemo, useCallback, useEffect } from "react";
+import React, { useState, useMemo, useCallback, useEffect, useRef } from "react";
 import SidebarComponent from "./SideBar";
 import Settings from "./Settings";
 import Calendar from "./Calendar";
@@ -14,6 +14,10 @@ import { Board_Users } from "../utils/interface";
 import Notification from "./Notification";
 import GridLoader from "react-spinners/GridLoader";
 import { VscTriangleRight } from "react-icons/vsc";
+import MindMap from "./MindMap";
+import { environment_urls } from "../utils/URLS";
+import { ReactFlowProvider } from 'reactflow';
+
 
 
 interface MainPageProps {
@@ -145,6 +149,304 @@ const MainPage: React.FC<MainPageProps> = ({
   }, [selectedBoard]);
 
 
+
+
+
+
+  // ======================================   Main useEffect for websocket connection  =========================================
+  const socketRef = useRef<WebSocket | null>(null);
+  const listsContainerRef = useRef<HTMLDivElement | null>(null);
+
+  const [boardData, setBoardData] = useState<board>({
+    id: 0,
+    name: '',
+    created_at: '',
+    lists: [],
+    owner: '',
+    owner_email: '',
+    members: [],
+    board_users: [],
+    background_image: null,
+    creation_date: '',
+
+  });
+  const [Adding_new_list, setAdding_new_list] = useState<boolean>(false);
+  const [ListName, setListName] = useState<string>('');
+
+  const [allCurrentBoardUsers, setAllCurrentBoardUsers] = useState<ProfileData[]>([]);
+
+
+  const [isAddingList, setIsAddingList] = useState<boolean>(false);
+  const [updatingListNameId, setUpdatingListNameId] = useState<number | null>(null);
+  const [loadingLists, setLoadingLists] = useState<{ [listId: number]: boolean }>({});
+  const [updatingTaskId, setUpdatingTaskId] = useState<number | null>(null);
+  const [completingTaskId, setCompletingTaskId] = useState<number | null>(null);
+  const [adding_new_task_loader, setAdding_new_task_loader] = useState<{ listId: number | null }>({ listId: null });
+
+
+
+
+  useEffect(() => {
+    if (!selectedBoard?.id) return;
+
+    if (socketRef.current) {
+      socketRef.current.close();
+    }
+
+
+    const token = localStorage.getItem('access_token');
+    const newSocket = new WebSocket(`${environment_urls.URLS.websockersURL}${selectedBoard.id}/?token=${token}`);
+    // const newSocket = new WebSocket(`ws://localhost:8000/ws/boards/${selectedBoard.id}/?token=${token}`);
+
+    socketRef.current = newSocket;
+
+
+    newSocket.onopen = () => {
+      console.log('WebSocket connection established');
+    };
+
+    newSocket.onerror = (error) => console.log('WebSocket error:', error);
+
+    newSocket.onmessage = (event) => {
+      const data = JSON.parse(event.data);
+      const { action, payload } = data;
+
+      switch (action) {
+        case 'move_task':
+          const { task_id, source_list_id, target_list_id } = payload;
+          setBoardData((prevData: board) => {
+            const newBoardData = { ...prevData };
+            const sourceListIndex = newBoardData.lists.findIndex(list => list.id === source_list_id);
+            const targetListIndex = newBoardData.lists.findIndex(list => list.id === target_list_id);
+
+            if (sourceListIndex === -1 || targetListIndex === -1) return newBoardData;
+
+            const taskIndex = newBoardData.lists[sourceListIndex].tasks.findIndex(task => task.id === task_id);
+            if (taskIndex === -1) return newBoardData;
+
+            const [movedTask] = newBoardData.lists[sourceListIndex].tasks.splice(taskIndex, 1);
+            movedTask.list = target_list_id;
+            newBoardData.lists[targetListIndex].tasks.push(movedTask);
+
+            return newBoardData;
+          });
+          break;
+
+        case 'set_status':
+          console.log('Received set_status:', payload);
+          setBoardData((prevData: board) => {
+            const newBoardData = { ...prevData };
+            const userIndex = newBoardData.board_users.findIndex(user => user.id === payload.user_id);
+            if (userIndex !== -1) {
+              newBoardData.board_users[userIndex].user_status = payload.new_status;
+            }
+            return newBoardData;
+          });
+
+          const updatedBoardUsers = selectedBoard?.board_users.map((user) =>
+            user.id === payload.user_id ? { ...user, user_status: payload.new_status } : user
+          );
+
+          setCurrent_board_users(updatedBoardUsers || []);
+          break;
+
+        case 'create':
+        case 'update':
+          setBoardData((prevData: board) => ({
+            ...prevData,
+            ...payload,
+          }));
+          break;
+
+        case 'add_list':
+          setBoardData((prevData: board) => ({
+            ...prevData,
+            lists: [...prevData.lists, payload],
+          }));
+          setIsAddingList(false); // Clear loading state when adding list
+
+          break;
+
+        case 'edit_list_name':
+          console.log('Received edit_list_name:', payload);
+          setBoardData((prevData: board) => {
+            const updatedLists = prevData.lists.map((list) =>
+              list.id === payload.list_id ? { ...list, name: payload.new_name } : list
+            );
+            setUpdatingListNameId(null);
+            return { ...prevData, lists: updatedLists };
+          });
+          break;
+
+        case 'reorder_lists':
+          console.log('Received reorder_lists:', payload);
+          setBoardData((prevData: board) => {
+            const reorderedLists = payload.list_order.map((listId: number) =>
+              prevData.lists.find((list) => list.id === listId)
+            ).filter(Boolean); // Remove undefined
+
+            // Also add any lists that are in prevData.lists but not in list_order (to avoid losing lists)
+            const missingLists = prevData.lists.filter(
+              (list) => !payload.list_order.includes(list.id)
+            );
+
+            return { ...prevData, lists: [...reorderedLists, ...missingLists] };
+          });
+          break;
+
+        case 'delete_list':
+          setIsLoading(false);
+          setBoardData((prevData: board) => ({
+            ...prevData,
+            lists: prevData.lists.filter((list) => list.id !== payload.list_id),
+          }));
+          break;
+
+        case 'add_task':
+          console.log('Received add_task:', payload);
+          setBoardData((prevData: board) => {
+            const updatedLists = prevData.lists.map((list) => {
+              if (list.id === payload.list) {
+                return { ...list, tasks: [...list.tasks, payload] };
+              }
+              return list;
+            });
+
+            return { ...prevData, lists: updatedLists };
+          });
+          setLoadingLists((prev) => ({ ...prev, [payload.list]: false }));
+          setAdding_new_task_loader({ listId: null }); // Clear the skeleton loader
+          break;
+
+        case 'delete_task':
+          console.log('Received delete_task:', payload);
+          setBoardData((prevData: board) => {
+            const updatedLists = prevData.lists.map((list) => {
+              if (list.id === payload.list_id) {
+                return { ...list, tasks: list.tasks.filter((task) => task.id !== payload.task_id) };
+              }
+              return list;
+            });
+            return { ...prevData, lists: updatedLists };
+          });
+          break;
+
+        case 'update_task':
+          console.log('Received update_task:', payload);
+          setBoardData((prevData: board) => {
+            const updatedLists = prevData.lists.map((list) => ({
+              ...list,
+              tasks: list.tasks.map((task) =>
+                task.id === payload.id ? {
+                  ...task,
+                  title: payload.title,
+                  description: payload.description,
+                  due_date: payload.due_date,
+                  completed: payload.completed,
+                  priority: payload.priority,
+                  task_associated_users_id: payload.task_associated_users_id, // Add this line
+                } : task
+              ),
+            }));
+            setUpdatingTaskId(null);
+            setCompletingTaskId(null);
+            return { ...prevData, lists: updatedLists };
+          });
+          break;
+
+
+        case 'reorder_task':
+          console.log('Received reorder_task:', payload);
+          setBoardData((prevData: board) => {
+            const updatedLists = prevData.lists.map((list) => {
+              if (list.id === payload.list_id) {
+                const reorderedTasks = payload.task_order.map((taskId: number) =>
+                  list.tasks.find((task) => task.id === taskId)
+                );
+                return { ...list, tasks: reorderedTasks };
+              }
+              return list;
+            });
+            return { ...prevData, lists: updatedLists };
+          });
+          break;
+
+
+        case 'update_board_name':
+          console.log('Received update_board_name:', payload);
+          // Update boardData
+          setBoardData((prevData: board) => ({
+            ...prevData,
+            name: payload.new_name,
+          }));
+
+          if (typeof payload.new_name === 'string') {
+            // Update selectedBoard
+            const updatedBoard: board = {
+              ...selectedBoard,
+              name: payload.new_name,
+            };
+            setSelectedBoard(updatedBoard);
+
+            // Update boards array so Sidebar re-renders with new name
+            const new_boards: board[] = boards.map((board: board) =>
+              board.id === selectedBoard?.id ? { ...board, name: payload.new_name } : board
+            );
+            setBoards(new_boards);
+          } else {
+            console.error('Invalid board name:', payload.new_name);
+          }
+          break;
+
+
+        case 'delete_board':
+          console.log('Received delete_board:', payload);
+          // Handle board deletion
+          setBoardData((prevData: board) => ({ ...prevData, lists: [] }));
+          setSelectedBoard({
+            id: 0,
+            name: '',
+            created_at: '',
+            lists: [],
+            owner: '',
+            owner_email: '',
+            members: [],
+            board_users: [],
+            background_image: null,
+            creation_date: '',
+
+          });
+
+          if (payload.board_id) {
+            const updatedBoards = boards.filter((board) => board.id !== payload.board_id);
+            setBoards(updatedBoards);
+          }
+          break;
+
+
+        default:
+          break;
+      }
+    };
+
+    newSocket.onerror = (error) => {
+      console.error('WebSocket error:', error);
+    };
+
+    newSocket.onclose = (event) => {
+      console.log('WebSocket connection closed:', event);
+    };
+
+    return () => {
+      if (newSocket) {
+        newSocket.close();
+      }
+    };
+  }, [selectedBoard?.id]);
+
+
+
+
   const renderComponent = useCallback(() => {
 
     switch (selectedComponent) {
@@ -197,6 +499,31 @@ const MainPage: React.FC<MainPageProps> = ({
             setIsLoading={setIsLoading}
             is_members_refreshing={is_members_refreshing}
             isMobile={isMobile}
+
+            socketRef={socketRef}
+            listsContainerRef={listsContainerRef}
+            boardData={boardData}
+            setBoardData={setBoardData}
+            loadingLists={loadingLists}
+            setLoadingLists={setLoadingLists}
+            isAddingList={isAddingList}
+            setIsAddingList={setIsAddingList}
+            updatingListNameId={updatingListNameId}
+            setUpdatingListNameId={setUpdatingListNameId}
+
+            setUpdatingTaskId={setUpdatingTaskId}
+            updatingTaskId={updatingTaskId}
+            setCompletingTaskId={setCompletingTaskId}
+            completingTaskId={completingTaskId}
+            setAdding_new_list={setAdding_new_list}
+            Adding_new_list={Adding_new_list}
+            setListName={setListName}
+            ListName={ListName}
+            setAllCurrentBoardUsers={setAllCurrentBoardUsers}
+            allCurrentBoardUsers={allCurrentBoardUsers}
+            setAdding_new_task_loader={setAdding_new_task_loader}
+            adding_new_task_loader={adding_new_task_loader}
+            setSelectedComponent={setSelectedComponent}
           />
         );
       case "Notification":
@@ -205,14 +532,40 @@ const MainPage: React.FC<MainPageProps> = ({
           setIsLoading={setIsLoading}
           isMobile={isMobile}
         />;
+      case "MindMap":
+        return (
+          <ReactFlowProvider>
+            <MindMap
+              currentTheme={currentTheme}
+              boards={boards}
+              setBoards={setBoards}
+              allCurrentBoardUsers={allCurrentBoardUsers}
+            />
+          </ReactFlowProvider>
+
+        );
 
     }
   }, [selectedComponent, boards, selectedBoard,
     currentTheme, profileData, current_board_users,
     is_cur_Board_users_fetched, isLoading, setIsLoading,
     notificationData, isBoardsLoaded, setCurrent_board_users, setCurrentTheme,
-
+    socketRef, isAddingList, setIsAddingList, updatingListNameId, setUpdatingListNameId,
+    setUpdatingTaskId, updatingTaskId, setCompletingTaskId, completingTaskId,
+    boardData, setBoardData, setAdding_new_list, Adding_new_list, setListName, ListName,
+    listsContainerRef, allCurrentBoardUsers, setAllCurrentBoardUsers, adding_new_task_loader, setAdding_new_task_loader
   ]);
+
+
+  useEffect(() => {
+    console.log("listname changed:", ListName);
+  }, [ListName])
+
+  // const [isAddingList, setIsAddingList] = useState<boolean>(false);
+  // const [updatingListNameId, setUpdatingListNameId] = useState<number | null>(null);
+  // const [loadingLists, setLoadingLists] = useState<{ [listId: number]: boolean }>({});
+  // const [updatingTaskId, setUpdatingTaskId] = useState<number | null>(null);
+  // const [completingTaskId, setCompletingTaskId] = useState<number | null>(null);
 
 
 

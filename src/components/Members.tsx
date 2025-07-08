@@ -22,7 +22,7 @@ import { MdDeleteForever } from "react-icons/md";
 import { ProfileData } from "../utils/interface";
 import { PulseLoader } from "react-spinners";
 import { useTranslation } from 'react-i18next';
-
+import { BsFillDiagram3Fill } from "react-icons/bs";
 
 interface MembersProps {
   selectedBoard: board | null;
@@ -40,6 +40,8 @@ interface MembersProps {
   is_members_refreshing: boolean;
   isMobile: boolean;
   profileData: ProfileData;
+  setSelectedComponent: (component: string) => void;
+  setSelectedBoard: (board: board | null) => void;
 }
 
 const Members: React.FC<MembersProps> = ({
@@ -58,6 +60,8 @@ const Members: React.FC<MembersProps> = ({
   is_members_refreshing,
   isMobile,
   profileData,
+  setSelectedComponent,
+  setSelectedBoard,
 }) => {
 
   const [isUsersWindowOpen, setIsUsersWindowOpen] = useState<boolean>(false);
@@ -84,7 +88,6 @@ const Members: React.FC<MembersProps> = ({
   const is_current_user_admin = current_board_users.find(user => user.email === current_user_email)?.user_status === 'admin'
   // const is_current_user_member = current_board_users.find(user => user.email === current_user_email)?.user_status === 'member'
   const is_current_user_admin_or_owner = is_current_user_owner || is_current_user_admin
-
 
 
 
@@ -370,6 +373,18 @@ const Members: React.FC<MembersProps> = ({
   }
 
   // =====================================================================================================================
+  // const prev_mindmap_selected_board = localStorage.getItem('prev_mindmap_selected_board_id');
+
+  const handle_diagram_click = (board_id: string) => {
+    localStorage.setItem('prev_mindmap_selected_board_id', board_id);
+    setSelectedBoard(null)
+    setSelectedComponent('MindMap');
+  }
+
+
+
+
+  // =====================================================================================================================
 
   return (
     <div className="main_members_container">
@@ -487,10 +502,11 @@ const Members: React.FC<MembersProps> = ({
         )}
 
 
+
       {/* board name and icons for editing and deleting board, and board name */}
       {/* აქ არის ორი ვერსია სახელის აფდეითისთვის, ერტი მობაილისტვის და მეორე დესკტოპისთვის.isMobile  ის მიხედვით რენდერდება რომელიმე */}
       <>
-        <div className="board_name_cont">
+        <div className="board_name_cont" color={`${currentTheme['--main-text-coloure']}`} >
           <FaClipboardList className='board_icon' style={{ fill: `${currentTheme['--main-text-coloure']}` }} />
           {isMobileBoardNameUpdateModalOpen && isMobile && ReactDOM.createPortal(
             <div>
@@ -620,7 +636,12 @@ const Members: React.FC<MembersProps> = ({
           )}
         </div>
       </>
-
+      <div
+        className="members_diagram_icon_cont"
+        onClick={() => handle_diagram_click(String(selectedBoard?.id))}>
+        <BsFillDiagram3Fill className="members_diagram_icon" />
+        <p style={{ color: currentTheme['--main-text-coloure'] }} className="diagram_p"> Diagram</p>
+      </div>
 
       {/* current board users list and their permission in window */}
 
@@ -631,7 +652,7 @@ const Members: React.FC<MembersProps> = ({
             <div className="each_user_container" style={{ backgroundColor: `${currentTheme['--list-background-color']}` }} >
 
               <div className="close_icon_cont">
-                <p className="manage_users_text" 
+                <p className="manage_users_text"
                   style={{ color: currentTheme['--main-text-coloure'] }}
                 >{t('manage_users')}</p>
                 <div className="refresh_and_close_icons_cont" >
@@ -651,7 +672,7 @@ const Members: React.FC<MembersProps> = ({
                     type="text"
                     value={searchInput}
                     onChange={handleSearchInputChange}
-                    placeholder= {t('search_users_by_email')}
+                    placeholder={t('search_users_by_email')}
                     style={{
                       backgroundColor: currentTheme['--task-background-color'],
                       color: currentTheme['--main-text-coloure'],

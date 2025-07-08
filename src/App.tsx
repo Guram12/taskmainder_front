@@ -18,8 +18,7 @@ import { Board_Users } from './utils/interface';
 import { NotificationPayload } from './utils/interface';
 import ErrorPage from './components/ErrorPage';
 import { useTranslation } from 'react-i18next';
-
-
+import MindMap from './components/MindMap';
 
 
 
@@ -441,6 +440,15 @@ const App: React.FC = () => {
         <Route path="/register" element={<Register currentTheme={currentTheme} isMobile={isMobile} />} />
         <Route path="/password-reset" element={<PasswordReset currentTheme={currentTheme} />} />
         <Route path="/password-reset-confirm/:uid/:token" element={<PasswordResetConfirm currentTheme={currentTheme} />} />
+
+
+        <Route path="/mindmap" element={<MindMap
+          currentTheme={currentTheme}
+          boards={boards}
+          setBoards={setBoards}
+          allCurrentBoardUsers={[]}
+
+        />} />
         <Route path="/error" element={<ErrorPage currentTheme={currentTheme} />} />
         <Route path="/finish-profile" element={<FinishGoogleSignIn
           setIsAuthenticated={setIsAuthenticated}
