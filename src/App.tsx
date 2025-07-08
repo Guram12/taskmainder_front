@@ -426,7 +426,7 @@ const App: React.FC = () => {
         setLanguage={setLanguage}
         language={language}
         setSelectedComponent={setSelectedComponent}
-
+        setSelectedBoard={setSelectedBoard}
       />
       <Routes>
         <Route path="/"
