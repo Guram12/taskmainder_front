@@ -371,7 +371,6 @@ const MainPage: React.FC<MainPageProps> = ({
 
         case 'update_board_name':
           console.log('Received update_board_name:', payload);
-
           // Update boardData
           setBoardData((prevData: board) => ({
             ...prevData,
@@ -379,11 +378,18 @@ const MainPage: React.FC<MainPageProps> = ({
           }));
 
           if (typeof payload.new_name === 'string') {
+            // Update selectedBoard
             const updatedBoard: board = {
               ...selectedBoard,
               name: payload.new_name,
             };
             setSelectedBoard(updatedBoard);
+
+            // Update boards array so Sidebar re-renders with new name
+            const new_boards: board[] = boards.map((board: board) =>
+              board.id === selectedBoard?.id ? { ...board, name: payload.new_name } : board
+            );
+            setBoards(new_boards);
           } else {
             console.error('Invalid board name:', payload.new_name);
           }
@@ -514,7 +520,7 @@ const MainPage: React.FC<MainPageProps> = ({
             allCurrentBoardUsers={allCurrentBoardUsers}
             setAdding_new_task_loader={setAdding_new_task_loader}
             adding_new_task_loader={adding_new_task_loader}
-            
+            setSelectedComponent={setSelectedComponent}
           />
         );
       case "Notification":
@@ -527,11 +533,9 @@ const MainPage: React.FC<MainPageProps> = ({
         return (
           <MindMap
             currentTheme={currentTheme}
-            setIsLoading={setIsLoading}
-            isMobile={isMobile}
             boards={boards}
+            setBoards={setBoards}
             allCurrentBoardUsers={allCurrentBoardUsers}
-            setAllCurrentBoardUsers={setAllCurrentBoardUsers}
           />
         );
 
@@ -543,7 +547,7 @@ const MainPage: React.FC<MainPageProps> = ({
     socketRef, isAddingList, setIsAddingList, updatingListNameId, setUpdatingListNameId,
     setUpdatingTaskId, updatingTaskId, setCompletingTaskId, completingTaskId,
     boardData, setBoardData, setAdding_new_list, Adding_new_list, setListName, ListName,
-    listsContainerRef, allCurrentBoardUsers , setAllCurrentBoardUsers, adding_new_task_loader, setAdding_new_task_loader
+    listsContainerRef, allCurrentBoardUsers, setAllCurrentBoardUsers, adding_new_task_loader, setAdding_new_task_loader
   ]);
 
 

@@ -68,6 +68,7 @@ export interface BoardsProps {
   allCurrentBoardUsers: ProfileData[];
   setAdding_new_task_loader: (adding_new_task_loader: { listId: number | null }) => void;
   adding_new_task_loader: { listId: number | null };
+  setSelectedComponent: (component: string) => void;
 }
 
 const Boards: React.FC<BoardsProps> = ({
@@ -108,6 +109,7 @@ const Boards: React.FC<BoardsProps> = ({
   setAllCurrentBoardUsers,
   setAdding_new_task_loader,
   adding_new_task_loader,
+  setSelectedComponent,
 }) => {
 
 
@@ -717,6 +719,8 @@ const Boards: React.FC<BoardsProps> = ({
               is_members_refreshing={is_members_refreshing}
               isMobile={isMobile}
               profileData={profileData}
+              setSelectedComponent={setSelectedComponent}
+              setSelectedBoard={setSelectedBoard}
             />
           </div>
         )}

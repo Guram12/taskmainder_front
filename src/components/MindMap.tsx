@@ -28,6 +28,8 @@ import HashLoader from 'react-spinners/HashLoader';
 import { use } from 'i18next';
 import { openSync } from 'fs';
 import Mindmap_ListName_Modal from './Mindmap_ListName_Modal';
+import Mindmap_BoardName_Modal from './Mindmap_BoardName_Modal';
+
 
 const initialNodes: Node[] = [
   {
@@ -49,16 +51,6 @@ const initialNodes: Node[] = [
 ];
 
 
-
-interface MindMapProps {
-  currentTheme: ThemeSpecs;
-  setIsLoading: (isLoading: boolean) => void;
-  isMobile: boolean;
-  boards: board[];
-  allCurrentBoardUsers: ProfileData[];
-  setAllCurrentBoardUsers: (allCurrentBoardUsers: ProfileData[]) => void;
-}
-
 interface NodePosition {
   x: number;
   y: number;
@@ -68,13 +60,19 @@ interface SavedPositions {
   [nodeId: string]: NodePosition;
 }
 
+interface MindMapProps {
+  currentTheme: ThemeSpecs;
+  boards: board[];
+  setBoards: (boards: board[]) => void;
+  allCurrentBoardUsers: ProfileData[];
+}
+
+
 const MindMap: React.FC<MindMapProps> = ({
   currentTheme,
-  // setIsLoading,
-  // isMobile,
   boards,
   allCurrentBoardUsers,
-  setAllCurrentBoardUsers,
+  setBoards,
 }) => {
 
 
@@ -90,6 +88,11 @@ const MindMap: React.FC<MindMapProps> = ({
   const [editingList, setEditingList] = useState<lists | null>(null);
   const [isListEditModalOpen, setIsListEditModalOpen] = useState<boolean>(false);
   const [listNameInput, setListNameInput] = useState<string>('');
+
+  const [isBoardEditModalOpen, setIsBoardEditModalOpen] = useState<boolean>(false);
+  const [editingBoard, setEditingBoard] = useState<board | null>(null);
+  const [boardNameInput, setBoardNameInput] = useState<string>('');
+
 
 
   // Add new state for naming new items
@@ -326,6 +329,26 @@ const MindMap: React.FC<MindMapProps> = ({
               );
               return { ...prevData, lists: updatedLists };
             });
+            break;
+
+          // ================================= board cases ===================================================
+          case 'update_board_name':
+            console.log('Received update_board_name:', payload);
+            // Update boardData
+            setMaindmap_selected_board_data((prevData: board) => ({
+              ...prevData,
+              name: payload.new_name,
+            }));
+
+            if (typeof payload.new_name === 'string') {
+              const updatedBoard: board = {
+                ...maindmap_selected_board_data,
+                name: payload.new_name,
+              };
+              setMaindmap_selected_board_data(updatedBoard);
+            } else {
+              console.error('Invalid board name:', payload.new_name);
+            }
             break;
         }
       } catch (error) {
@@ -607,11 +630,71 @@ const MindMap: React.FC<MindMapProps> = ({
       console.error('WebSocket is not connected for creating task');
     }
   }, []);
-  // ========================================================================================================================
-  // ========================================================================================================================
+
+  // ============================== BOARD name update  ==========================================
+
+  const sendBoardNameUpdate = useCallback((boardId: number, newName: string) => {
+    const set_new_boards: board[] = boards.map((board) => {
+      if (board.id === boardId) {
+        return { ...board, name: newName };
+      }
+      return board;
+    });
+
+    setBoards(set_new_boards);
+
+    if (mindMapSocketRef.current && mindMapSocketRef.current.readyState === WebSocket.OPEN) {
+      const message = {
+        action: 'edit_board_name',
+        payload: {
+          board_id: boardId,
+          new_name: newName
+        }
+      };
+
+      try {
+        mindMapSocketRef.current.send(JSON.stringify(message));
+        console.log('Successfully sent board name update:', message);
+      } catch (error) {
+        console.error('Error sending board name update message:', error);
+      }
+    } else {
+      console.error('WebSocket is not connected for updating board name');
+    }
+  }, []);
+
+  const handleBoardNameUpdate = useCallback(() => {
+    if (!editingBoard || !boardNameInput.trim()) return;
+    sendBoardNameUpdate(editingBoard.id, boardNameInput.trim());
+    setIsBoardEditModalOpen(false);
+    setEditingBoard(null);
+    setBoardNameInput('');
+
+    if (mindMapSocketRef.current && mindMapSocketRef.current.readyState === WebSocket.OPEN) {
+      const message = {
+        action: 'update_board_name',
+        payload: {
+          board_id: editingBoard.id,
+          new_name: boardNameInput.trim()
+        }
+      };
+
+      try {
+        mindMapSocketRef.current.send(JSON.stringify(message));
+        console.log('Successfully sent board name update:', message);
+      } catch (error) {
+        console.error('Error sending board name update message:', error);
+      }
+    }
+
+  }, [editingBoard, boardNameInput, sendBoardNameUpdate]);
+
+  const handleCancelBoardEdit = useCallback(() => {
+    setIsBoardEditModalOpen(false);
+    setEditingBoard(null);
+    setBoardNameInput('');
+  }, []);
   // ============================== Send WebSocket message for creating new LIST ==========================================
-  // ========================================================================================================================
-  // ========================================================================================================================
 
   const sendCreateList = useCallback((boardId: number, listName: string) => {
     if (mindMapSocketRef.current && mindMapSocketRef.current.readyState === WebSocket.OPEN) {
@@ -633,6 +716,9 @@ const MindMap: React.FC<MindMapProps> = ({
       console.error('WebSocket is not connected for creating list');
     }
   }, []);
+
+
+  // =========================================== list name update =========================================================
 
   const sendListNameUpdate = useCallback((listId: number, newName: string) => {
     if (mindMapSocketRef.current && mindMapSocketRef.current.readyState === WebSocket.OPEN) {
@@ -980,6 +1066,17 @@ const MindMap: React.FC<MindMapProps> = ({
           setIsListEditModalOpen(true);
         }
       }
+
+      else if (node.id.startsWith('board-')) {
+        const boardId = parseInt(node.id.replace('board-', ''));
+
+        // Use the main board object for editing
+        if (maindmap_selected_board_data.id === boardId) {
+          setEditingBoard(maindmap_selected_board_data);
+          setBoardNameInput(maindmap_selected_board_data.name);
+          setIsBoardEditModalOpen(true);
+        }
+      }
     }
   }, [viewMode, maindmap_selected_board_data]);
 
@@ -1034,6 +1131,17 @@ const MindMap: React.FC<MindMapProps> = ({
           setListNameInput={setListNameInput}
           handleListNameUpdate={handleListNameUpdate}
 
+        />
+      )}
+      {isBoardEditModalOpen && editingBoard && (
+        <Mindmap_BoardName_Modal
+          editingBoard={editingBoard}
+          isBoardEditModalOpen={isBoardEditModalOpen}
+          currentTheme={currentTheme}
+          handleCancelBoardEdit={handleCancelBoardEdit}
+          boardNameInput={boardNameInput}
+          setBoardNameInput={setBoardNameInput}
+          handleBoardNameUpdate={handleBoardNameUpdate}
         />
       )}
 

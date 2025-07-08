@@ -35,14 +35,51 @@
   margin-left: 20px;
   margin-right: 20px;
   cursor: pointer;
-  color: white;
-
+  transition: all 0.3s ease;
 }
+
+.add_user_icon:hover {
+  transform: scale(1.2);
+  color: seagreen !important;
+}
+
+
+.members_diagram_icon_cont {
+  height: 27px;
+  margin-left: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 15px;
+  cursor: pointer;
+}
+
+.members_diagram_icon {
+  height: 27px;
+  min-height: 27px;
+  min-width: 27px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+
+.diagram_p {
+  font-size: 16px;
+  font-weight: bold;
+  margin: 0px;
+}
+/* when hover  members_diagram_icon_cont, change colore of members_diagram_icon */
+.members_diagram_icon_cont:hover .members_diagram_icon {
+  transform: scale(1.2);
+  color: mediumseagreen !important;
+}
+
+
 
 /* ============================== board name cont styles ========================= */
 
 .board_name_cont {
-  margin-left: 50px;
+  margin-left: 30px;
   display: flex;
   justify-content: flex-start;
   align-items: center;
