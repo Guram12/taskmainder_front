@@ -27,7 +27,7 @@ import TaskUpdateModal from './Boards/TaskUpdateModal';
 import HashLoader from 'react-spinners/HashLoader';
 import { use } from 'i18next';
 import { openSync } from 'fs';
-
+import Mindmap_ListName_Modal from './Mindmap_ListName_Modal';
 
 const initialNodes: Node[] = [
   {
@@ -85,7 +85,13 @@ const MindMap: React.FC<MindMapProps> = ({
   const [selectedElements, setSelectedElements] = useState<string[]>([]);
   const [viewMode, setViewMode] = useState<'custom' | 'board'>('custom');
   const [editingTask, setEditingTask] = useState<tasks | null>(null);
-  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [isEditModalOpen, setIsEditModalOpen] = useState<boolean>(false);
+
+  const [editingList, setEditingList] = useState<lists | null>(null);
+  const [isListEditModalOpen, setIsListEditModalOpen] = useState<boolean>(false);
+  const [listNameInput, setListNameInput] = useState<string>('');
+
+
   // Add new state for naming new items
   const [newItemModal, setNewItemModal] = useState<{
     isOpen: boolean;
@@ -104,8 +110,8 @@ const MindMap: React.FC<MindMapProps> = ({
   const prev_mindmap_selected_board = localStorage.getItem('prev_mindmap_selected_board_id');
 
 
+  //-------------  when page opens automatically select boar from localstorage prev selected ---------
   useEffect(() => {
-    // when page opens automatically select boar from localstorage prev selected 
     if (prev_mindmap_selected_board) {
       const selectedBoard = boards.find(board => board.id === parseInt(prev_mindmap_selected_board));
       if (selectedBoard) {
@@ -117,7 +123,7 @@ const MindMap: React.FC<MindMapProps> = ({
       }
     }
   }, []);
-
+  // --------------------------------------------------------------------------------------------------
   const [maindmap_selected_board_data, setMaindmap_selected_board_data] = useState<board>({
     id: 0,
     name: '',
@@ -156,7 +162,7 @@ const MindMap: React.FC<MindMapProps> = ({
     }, 500); // Debounce for 500ms
   }, [getPositionStorageKey]);
 
-  // Function to load positions from localStorage
+  //================================ Function to load positions from localStorage =========================================
   const loadPositionsFromStorage = useCallback((boardId: number): SavedPositions => {
     try {
       const key = getPositionStorageKey(boardId);
@@ -198,8 +204,8 @@ const MindMap: React.FC<MindMapProps> = ({
     }
   }, [onNodesChange, viewMode, maindmap_selected_board_data?.id, savePositionsToStorage, setNodes]);
 
+  // =============================== websocket playload useefect for boarddata update   ========================================
   useEffect(() => {
-
     if (!maindmap_selected_board_data?.id) return;
 
     // Clean up previous socket connection
@@ -311,6 +317,15 @@ const MindMap: React.FC<MindMapProps> = ({
               lists: [...prevData.lists, payload],
             }));
 
+            break;
+          case 'edit_list_name':
+            console.log('Received edit_list_name:', payload);
+            setMaindmap_selected_board_data((prevData: board) => {
+              const updatedLists = prevData.lists.map((list) =>
+                list.id === payload.list_id ? { ...list, name: payload.new_name } : list
+              );
+              return { ...prevData, lists: updatedLists };
+            });
             break;
         }
       } catch (error) {
@@ -551,7 +566,7 @@ const MindMap: React.FC<MindMapProps> = ({
 
     const board = boards.find(b => b.id === parseInt(boardId));
     if (board) {
-      setMaindmap_selected_board_data(board); // Add this line to trigger WebSocket connection
+      setMaindmap_selected_board_data(board);
       setViewMode('board');
       const { nodes: boardNodes, edges: boardEdges } = convertBoardToMindMap(board);
       setNodes(boardNodes);
@@ -592,8 +607,12 @@ const MindMap: React.FC<MindMapProps> = ({
       console.error('WebSocket is not connected for creating task');
     }
   }, []);
+  // ========================================================================================================================
+  // ========================================================================================================================
+  // ============================== Send WebSocket message for creating new LIST ==========================================
+  // ========================================================================================================================
+  // ========================================================================================================================
 
-  // Send WebSocket message for creating new list
   const sendCreateList = useCallback((boardId: number, listName: string) => {
     if (mindMapSocketRef.current && mindMapSocketRef.current.readyState === WebSocket.OPEN) {
       const message = {
@@ -615,8 +634,51 @@ const MindMap: React.FC<MindMapProps> = ({
     }
   }, []);
 
+  const sendListNameUpdate = useCallback((listId: number, newName: string) => {
+    if (mindMapSocketRef.current && mindMapSocketRef.current.readyState === WebSocket.OPEN) {
+      const message = {
+        action: 'edit_list_name',
+        payload: {
+          list_id: listId,
+          new_name: newName
+        }
+      };
 
-  // Handle new connections with smart detection
+      try {
+        mindMapSocketRef.current.send(JSON.stringify(message));
+        console.log('Successfully sent list name update:', message);
+      } catch (error) {
+        console.error('Error sending list name update message:', error);
+      }
+    } else {
+      console.error('WebSocket is not connected for updating list name');
+    }
+  }, []);
+  // ------------------------------------------------------------------------------------------
+  const handleListNameUpdate = useCallback(() => {
+    if (!editingList || !listNameInput.trim()) return;
+
+    sendListNameUpdate(editingList.id, listNameInput.trim());
+
+    // Close modal
+    setIsListEditModalOpen(false);
+    setEditingList(null);
+    setListNameInput('');
+  }, [editingList, listNameInput, sendListNameUpdate]);
+
+  // Cancel list editing
+  const handleCancelListEdit = useCallback(() => {
+    setIsListEditModalOpen(false);
+    setEditingList(null);
+    setListNameInput('');
+  }, []);
+
+  // ========================================================================================================================
+  // ========================================================================================================================
+  // ========================================================================================================================
+
+
+  //  ============================= Handle new connections with smart detection  ===========================================
   const onConnect: OnConnect = useCallback(
     (params: Connection) => {
       console.log('Connection created:', params);
@@ -826,7 +888,7 @@ const MindMap: React.FC<MindMapProps> = ({
 
 
 
-  // Handle task update using the existing modal's format
+  // ================================= Handle task update using the existing modal's format===========================
   const handleTaskUpdate = useCallback((
     taskId: number,
     updatedTitle: string,
@@ -846,8 +908,6 @@ const MindMap: React.FC<MindMapProps> = ({
       completed: completed,
       task_associated_users_id: task_associated_users_id
     };
-
-    // Send WebSocket message
     sendTaskUpdate(updatedTaskData);
 
     // Reset updating task ID
@@ -880,24 +940,45 @@ const MindMap: React.FC<MindMapProps> = ({
     }
   }, []);
 
-  // ============================= Handle task node click for editing===================================
+  // ========================================================================================================================
+  // ========================================================================================================================
+  // ====================================== Handle TASK node click for editing ==============================================
+  // ========================================================================================================================
+  // ========================================================================================================================
+
   const onNodeClick = useCallback((event: React.MouseEvent, node: Node) => {
     console.log('Node clicked:', node);
     console.log('Mouse event:', event);
-    // Only allow editing task nodes in board mode
-    if (viewMode === 'board' && node.id.startsWith('task-')) {
-      const taskId = parseInt(node.id.replace('task-', ''));
 
-      // Find the task in the current board data
-      let foundTask: tasks | null = null;
-      for (const list of maindmap_selected_board_data.lists) {
-        foundTask = list.tasks.find(task => task.id === taskId) || null;
-        if (foundTask) break;
+    if (viewMode === 'board') {
+      // Handle task node clicks
+      if (node.id.startsWith('task-')) {
+        const taskId = parseInt(node.id.replace('task-', ''));
+
+        // Find the task in the current board data
+        let foundTask: tasks | null = null;
+        for (const list of maindmap_selected_board_data.lists) {
+          foundTask = list.tasks.find(task => task.id === taskId) || null;
+          if (foundTask) break;
+        }
+
+        if (foundTask) {
+          setEditingTask(foundTask);
+          setIsEditModalOpen(true);
+        }
       }
+      // Handle list node clicks
+      else if (node.id.startsWith('list-')) {
+        const listId = parseInt(node.id.replace('list-', ''));
 
-      if (foundTask) {
-        setEditingTask(foundTask);
-        setIsEditModalOpen(true);
+        // Find the list in the current board data
+        const foundList = maindmap_selected_board_data.lists.find(list => list.id === listId);
+
+        if (foundList) {
+          setEditingList(foundList);
+          setListNameInput(foundList.name);
+          setIsListEditModalOpen(true);
+        }
       }
     }
   }, [viewMode, maindmap_selected_board_data]);
@@ -940,6 +1021,19 @@ const MindMap: React.FC<MindMapProps> = ({
           currentTheme={currentTheme}
           allCurrentBoardUsers={allCurrentBoardUsers}
           associatedUsers={getAssociatedUsers(editingTask)}
+        />
+      )}
+
+      {isListEditModalOpen && editingList && (
+        <Mindmap_ListName_Modal
+          editingList={editingList}
+          isListEditModalOpen={isListEditModalOpen}
+          currentTheme={currentTheme}
+          handleCancelListEdit={handleCancelListEdit}
+          listNameInput={listNameInput}
+          setListNameInput={setListNameInput}
+          handleListNameUpdate={handleListNameUpdate}
+
         />
       )}
 
