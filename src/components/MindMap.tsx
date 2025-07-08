@@ -16,6 +16,8 @@ import ReactFlow, {
   OnConnect,
   OnEdgesChange,
   OnNodesChange,
+  ReactFlowInstance,
+
 } from 'reactflow';
 import 'reactflow/dist/style.css';
 import { ThemeSpecs } from '../utils/theme';
@@ -142,6 +144,8 @@ const MindMap: React.FC<MindMapProps> = ({
 
   const mindMapSocketRef = useRef<WebSocket | null>(null);
   const saveTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+
+  const reactFlowInstanceRef = useRef<ReactFlowInstance | null>(null);
 
   // Function to get localStorage key for board positions
   const getPositionStorageKey = useCallback((boardId: number) => {
@@ -1091,15 +1095,22 @@ const MindMap: React.FC<MindMapProps> = ({
 
 
 
-  // ============== Update the convertBoardToMindMap function to regenerate nodes when board data changes==============
+  // ============== Update the convertBoardToMindMap function to regenerate nodes when board data changes ==============
+
   useEffect(() => {
     if (viewMode === 'board' && maindmap_selected_board_data?.id) {
       const { nodes: boardNodes, edges: boardEdges } = convertBoardToMindMap(maindmap_selected_board_data);
       setNodes(boardNodes);
       setEdges(boardEdges);
+
+      // Call fitView after nodes/edges are set and rendered
+      setTimeout(() => {
+        if (reactFlowInstanceRef.current) {
+          reactFlowInstanceRef.current.fitView();
+        }
+      }, 0);
     }
   }, [maindmap_selected_board_data, viewMode, convertBoardToMindMap, setNodes, setEdges]);
-
 
 
 
@@ -1376,6 +1387,7 @@ const MindMap: React.FC<MindMapProps> = ({
       {diagram_loading ? (
         <div className="diagram_loader_container"><HashLoader color={currentTheme['--main-text-coloure']} className='hashloader' /></div>
       ) : (
+
         <ReactFlow
           nodes={nodes}
           edges={edges}
@@ -1392,6 +1404,9 @@ const MindMap: React.FC<MindMapProps> = ({
           elementsSelectable={true}
           style={{
             background: currentTheme['--background-color'],
+          }}
+          onInit={(instance) => {
+            reactFlowInstanceRef.current = instance;
           }}
         >
           <Controls />
@@ -1421,6 +1436,7 @@ const MindMap: React.FC<MindMapProps> = ({
             color={currentTheme['--due-date-color']}
           />
         </ReactFlow>
+
       )}
 
     </div>

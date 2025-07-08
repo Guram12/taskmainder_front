@@ -16,6 +16,9 @@ import GridLoader from "react-spinners/GridLoader";
 import { VscTriangleRight } from "react-icons/vsc";
 import MindMap from "./MindMap";
 import { environment_urls } from "../utils/URLS";
+import { ReactFlowProvider } from 'reactflow';
+
+
 
 interface MainPageProps {
   currentTheme: ThemeSpecs;
@@ -531,12 +534,15 @@ const MainPage: React.FC<MainPageProps> = ({
         />;
       case "MindMap":
         return (
-          <MindMap
-            currentTheme={currentTheme}
-            boards={boards}
-            setBoards={setBoards}
-            allCurrentBoardUsers={allCurrentBoardUsers}
-          />
+          <ReactFlowProvider>
+            <MindMap
+              currentTheme={currentTheme}
+              boards={boards}
+              setBoards={setBoards}
+              allCurrentBoardUsers={allCurrentBoardUsers}
+            />
+          </ReactFlowProvider>
+
         );
 
     }
