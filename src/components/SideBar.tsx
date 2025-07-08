@@ -23,6 +23,7 @@ import { IoIosAddCircleOutline } from "react-icons/io";
 import { GrFormCheckmark } from "react-icons/gr";
 import { HiXMark } from "react-icons/hi2";
 import { useTranslation } from 'react-i18next';
+import { FaSitemap } from "react-icons/fa";
 
 
 interface SidebarProps {
@@ -549,10 +550,9 @@ const SidebarComponent: React.FC<SidebarProps> = ({
                     fontWeight: 'bold',
                     transition: 'all 0.3s',
                   }}
-                  icon={<FaCalendarAlt className='sidebar_big_icon' />}
+                  icon={<FaSitemap className='sidebar_big_icon' />}
                   onClick={() => handel_sidebar_page_click("MindMap")}
-                >mindmap</MenuItem>
-
+                >Diagrams</MenuItem>
               </Menu>
 
 

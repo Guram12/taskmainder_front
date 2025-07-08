@@ -1,13 +1,11 @@
 import axios from 'axios';
 import { environment_urls } from './URLS';
 
-
 const baseURL = environment_urls.URLS.baseURL;
-
-
 
 const axiosInstance = axios.create({
   baseURL: baseURL,
+  timeout: 10000, // Add timeout
 });
 
 // Request interceptor to add the access token to headers
@@ -33,7 +31,15 @@ axiosInstance.interceptors.response.use(
     const originalRequest = error.config;
     const refreshToken = localStorage.getItem('refresh_token');
 
-    if (error.response.status === 401 && refreshToken && !originalRequest._retry) {
+    // Handle network errors (timeout, SSL redirect issues, etc.)
+    if (!error.response) {
+      console.error('Network error:', error.message);
+      // If it's a network error, don't try to refresh tokens
+      return Promise.reject(error);
+    }
+
+    // Check if error.response exists before accessing its properties
+    if (error.response && error.response.status === 401 && refreshToken && !originalRequest._retry) {
       originalRequest._retry = true;
       try {
         const response = await axios.post(`${baseURL}/auth/token/refresh/`, {
@@ -48,7 +54,7 @@ axiosInstance.interceptors.response.use(
         localStorage.removeItem('refresh_token');
         // window.location.href = '/'; 
       }
-    } else if (error.response.status === 401) {
+    } else if (error.response && error.response.status === 401) {
       localStorage.removeItem('access_token');
       localStorage.removeItem('refresh_token');
       // window.location.href = '/'; 

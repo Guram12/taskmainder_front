@@ -24,6 +24,9 @@ import { board, lists, tasks, ProfileData } from '../utils/interface';
 import axiosInstance from '../utils/axiosinstance';
 import { environment_urls } from '../utils/URLS';
 import TaskUpdateModal from './Boards/TaskUpdateModal';
+import HashLoader from 'react-spinners/HashLoader';
+import { use } from 'i18next';
+import { openSync } from 'fs';
 
 
 const initialNodes: Node[] = [
@@ -74,6 +77,9 @@ const MindMap: React.FC<MindMapProps> = ({
   setAllCurrentBoardUsers,
 }) => {
 
+
+
+  const [diagram_loading, setDiagram_loading] = useState<boolean>(false);
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
   const [selectedElements, setSelectedElements] = useState<string[]>([]);
@@ -94,6 +100,23 @@ const MindMap: React.FC<MindMapProps> = ({
     targetId: '',
     tempNodeId: ''
   });
+
+  const prev_mindmap_selected_board = localStorage.getItem('prev_mindmap_selected_board_id');
+
+
+  useEffect(() => {
+    // when page opens automatically select boar from localstorage prev selected 
+    if (prev_mindmap_selected_board) {
+      const selectedBoard = boards.find(board => board.id === parseInt(prev_mindmap_selected_board));
+      if (selectedBoard) {
+        setMaindmap_selected_board_data(selectedBoard);
+        setViewMode('board');
+        fetchBoardData(selectedBoard.id.toString());
+      } else {
+        return;
+      }
+    }
+  }, []);
 
   const [maindmap_selected_board_data, setMaindmap_selected_board_data] = useState<board>({
     id: 0,
@@ -191,7 +214,6 @@ const MindMap: React.FC<MindMapProps> = ({
     }
 
     const wsUrl = `${environment_urls.URLS.websockersURL}${maindmap_selected_board_data.id}/?token=${token}`;
-    console.log('Connecting to WebSocket:', wsUrl);
 
     const newSocket = new WebSocket(wsUrl);
     mindMapSocketRef.current = newSocket;
@@ -263,7 +285,18 @@ const MindMap: React.FC<MindMapProps> = ({
               return { ...prevData, lists: updatedLists };
             });
             break;
-
+          case 'delete_task':
+            console.log('Received delete_task:', payload);
+            setMaindmap_selected_board_data((prevData: board) => {
+              const updatedLists = prevData.lists.map((list) => {
+                if (list.id === payload.list_id) {
+                  return { ...list, tasks: list.tasks.filter((task) => task.id !== payload.task_id) };
+                }
+                return list;
+              });
+              return { ...prevData, lists: updatedLists };
+            });
+            break;
           // ================================= list cases ===================================================
           case 'delete_list':
             setMaindmap_selected_board_data((prevData: board) => ({
@@ -505,12 +538,15 @@ const MindMap: React.FC<MindMapProps> = ({
       setViewMode('board');
     } catch (error) {
       console.error('Error fetching board data:', error);
+    } finally {
+      setDiagram_loading(false);
     }
   };
 
 
   const handleBoardChange = useCallback((boardId: string) => {
-
+    localStorage.setItem('prev_mindmap_selected_board_id', boardId);
+    setDiagram_loading(true);
     fetchBoardData(boardId);
 
     const board = boards.find(b => b.id === parseInt(boardId));
@@ -540,7 +576,7 @@ const MindMap: React.FC<MindMapProps> = ({
       const message = {
         action: 'add_task',
         payload: {
-          list: listId, 
+          list: listId,
           title: taskName,
 
         }
@@ -824,11 +860,30 @@ const MindMap: React.FC<MindMapProps> = ({
     // For now, just close the modal
     setIsEditModalOpen(false);
     setEditingTask(null);
+    if (mindMapSocketRef.current && mindMapSocketRef.current.readyState === WebSocket.OPEN) {
+      const message = {
+        action: 'delete_task',
+        payload: {
+          task_id: taskId,
+          list_id: listId
+        }
+      };
+
+      try {
+        mindMapSocketRef.current.send(JSON.stringify(message));
+        console.log('Successfully sent delete task:', message);
+      } catch (error) {
+        console.error('Error sending delete task message:', error);
+      }
+    } else {
+      console.error('WebSocket is not connected for deleting task');
+    }
   }, []);
 
-  // Handle task node click for editing
+  // ============================= Handle task node click for editing===================================
   const onNodeClick = useCallback((event: React.MouseEvent, node: Node) => {
     console.log('Node clicked:', node);
+    console.log('Mouse event:', event);
     // Only allow editing task nodes in board mode
     if (viewMode === 'board' && node.id.startsWith('task-')) {
       const taskId = parseInt(node.id.replace('task-', ''));
@@ -890,26 +945,14 @@ const MindMap: React.FC<MindMapProps> = ({
 
       {/* New Item Creation Modal */}
       {newItemModal.isOpen && (
-        <div style={{
-          position: 'fixed',
-          top: 0,
-          left: 0,
-          right: 0,
-          bottom: 0,
-          backgroundColor: 'rgba(0, 0, 0, 0.7)',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          zIndex: 10000
-        }}>
-          <div style={{
-            background: currentTheme['--background-color'],
-            padding: '20px',
-            borderRadius: '8px',
-            border: `1px solid ${currentTheme['--border-color']}`,
-            minWidth: '300px',
-            maxWidth: '400px'
-          }}>
+        <div className='diagram_new_item_container'>
+          <div
+            className='new_item_modal'
+            style={{
+              background: currentTheme['--background-color'],
+              border: `1px solid ${currentTheme['--border-color']}`,
+            }}
+          >
             <h3 style={{
               color: currentTheme['--main-text-coloure'],
               marginBottom: '15px',
@@ -928,15 +971,10 @@ const MindMap: React.FC<MindMapProps> = ({
                   handleCreateNewItem();
                 }
               }}
+              className='new_item_input'
               style={{
-                width: '100%',
-                padding: '8px',
-                border: `1px solid ${currentTheme['--border-color']}`,
-                borderRadius: '4px',
                 background: currentTheme['--task-background-color'],
                 color: currentTheme['--main-text-coloure'],
-                fontSize: '14px',
-                marginBottom: '15px'
               }}
               autoFocus
             />
@@ -977,18 +1015,14 @@ const MindMap: React.FC<MindMapProps> = ({
       )}
 
       {/* Board Selection Panel */}
-      <div style={{
-        zIndex: 1000,
-        background: currentTheme['--background-color'],
-        padding: '10px',
-        borderRadius: '8px',
-        border: `1px solid ${currentTheme['--border-color']}`,
-        marginBottom: '10px',
-        display: 'flex',
-        gap: '10px',
-        alignItems: 'center',
-        flexWrap: 'wrap'
-      }}>
+
+      <div
+        className='mindmap_board_selection_panel_container'
+        style={{
+          background: currentTheme['--background-color'],
+          borderColor: currentTheme['--border-color'],
+
+        }}>
         <label style={{ color: currentTheme['--main-text-coloure'], fontSize: '14px' }}>
           Select Board:
         </label>
@@ -998,12 +1032,9 @@ const MindMap: React.FC<MindMapProps> = ({
           style={{
             background: currentTheme['--task-background-color'],
             color: currentTheme['--main-text-coloure'],
-            border: `1px solid ${currentTheme['--border-color']}`,
-            borderRadius: '4px',
-            padding: '5px 10px',
-            fontSize: '12px',
-            minWidth: '150px'
+            borderColor: currentTheme['--border-color'],
           }}
+          className='mindmap_board_select'
         >
           <option value="">Select a board...</option>
           {boards.map(board => (
@@ -1015,108 +1046,107 @@ const MindMap: React.FC<MindMapProps> = ({
       </div>
 
       {/* Control Panel - Show for both modes */}
-      <div style={{
-        zIndex: 1000,
-        background: currentTheme['--background-color'],
-        padding: '10px',
-        borderRadius: '8px',
-        border: `1px solid ${currentTheme['--border-color']}`,
-        display: 'flex',
-        gap: '10px',
-        flexWrap: 'wrap'
-      }}>
-        <button
-          onClick={addNewNode}
+      {!diagram_loading && (
+
+        <div
+          className='mindmap_control_panel_buttons_container'
           style={{
-            background: '#6366f1',
-            color: 'white',
-            border: 'none',
-            padding: '5px 10px',
-            borderRadius: '4px',
-            cursor: 'pointer',
-            fontSize: '12px'
-          }}
-        >
-          Add Node (Connect to Board/List)
-        </button>
+            background: currentTheme['--background-color'],
+            borderColor: currentTheme['--border-color'],
+          }}>
+          <button
+            onClick={addNewNode}
+            style={{
+              background: '#6366f1',
+              color: 'white',
+              border: 'none',
+              padding: '5px 10px',
+              borderRadius: '4px',
+              cursor: 'pointer',
+              fontSize: '12px'
+            }}
+          >
+            Add Node (Connect to Board/List)
+          </button>
 
-        <button
-          onClick={removeSelectedConnections}
-          disabled={selectedElements.filter(id => edges.some(e => e.id === id)).length === 0}
-          style={{
-            background: selectedElements.filter(id => edges.some(e => e.id === id)).length > 0 ? '#f59e0b' : '#64748b',
-            color: 'white',
-            border: 'none',
-            padding: '5px 10px',
-            borderRadius: '4px',
-            cursor: 'pointer',
-            fontSize: '12px'
-          }}
-        >
-          Remove Connections (Ctrl+R)
-        </button>
+          <button
+            onClick={removeSelectedConnections}
+            disabled={selectedElements.filter(id => edges.some(e => e.id === id)).length === 0}
+            style={{
+              background: selectedElements.filter(id => edges.some(e => e.id === id)).length > 0 ? '#f59e0b' : '#64748b',
+              color: 'white',
+              border: 'none',
+              padding: '5px 10px',
+              borderRadius: '4px',
+              cursor: 'pointer',
+              fontSize: '12px'
+            }}
+          >
+            Remove Connections (Ctrl+R)
+          </button>
 
 
-        {viewMode === 'board' && maindmap_selected_board_data && (
-          <>
-            <button
-              onClick={() => {
-                const { nodes: boardNodes, edges: boardEdges } = convertBoardToMindMap(maindmap_selected_board_data);
-                setNodes(boardNodes);
-                setEdges(boardEdges);
-              }}
-              style={{
-                background: '#059669',
-                color: 'white',
-                border: 'none',
-                padding: '5px 10px',
-                borderRadius: '4px',
-                cursor: 'pointer',
-                fontSize: '12px'
-              }}
-            >
-              Reset Board Layout
-            </button>
-            <button
-              onClick={() => {
-                if (window.confirm('Are you sure you want to clear all saved positions for this board?')) {
-                  const key = getPositionStorageKey(maindmap_selected_board_data.id);
-                  localStorage.removeItem(key);
-                  // Reload the board with default positions
+          {viewMode === 'board' && maindmap_selected_board_data && (
+            <>
+              <button
+                onClick={() => {
                   const { nodes: boardNodes, edges: boardEdges } = convertBoardToMindMap(maindmap_selected_board_data);
                   setNodes(boardNodes);
                   setEdges(boardEdges);
-                }
-              }}
-              style={{
-                background: '#ef4444',
-                color: 'white',
-                border: 'none',
-                padding: '5px 10px',
-                borderRadius: '4px',
-                cursor: 'pointer',
-                fontSize: '12px'
-              }}
-            >
-              Clear Saved Positions
-            </button>
-          </>
-        )}
-        <button
-          onClick={autoLayout}
-          style={{
-            background: '#8b5cf6',
-            color: 'white',
-            border: 'none',
-            padding: '5px 10px',
-            borderRadius: '4px',
-            cursor: 'pointer',
-            fontSize: '12px'
-          }}
-        >
-          Auto Layout
-        </button>
-      </div>
+                }}
+                style={{
+                  background: '#059669',
+                  color: 'white',
+                  border: 'none',
+                  padding: '5px 10px',
+                  borderRadius: '4px',
+                  cursor: 'pointer',
+                  fontSize: '12px'
+                }}
+              >
+                Reset Board Layout
+              </button>
+              <button
+                onClick={() => {
+                  if (window.confirm('Are you sure you want to clear all saved positions for this board?')) {
+                    const key = getPositionStorageKey(maindmap_selected_board_data.id);
+                    localStorage.removeItem(key);
+                    // Reload the board with default positions
+                    const { nodes: boardNodes, edges: boardEdges } = convertBoardToMindMap(maindmap_selected_board_data);
+                    setNodes(boardNodes);
+                    setEdges(boardEdges);
+                  }
+                }}
+                style={{
+                  background: '#ef4444',
+                  color: 'white',
+                  border: 'none',
+                  padding: '5px 10px',
+                  borderRadius: '4px',
+                  cursor: 'pointer',
+                  fontSize: '12px'
+                }}
+              >
+                Clear Saved Positions
+              </button>
+            </>
+          )}
+          <button
+            onClick={autoLayout}
+            style={{
+              background: '#8b5cf6',
+              color: 'white',
+              border: 'none',
+              padding: '5px 10px',
+              borderRadius: '4px',
+              cursor: 'pointer',
+              fontSize: '12px'
+            }}
+          >
+            Auto Layout
+          </button>
+        </div>
+      )}
 
       {/* Info Panel for Board Mode */}
       {viewMode === 'board' && maindmap_selected_board_data && (
@@ -1141,51 +1171,56 @@ const MindMap: React.FC<MindMapProps> = ({
         </div>
       )}
 
-      <ReactFlow
-        nodes={nodes}
-        edges={edges}
-        onNodesChange={handleNodesChange}
-        onEdgesChange={onEdgesChange}
-        onConnect={onConnect}
-        // onSelectionChange={onSelectionChange}
-        onNodeClick={onNodeClick}
-        fitView
-        multiSelectionKeyCode="Shift"
-        deleteKeyCode={null} // This disables deletion with Delete key
-        nodesDraggable={true}
-        nodesConnectable={true}
-        elementsSelectable={true}
-        style={{
-          background: currentTheme['--background-color'],
-        }}
-      >
-        <Controls />
-        <MiniMap
-          nodeColor={(node) => {
-            if (node.id.startsWith('board-')) return '#6366f1';
-            if (node.id.startsWith('list-')) return '#10b981';
-            if (node.id.startsWith('task-')) {
-              const taskData = node.data as any;
-              if (taskData.completed) return '#6b7280';
-              if (taskData.priority === 'red') return '#ef4444';
-              if (taskData.priority === 'orange') return '#f59e0b';
-              if (taskData.priority === 'green') return '#22c55e';
-              return '#8b5cf6';
-            }
-            return '#10b981';
+      {diagram_loading ? (
+        <div className="diagram_loader_container"><HashLoader color={currentTheme['--main-text-coloure']} className='hashloader' /></div>
+      ) : (
+        <ReactFlow
+          nodes={nodes}
+          edges={edges}
+          onNodesChange={handleNodesChange}
+          onEdgesChange={onEdgesChange}
+          onConnect={onConnect}
+          // onSelectionChange={onSelectionChange}
+          onNodeClick={onNodeClick}
+          fitView
+          multiSelectionKeyCode="Shift"
+          deleteKeyCode={null} // This disables deletion with Delete key
+          nodesDraggable={true}
+          nodesConnectable={true}
+          elementsSelectable={true}
+          style={{
+            background: currentTheme['--background-color'],
           }}
-          nodeStrokeWidth={3}
-          zoomable
-          pannable
-          maskColor="rgba(30, 41, 59, 0.8)"
-        />
-        <Background
-          variant={BackgroundVariant.Dots}
-          gap={20}
-          size={1}
-          color={currentTheme['--due-date-color']}
-        />
-      </ReactFlow>
+        >
+          <Controls />
+          <MiniMap
+            nodeColor={(node) => {
+              if (node.id.startsWith('board-')) return '#6366f1';
+              if (node.id.startsWith('list-')) return '#10b981';
+              if (node.id.startsWith('task-')) {
+                const taskData = node.data as any;
+                if (taskData.completed) return '#6b7280';
+                if (taskData.priority === 'red') return '#ef4444';
+                if (taskData.priority === 'orange') return '#f59e0b';
+                if (taskData.priority === 'green') return '#22c55e';
+                return '#8b5cf6';
+              }
+              return '#10b981';
+            }}
+            nodeStrokeWidth={3}
+            zoomable
+            pannable
+            maskColor="rgba(30, 41, 59, 0.8)"
+          />
+          <Background
+            variant={BackgroundVariant.Dots}
+            gap={20}
+            size={1}
+            color={currentTheme['--due-date-color']}
+          />
+        </ReactFlow>
+      )}
+
     </div>
   );
 };
