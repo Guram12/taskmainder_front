@@ -12,9 +12,9 @@ import ReactFlow, {
   Node,
   BackgroundVariant,
   NodeChange,
-  EdgeChange,
+  // EdgeChange,
   OnConnect,
-  OnEdgesChange,
+  // OnEdgesChange,
   OnNodesChange,
   ReactFlowInstance,
 
@@ -27,8 +27,8 @@ import axiosInstance from '../utils/axiosinstance';
 import { environment_urls } from '../utils/URLS';
 import TaskUpdateModal from './Boards/TaskUpdateModal';
 import HashLoader from 'react-spinners/HashLoader';
-import { use } from 'i18next';
-import { openSync } from 'fs';
+// import { use } from 'i18next';
+// import { openSync } from 'fs';
 import Mindmap_ListName_Modal from './Mindmap_ListName_Modal';
 import Mindmap_BoardName_Modal from './Mindmap_BoardName_Modal';
 
