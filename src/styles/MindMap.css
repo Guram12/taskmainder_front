@@ -133,6 +133,11 @@
   gap: 10px;
 }
 
+.mindmap_board_selection_icon{
+  width: 25px;
+  height: 25px;
+}
+
 
 .mindmap_board_select {
   border-radius: 4px;

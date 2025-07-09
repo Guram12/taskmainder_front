@@ -22,7 +22,8 @@ const resources = {
       'calendar': 'Calendar',
       'notification': 'Notification',
       "settings": "Settings",
-
+      'diagrams': 'Diagrams',
+      
       //template component
       "choose_a_template": "Choose a Template",
       'select_template': "Select Template",
@@ -197,6 +198,7 @@ const resources = {
       'calendar': 'კალენდარი',
       'notification': 'შეტყობინებები',
       "settings": "პარამეტრები",
+      'diagrams': 'დიაგრამები',
 
       //template component
       "choose_a_template": "შეარჩიე შაბლონი",

@@ -552,7 +552,7 @@ const SidebarComponent: React.FC<SidebarProps> = ({
                   }}
                   icon={<FaSitemap className='sidebar_big_icon' />}
                   onClick={() => handel_sidebar_page_click("MindMap")}
-                >Diagrams</MenuItem>
+                >{t('diagrams')}</MenuItem>
               </Menu>
 
 

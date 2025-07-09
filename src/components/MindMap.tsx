@@ -33,13 +33,14 @@ import Mindmap_ListName_Modal from './Mindmap_ListName_Modal';
 import Mindmap_BoardName_Modal from './Mindmap_BoardName_Modal';
 import Select from 'react-select';
 import { PiWarningFill } from "react-icons/pi";
+import { FaClipboardList } from "react-icons/fa";
 
 
 const initialNodes: Node[] = [
   {
     id: '1',
     type: 'input',
-    data: { label: 'Please select a board to visualize' },
+    data: { label: 'Please select or create a board to visualize' },
     position: { x: 250, y: 25 },
     style: {
       background: '#6366f1',
@@ -1320,99 +1321,95 @@ const MindMap: React.FC<MindMapProps> = ({
       )}
 
       {/* Board Selection Panel */}
+      {boards.length > 0 && (
+        <div
+          className='mindmap_board_selection_panel_container'
+          style={{
+            background: currentTheme['--background-color'],
+            borderColor: currentTheme['--border-color'],
+          }}
+        >
+          <FaClipboardList className='mindmap_board_selection_icon' />
+          <Select
+            value={boardOptions.find(opt => opt.value === maindmap_selected_board_data?.id)}
+            onChange={option => handleBoardChange(String(option?.value))}
+            options={boardOptions}
+            styles={customStyles}
+            placeholder="Select a board..."
+            isSearchable
+          />
 
-      <div
-        className='mindmap_board_selection_panel_container'
-        style={{
-          background: currentTheme['--background-color'],
-          borderColor: currentTheme['--border-color'],
+          {/* Control Panel - Show for both modes */}
+          {!diagram_loading && boards.length > 0 && (
 
-        }}>
-        <label style={{ color: currentTheme['--main-text-coloure'], fontSize: '14px' }}>
-          Select Board:
-        </label>
-        <Select
-          value={boardOptions.find(opt => opt.value === maindmap_selected_board_data?.id)}
-          onChange={option => handleBoardChange(String(option?.value))}
-          options={boardOptions}
-          styles={customStyles}
-          placeholder="Select a board..."
-          isSearchable
-        />
-
-
-        {/* Control Panel - Show for both modes */}
-        {!diagram_loading && (
-
-          <div
-            className='mindmap_control_panel_buttons_container'
-            style={{
-              background: currentTheme['--background-color'],
-              borderColor: currentTheme['--border-color'],
-            }}>
-            <button
-              onClick={addNewNode}
+            <div
+              className='mindmap_control_panel_buttons_container'
               style={{
-                background: '#6366f1',
-                color: 'white',
-                border: 'none',
-                padding: '5px 10px',
-                borderRadius: '4px',
-                cursor: 'pointer',
-                fontSize: '12px'
-              }}
-            >
-              Add Node (Connect to Board/List)
-            </button>
+                background: currentTheme['--background-color'],
+                borderColor: currentTheme['--border-color'],
+              }}>
+              <button
+                onClick={addNewNode}
+                style={{
+                  background: '#6366f1',
+                  color: 'white',
+                  border: 'none',
+                  padding: '5px 10px',
+                  borderRadius: '4px',
+                  cursor: 'pointer',
+                  fontSize: '12px'
+                }}
+              >
+                Add Node (Connect to Board/List)
+              </button>
 
 
-            {viewMode === 'board' && maindmap_selected_board_data && (
-              <>
-                <button
-                  onClick={() => {
-                    if (window.confirm('Are you sure you want to clear all saved positions for this board?')) {
-                      const key = getPositionStorageKey(maindmap_selected_board_data.id);
-                      localStorage.removeItem(key);
-                      // Reload the board with default positions
-                      const { nodes: boardNodes, edges: boardEdges } = convertBoardToMindMap(maindmap_selected_board_data);
-                      setNodes(boardNodes);
-                      setEdges(boardEdges);
-                    }
-                  }}
-                  style={{
-                    background: '#ef4444',
-                    color: 'white',
-                    border: 'none',
-                    padding: '5px 10px',
-                    borderRadius: '4px',
-                    cursor: 'pointer',
-                    fontSize: '12px'
-                  }}
-                >
-                  Clear Saved Positions
-                </button>
-              </>
-            )}
+              {viewMode === 'board' && maindmap_selected_board_data && (
+                <>
+                  <button
+                    onClick={() => {
+                      if (window.confirm('Are you sure you want to clear all saved positions for this board?')) {
+                        const key = getPositionStorageKey(maindmap_selected_board_data.id);
+                        localStorage.removeItem(key);
+                        // Reload the board with default positions
+                        const { nodes: boardNodes, edges: boardEdges } = convertBoardToMindMap(maindmap_selected_board_data);
+                        setNodes(boardNodes);
+                        setEdges(boardEdges);
+                      }
+                    }}
+                    style={{
+                      background: '#ef4444',
+                      color: 'white',
+                      border: 'none',
+                      padding: '5px 10px',
+                      borderRadius: '4px',
+                      cursor: 'pointer',
+                      fontSize: '12px'
+                    }}
+                  >
+                    Clear Saved Positions
+                  </button>
+                </>
+              )}
 
-            <button
-              onClick={autoLayout}
-              style={{
-                background: '#8b5cf6',
-                color: 'white',
-                border: 'none',
-                padding: '5px 10px',
-                borderRadius: '4px',
-                cursor: 'pointer',
-                fontSize: '12px'
-              }}
-            >
-              Auto Layout
-            </button>
-          </div>
-        )}
-
-
-      </div>
+              <button
+                onClick={autoLayout}
+                style={{
+                  background: '#8b5cf6',
+                  color: 'white',
+                  border: 'none',
+                  padding: '5px 10px',
+                  borderRadius: '4px',
+                  cursor: 'pointer',
+                  fontSize: '12px'
+                }}
+              >
+                Auto Layout
+              </button>
+            </div>
+          )}
+        </div>
+      )}
 
 
       <div className='mindmap_diagram_container'>
