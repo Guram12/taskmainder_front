@@ -37,9 +37,9 @@ import { FaClipboardList } from "react-icons/fa";
 import CustomTaskNode from './CustomTaskNode';
 
 
-  const nodeTypes = {
-    customTask: CustomTaskNode,
-  };
+const nodeTypes = {
+  customTask: CustomTaskNode,
+};
 
 const initialNodes: Node[] = [
   {
@@ -772,12 +772,33 @@ const MindMap: React.FC<MindMapProps> = ({
     setListNameInput('');
   }, []);
 
-  // ========================================================================================================================
-  // ========================================================================================================================
-  // ========================================================================================================================
 
+  const sendMoveTask = useCallback((taskId: number, sourceListId: number, targetListId: number) => {
+    if (mindMapSocketRef.current && mindMapSocketRef.current.readyState === WebSocket.OPEN) {
+      const message = {
+        action: 'move_task',
+        payload: {
+          task_id: taskId,
+          source_list_id: sourceListId,
+          target_list_id: targetListId,
+        }
+      };
+      try {
+        mindMapSocketRef.current.send(JSON.stringify(message));
+        console.log('Successfully sent move_task:', message);
+      } catch (error) {
+        console.error('Error sending move_task message:', error);
+      }
+    } else {
+      console.error('WebSocket is not connected for moving task');
+    }
+  }, []);
 
+  // ========================================================================================================================
+  // ========================================================================================================================
+  // ========================================================================================================================
   //  ============================= Handle new connections with smart detection  ===========================================
+
 
   const onConnect: OnConnect = useCallback(
     (params: Connection) => {
@@ -793,6 +814,8 @@ const MindMap: React.FC<MindMapProps> = ({
         const isNewNodeTarget = targetNode?.data.label?.includes('New Node');
         const isTaskSource = params.source?.startsWith('task-');
         const isTaskTarget = params.target?.startsWith('task-');
+        const isListSource = params.source?.startsWith('list-');
+        const isListTarget = params.target?.startsWith('list-');
 
         // Prevent connecting task to task
         if (isTaskSource && isTaskTarget) {
@@ -805,6 +828,50 @@ const MindMap: React.FC<MindMapProps> = ({
           return;
         }
 
+        // --- Move task to another list if connecting task to list ---
+        if (
+          ((isTaskSource && isListTarget) || (isListSource && isTaskTarget)) &&
+          !isNewNodeSource && !isNewNodeTarget
+        ) {
+          // Determine taskId, sourceListId, targetListId
+          let taskId: number | null = null;
+          let sourceListId: number | null = null;
+          let targetListId: number | null = null;
+
+          if (isTaskSource && isListTarget) {
+            taskId = parseInt(params.source!.replace('task-', ''));
+            targetListId = parseInt(params.target!.replace('list-', ''));
+            // Find the source list by searching which list contains this task
+            for (const list of maindmap_selected_board_data.lists) {
+              if (list.tasks.some(task => task.id === taskId)) {
+                sourceListId = list.id;
+                break;
+              }
+            }
+          } else if (isListSource && isTaskTarget) {
+            taskId = parseInt(params.target!.replace('task-', ''));
+            targetListId = parseInt(params.source!.replace('list-', ''));
+            // Find the source list by searching which list contains this task
+            for (const list of maindmap_selected_board_data.lists) {
+              if (list.tasks.some(task => task.id === taskId)) {
+                sourceListId = list.id;
+                break;
+              }
+            }
+          }
+
+          // Only move if source and target lists are different
+          if (
+            taskId &&
+            sourceListId &&
+            targetListId &&
+            sourceListId !== targetListId
+          ) {
+            sendMoveTask(taskId, sourceListId, targetListId);
+          }
+          // Do not create a new edge in this case
+          return;
+        }
 
         // Check if we're connecting a new node to an existing structure
         const isNewNodeConnection = sourceNode?.data.label?.includes('New Node') ||
@@ -863,7 +930,7 @@ const MindMap: React.FC<MindMapProps> = ({
         console.log('Connection already exists between these nodes');
       }
     },
-    [setEdges, edgeExists, viewMode, nodes]
+    [setEdges, edgeExists, viewMode, nodes, maindmap_selected_board_data, sendMoveTask]
   );
 
   // Handle new item creation
@@ -997,6 +1064,10 @@ const MindMap: React.FC<MindMapProps> = ({
   }, []);
 
 
+  // ====================================================== move task ===================================================
+
+
+
 
   // ================================= Handle task update using the existing modal's format===========================
   const handleTaskUpdate = useCallback((
@@ -1124,11 +1195,11 @@ const MindMap: React.FC<MindMapProps> = ({
       setEdges(boardEdges);
 
       // Call fitView after nodes/edges are set and rendered
-      setTimeout(() => {
-        if (reactFlowInstanceRef.current) {
-          reactFlowInstanceRef.current.fitView();
-        }
-      }, 0);
+      // setTimeout(() => {
+      //   if (reactFlowInstanceRef.current) {
+      //     reactFlowInstanceRef.current.fitView();
+      //   }
+      // }, 0);
     }
   }, [maindmap_selected_board_data, viewMode, convertBoardToMindMap, setNodes, setEdges]);
 
