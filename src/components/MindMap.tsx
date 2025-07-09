@@ -481,9 +481,9 @@ const MindMap: React.FC<MindMapProps> = ({
         data: { label: list.name },
         position: listPosition,
         style: {
-          background: '#10b981',
-          color: 'white',
-          border: '2px solid #059669',
+          background: currentTheme['--list-background-color'],
+          color: currentTheme['--main-text-coloure'],
+          border: `2px solid ${currentTheme['--border-color']}`,
           borderRadius: '8px',
           fontSize: '14px',
           fontWeight: 'bold',
@@ -533,21 +533,21 @@ const MindMap: React.FC<MindMapProps> = ({
           },
           position: taskPosition,
           style: {
-            background: task.completed ? '#6b7280' :
+            background: currentTheme['--task-background-color'],
+            color: currentTheme['--main-text-coloure'],
+            border: `3px solid`,
+            borderColor:
               task.priority === 'red' ? '#ef4444' :
                 task.priority === 'orange' ? '#f59e0b' :
-                  task.priority === 'green' ? '#22c55e' : '#8b5cf6',
-            color: 'white',
-            border: `2px solid ${task.completed ? '#4b5563' :
-              task.priority === 'red' ? '#dc2626' :
-                task.priority === 'orange' ? '#d97706' :
-                  task.priority === 'green' ? '#16a34a' : '#7c3aed'}`,
+                  task.priority === 'green' ? '#22c55e' :
+                    currentTheme['--border-color'],
+
             borderRadius: '8px',
             fontSize: '11px',
             padding: '6px',
             minWidth: '100px',
             maxWidth: '150px',
-            opacity: task.completed ? 0.7 : 1,
+            opacity: task.completed ? 0.4 : 1,
             wordWrap: 'break-word',
           },
         };
@@ -560,7 +560,7 @@ const MindMap: React.FC<MindMapProps> = ({
           source: `list-${list.id}`,
           target: `task-${task.id}`,
           style: {
-            stroke: '#10b981',
+            stroke: currentTheme['--scrollbar-thumb-color'],
             strokeWidth: 2,
             strokeDasharray: task.completed ? '5,5' : undefined
           },
@@ -1449,7 +1449,7 @@ const MindMap: React.FC<MindMapProps> = ({
                   if (taskData.priority === 'red') return '#ef4444';
                   if (taskData.priority === 'orange') return '#f59e0b';
                   if (taskData.priority === 'green') return '#22c55e';
-                  return '#8b5cf6';
+                  return `${currentTheme['--task-background-color']}`;
                 }
                 return '#10b981';
               }}
