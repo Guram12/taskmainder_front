@@ -34,3 +34,5 @@ SideBar copy.tsx
 .env
 VAPID_key.json
 /.env
+src/components/save.txt
+src/components/Diagram.txt

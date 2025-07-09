@@ -1,9 +1,9 @@
 .mindmap_main_container {
   width: 100%;
-  height: calc(100vh - 220px);
-  margin-top: 10px;
+  height: calc(100vh - 75px);
+  border: 1px solid red;
+  /* overflow: hidden;  // Optional: add if you want to hide overflow */
 }
-
 
 .diagram_new_item_container {
   position: fixed;
@@ -17,6 +17,13 @@
   justify-content: center;
   z-index: 10000;
 }
+
+.react-flow__attribution {
+  display: none !important;
+}
+
+
+
 
 
 .new_item_modal {
@@ -52,16 +59,15 @@
 }
 
 
-.mindmap_board_select{
-    border-radius: 4px;
-    padding: 5px 10px;
-    font-size: 12px;
-    min-width: 150px;
-    border: 1px solid;
+.mindmap_board_select {
+  border-radius: 4px;
+  padding: 5px 10px;
+  font-size: 12px;
+  min-width: 150px;
+  border: 1px solid;
 }
 
-.mindmap_control_panel_buttons_container{
-  z-index: 1000;
+.mindmap_control_panel_buttons_container {
   padding: 10px;
   border-radius: 8px;
   border: 1px solid;
@@ -93,7 +99,13 @@
 
 
 
-
+.mindmap_diagram_container {
+  width: 100%;
+  height: calc(100vh - 175px);
+  position: relative;
+  overflow: hidden;
+  border: 1px solid green;
+}
 
 
 

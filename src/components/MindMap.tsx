@@ -900,15 +900,6 @@ const MindMap: React.FC<MindMapProps> = ({
   }, [setNodes]);
 
 
-  // Remove selected connections
-  const removeSelectedConnections = useCallback(() => {
-    const selectedEdges = selectedElements.filter(id => edges.some(e => e.id === id));
-    if (selectedEdges.length > 0) {
-      setEdges((eds) => eds.filter(edge => !selectedEdges.includes(edge.id)));
-      setSelectedElements(prev => prev.filter(id => !selectedEdges.includes(id)));
-      console.log('Removed connections:', selectedEdges);
-    }
-  }, [selectedElements, edges, setEdges]);
 
   // Auto-layout function for better organization
   const autoLayout = useCallback(() => {
@@ -1256,188 +1247,138 @@ const MindMap: React.FC<MindMapProps> = ({
             </option>
           ))}
         </select>
+
+
+        {/* Control Panel - Show for both modes */}
+        {!diagram_loading && (
+
+          <div
+            className='mindmap_control_panel_buttons_container'
+            style={{
+              background: currentTheme['--background-color'],
+              borderColor: currentTheme['--border-color'],
+            }}>
+            <button
+              onClick={addNewNode}
+              style={{
+                background: '#6366f1',
+                color: 'white',
+                border: 'none',
+                padding: '5px 10px',
+                borderRadius: '4px',
+                cursor: 'pointer',
+                fontSize: '12px'
+              }}
+            >
+              Add Node (Connect to Board/List)
+            </button>
+
+
+            {viewMode === 'board' && maindmap_selected_board_data && (
+              <>
+                <button
+                  onClick={() => {
+                    if (window.confirm('Are you sure you want to clear all saved positions for this board?')) {
+                      const key = getPositionStorageKey(maindmap_selected_board_data.id);
+                      localStorage.removeItem(key);
+                      // Reload the board with default positions
+                      const { nodes: boardNodes, edges: boardEdges } = convertBoardToMindMap(maindmap_selected_board_data);
+                      setNodes(boardNodes);
+                      setEdges(boardEdges);
+                    }
+                  }}
+                  style={{
+                    background: '#ef4444',
+                    color: 'white',
+                    border: 'none',
+                    padding: '5px 10px',
+                    borderRadius: '4px',
+                    cursor: 'pointer',
+                    fontSize: '12px'
+                  }}
+                >
+                  Clear Saved Positions
+                </button>
+              </>
+            )}
+
+            <button
+              onClick={autoLayout}
+              style={{
+                background: '#8b5cf6',
+                color: 'white',
+                border: 'none',
+                padding: '5px 10px',
+                borderRadius: '4px',
+                cursor: 'pointer',
+                fontSize: '12px'
+              }}
+            >
+              Auto Layout
+            </button>
+          </div>
+        )}
+
+
       </div>
 
-      {/* Control Panel - Show for both modes */}
-      {!diagram_loading && (
 
-        <div
-          className='mindmap_control_panel_buttons_container'
-          style={{
-            background: currentTheme['--background-color'],
-            borderColor: currentTheme['--border-color'],
-          }}>
-          <button
-            onClick={addNewNode}
+      <div className='mindmap_diagram_container'>
+        {diagram_loading ? (
+          <div className="diagram_loader_container"><HashLoader color={currentTheme['--main-text-coloure']} className='hashloader' /></div>
+        ) : (
+          <ReactFlow
+            nodes={nodes}
+            edges={edges}
+            onNodesChange={handleNodesChange}
+            onEdgesChange={onEdgesChange}
+            onConnect={onConnect}
+            onNodeClick={onNodeClick}
+            fitView={true}
+            multiSelectionKeyCode="Shift"
+            deleteKeyCode={null}
+            nodesDraggable={true}
+            nodesConnectable={true}
+            elementsSelectable={true}
             style={{
-              background: '#6366f1',
-              color: 'white',
-              border: 'none',
-              padding: '5px 10px',
-              borderRadius: '4px',
-              cursor: 'pointer',
-              fontSize: '12px'
+              background: currentTheme['--background-color'],
+              width: '800px',
+              height: '600px',
+            }}
+            onInit={(instance) => {
+              reactFlowInstanceRef.current = instance;
             }}
           >
-            Add Node (Connect to Board/List)
-          </button>
+            <Controls />
+            <MiniMap
+              nodeColor={(node) => {
+                if (node.id.startsWith('board-')) return '#6366f1';
+                if (node.id.startsWith('list-')) return '#10b981';
+                if (node.id.startsWith('task-')) {
+                  const taskData = node.data as any;
+                  if (taskData.completed) return '#6b7280';
+                  if (taskData.priority === 'red') return '#ef4444';
+                  if (taskData.priority === 'orange') return '#f59e0b';
+                  if (taskData.priority === 'green') return '#22c55e';
+                  return '#8b5cf6';
+                }
+                return '#10b981';
+              }}
+              nodeStrokeWidth={3}
+              zoomable
+              pannable
+              maskColor="rgba(30, 41, 59, 0.8)"
+            />
+            <Background
+              variant={BackgroundVariant.Dots}
+              gap={20}
+              size={1}
+              color={currentTheme['--due-date-color']}
+            />
+          </ReactFlow>
 
-          <button
-            onClick={removeSelectedConnections}
-            disabled={selectedElements.filter(id => edges.some(e => e.id === id)).length === 0}
-            style={{
-              background: selectedElements.filter(id => edges.some(e => e.id === id)).length > 0 ? '#f59e0b' : '#64748b',
-              color: 'white',
-              border: 'none',
-              padding: '5px 10px',
-              borderRadius: '4px',
-              cursor: 'pointer',
-              fontSize: '12px'
-            }}
-          >
-            Remove Connections (Ctrl+R)
-          </button>
-
-
-          {viewMode === 'board' && maindmap_selected_board_data && (
-            <>
-              <button
-                onClick={() => {
-                  const { nodes: boardNodes, edges: boardEdges } = convertBoardToMindMap(maindmap_selected_board_data);
-                  setNodes(boardNodes);
-                  setEdges(boardEdges);
-                }}
-                style={{
-                  background: '#059669',
-                  color: 'white',
-                  border: 'none',
-                  padding: '5px 10px',
-                  borderRadius: '4px',
-                  cursor: 'pointer',
-                  fontSize: '12px'
-                }}
-              >
-                Reset Board Layout
-              </button>
-              <button
-                onClick={() => {
-                  if (window.confirm('Are you sure you want to clear all saved positions for this board?')) {
-                    const key = getPositionStorageKey(maindmap_selected_board_data.id);
-                    localStorage.removeItem(key);
-                    // Reload the board with default positions
-                    const { nodes: boardNodes, edges: boardEdges } = convertBoardToMindMap(maindmap_selected_board_data);
-                    setNodes(boardNodes);
-                    setEdges(boardEdges);
-                  }
-                }}
-                style={{
-                  background: '#ef4444',
-                  color: 'white',
-                  border: 'none',
-                  padding: '5px 10px',
-                  borderRadius: '4px',
-                  cursor: 'pointer',
-                  fontSize: '12px'
-                }}
-              >
-                Clear Saved Positions
-              </button>
-            </>
-          )}
-          <button
-            onClick={autoLayout}
-            style={{
-              background: '#8b5cf6',
-              color: 'white',
-              border: 'none',
-              padding: '5px 10px',
-              borderRadius: '4px',
-              cursor: 'pointer',
-              fontSize: '12px'
-            }}
-          >
-            Auto Layout
-          </button>
-        </div>
-      )}
-
-      {/* Info Panel for Board Mode */}
-      {viewMode === 'board' && maindmap_selected_board_data && (
-        <div style={{
-          zIndex: 1000,
-          background: currentTheme['--background-color'],
-          padding: '10px',
-          borderRadius: '8px',
-          border: `1px solid ${currentTheme['--border-color']}`,
-          marginBottom: '10px',
-          color: currentTheme['--main-text-coloure'],
-          fontSize: '12px'
-        }}>
-          <strong>Board View:</strong> {maindmap_selected_board_data.name} |
-          <span style={{ marginLeft: '10px' }}>
-            Lists: {maindmap_selected_board_data.lists.length} |
-            Tasks: {maindmap_selected_board_data.lists.reduce((acc, list) => acc + list.tasks.length, 0)}
-          </span>
-          <span style={{ marginLeft: '10px', fontStyle: 'italic' }}>
-            Click task nodes to edit. Add new node and connect to board (for lists) or lists (for tasks) to create new items.
-          </span>
-        </div>
-      )}
-
-      {diagram_loading ? (
-        <div className="diagram_loader_container"><HashLoader color={currentTheme['--main-text-coloure']} className='hashloader' /></div>
-      ) : (
-
-        <ReactFlow
-          nodes={nodes}
-          edges={edges}
-          onNodesChange={handleNodesChange}
-          onEdgesChange={onEdgesChange}
-          onConnect={onConnect}
-          // onSelectionChange={onSelectionChange}
-          onNodeClick={onNodeClick}
-          fitView
-          multiSelectionKeyCode="Shift"
-          deleteKeyCode={null} // This disables deletion with Delete key
-          nodesDraggable={true}
-          nodesConnectable={true}
-          elementsSelectable={true}
-          style={{
-            background: currentTheme['--background-color'],
-          }}
-          onInit={(instance) => {
-            reactFlowInstanceRef.current = instance;
-          }}
-        >
-          <Controls />
-          <MiniMap
-            nodeColor={(node) => {
-              if (node.id.startsWith('board-')) return '#6366f1';
-              if (node.id.startsWith('list-')) return '#10b981';
-              if (node.id.startsWith('task-')) {
-                const taskData = node.data as any;
-                if (taskData.completed) return '#6b7280';
-                if (taskData.priority === 'red') return '#ef4444';
-                if (taskData.priority === 'orange') return '#f59e0b';
-                if (taskData.priority === 'green') return '#22c55e';
-                return '#8b5cf6';
-              }
-              return '#10b981';
-            }}
-            nodeStrokeWidth={3}
-            zoomable
-            pannable
-            maskColor="rgba(30, 41, 59, 0.8)"
-          />
-          <Background
-            variant={BackgroundVariant.Dots}
-            gap={20}
-            size={1}
-            color={currentTheme['--due-date-color']}
-          />
-        </ReactFlow>
-
-      )}
+        )}
+      </div>
 
     </div>
   );
