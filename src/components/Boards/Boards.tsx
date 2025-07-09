@@ -721,6 +721,7 @@ const Boards: React.FC<BoardsProps> = ({
               profileData={profileData}
               setSelectedComponent={setSelectedComponent}
               setSelectedBoard={setSelectedBoard}
+              setIsLoading={setIsLoading}
             />
           </div>
         )}

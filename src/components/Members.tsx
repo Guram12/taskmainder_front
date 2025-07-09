@@ -42,6 +42,7 @@ interface MembersProps {
   profileData: ProfileData;
   setSelectedComponent: (component: string) => void;
   setSelectedBoard: (board: board | null) => void;
+  setIsLoading: (isLoading: boolean) => void;
 }
 
 const Members: React.FC<MembersProps> = ({
@@ -62,6 +63,7 @@ const Members: React.FC<MembersProps> = ({
   profileData,
   setSelectedComponent,
   setSelectedBoard,
+  setIsLoading,
 }) => {
 
   const [isUsersWindowOpen, setIsUsersWindowOpen] = useState<boolean>(false);
@@ -349,6 +351,8 @@ const Members: React.FC<MembersProps> = ({
   }
 
   const handleLeaveBoard = async () => {
+    setIs_leaving_board(false);
+    setIsLoading(true);
     try {
       const response = await axiosInstance.delete(`/api/boards/${selectedBoard?.id}/self-delete/`, {
         headers: {
@@ -361,14 +365,15 @@ const Members: React.FC<MembersProps> = ({
         // For example, you might want to remove the board from the list of boards
         const updatedBoards = boards.filter(board => board.id !== selectedBoard?.id);
         setBoards(updatedBoards);
-
+        setIsLoading(false);
 
 
       } else {
         console.error("Failed to leave the board:", response.data);
       }
     } catch (error) {
-
+      console.error("Error leaving the board:", error);
+      setIsLoading(false);
     }
   }
 

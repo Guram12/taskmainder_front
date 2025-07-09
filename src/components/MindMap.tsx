@@ -31,6 +31,7 @@ import HashLoader from 'react-spinners/HashLoader';
 // import { openSync } from 'fs';
 import Mindmap_ListName_Modal from './Mindmap_ListName_Modal';
 import Mindmap_BoardName_Modal from './Mindmap_BoardName_Modal';
+import Select from 'react-select';
 
 
 const initialNodes: Node[] = [
@@ -1104,6 +1105,54 @@ const MindMap: React.FC<MindMapProps> = ({
   }, [maindmap_selected_board_data, viewMode, convertBoardToMindMap, setNodes, setEdges]);
 
 
+  const boardOptions = boards.map(board => ({
+    value: board.id,
+    label: board.name,
+  }));
+
+  const customStyles = {
+    control: (provided: any) => ({
+      ...provided,
+      background: currentTheme['--task-background-color'],
+      color: currentTheme['--main-text-coloure'],
+      borderColor: currentTheme['--border-color'],
+      borderRadius: 6,
+      minHeight: 33,
+      boxShadow: 'none',
+      width: 260, // static width
+      minWidth: 260,
+      maxWidth: 260,
+    }),
+    menu: (provided: any) => ({
+      ...provided,
+      background: currentTheme['--task-background-color'],
+      color: currentTheme['--main-text-coloure'],
+      borderColor: currentTheme['--border-color'],
+      zIndex: 10,
+      width: 260, // static width for dropdown
+      minWidth: 260,
+      maxWidth: 260,
+    }),
+    option: (provided: any, state: any) => ({
+      ...provided,
+      background: state.isFocused
+        ? currentTheme['--hover-color']
+        : currentTheme['--task-background-color'],
+      color: currentTheme['--main-text-coloure'],
+      cursor: 'pointer',
+    }),
+    singleValue: (provided: any) => ({
+      ...provided,
+      color: currentTheme['--main-text-coloure'],
+    }),
+    input: (provided: any) => ({
+      ...provided,
+      color: currentTheme['--main-text-coloure'],
+    }),
+  };
+
+
+
 
   return (
     <div className='mindmap_main_container'>
@@ -1230,23 +1279,14 @@ const MindMap: React.FC<MindMapProps> = ({
         <label style={{ color: currentTheme['--main-text-coloure'], fontSize: '14px' }}>
           Select Board:
         </label>
-        <select
-          value={maindmap_selected_board_data?.id || ''}
-          onChange={(e) => handleBoardChange(e.target.value)}
-          style={{
-            background: currentTheme['--task-background-color'],
-            color: currentTheme['--main-text-coloure'],
-            borderColor: currentTheme['--border-color'],
-          }}
-          className='mindmap_board_select'
-        >
-          <option value="">Select a board...</option>
-          {boards.map(board => (
-            <option key={board.id} value={board.id}>
-              {board.name}
-            </option>
-          ))}
-        </select>
+        <Select
+          value={boardOptions.find(opt => opt.value === maindmap_selected_board_data?.id)}
+          onChange={option => handleBoardChange(String(option?.value))}
+          options={boardOptions}
+          styles={customStyles}
+          placeholder="Select a board..."
+          isSearchable
+        />
 
 
         {/* Control Panel - Show for both modes */}
