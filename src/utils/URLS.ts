@@ -9,3 +9,22 @@ export const environment_urls = {
     websockersURL: "wss://api.shemaxsene.space/ws/boards/",
   }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

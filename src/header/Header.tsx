@@ -16,7 +16,7 @@ import type { MenuProps } from 'antd';
 import { LuLogOut } from "react-icons/lu";
 import ConfirmationDialog from "../components/Boards/ConfirmationDialog";
 import { useTranslation } from 'react-i18next';
-
+import { board } from "../utils/interface";
 
 interface HeaderProps {
   profileData: ProfileData;
@@ -32,6 +32,7 @@ interface HeaderProps {
   setLanguage: (language: 'en' | 'ka') => void;
   language: 'en' | 'ka';
   setSelectedComponent: (selectedComponent: string) => void;
+  setSelectedBoard: (selectedBoard: board | null) => void;
 }
 
 
@@ -49,7 +50,8 @@ const Header: React.FC<HeaderProps> = ({
   isMobile,
   setLanguage,
   language,
-  setSelectedComponent
+  setSelectedComponent,
+  setSelectedBoard
 }) => {
 
 
@@ -143,6 +145,7 @@ const handleLanguageChange = (selectedLanguage: 'en' | 'ka') => {
 
   // ===================================== handle user image click =========================================
   const handleUserImageClick = () => {
+    setSelectedBoard(null); 
     setSelectedComponent('Settings');
   };
 

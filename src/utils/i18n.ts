@@ -22,7 +22,8 @@ const resources = {
       'calendar': 'Calendar',
       'notification': 'Notification',
       "settings": "Settings",
-
+      'diagrams': 'Diagrams',
+      
       //template component
       "choose_a_template": "Choose a Template",
       'select_template': "Select Template",
@@ -136,6 +137,7 @@ const resources = {
       'owner': 'owner',
       "are_you_sure_you_want_to_delete_the_user": "Are you sure you want to delete the user: ",
       'from the board': " from the board: ",
+      'diagram': "Diagram",
 
       //board component
       'create_List': 'Create List',
@@ -196,6 +198,7 @@ const resources = {
       'calendar': 'კალენდარი',
       'notification': 'შეტყობინებები',
       "settings": "პარამეტრები",
+      'diagrams': 'დიაგრამები',
 
       //template component
       "choose_a_template": "შეარჩიე შაბლონი",
@@ -310,6 +313,7 @@ const resources = {
       'owner': 'მფლობელი',
       "are_you_sure_you_want_to_delete_the_user": "დარწმუნებული ხართ, რომ გსურთ წაშალოთ მომხმარებელი: ",
       'from the board': " დაფიდან: ",
+      'diagram': "დიაგრამა" ,
 
       //board component
       'create_List': 'სიის დამატება',

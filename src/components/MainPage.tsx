@@ -559,15 +559,7 @@ const MainPage: React.FC<MainPageProps> = ({
 
   useEffect(() => {
     console.log("listname changed:", ListName);
-  }, [ListName])
-
-  // const [isAddingList, setIsAddingList] = useState<boolean>(false);
-  // const [updatingListNameId, setUpdatingListNameId] = useState<number | null>(null);
-  // const [loadingLists, setLoadingLists] = useState<{ [listId: number]: boolean }>({});
-  // const [updatingTaskId, setUpdatingTaskId] = useState<number | null>(null);
-  // const [completingTaskId, setCompletingTaskId] = useState<number | null>(null);
-
-
+  }, [ListName]);
 
   // ===========================================================================================================
 

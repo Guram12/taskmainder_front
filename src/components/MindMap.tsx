@@ -31,13 +31,21 @@ import HashLoader from 'react-spinners/HashLoader';
 // import { openSync } from 'fs';
 import Mindmap_ListName_Modal from './Mindmap_ListName_Modal';
 import Mindmap_BoardName_Modal from './Mindmap_BoardName_Modal';
+import Select from 'react-select';
+import { PiWarningFill } from "react-icons/pi";
+import { FaClipboardList } from "react-icons/fa";
+import CustomTaskNode from './CustomTaskNode';
 
+
+const nodeTypes = {
+  customTask: CustomTaskNode,
+};
 
 const initialNodes: Node[] = [
   {
     id: '1',
     type: 'input',
-    data: { label: 'Please select a board to visualize' },
+    data: { label: 'Please select or create a board to visualize' },
     position: { x: 250, y: 25 },
     style: {
       background: '#6366f1',
@@ -82,7 +90,6 @@ const MindMap: React.FC<MindMapProps> = ({
   const [diagram_loading, setDiagram_loading] = useState<boolean>(false);
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
-  const [selectedElements, setSelectedElements] = useState<string[]>([]);
   const [viewMode, setViewMode] = useState<'custom' | 'board'>('custom');
   const [editingTask, setEditingTask] = useState<tasks | null>(null);
   const [isEditModalOpen, setIsEditModalOpen] = useState<boolean>(false);
@@ -94,6 +101,8 @@ const MindMap: React.FC<MindMapProps> = ({
   const [isBoardEditModalOpen, setIsBoardEditModalOpen] = useState<boolean>(false);
   const [editingBoard, setEditingBoard] = useState<board | null>(null);
   const [boardNameInput, setBoardNameInput] = useState<string>('');
+
+  const [cannot_connect_to_task_warning, setCannot_connect_to_task_warning] = useState<boolean>(false);
 
 
 
@@ -122,7 +131,7 @@ const MindMap: React.FC<MindMapProps> = ({
       if (selectedBoard) {
         setMaindmap_selected_board_data(selectedBoard);
         setViewMode('board');
-        fetchBoardData(selectedBoard.id.toString());
+        // fetchBoardData(selectedBoard.id.toString());
       } else {
         return;
       }
@@ -418,7 +427,7 @@ const MindMap: React.FC<MindMapProps> = ({
     return position;
   };
 
-  // Convert board data to mind map format
+  // ================================  Convert board data to mind map format ================================================
   const convertBoardToMindMap = useCallback((board: board) => {
     const newNodes: Node[] = [];
     const newEdges: Edge[] = [];
@@ -477,9 +486,9 @@ const MindMap: React.FC<MindMapProps> = ({
         data: { label: list.name },
         position: listPosition,
         style: {
-          background: '#10b981',
-          color: 'white',
-          border: '2px solid #059669',
+          background: currentTheme['--list-background-color'],
+          color: currentTheme['--main-text-coloure'],
+          border: `2px solid ${currentTheme['--border-color']}`,
           borderRadius: '8px',
           fontSize: '14px',
           fontWeight: 'bold',
@@ -521,31 +530,31 @@ const MindMap: React.FC<MindMapProps> = ({
 
         const taskNode: Node = {
           id: taskNodeId,
+          type: 'customTask',
           data: {
-            label: task.title.length > 20 ? task.title.substring(0, 20) + '...' : task.title,
+            label: task.title,
             completed: task.completed,
             priority: task.priority,
-            due_date: task.due_date
+            due_date: task.due_date,
+            style: {
+              background: currentTheme['--task-background-color'],
+              color: currentTheme['--main-text-coloure'],
+              border: `3px solid`,
+              borderColor:
+                task.priority === 'red' ? '#ef4444' :
+                  task.priority === 'orange' ? '#f59e0b' :
+                    task.priority === 'green' ? '#22c55e' :
+                      currentTheme['--border-color'],
+              borderRadius: '8px',
+              fontSize: '11px',
+              padding: '6px',
+              minWidth: '100px',
+              maxWidth: '200px',
+              opacity: task.completed ? 0.4 : 1,
+              wordWrap: 'break-word',
+            }
           },
           position: taskPosition,
-          style: {
-            background: task.completed ? '#6b7280' :
-              task.priority === 'red' ? '#ef4444' :
-                task.priority === 'orange' ? '#f59e0b' :
-                  task.priority === 'green' ? '#22c55e' : '#8b5cf6',
-            color: 'white',
-            border: `2px solid ${task.completed ? '#4b5563' :
-              task.priority === 'red' ? '#dc2626' :
-                task.priority === 'orange' ? '#d97706' :
-                  task.priority === 'green' ? '#16a34a' : '#7c3aed'}`,
-            borderRadius: '8px',
-            fontSize: '11px',
-            padding: '6px',
-            minWidth: '100px',
-            maxWidth: '150px',
-            opacity: task.completed ? 0.7 : 1,
-            wordWrap: 'break-word',
-          },
         };
         newNodes.push(taskNode);
         occupiedPositions.push(taskPosition);
@@ -556,7 +565,7 @@ const MindMap: React.FC<MindMapProps> = ({
           source: `list-${list.id}`,
           target: `task-${task.id}`,
           style: {
-            stroke: '#10b981',
+            stroke: currentTheme['--scrollbar-thumb-color'],
             strokeWidth: 2,
             strokeDasharray: task.completed ? '5,5' : undefined
           },
@@ -763,12 +772,34 @@ const MindMap: React.FC<MindMapProps> = ({
     setListNameInput('');
   }, []);
 
-  // ========================================================================================================================
-  // ========================================================================================================================
-  // ========================================================================================================================
 
+  const sendMoveTask = useCallback((taskId: number, sourceListId: number, targetListId: number) => {
+    if (mindMapSocketRef.current && mindMapSocketRef.current.readyState === WebSocket.OPEN) {
+      const message = {
+        action: 'move_task',
+        payload: {
+          task_id: taskId,
+          source_list_id: sourceListId,
+          target_list_id: targetListId,
+        }
+      };
+      try {
+        mindMapSocketRef.current.send(JSON.stringify(message));
+        console.log('Successfully sent move_task:', message);
+      } catch (error) {
+        console.error('Error sending move_task message:', error);
+      }
+    } else {
+      console.error('WebSocket is not connected for moving task');
+    }
+  }, []);
 
+  // ========================================================================================================================
+  // ========================================================================================================================
+  // ========================================================================================================================
   //  ============================= Handle new connections with smart detection  ===========================================
+
+
   const onConnect: OnConnect = useCallback(
     (params: Connection) => {
       console.log('Connection created:', params);
@@ -776,6 +807,71 @@ const MindMap: React.FC<MindMapProps> = ({
       if (viewMode === 'board' && params.source && params.target) {
         const sourceNode = nodes.find(n => n.id === params.source);
         const targetNode = nodes.find(n => n.id === params.target);
+
+
+        // Prevent connecting a new node to a task node
+        const isNewNodeSource = sourceNode?.data.label?.includes('New Node');
+        const isNewNodeTarget = targetNode?.data.label?.includes('New Node');
+        const isTaskSource = params.source?.startsWith('task-');
+        const isTaskTarget = params.target?.startsWith('task-');
+        const isListSource = params.source?.startsWith('list-');
+        const isListTarget = params.target?.startsWith('list-');
+
+        // Prevent connecting task to task
+        if (isTaskSource && isTaskTarget) {
+          setCannot_connect_to_task_warning(true);
+          return;
+        }
+
+        if ((isNewNodeSource && isTaskTarget) || (isNewNodeTarget && isTaskSource)) {
+          setCannot_connect_to_task_warning(true);
+          return;
+        }
+
+        // --- Move task to another list if connecting task to list ---
+        if (
+          ((isTaskSource && isListTarget) || (isListSource && isTaskTarget)) &&
+          !isNewNodeSource && !isNewNodeTarget
+        ) {
+          // Determine taskId, sourceListId, targetListId
+          let taskId: number | null = null;
+          let sourceListId: number | null = null;
+          let targetListId: number | null = null;
+
+          if (isTaskSource && isListTarget) {
+            taskId = parseInt(params.source!.replace('task-', ''));
+            targetListId = parseInt(params.target!.replace('list-', ''));
+            // Find the source list by searching which list contains this task
+            for (const list of maindmap_selected_board_data.lists) {
+              if (list.tasks.some(task => task.id === taskId)) {
+                sourceListId = list.id;
+                break;
+              }
+            }
+          } else if (isListSource && isTaskTarget) {
+            taskId = parseInt(params.target!.replace('task-', ''));
+            targetListId = parseInt(params.source!.replace('list-', ''));
+            // Find the source list by searching which list contains this task
+            for (const list of maindmap_selected_board_data.lists) {
+              if (list.tasks.some(task => task.id === taskId)) {
+                sourceListId = list.id;
+                break;
+              }
+            }
+          }
+
+          // Only move if source and target lists are different
+          if (
+            taskId &&
+            sourceListId &&
+            targetListId &&
+            sourceListId !== targetListId
+          ) {
+            sendMoveTask(taskId, sourceListId, targetListId);
+          }
+          // Do not create a new edge in this case
+          return;
+        }
 
         // Check if we're connecting a new node to an existing structure
         const isNewNodeConnection = sourceNode?.data.label?.includes('New Node') ||
@@ -834,7 +930,7 @@ const MindMap: React.FC<MindMapProps> = ({
         console.log('Connection already exists between these nodes');
       }
     },
-    [setEdges, edgeExists, viewMode, nodes]
+    [setEdges, edgeExists, viewMode, nodes, maindmap_selected_board_data, sendMoveTask]
   );
 
   // Handle new item creation
@@ -900,15 +996,6 @@ const MindMap: React.FC<MindMapProps> = ({
   }, [setNodes]);
 
 
-  // Remove selected connections
-  const removeSelectedConnections = useCallback(() => {
-    const selectedEdges = selectedElements.filter(id => edges.some(e => e.id === id));
-    if (selectedEdges.length > 0) {
-      setEdges((eds) => eds.filter(edge => !selectedEdges.includes(edge.id)));
-      setSelectedElements(prev => prev.filter(id => !selectedEdges.includes(id)));
-      console.log('Removed connections:', selectedEdges);
-    }
-  }, [selectedElements, edges, setEdges]);
 
   // Auto-layout function for better organization
   const autoLayout = useCallback(() => {
@@ -975,6 +1062,10 @@ const MindMap: React.FC<MindMapProps> = ({
       );
     }
   }, []);
+
+
+  // ====================================================== move task ===================================================
+
 
 
 
@@ -1104,13 +1195,62 @@ const MindMap: React.FC<MindMapProps> = ({
       setEdges(boardEdges);
 
       // Call fitView after nodes/edges are set and rendered
-      setTimeout(() => {
-        if (reactFlowInstanceRef.current) {
-          reactFlowInstanceRef.current.fitView();
-        }
-      }, 0);
+      // setTimeout(() => {
+      //   if (reactFlowInstanceRef.current) {
+      //     reactFlowInstanceRef.current.fitView();
+      //   }
+      // }, 0);
     }
   }, [maindmap_selected_board_data, viewMode, convertBoardToMindMap, setNodes, setEdges]);
+
+
+  const boardOptions = boards.map(board => ({
+    value: board.id,
+    label: board.name,
+  }));
+
+  const customStyles = {
+    control: (provided: any) => ({
+      ...provided,
+      background: currentTheme['--task-background-color'],
+      color: currentTheme['--main-text-coloure'],
+      borderColor: currentTheme['--border-color'],
+      borderRadius: 6,
+      minHeight: 35,
+      boxShadow: 'none',
+      width: 260, // static width
+      height: 35,
+      minWidth: 260,
+      maxWidth: 260,
+    }),
+    menu: (provided: any) => ({
+      ...provided,
+      background: currentTheme['--task-background-color'],
+      color: currentTheme['--main-text-coloure'],
+      borderColor: currentTheme['--border-color'],
+      zIndex: 10,
+      width: 260, // static width for dropdown
+      minWidth: 260,
+      maxWidth: 260,
+    }),
+    option: (provided: any, state: any) => ({
+      ...provided,
+      background: state.isFocused
+        ? currentTheme['--hover-color']
+        : currentTheme['--task-background-color'],
+      color: currentTheme['--main-text-coloure'],
+      cursor: 'pointer',
+    }),
+    singleValue: (provided: any) => ({
+      ...provided,
+      color: currentTheme['--main-text-coloure'],
+    }),
+    input: (provided: any) => ({
+      ...provided,
+      color: currentTheme['--main-text-coloure'],
+    }),
+  };
+
 
 
 
@@ -1154,6 +1294,42 @@ const MindMap: React.FC<MindMapProps> = ({
           setBoardNameInput={setBoardNameInput}
           handleBoardNameUpdate={handleBoardNameUpdate}
         />
+      )}
+
+      {cannot_connect_to_task_warning && (
+        <div className='warning_message_container'>
+          <div className='dark_background'> </div>
+          <div
+            className='warning_text'
+            style={{
+              color: currentTheme['--main-text-coloure'],
+              background: currentTheme['--list-background-color'],
+              borderColor: currentTheme['--border-color'],
+            }}
+          >
+            <div className='warning_little_container'>
+              <PiWarningFill className='taskwarning_icon' />
+              <p className='warning_text_message'
+                style={{
+                  color: currentTheme['--main-text-coloure'],
+
+                }}
+              >
+                You cannot connect a new node to a task node.
+              </p>
+            </div>
+            <button
+              onClick={() => setCannot_connect_to_task_warning(false)}
+              className='warning_close_button'
+              style={{
+                backgroundColor: currentTheme['--task-background-color'],
+                borderColor: currentTheme['--border-color'],
+              }}
+            >
+              Close
+            </button>
+          </div>
+        </div>
       )}
 
       {/* New Item Creation Modal */}
@@ -1228,216 +1404,154 @@ const MindMap: React.FC<MindMapProps> = ({
       )}
 
       {/* Board Selection Panel */}
-
-      <div
-        className='mindmap_board_selection_panel_container'
-        style={{
-          background: currentTheme['--background-color'],
-          borderColor: currentTheme['--border-color'],
-
-        }}>
-        <label style={{ color: currentTheme['--main-text-coloure'], fontSize: '14px' }}>
-          Select Board:
-        </label>
-        <select
-          value={maindmap_selected_board_data?.id || ''}
-          onChange={(e) => handleBoardChange(e.target.value)}
-          style={{
-            background: currentTheme['--task-background-color'],
-            color: currentTheme['--main-text-coloure'],
-            borderColor: currentTheme['--border-color'],
-          }}
-          className='mindmap_board_select'
-        >
-          <option value="">Select a board...</option>
-          {boards.map(board => (
-            <option key={board.id} value={board.id}>
-              {board.name}
-            </option>
-          ))}
-        </select>
-      </div>
-
-      {/* Control Panel - Show for both modes */}
-      {!diagram_loading && (
-
+      {boards.length > 0 && (
         <div
-          className='mindmap_control_panel_buttons_container'
+          className='mindmap_board_selection_panel_container'
           style={{
             background: currentTheme['--background-color'],
             borderColor: currentTheme['--border-color'],
-          }}>
-          <button
-            onClick={addNewNode}
-            style={{
-              background: '#6366f1',
-              color: 'white',
-              border: 'none',
-              padding: '5px 10px',
-              borderRadius: '4px',
-              cursor: 'pointer',
-              fontSize: '12px'
-            }}
-          >
-            Add Node (Connect to Board/List)
-          </button>
-
-          <button
-            onClick={removeSelectedConnections}
-            disabled={selectedElements.filter(id => edges.some(e => e.id === id)).length === 0}
-            style={{
-              background: selectedElements.filter(id => edges.some(e => e.id === id)).length > 0 ? '#f59e0b' : '#64748b',
-              color: 'white',
-              border: 'none',
-              padding: '5px 10px',
-              borderRadius: '4px',
-              cursor: 'pointer',
-              fontSize: '12px'
-            }}
-          >
-            Remove Connections (Ctrl+R)
-          </button>
-
-
-          {viewMode === 'board' && maindmap_selected_board_data && (
-            <>
-              <button
-                onClick={() => {
-                  const { nodes: boardNodes, edges: boardEdges } = convertBoardToMindMap(maindmap_selected_board_data);
-                  setNodes(boardNodes);
-                  setEdges(boardEdges);
-                }}
-                style={{
-                  background: '#059669',
-                  color: 'white',
-                  border: 'none',
-                  padding: '5px 10px',
-                  borderRadius: '4px',
-                  cursor: 'pointer',
-                  fontSize: '12px'
-                }}
-              >
-                Reset Board Layout
-              </button>
-              <button
-                onClick={() => {
-                  if (window.confirm('Are you sure you want to clear all saved positions for this board?')) {
-                    const key = getPositionStorageKey(maindmap_selected_board_data.id);
-                    localStorage.removeItem(key);
-                    // Reload the board with default positions
-                    const { nodes: boardNodes, edges: boardEdges } = convertBoardToMindMap(maindmap_selected_board_data);
-                    setNodes(boardNodes);
-                    setEdges(boardEdges);
-                  }
-                }}
-                style={{
-                  background: '#ef4444',
-                  color: 'white',
-                  border: 'none',
-                  padding: '5px 10px',
-                  borderRadius: '4px',
-                  cursor: 'pointer',
-                  fontSize: '12px'
-                }}
-              >
-                Clear Saved Positions
-              </button>
-            </>
-          )}
-          <button
-            onClick={autoLayout}
-            style={{
-              background: '#8b5cf6',
-              color: 'white',
-              border: 'none',
-              padding: '5px 10px',
-              borderRadius: '4px',
-              cursor: 'pointer',
-              fontSize: '12px'
-            }}
-          >
-            Auto Layout
-          </button>
-        </div>
-      )}
-
-      {/* Info Panel for Board Mode */}
-      {viewMode === 'board' && maindmap_selected_board_data && (
-        <div style={{
-          zIndex: 1000,
-          background: currentTheme['--background-color'],
-          padding: '10px',
-          borderRadius: '8px',
-          border: `1px solid ${currentTheme['--border-color']}`,
-          marginBottom: '10px',
-          color: currentTheme['--main-text-coloure'],
-          fontSize: '12px'
-        }}>
-          <strong>Board View:</strong> {maindmap_selected_board_data.name} |
-          <span style={{ marginLeft: '10px' }}>
-            Lists: {maindmap_selected_board_data.lists.length} |
-            Tasks: {maindmap_selected_board_data.lists.reduce((acc, list) => acc + list.tasks.length, 0)}
-          </span>
-          <span style={{ marginLeft: '10px', fontStyle: 'italic' }}>
-            Click task nodes to edit. Add new node and connect to board (for lists) or lists (for tasks) to create new items.
-          </span>
-        </div>
-      )}
-
-      {diagram_loading ? (
-        <div className="diagram_loader_container"><HashLoader color={currentTheme['--main-text-coloure']} className='hashloader' /></div>
-      ) : (
-
-        <ReactFlow
-          nodes={nodes}
-          edges={edges}
-          onNodesChange={handleNodesChange}
-          onEdgesChange={onEdgesChange}
-          onConnect={onConnect}
-          // onSelectionChange={onSelectionChange}
-          onNodeClick={onNodeClick}
-          fitView
-          multiSelectionKeyCode="Shift"
-          deleteKeyCode={null} // This disables deletion with Delete key
-          nodesDraggable={true}
-          nodesConnectable={true}
-          elementsSelectable={true}
-          style={{
-            background: currentTheme['--background-color'],
-          }}
-          onInit={(instance) => {
-            reactFlowInstanceRef.current = instance;
           }}
         >
-          <Controls />
-          <MiniMap
-            nodeColor={(node) => {
-              if (node.id.startsWith('board-')) return '#6366f1';
-              if (node.id.startsWith('list-')) return '#10b981';
-              if (node.id.startsWith('task-')) {
-                const taskData = node.data as any;
-                if (taskData.completed) return '#6b7280';
-                if (taskData.priority === 'red') return '#ef4444';
-                if (taskData.priority === 'orange') return '#f59e0b';
-                if (taskData.priority === 'green') return '#22c55e';
-                return '#8b5cf6';
-              }
-              return '#10b981';
-            }}
-            nodeStrokeWidth={3}
-            zoomable
-            pannable
-            maskColor="rgba(30, 41, 59, 0.8)"
+          <FaClipboardList className='mindmap_board_selection_icon' />
+          <Select
+            value={boardOptions.find(opt => opt.value === maindmap_selected_board_data?.id)}
+            onChange={option => handleBoardChange(String(option?.value))}
+            options={boardOptions}
+            styles={customStyles}
+            placeholder="Select a board..."
+            isSearchable
           />
-          <Background
-            variant={BackgroundVariant.Dots}
-            gap={20}
-            size={1}
-            color={currentTheme['--due-date-color']}
-          />
-        </ReactFlow>
 
+          {/* Control Panel - Show for both modes */}
+          {!diagram_loading && boards.length > 0 && (
+
+            <div
+              className='mindmap_control_panel_buttons_container'
+              style={{
+                background: currentTheme['--background-color'],
+                borderColor: currentTheme['--border-color'],
+              }}>
+              <button
+                onClick={addNewNode}
+                style={{
+                  background: '#6366f1',
+                  color: 'white',
+                  border: 'none',
+                  padding: '5px 10px',
+                  borderRadius: '4px',
+                  cursor: 'pointer',
+                  fontSize: '12px'
+                }}
+              >
+                Add Node (Connect to Board/List)
+              </button>
+
+
+              {viewMode === 'board' && maindmap_selected_board_data && (
+                <>
+                  <button
+                    onClick={() => {
+                      if (window.confirm('Are you sure you want to clear all saved positions for this board?')) {
+                        const key = getPositionStorageKey(maindmap_selected_board_data.id);
+                        localStorage.removeItem(key);
+                        // Reload the board with default positions
+                        const { nodes: boardNodes, edges: boardEdges } = convertBoardToMindMap(maindmap_selected_board_data);
+                        setNodes(boardNodes);
+                        setEdges(boardEdges);
+                      }
+                    }}
+                    style={{
+                      background: '#ef4444',
+                      color: 'white',
+                      border: 'none',
+                      padding: '5px 10px',
+                      borderRadius: '4px',
+                      cursor: 'pointer',
+                      fontSize: '12px'
+                    }}
+                  >
+                    Clear Saved Positions
+                  </button>
+                </>
+              )}
+
+              <button
+                onClick={autoLayout}
+                style={{
+                  background: '#8b5cf6',
+                  color: 'white',
+                  border: 'none',
+                  padding: '5px 10px',
+                  borderRadius: '4px',
+                  cursor: 'pointer',
+                  fontSize: '12px'
+                }}
+              >
+                Auto Layout
+              </button>
+            </div>
+          )}
+        </div>
       )}
+
+
+      <div className='mindmap_diagram_container'>
+        {diagram_loading ? (
+          <div className="diagram_loader_container"><HashLoader color={currentTheme['--main-text-coloure']} className='hashloader' /></div>
+        ) : (
+          <ReactFlow
+            nodes={nodes}
+            edges={edges}
+            onNodesChange={handleNodesChange}
+            onEdgesChange={onEdgesChange}
+            onConnect={onConnect}
+            onNodeClick={onNodeClick}
+            fitView={true}
+            multiSelectionKeyCode="Shift"
+            deleteKeyCode={null}
+            nodesDraggable={true}
+            nodesConnectable={true}
+            elementsSelectable={true}
+            nodeTypes={nodeTypes}
+            style={{
+              background: currentTheme['--background-color'],
+              width: '800px',
+              height: '600px',
+            }}
+            onInit={(instance) => {
+              reactFlowInstanceRef.current = instance;
+            }}
+          >
+            <Controls />
+            <MiniMap
+              nodeColor={(node) => {
+                if (node.id.startsWith('board-')) return '#6366f1';
+                if (node.id.startsWith('list-')) return '#10b981';
+                if (node.id.startsWith('task-')) {
+                  const taskData = node.data as any;
+                  if (taskData.completed) return '#6b7280';
+                  if (taskData.priority === 'red') return '#ef4444';
+                  if (taskData.priority === 'orange') return '#f59e0b';
+                  if (taskData.priority === 'green') return '#22c55e';
+                  return `${currentTheme['--task-background-color']}`;
+                }
+                return '#10b981';
+              }}
+              nodeStrokeWidth={3}
+              zoomable
+              pannable
+              maskColor="rgba(30, 41, 59, 0.8)"
+            />
+            <Background
+              variant={BackgroundVariant.Dots}
+              gap={20}
+              size={1}
+              color={currentTheme['--due-date-color']}
+            />
+          </ReactFlow>
+
+        )}
+      </div>
 
     </div>
   );
