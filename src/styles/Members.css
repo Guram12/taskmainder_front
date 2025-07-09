@@ -522,7 +522,9 @@
 
 @media screen and (max-width: 768px) {
 
-
+.main_members_container {
+  justify-content: space-between;
+}
   .board_name_cont {
     margin-left: 0px;
   }
@@ -690,5 +692,20 @@
     font-size: 18px;
     font-weight: bold;
 
+  }
+.members_diagram_icon_cont {
+  height: 27px;
+  margin-left: 0px;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 0px;
+  cursor: pointer;
+  width: min-content;
+
+}
+
+  .diagram_p{
+    display: none;
   }
 }

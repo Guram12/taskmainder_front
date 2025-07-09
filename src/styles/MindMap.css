@@ -5,6 +5,82 @@
   /* overflow: hidden;  // Optional: add if you want to hide overflow */
 }
 
+/* =========================================  task connect warning styles ============================================ */
+.warning_message_container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  /* Prevents blocking UI */
+}
+
+.warning_message_container .dark_background {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0 0 0 / 0.4);
+  z-index: 99999;
+}
+
+.warning_message_container .warning_text {
+  position: relative;
+  z-index: 999999;
+  border: 2px solid;
+  border-radius: 8px;
+  padding: 24px 40px;
+  font-size: 1.2rem;
+  font-weight: bold;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.15);
+  text-align: center;
+  max-width: 90vw;
+  pointer-events: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+}
+
+.warning_little_container {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.taskwarning_icon {
+  color: red;
+  width: 30px;
+  height: 30px;
+}
+
+.warning_text_message {
+  font-size: 16px;
+  margin: 0px;
+}
+
+.warning_close_button {
+  width: 100px;
+  height: 30px;
+  cursor: pointer;
+  border: 1px solid;
+  border-radius: 8px;
+  transition: all 0.3s ease-in-out;
+  font-size: 15px;
+  font-weight: bold;
+}
+
+.warning_close_button:hover {
+  box-shadow: 0 2px 4px rgba(0 0 0 / 0.3);
+  background-color: seagreen !important;
+}
+/* ===================================================================================================== */
 .diagram_new_item_container {
   position: fixed;
   top: 0;
@@ -21,7 +97,6 @@
 .react-flow__attribution {
   display: none !important;
 }
-
 
 
 
@@ -80,27 +155,6 @@
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 .mindmap_diagram_container {
   width: 100%;
   height: calc(100vh - 175px);
@@ -122,4 +176,16 @@
 .hashloader {
   width: 60px;
   height: 60px;
+}
+
+
+@media screen and (max-width: 768px) {
+
+  .warning_text {
+    width: 70%;
+  }
+
+  .warning_text_message {
+    font-size: 14px;
+  }
 }

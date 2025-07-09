@@ -136,6 +136,7 @@ const resources = {
       'owner': 'owner',
       "are_you_sure_you_want_to_delete_the_user": "Are you sure you want to delete the user: ",
       'from the board': " from the board: ",
+      'diagram': "Diagram",
 
       //board component
       'create_List': 'Create List',
@@ -310,6 +311,7 @@ const resources = {
       'owner': 'მფლობელი',
       "are_you_sure_you_want_to_delete_the_user": "დარწმუნებული ხართ, რომ გსურთ წაშალოთ მომხმარებელი: ",
       'from the board': " დაფიდან: ",
+      'diagram': "დიაგრამა" ,
 
       //board component
       'create_List': 'სიის დამატება',

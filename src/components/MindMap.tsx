@@ -32,6 +32,7 @@ import HashLoader from 'react-spinners/HashLoader';
 import Mindmap_ListName_Modal from './Mindmap_ListName_Modal';
 import Mindmap_BoardName_Modal from './Mindmap_BoardName_Modal';
 import Select from 'react-select';
+import { PiWarningFill } from "react-icons/pi";
 
 
 const initialNodes: Node[] = [
@@ -83,7 +84,6 @@ const MindMap: React.FC<MindMapProps> = ({
   const [diagram_loading, setDiagram_loading] = useState<boolean>(false);
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
-  const [selectedElements, setSelectedElements] = useState<string[]>([]);
   const [viewMode, setViewMode] = useState<'custom' | 'board'>('custom');
   const [editingTask, setEditingTask] = useState<tasks | null>(null);
   const [isEditModalOpen, setIsEditModalOpen] = useState<boolean>(false);
@@ -95,6 +95,8 @@ const MindMap: React.FC<MindMapProps> = ({
   const [isBoardEditModalOpen, setIsBoardEditModalOpen] = useState<boolean>(false);
   const [editingBoard, setEditingBoard] = useState<board | null>(null);
   const [boardNameInput, setBoardNameInput] = useState<string>('');
+
+  const [cannot_connect_to_task_warning, setCannot_connect_to_task_warning] = useState<boolean>(false);
 
 
 
@@ -123,7 +125,7 @@ const MindMap: React.FC<MindMapProps> = ({
       if (selectedBoard) {
         setMaindmap_selected_board_data(selectedBoard);
         setViewMode('board');
-        fetchBoardData(selectedBoard.id.toString());
+        // fetchBoardData(selectedBoard.id.toString());
       } else {
         return;
       }
@@ -778,6 +780,19 @@ const MindMap: React.FC<MindMapProps> = ({
         const sourceNode = nodes.find(n => n.id === params.source);
         const targetNode = nodes.find(n => n.id === params.target);
 
+
+        // Prevent connecting a new node to a task node
+        const isNewNodeSource = sourceNode?.data.label?.includes('New Node');
+        const isNewNodeTarget = targetNode?.data.label?.includes('New Node');
+        const isTaskSource = params.source?.startsWith('task-');
+        const isTaskTarget = params.target?.startsWith('task-');
+
+        if ((isNewNodeSource && isTaskTarget) || (isNewNodeTarget && isTaskSource)) {
+          setCannot_connect_to_task_warning(true);
+          return;
+        }
+
+
         // Check if we're connecting a new node to an existing structure
         const isNewNodeConnection = sourceNode?.data.label?.includes('New Node') ||
           targetNode?.data.label?.includes('New Node');
@@ -1117,9 +1132,10 @@ const MindMap: React.FC<MindMapProps> = ({
       color: currentTheme['--main-text-coloure'],
       borderColor: currentTheme['--border-color'],
       borderRadius: 6,
-      minHeight: 33,
+      minHeight: 35,
       boxShadow: 'none',
       width: 260, // static width
+      height: 35,
       minWidth: 260,
       maxWidth: 260,
     }),
@@ -1194,6 +1210,42 @@ const MindMap: React.FC<MindMapProps> = ({
           setBoardNameInput={setBoardNameInput}
           handleBoardNameUpdate={handleBoardNameUpdate}
         />
+      )}
+
+      {cannot_connect_to_task_warning && (
+        <div className='warning_message_container'>
+          <div className='dark_background'> </div>
+          <div
+            className='warning_text'
+            style={{
+              color: currentTheme['--main-text-coloure'],
+              background: currentTheme['--list-background-color'],
+              borderColor: currentTheme['--border-color'],
+            }}
+          >
+            <div className='warning_little_container'>
+              <PiWarningFill className='taskwarning_icon' />
+              <p className='warning_text_message'
+                style={{
+                  color: currentTheme['--main-text-coloure'],
+
+                }}
+              >
+                You cannot connect a new node to a task node.
+              </p>
+            </div>
+            <button
+              onClick={() => setCannot_connect_to_task_warning(false)}
+              className='warning_close_button'
+              style={{
+                backgroundColor: currentTheme['--task-background-color'],
+                borderColor: currentTheme['--border-color'],
+              }}
+            >
+              Close
+            </button>
+          </div>
+        </div>
       )}
 
       {/* New Item Creation Modal */}

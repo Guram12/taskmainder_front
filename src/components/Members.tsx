@@ -645,7 +645,7 @@ const Members: React.FC<MembersProps> = ({
         className="members_diagram_icon_cont"
         onClick={() => handle_diagram_click(String(selectedBoard?.id))}>
         <BsFillDiagram3Fill className="members_diagram_icon" />
-        <p style={{ color: currentTheme['--main-text-coloure'] }} className="diagram_p"> Diagram</p>
+        <p style={{ color: currentTheme['--main-text-coloure'] }} className="diagram_p"> {t('diagram')}</p>
       </div>
 
       {/* current board users list and their permission in window */}
