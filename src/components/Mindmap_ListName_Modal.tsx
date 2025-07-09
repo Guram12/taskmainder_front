@@ -67,6 +67,7 @@ const Mindmap_ListName_Modal: React.FC<Mindmap_ListName_ModalProps> = ({
                 color: currentTheme['--main-text-coloure'],
               }}
               autoFocus
+              maxLength={21}
             />
 
             <div style={{ display: 'flex', gap: '10px', justifyContent: 'flex-end', marginTop: '15px' }}>

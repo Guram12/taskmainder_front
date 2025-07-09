@@ -34,7 +34,12 @@ import Mindmap_BoardName_Modal from './Mindmap_BoardName_Modal';
 import Select from 'react-select';
 import { PiWarningFill } from "react-icons/pi";
 import { FaClipboardList } from "react-icons/fa";
+import CustomTaskNode from './CustomTaskNode';
 
+
+  const nodeTypes = {
+    customTask: CustomTaskNode,
+  };
 
 const initialNodes: Node[] = [
   {
@@ -422,7 +427,7 @@ const MindMap: React.FC<MindMapProps> = ({
     return position;
   };
 
-  // Convert board data to mind map format
+  // ================================  Convert board data to mind map format ================================================
   const convertBoardToMindMap = useCallback((board: board) => {
     const newNodes: Node[] = [];
     const newEdges: Edge[] = [];
@@ -525,31 +530,31 @@ const MindMap: React.FC<MindMapProps> = ({
 
         const taskNode: Node = {
           id: taskNodeId,
+          type: 'customTask',
           data: {
-            label: task.title.length > 20 ? task.title.substring(0, 20) + '...' : task.title,
+            label: task.title,
             completed: task.completed,
             priority: task.priority,
-            due_date: task.due_date
+            due_date: task.due_date,
+            style: {
+              background: currentTheme['--task-background-color'],
+              color: currentTheme['--main-text-coloure'],
+              border: `3px solid`,
+              borderColor:
+                task.priority === 'red' ? '#ef4444' :
+                  task.priority === 'orange' ? '#f59e0b' :
+                    task.priority === 'green' ? '#22c55e' :
+                      currentTheme['--border-color'],
+              borderRadius: '8px',
+              fontSize: '11px',
+              padding: '6px',
+              minWidth: '100px',
+              maxWidth: '200px',
+              opacity: task.completed ? 0.4 : 1,
+              wordWrap: 'break-word',
+            }
           },
           position: taskPosition,
-          style: {
-            background: currentTheme['--task-background-color'],
-            color: currentTheme['--main-text-coloure'],
-            border: `3px solid`,
-            borderColor:
-              task.priority === 'red' ? '#ef4444' :
-                task.priority === 'orange' ? '#f59e0b' :
-                  task.priority === 'green' ? '#22c55e' :
-                    currentTheme['--border-color'],
-
-            borderRadius: '8px',
-            fontSize: '11px',
-            padding: '6px',
-            minWidth: '100px',
-            maxWidth: '150px',
-            opacity: task.completed ? 0.4 : 1,
-            wordWrap: 'break-word',
-          },
         };
         newNodes.push(taskNode);
         occupiedPositions.push(taskPosition);
@@ -773,6 +778,7 @@ const MindMap: React.FC<MindMapProps> = ({
 
 
   //  ============================= Handle new connections with smart detection  ===========================================
+
   const onConnect: OnConnect = useCallback(
     (params: Connection) => {
       console.log('Connection created:', params);
@@ -787,6 +793,12 @@ const MindMap: React.FC<MindMapProps> = ({
         const isNewNodeTarget = targetNode?.data.label?.includes('New Node');
         const isTaskSource = params.source?.startsWith('task-');
         const isTaskTarget = params.target?.startsWith('task-');
+
+        // Prevent connecting task to task
+        if (isTaskSource && isTaskTarget) {
+          setCannot_connect_to_task_warning(true);
+          return;
+        }
 
         if ((isNewNodeSource && isTaskTarget) || (isNewNodeTarget && isTaskSource)) {
           setCannot_connect_to_task_warning(true);
@@ -1429,6 +1441,7 @@ const MindMap: React.FC<MindMapProps> = ({
             nodesDraggable={true}
             nodesConnectable={true}
             elementsSelectable={true}
+            nodeTypes={nodeTypes}
             style={{
               background: currentTheme['--background-color'],
               width: '800px',
