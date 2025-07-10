@@ -5,8 +5,8 @@ export const environment_urls = {
   //   websockersURL: "ws://localhost:8000/ws/boards/",
   // }
   URLS: {
-    baseURL: "https://api.shemaxsene.space",
-    websockersURL: "wss://api.shemaxsene.space/ws/boards/",
+    baseURL: "https://api.dailydoer.space",
+    websockersURL: "wss://api.dailydoer.space/ws/boards/",
   }
 }
 
