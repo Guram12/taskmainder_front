@@ -191,9 +191,10 @@ const App: React.FC = () => {
 
 
   useEffect(() => {
-    subscribeToPushNotifications();
-  }, []);
-
+    if (isAuthenticated) {
+      subscribeToPushNotifications();
+    }
+  }, [isAuthenticated]);
 
   // -------------------------------------------- socket connection for board users ------------------------------------------
   const [is_members_refreshing, setIs_members_refreshing] = useState<boolean>(false);
