@@ -56,6 +56,10 @@ const App: React.FC = () => {
 
   // ==================================== change language =========================================
 
+useEffect(() => {
+  console.log('language' + language + ' is set');
+}, [language]);
+
   useEffect(() => {
     console.log('language changed to:', language);
     if (i18n.isInitialized) {
