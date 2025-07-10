@@ -820,6 +820,7 @@ const Members: React.FC<MembersProps> = ({
                               className="board_user_images"
                             />
                           ) : (
+                            
                             <Avatar
                               className="board_user_images"
                               alt={boardUser.username}

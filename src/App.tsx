@@ -448,6 +448,8 @@ const App: React.FC = () => {
           boards={boards}
           setBoards={setBoards}
           allCurrentBoardUsers={[]}
+          setSelectedComponent={setSelectedComponent}
+          setSelectedBoard={setSelectedBoard}
 
         />} />
         <Route path="/error" element={<ErrorPage currentTheme={currentTheme} />} />

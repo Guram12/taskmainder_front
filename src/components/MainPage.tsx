@@ -540,6 +540,8 @@ const MainPage: React.FC<MainPageProps> = ({
               boards={boards}
               setBoards={setBoards}
               allCurrentBoardUsers={allCurrentBoardUsers}
+              setSelectedBoard={setSelectedBoard}
+              setSelectedComponent={setSelectedComponent}
             />
           </ReactFlowProvider>
 

@@ -125,6 +125,8 @@
   border: 1px solid;
   border-radius: 30px;
   font-size: 13px;
+  cursor: pointer;
+
 }
 
 /* ------------------------------------- mobile theme dropdown  styles -------------------------------------------------- */
@@ -226,7 +228,8 @@
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  max-width: 150px; /* Adjust this value based on your design needs */
+  max-width: 150px;
+  /* Adjust this value based on your design needs */
 }
 
 .language_and_user_in_header {

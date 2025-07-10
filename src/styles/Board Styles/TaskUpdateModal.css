@@ -251,7 +251,8 @@
   background-color: transparent;
   border: 1px solid;
   font-weight: bold;
-  font-size: 10px;
+  font-size: 9px;
+  min-width: 50px;
 }
 
 .low {

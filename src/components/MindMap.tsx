@@ -75,6 +75,8 @@ interface MindMapProps {
   boards: board[];
   setBoards: (boards: board[]) => void;
   allCurrentBoardUsers: ProfileData[];
+  setSelectedBoard: (board: board | null) => void;
+  setSelectedComponent: (component: string) => void;
 }
 
 
@@ -83,6 +85,8 @@ const MindMap: React.FC<MindMapProps> = ({
   boards,
   allCurrentBoardUsers,
   setBoards,
+  setSelectedBoard,
+  setSelectedComponent,
 }) => {
 
 
@@ -102,7 +106,7 @@ const MindMap: React.FC<MindMapProps> = ({
   const [editingBoard, setEditingBoard] = useState<board | null>(null);
   const [boardNameInput, setBoardNameInput] = useState<string>('');
 
-  const [cannot_connect_to_task_warning, setCannot_connect_to_task_warning] = useState<boolean>(false);
+  const [cannot_connect_to_task_warning, setCannot_connect_to_task_warning] = useState<{ isConnected: boolean, message: string }>({ isConnected: false, message: '' });
 
 
 
@@ -192,7 +196,7 @@ const MindMap: React.FC<MindMapProps> = ({
     return {};
   }, [getPositionStorageKey]);
 
-  // Custom onNodesChange handler that saves positions
+  //================================= Custom onNodesChange handler that saves positions
   const handleNodesChange: OnNodesChange = useCallback((changes: NodeChange[]) => {
     onNodesChange(changes);
 
@@ -442,7 +446,6 @@ const MindMap: React.FC<MindMapProps> = ({
 
     // Dynamic spacing calculations
     const listSpacing = Math.max(300, 200 + (totalTasks > 20 ? 100 : 0));
-    const taskSpacing = Math.max(120, 100 + (totalTasks > 10 ? 20 : 0));
     const verticalSpacing = Math.max(100, 80 + (totalTasks > 15 ? 30 : 0));
 
     // Main board node - centered or use saved position
@@ -510,24 +513,23 @@ const MindMap: React.FC<MindMapProps> = ({
       newEdges.push(boardToListEdge);
 
       // Create task nodes with improved grid layout
-      const tasksPerRow = Math.min(3, Math.ceil(Math.sqrt(list.tasks.length)));
       const taskStartY = listPosition.y + 150;
-
       list.tasks.forEach((task: tasks, taskIndex: number) => {
         const taskNodeId = `task-${task.id}`;
-        const row = Math.floor(taskIndex / tasksPerRow);
-        const col = taskIndex % tasksPerRow;
-
-        // Calculate base position for task
+        // Each task is placed directly below the previous one
         const baseTaskPosition = {
-          x: listPosition.x - ((tasksPerRow - 1) * taskSpacing / 2) + (col * taskSpacing),
-          y: taskStartY + (row * verticalSpacing)
+          x: listPosition.x,
+          y: taskStartY + (taskIndex * verticalSpacing)
         };
 
-        // Use saved position if available, otherwise find non-overlapping position
+        // Use saved position if available, otherwise use calculated
         const taskPosition = savedPositions[taskNodeId] ||
-          findNonOverlappingPosition(baseTaskPosition, occupiedPositions, 130);
+          findNonOverlappingPosition(baseTaskPosition, occupiedPositions, 100);
 
+
+        const associatedUsers = allCurrentBoardUsers.filter(user =>
+          task.task_associated_users_id?.includes(user.id)
+        );
         const taskNode: Node = {
           id: taskNodeId,
           type: 'customTask',
@@ -536,6 +538,7 @@ const MindMap: React.FC<MindMapProps> = ({
             completed: task.completed,
             priority: task.priority,
             due_date: task.due_date,
+            associatedUsers,
             style: {
               background: currentTheme['--task-background-color'],
               color: currentTheme['--main-text-coloure'],
@@ -810,8 +813,8 @@ const MindMap: React.FC<MindMapProps> = ({
 
 
         // Prevent connecting a new node to a task node
-        const isNewNodeSource = sourceNode?.data.label?.includes('New Node');
-        const isNewNodeTarget = targetNode?.data.label?.includes('New Node');
+        const isNewNodeSource = sourceNode?.data.isTemp; // <-- use isTemp
+        const isNewNodeTarget = targetNode?.data.isTemp; // <-- use isTemp
         const isTaskSource = params.source?.startsWith('task-');
         const isTaskTarget = params.target?.startsWith('task-');
         const isListSource = params.source?.startsWith('list-');
@@ -819,12 +822,19 @@ const MindMap: React.FC<MindMapProps> = ({
 
         // Prevent connecting task to task
         if (isTaskSource && isTaskTarget) {
-          setCannot_connect_to_task_warning(true);
+          setCannot_connect_to_task_warning({ isConnected: true, message: 'Cannot connect task to task' });
           return;
         }
 
+        // Prevent connecting list to list
+        if (isListSource && isListTarget) {
+          setCannot_connect_to_task_warning({ isConnected: true, message: 'Cannot connect list to list' });
+          return;
+        }
+
+        // Prevent connecting new node to task or task to new node
         if ((isNewNodeSource && isTaskTarget) || (isNewNodeTarget && isTaskSource)) {
-          setCannot_connect_to_task_warning(true);
+          setCannot_connect_to_task_warning({ isConnected: true, message: 'Cannot connect new node to task' });
           return;
         }
 
@@ -873,19 +883,14 @@ const MindMap: React.FC<MindMapProps> = ({
           return;
         }
 
-        // Check if we're connecting a new node to an existing structure
-        const isNewNodeConnection = sourceNode?.data.label?.includes('New Node') ||
-          targetNode?.data.label?.includes('New Node');
 
-        if (isNewNodeConnection) {
+        if (isNewNodeSource || isNewNodeTarget) {
           let newItemType: 'task' | 'list' = 'task';
           let targetId = '';
           let tempNodeId = '';
 
-          // Determine what type of item to create based on the connection
-          if (sourceNode?.data.label?.includes('New Node')) {
-            // New node is source
-            tempNodeId = params.source;
+          if (isNewNodeSource) {
+            tempNodeId = params.source!;
             if (params.target?.startsWith('board-')) {
               newItemType = 'list';
               targetId = params.target;
@@ -893,9 +898,8 @@ const MindMap: React.FC<MindMapProps> = ({
               newItemType = 'task';
               targetId = params.target;
             }
-          } else if (targetNode?.data.label?.includes('New Node')) {
-            // New node is target
-            tempNodeId = params.target;
+          } else if (isNewNodeTarget) {
+            tempNodeId = params.target!;
             if (params.source?.startsWith('board-')) {
               newItemType = 'list';
               targetId = params.source;
@@ -906,7 +910,6 @@ const MindMap: React.FC<MindMapProps> = ({
           }
 
           if (targetId && tempNodeId) {
-            // Open modal to name the new item
             setNewItemModal({
               isOpen: true,
               type: newItemType,
@@ -914,7 +917,7 @@ const MindMap: React.FC<MindMapProps> = ({
               targetId: targetId,
               tempNodeId: tempNodeId
             });
-            return; // Don't create the edge yet
+            return;
           }
         }
       }
@@ -933,10 +936,15 @@ const MindMap: React.FC<MindMapProps> = ({
     [setEdges, edgeExists, viewMode, nodes, maindmap_selected_board_data, sendMoveTask]
   );
 
-  // Handle new item creation
+
+
+  // ========================================  Handle new item creation  ================================================
+  const [isTempNodeCreated, setIsTempNodeCreated] = useState<boolean>(false);
+  const [tempNodeId, setTempNodeId] = useState<string | null>(null);
+
+
   const handleCreateNewItem = useCallback(() => {
     if (!newItemModal.name.trim()) return;
-
     const { type, targetId, tempNodeId, name } = newItemModal;
 
     if (type === 'task' && targetId.startsWith('list-')) {
@@ -949,7 +957,7 @@ const MindMap: React.FC<MindMapProps> = ({
 
     // Remove the temporary node
     setNodes((nds) => nds.filter(node => node.id !== tempNodeId));
-
+    setIsTempNodeCreated(false);
     // Close modal
     setNewItemModal({
       isOpen: false,
@@ -975,17 +983,23 @@ const MindMap: React.FC<MindMapProps> = ({
     });
   }, [newItemModal.tempNodeId, setNodes]);
 
-  // Add new node with better labeling
+  // =================================   Add new node with better labeling =========================================
+
   const addNewNode = useCallback(() => {
+    setIsTempNodeCreated(true);
+
     const newNodeId = `temp-${Date.now()}`;
+    setTempNodeId(newNodeId); // <-- store the ID
+
     const newNode: Node = {
       id: newNodeId,
-      data: { label: `New Node (Connect to create)` },
+      data: { label: `Connect board to create list. Connect list to create task`, isTemp: true },
       position: { x: Math.random() * 500 + 200, y: Math.random() * 300 + 200 },
       style: {
-        background: '#64748b',
+        background: currentTheme['--task-background-color'],
         color: 'white',
-        border: '2px solid #475569',
+        border: '2px solid',
+        borderColor: currentTheme['--border-color'],
         borderRadius: '8px',
         fontSize: '12px',
         padding: '8px',
@@ -993,36 +1007,28 @@ const MindMap: React.FC<MindMapProps> = ({
       },
     };
     setNodes((nds) => [...nds, newNode]);
-  }, [setNodes]);
+  }, [setNodes, currentTheme]);
 
+  // ================================== delete newly created node befor connection =====================================
 
+  const handle_delete_new_node = useCallback((nodeId: string) => {
+    setNodes((nds) => nds.filter(node => node.id !== nodeId));
+    setIsTempNodeCreated(false);
+    setTempNodeId(null); // <-- clear the temp node id
 
-  // Auto-layout function for better organization
-  const autoLayout = useCallback(() => {
-    const layoutedNodes = nodes.map((node) => {
-      if (node.id.startsWith('board-')) {
-        // Keep board nodes at the top center
+    setNewItemModal((prev) => {
+      if (prev.tempNodeId === nodeId) {
         return {
-          ...node,
-          position: { x: 400, y: 50 }
+          isOpen: false,
+          type: 'task',
+          name: '',
+          targetId: '',
+          tempNodeId: ''
         };
-      } else if (node.id.startsWith('list-')) {
-        // Arrange lists in a row
-        const listNodes = nodes.filter(n => n.id.startsWith('list-'));
-        const listIndex = listNodes.findIndex(n => n.id === node.id);
-        return {
-          ...node,
-          position: { x: 100 + (listIndex * 300), y: 250 }
-        };
-      } else if (node.id.startsWith('task-')) {
-        // Keep tasks near their parent lists
-        return node;
       }
-      return node;
+      return prev;
     });
-
-    setNodes(layoutedNodes);
-  }, [nodes, setNodes]);
+  }, [setNodes, setIsTempNodeCreated, setNewItemModal]);
 
 
   // ======================================= task update ================================================
@@ -1194,14 +1200,9 @@ const MindMap: React.FC<MindMapProps> = ({
       setNodes(boardNodes);
       setEdges(boardEdges);
 
-      // Call fitView after nodes/edges are set and rendered
-      // setTimeout(() => {
-      //   if (reactFlowInstanceRef.current) {
-      //     reactFlowInstanceRef.current.fitView();
-      //   }
-      // }, 0);
     }
   }, [maindmap_selected_board_data, viewMode, convertBoardToMindMap, setNodes, setEdges]);
+
 
 
   const boardOptions = boards.map(board => ({
@@ -1218,10 +1219,10 @@ const MindMap: React.FC<MindMapProps> = ({
       borderRadius: 6,
       minHeight: 35,
       boxShadow: 'none',
-      width: 260, // static width
+      width: 220,
       height: 35,
-      minWidth: 260,
-      maxWidth: 260,
+      minWidth: 220,
+      maxWidth: 220,
     }),
     menu: (provided: any) => ({
       ...provided,
@@ -1229,7 +1230,7 @@ const MindMap: React.FC<MindMapProps> = ({
       color: currentTheme['--main-text-coloure'],
       borderColor: currentTheme['--border-color'],
       zIndex: 10,
-      width: 260, // static width for dropdown
+      width: 260,
       minWidth: 260,
       maxWidth: 260,
     }),
@@ -1251,7 +1252,37 @@ const MindMap: React.FC<MindMapProps> = ({
     }),
   };
 
+  // ================================= reset positions to default =========================================
 
+  const handleResetPositions = useCallback(() => {
+    if (!maindmap_selected_board_data?.id) return;
+    // Remove saved positions from localStorage
+    const key = getPositionStorageKey(maindmap_selected_board_data.id);
+    localStorage.removeItem(key);
+
+    // Regenerate nodes/edges with default positions
+    const { nodes: boardNodes, edges: boardEdges } = convertBoardToMindMap(maindmap_selected_board_data);
+    setNodes(boardNodes);
+    setEdges(boardEdges);
+  }, [
+    maindmap_selected_board_data,
+    getPositionStorageKey,
+    convertBoardToMindMap,
+    setNodes,
+    setEdges,
+  ]);
+
+  // =============================================== return to boards ================================================
+
+  const returnToBoards = () => {
+    if (maindmap_selected_board_data.id !== 0 && maindmap_selected_board_data.id !== null) {
+      setSelectedBoard(maindmap_selected_board_data)
+      setSelectedComponent("Boards"); // Switch to the Boards view
+
+    } else {
+      return;
+    }
+  }
 
 
   return (
@@ -1296,7 +1327,7 @@ const MindMap: React.FC<MindMapProps> = ({
         />
       )}
 
-      {cannot_connect_to_task_warning && (
+      {cannot_connect_to_task_warning.isConnected && (
         <div className='warning_message_container'>
           <div className='dark_background'> </div>
           <div
@@ -1315,11 +1346,11 @@ const MindMap: React.FC<MindMapProps> = ({
 
                 }}
               >
-                You cannot connect a new node to a task node.
+                {cannot_connect_to_task_warning.message}
               </p>
             </div>
             <button
-              onClick={() => setCannot_connect_to_task_warning(false)}
+              onClick={() => setCannot_connect_to_task_warning({ isConnected: false, message: '' })}
               className='warning_close_button'
               style={{
                 backgroundColor: currentTheme['--task-background-color'],
@@ -1412,7 +1443,18 @@ const MindMap: React.FC<MindMapProps> = ({
             borderColor: currentTheme['--border-color'],
           }}
         >
-          <FaClipboardList className='mindmap_board_selection_icon' />
+          <div
+            className='mindmap_board_return_container'
+            style={{ background: currentTheme['--task-background-color'] }}
+            onClick={returnToBoards}
+          >
+            <FaClipboardList className='mindmap_board_selection_icon'
+              style={{ color: currentTheme['--main-text-coloure'] }}
+            />
+            <p className='return_board_p'> Boards Mode</p>
+          </div>
+
+
           <Select
             value={boardOptions.find(opt => opt.value === maindmap_selected_board_data?.id)}
             onChange={option => handleBoardChange(String(option?.value))}
@@ -1422,76 +1464,56 @@ const MindMap: React.FC<MindMapProps> = ({
             isSearchable
           />
 
-          {/* Control Panel - Show for both modes */}
-          {!diagram_loading && boards.length > 0 && (
 
-            <div
-              className='mindmap_control_panel_buttons_container'
+          {isTempNodeCreated && tempNodeId ? (
+            <button
+              onClick={() => handle_delete_new_node(tempNodeId)}
+              className='delete_new_node_button'
               style={{
-                background: currentTheme['--background-color'],
-                borderColor: currentTheme['--border-color'],
-              }}>
-              <button
-                onClick={addNewNode}
-                style={{
-                  background: '#6366f1',
-                  color: 'white',
-                  border: 'none',
-                  padding: '5px 10px',
-                  borderRadius: '4px',
-                  cursor: 'pointer',
-                  fontSize: '12px'
-                }}
-              >
-                Add Node (Connect to Board/List)
-              </button>
-
-
-              {viewMode === 'board' && maindmap_selected_board_data && (
-                <>
-                  <button
-                    onClick={() => {
-                      if (window.confirm('Are you sure you want to clear all saved positions for this board?')) {
-                        const key = getPositionStorageKey(maindmap_selected_board_data.id);
-                        localStorage.removeItem(key);
-                        // Reload the board with default positions
-                        const { nodes: boardNodes, edges: boardEdges } = convertBoardToMindMap(maindmap_selected_board_data);
-                        setNodes(boardNodes);
-                        setEdges(boardEdges);
-                      }
-                    }}
-                    style={{
-                      background: '#ef4444',
-                      color: 'white',
-                      border: 'none',
-                      padding: '5px 10px',
-                      borderRadius: '4px',
-                      cursor: 'pointer',
-                      fontSize: '12px'
-                    }}
-                  >
-                    Clear Saved Positions
-                  </button>
-                </>
-              )}
-
-              <button
-                onClick={autoLayout}
-                style={{
-                  background: '#8b5cf6',
-                  color: 'white',
-                  border: 'none',
-                  padding: '5px 10px',
-                  borderRadius: '4px',
-                  cursor: 'pointer',
-                  fontSize: '12px'
-                }}
-              >
-                Auto Layout
-              </button>
-            </div>
+                background: currentTheme['--task-background-color'],
+                color: currentTheme['--main-text-coloure'],
+              }}
+            >
+              delete node
+            </button>
+          ) : (
+            <button
+              onClick={addNewNode}
+              style={{
+                background: currentTheme['--task-background-color'],
+                color: currentTheme['--main-text-coloure'],
+                border: 'none',
+                padding: '5px 10px',
+                borderRadius: '4px',
+                cursor: 'pointer',
+                fontSize: '12px'
+              }}
+              className='add_new_node_button'
+            >
+              Add List / Task
+            </button>
           )}
+
+          {viewMode === 'board' && maindmap_selected_board_data && (
+            <button
+              onClick={handleResetPositions}
+              style={{
+                background: currentTheme['--task-background-color'],
+                color: currentTheme['--main-text-coloure'],
+                border: 'none',
+                padding: '5px 10px',
+                borderRadius: '4px',
+                cursor: 'pointer',
+                fontSize: '12px'
+              }}
+              className='reset_positions_button'
+            >
+              Reset positions
+            </button>
+          )}
+
         </div>
+
       )}
 
 
@@ -1541,7 +1563,11 @@ const MindMap: React.FC<MindMapProps> = ({
               zoomable
               pannable
               maskColor="rgba(30, 41, 59, 0.8)"
+              style={{
+                backgroundColor: currentTheme['--background-color'],
+              }}
             />
+
             <Background
               variant={BackgroundVariant.Dots}
               gap={20}

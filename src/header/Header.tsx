@@ -174,7 +174,7 @@ const handleLanguageChange = (selectedLanguage: 'en' | 'ka') => {
             }}
             onClick={handle_return_to_custom_theme}
           >
-
+              
             {t('customTheme')}
           </div>
         ),

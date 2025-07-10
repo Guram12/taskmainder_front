@@ -1,7 +1,6 @@
 .mindmap_main_container {
   width: 100%;
-  height: calc(100vh - 75px);
-  border: 1px solid red;
+  height: calc(100vh - 72px);
   /* overflow: hidden;  // Optional: add if you want to hide overflow */
 }
 
@@ -80,6 +79,7 @@
   box-shadow: 0 2px 4px rgba(0 0 0 / 0.3);
   background-color: seagreen !important;
 }
+
 /* ===================================================================================================== */
 .diagram_new_item_container {
   position: fixed;
@@ -98,9 +98,6 @@
   display: none !important;
 }
 
-
-
-
 .new_item_modal {
   width: 400px;
   padding: 20px;
@@ -108,7 +105,6 @@
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   border: 1px solid;
 }
-
 
 
 .new_item_input {
@@ -125,17 +121,91 @@
   z-index: 1000;
   padding: 10px;
   border-radius: 8px;
-  border: 1px solid;
-  margin-bottom: 10px;
+  border-bottom: 1px solid;
   display: flex;
   align-items: center;
   flex-wrap: wrap;
   gap: 10px;
 }
 
-.mindmap_board_selection_icon{
+
+.mindmap_board_return_container {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  border-radius: 4px;
+  padding: 0px 8px 0px 6px;
+  height: 34px;
+  transition: all 0.3s ease-in-out;
+}
+
+.mindmap_board_return_container:hover{
+  background-color:seagreen !important;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.mindmap_board_selection_icon {
   width: 25px;
   height: 25px;
+  transition: all 0.3s ease-in-out;
+  cursor: pointer;
+
+}
+
+.return_board_p {
+  font-size: 12px;
+  font-weight: bold;
+  cursor: pointer;
+  margin: 0px;
+}
+
+
+.delete_new_node_button {
+  border: none;
+  padding: 5px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 12px;
+  height: 35px;
+  font-weight: bold;
+  transition: all 0.3s ease-in-out;
+}
+
+.delete_new_node_button:hover {
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  background-color: red !important;
+}
+
+.add_new_node_button {
+  border: none;
+  padding: 5px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 12px;
+  height: 35px;
+  font-weight: bold;
+  transition: all 0.3s ease-in-out;
+}
+
+.add_new_node_button:hover {
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  background-color: seagreen !important;
+}
+
+.reset_positions_button {
+  border: none;
+  padding: 5px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 12px;
+  height: 35px;
+  font-weight: bold;
+  transition: all 0.3s ease-in-out;
+}
+
+.reset_positions_button:hover {
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  background-color: red !important;
 }
 
 
@@ -148,24 +218,11 @@
 }
 
 
-
-.mindmap_control_panel_buttons_container {
-  padding: 10px;
-  border-radius: 8px;
-  border: 1px solid;
-  display: flex;
-  gap: 10px;
-  flex-wrap: wrap;
-}
-
-
-
 .mindmap_diagram_container {
   width: 100%;
-  height: calc(100vh - 175px);
+  height: calc(100vh - 128px);
   position: relative;
   overflow: hidden;
-  border: 1px solid green;
 }
 
 
@@ -183,8 +240,44 @@
   height: 60px;
 }
 
+/* ======================================= task node styles ========================================= */
+.all_user_image_cont {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+  margin-top: 10px;
+  gap: 2px;
+  overflow-x: scroll;
+  overflow: hidden;
+}
+
+.tasknode_user_images_cont {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+
+}
+
+.tasknode_image {
+  width: 25px;
+  height: 25px;
+  border-radius: 50%;
+}
+
+
+
+
+/* ====================================================================================================== */
+
 
 @media screen and (max-width: 768px) {
+  .mindmap_diagram_container {
+    width: 100%;
+    height: calc(100vh - 173px);
+    position: relative;
+    overflow: hidden;
+  }
 
   .warning_text {
     width: 70%;
