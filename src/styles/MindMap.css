@@ -128,10 +128,37 @@
   gap: 10px;
 }
 
+
+.mindmap_board_return_container {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  border-radius: 4px;
+  padding: 0px 8px 0px 6px;
+  height: 34px;
+  transition: all 0.3s ease-in-out;
+}
+
+.mindmap_board_return_container:hover{
+  background-color:seagreen !important;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
 .mindmap_board_selection_icon {
   width: 25px;
   height: 25px;
+  transition: all 0.3s ease-in-out;
+  cursor: pointer;
+
 }
+
+.return_board_p {
+  font-size: 12px;
+  font-weight: bold;
+  cursor: pointer;
+  margin: 0px;
+}
+
 
 .delete_new_node_button {
   border: none;
@@ -212,6 +239,36 @@
   width: 60px;
   height: 60px;
 }
+
+/* ======================================= task node styles ========================================= */
+.all_user_image_cont {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+  margin-top: 10px;
+  gap: 2px;
+  overflow-x: scroll;
+  overflow: hidden;
+}
+
+.tasknode_user_images_cont {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+
+}
+
+.tasknode_image {
+  width: 25px;
+  height: 25px;
+  border-radius: 50%;
+}
+
+
+
+
+/* ====================================================================================================== */
 
 
 @media screen and (max-width: 768px) {

@@ -75,6 +75,8 @@ interface MindMapProps {
   boards: board[];
   setBoards: (boards: board[]) => void;
   allCurrentBoardUsers: ProfileData[];
+  setSelectedBoard: (board: board | null) => void;
+  setSelectedComponent: (component: string) => void;
 }
 
 
@@ -83,6 +85,8 @@ const MindMap: React.FC<MindMapProps> = ({
   boards,
   allCurrentBoardUsers,
   setBoards,
+  setSelectedBoard,
+  setSelectedComponent,
 }) => {
 
 
@@ -522,6 +526,10 @@ const MindMap: React.FC<MindMapProps> = ({
         const taskPosition = savedPositions[taskNodeId] ||
           findNonOverlappingPosition(baseTaskPosition, occupiedPositions, 100);
 
+
+        const associatedUsers = allCurrentBoardUsers.filter(user =>
+          task.task_associated_users_id?.includes(user.id)
+        );
         const taskNode: Node = {
           id: taskNodeId,
           type: 'customTask',
@@ -530,6 +538,7 @@ const MindMap: React.FC<MindMapProps> = ({
             completed: task.completed,
             priority: task.priority,
             due_date: task.due_date,
+            associatedUsers,
             style: {
               background: currentTheme['--task-background-color'],
               color: currentTheme['--main-text-coloure'],
@@ -1268,6 +1277,19 @@ const MindMap: React.FC<MindMapProps> = ({
     setEdges,
   ]);
 
+  // =============================================== return to boards ================================================
+
+  const returnToBoards = () => {
+    if (maindmap_selected_board_data.id !== 0 && maindmap_selected_board_data.id !== null) {
+      setSelectedBoard(maindmap_selected_board_data)
+      setSelectedComponent("Boards"); // Switch to the Boards view
+
+    } else {
+      return;
+    }
+  }
+
+
   return (
     <div className='mindmap_main_container'>
       {/* Task Update Modal */}
@@ -1426,7 +1448,18 @@ const MindMap: React.FC<MindMapProps> = ({
             borderColor: currentTheme['--border-color'],
           }}
         >
-          <FaClipboardList className='mindmap_board_selection_icon' />
+          <div
+            className='mindmap_board_return_container'
+            style={{ background: currentTheme['--task-background-color'] }}
+            onClick={returnToBoards}
+          >
+            <FaClipboardList className='mindmap_board_selection_icon'
+              style={{ color: currentTheme['--main-text-coloure'] }}
+            />
+            <p className='return_board_p'> Boards Mode</p>
+          </div>
+
+
           <Select
             value={boardOptions.find(opt => opt.value === maindmap_selected_board_data?.id)}
             onChange={option => handleBoardChange(String(option?.value))}
@@ -1435,8 +1468,6 @@ const MindMap: React.FC<MindMapProps> = ({
             placeholder="Select a board..."
             isSearchable
           />
-
-
 
 
           {isTempNodeCreated && tempNodeId ? (
