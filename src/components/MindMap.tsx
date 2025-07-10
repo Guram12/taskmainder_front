@@ -933,10 +933,15 @@ const MindMap: React.FC<MindMapProps> = ({
     [setEdges, edgeExists, viewMode, nodes, maindmap_selected_board_data, sendMoveTask]
   );
 
-  // Handle new item creation
+
+
+  // ========================================  Handle new item creation  ================================================
+  const [isTempNodeCreated, setIsTempNodeCreated] = useState<boolean>(false);
+  const [tempNodeId, setTempNodeId] = useState<string | null>(null);
+
+
   const handleCreateNewItem = useCallback(() => {
     if (!newItemModal.name.trim()) return;
-
     const { type, targetId, tempNodeId, name } = newItemModal;
 
     if (type === 'task' && targetId.startsWith('list-')) {
@@ -949,7 +954,7 @@ const MindMap: React.FC<MindMapProps> = ({
 
     // Remove the temporary node
     setNodes((nds) => nds.filter(node => node.id !== tempNodeId));
-
+    setIsTempNodeCreated(false);
     // Close modal
     setNewItemModal({
       isOpen: false,
@@ -975,12 +980,17 @@ const MindMap: React.FC<MindMapProps> = ({
     });
   }, [newItemModal.tempNodeId, setNodes]);
 
-  // Add new node with better labeling
+  // =================================   Add new node with better labeling =========================================
+
   const addNewNode = useCallback(() => {
+    setIsTempNodeCreated(true);
+
     const newNodeId = `temp-${Date.now()}`;
+    setTempNodeId(newNodeId); // <-- store the ID
+
     const newNode: Node = {
       id: newNodeId,
-      data: { label: `Connect board to create list. Connect list to create task`, isTemp: true }, // <-- add isTemp
+      data: { label: `Connect board to create list. Connect list to create task`, isTemp: true },
       position: { x: Math.random() * 500 + 200, y: Math.random() * 300 + 200 },
       style: {
         background: currentTheme['--task-background-color'],
@@ -994,9 +1004,28 @@ const MindMap: React.FC<MindMapProps> = ({
       },
     };
     setNodes((nds) => [...nds, newNode]);
-  }, [setNodes]);
+  }, [setNodes, currentTheme]);
 
+  // ================================== delete newly created node befor connection =====================================
 
+  const handle_delete_new_node = useCallback((nodeId: string) => {
+    setNodes((nds) => nds.filter(node => node.id !== nodeId));
+    setIsTempNodeCreated(false);
+    setTempNodeId(null); // <-- clear the temp node id
+
+    setNewItemModal((prev) => {
+      if (prev.tempNodeId === nodeId) {
+        return {
+          isOpen: false,
+          type: 'task',
+          name: '',
+          targetId: '',
+          tempNodeId: ''
+        };
+      }
+      return prev;
+    });
+  }, [setNodes, setIsTempNodeCreated, setNewItemModal]);
 
 
   // ======================================= task update ================================================
@@ -1397,22 +1426,36 @@ const MindMap: React.FC<MindMapProps> = ({
           />
 
 
-          <button
-            onClick={addNewNode}
-            style={{
-              background: currentTheme['--task-background-color'],
-              color: currentTheme['--main-text-coloure'],
-              border: 'none',
-              padding: '5px 10px',
-              borderRadius: '4px',
-              cursor: 'pointer',
-              fontSize: '12px'
-            }}
-            className='add_new_node_button'
-          >
-            Add List / Task
-          </button>
 
+
+          {isTempNodeCreated && tempNodeId ? (
+            <button
+              onClick={() => handle_delete_new_node(tempNodeId)}
+              className='delete_new_node_button'
+              style={{
+                background: currentTheme['--task-background-color'],
+                color: currentTheme['--main-text-coloure'],
+              }}
+            >
+              delete node
+            </button>
+          ) : (
+            <button
+              onClick={addNewNode}
+              style={{
+                background: currentTheme['--task-background-color'],
+                color: currentTheme['--main-text-coloure'],
+                border: 'none',
+                padding: '5px 10px',
+                borderRadius: '4px',
+                cursor: 'pointer',
+                fontSize: '12px'
+              }}
+              className='add_new_node_button'
+            >
+              Add List / Task
+            </button>
+          )}
 
           {viewMode === 'board' && maindmap_selected_board_data && (
             <button
@@ -1440,7 +1483,6 @@ const MindMap: React.FC<MindMapProps> = ({
               Reset positions
             </button>
           )}
-
 
         </div>
 
@@ -1493,7 +1535,11 @@ const MindMap: React.FC<MindMapProps> = ({
               zoomable
               pannable
               maskColor="rgba(30, 41, 59, 0.8)"
+              style= {{
+                backgroundColor: currentTheme['--background-color'],
+              }}
             />
+
             <Background
               variant={BackgroundVariant.Dots}
               gap={20}

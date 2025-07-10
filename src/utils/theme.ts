@@ -12,15 +12,14 @@ export interface ThemeSpecs {
 
 const themes = {
   dark_gray: {
-    '--background-color': '#181A1B',           // Slightly lighter, deep charcoal
+    '--background-color': '#181A1B',           // Deep charcoal
     '--main-text-coloure': '#F5F6FA',          // Very light gray for high contrast
-    '--border-color': '#2C2F33',               // Subtle, slightly lighter than background
-    '--scrollbar-thumb-color': '#44474A',      // Muted mid-gray for scrollbars
-    '--list-background-color': '#23272A',      // Slightly lighter than background for lists
-    '--task-background-color': '#181A1BCE',     // Close to list bg, but distinct for cards/tasks
-    // '--task-background-color': '#222326', 
-    '--hover-color': '#23272A',           // Slightly lighter than background
-    '--due-date-color': '#A3B1C6'         // Muted blue-gray for due dates
+    '--border-color': '#35383B',               // Slightly lighter, cool gray for borders
+    '--scrollbar-thumb-color': '#3A3D40',      // Mid-gray, distinct from background and border
+    '--list-background-color': '#202224',      // Noticeably lighter than background for lists
+    '--task-background-color': '#23262A',      // Slightly blue-tinted dark for cards/tasks
+    '--hover-color': '#24282C',                // Subtle blue-gray for hover, lighter than background
+    '--due-date-color': '#B0B9C6'              // Softer, lighter blue-gray for due dates
   },
 
   forest_night: {

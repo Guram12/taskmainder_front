@@ -1,7 +1,6 @@
 .mindmap_main_container {
   width: 100%;
-  height: calc(100vh - 75px);
-  border: 1px solid red;
+  height: calc(100vh - 72px);
   /* overflow: hidden;  // Optional: add if you want to hide overflow */
 }
 
@@ -122,8 +121,7 @@
   z-index: 1000;
   padding: 10px;
   border-radius: 8px;
-  border: 1px solid;
-  margin-bottom: 10px;
+  border-bottom: 1px solid;
   display: flex;
   align-items: center;
   flex-wrap: wrap;
@@ -133,6 +131,22 @@
 .mindmap_board_selection_icon {
   width: 25px;
   height: 25px;
+}
+
+.delete_new_node_button {
+  border: none;
+  padding: 5px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 12px;
+  height: 35px;
+  font-weight: bold;
+  transition: all 0.3s ease-in-out;
+}
+
+.delete_new_node_button:hover {
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  background-color: red !important;
 }
 
 .add_new_node_button {
@@ -179,10 +193,9 @@
 
 .mindmap_diagram_container {
   width: 100%;
-  height: calc(100vh - 175px);
+  height: calc(100vh - 128px);
   position: relative;
   overflow: hidden;
-  border: 1px solid green;
 }
 
 
@@ -202,6 +215,12 @@
 
 
 @media screen and (max-width: 768px) {
+  .mindmap_diagram_container {
+    width: 100%;
+    height: calc(100vh - 173px);
+    position: relative;
+    overflow: hidden;
+  }
 
   .warning_text {
     width: 70%;
