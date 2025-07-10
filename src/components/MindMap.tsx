@@ -1200,14 +1200,9 @@ const MindMap: React.FC<MindMapProps> = ({
       setNodes(boardNodes);
       setEdges(boardEdges);
 
-      // Call fitView after nodes/edges are set and rendered
-      // setTimeout(() => {
-      //   if (reactFlowInstanceRef.current) {
-      //     reactFlowInstanceRef.current.fitView();
-      //   }
-      // }, 0);
     }
   }, [maindmap_selected_board_data, viewMode, convertBoardToMindMap, setNodes, setEdges]);
+
 
 
   const boardOptions = boards.map(board => ({
