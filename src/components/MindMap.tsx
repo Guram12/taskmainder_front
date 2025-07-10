@@ -192,7 +192,7 @@ const MindMap: React.FC<MindMapProps> = ({
     return {};
   }, [getPositionStorageKey]);
 
-  // Custom onNodesChange handler that saves positions
+  //================================= Custom onNodesChange handler that saves positions
   const handleNodesChange: OnNodesChange = useCallback((changes: NodeChange[]) => {
     onNodesChange(changes);
 
@@ -442,7 +442,6 @@ const MindMap: React.FC<MindMapProps> = ({
 
     // Dynamic spacing calculations
     const listSpacing = Math.max(300, 200 + (totalTasks > 20 ? 100 : 0));
-    const taskSpacing = Math.max(120, 100 + (totalTasks > 10 ? 20 : 0));
     const verticalSpacing = Math.max(100, 80 + (totalTasks > 15 ? 30 : 0));
 
     // Main board node - centered or use saved position
@@ -510,23 +509,18 @@ const MindMap: React.FC<MindMapProps> = ({
       newEdges.push(boardToListEdge);
 
       // Create task nodes with improved grid layout
-      const tasksPerRow = Math.min(3, Math.ceil(Math.sqrt(list.tasks.length)));
       const taskStartY = listPosition.y + 150;
-
       list.tasks.forEach((task: tasks, taskIndex: number) => {
         const taskNodeId = `task-${task.id}`;
-        const row = Math.floor(taskIndex / tasksPerRow);
-        const col = taskIndex % tasksPerRow;
-
-        // Calculate base position for task
+        // Each task is placed directly below the previous one
         const baseTaskPosition = {
-          x: listPosition.x - ((tasksPerRow - 1) * taskSpacing / 2) + (col * taskSpacing),
-          y: taskStartY + (row * verticalSpacing)
+          x: listPosition.x,
+          y: taskStartY + (taskIndex * verticalSpacing)
         };
 
-        // Use saved position if available, otherwise find non-overlapping position
+        // Use saved position if available, otherwise use calculated
         const taskPosition = savedPositions[taskNodeId] ||
-          findNonOverlappingPosition(baseTaskPosition, occupiedPositions, 130);
+          findNonOverlappingPosition(baseTaskPosition, occupiedPositions, 100);
 
         const taskNode: Node = {
           id: taskNodeId,
@@ -1254,8 +1248,25 @@ const MindMap: React.FC<MindMapProps> = ({
     }),
   };
 
+  // ================================= reset positions to default =========================================
 
+  const handleResetPositions = useCallback(() => {
+    if (!maindmap_selected_board_data?.id) return;
+    // Remove saved positions from localStorage
+    const key = getPositionStorageKey(maindmap_selected_board_data.id);
+    localStorage.removeItem(key);
 
+    // Regenerate nodes/edges with default positions
+    const { nodes: boardNodes, edges: boardEdges } = convertBoardToMindMap(maindmap_selected_board_data);
+    setNodes(boardNodes);
+    setEdges(boardEdges);
+  }, [
+    maindmap_selected_board_data,
+    getPositionStorageKey,
+    convertBoardToMindMap,
+    setNodes,
+    setEdges,
+  ]);
 
   return (
     <div className='mindmap_main_container'>
@@ -1459,16 +1470,7 @@ const MindMap: React.FC<MindMapProps> = ({
 
           {viewMode === 'board' && maindmap_selected_board_data && (
             <button
-              onClick={() => {
-                if (window.confirm('Are you sure you want to clear all saved positions for this board?')) {
-                  const key = getPositionStorageKey(maindmap_selected_board_data.id);
-                  localStorage.removeItem(key);
-                  // Reload the board with default positions
-                  const { nodes: boardNodes, edges: boardEdges } = convertBoardToMindMap(maindmap_selected_board_data);
-                  setNodes(boardNodes);
-                  setEdges(boardEdges);
-                }
-              }}
+              onClick={handleResetPositions}
               style={{
                 background: currentTheme['--task-background-color'],
                 color: currentTheme['--main-text-coloure'],
@@ -1535,7 +1537,7 @@ const MindMap: React.FC<MindMapProps> = ({
               zoomable
               pannable
               maskColor="rgba(30, 41, 59, 0.8)"
-              style= {{
+              style={{
                 backgroundColor: currentTheme['--background-color'],
               }}
             />
