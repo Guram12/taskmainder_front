@@ -80,6 +80,7 @@
   box-shadow: 0 2px 4px rgba(0 0 0 / 0.3);
   background-color: seagreen !important;
 }
+
 /* ===================================================================================================== */
 .diagram_new_item_container {
   position: fixed;
@@ -98,9 +99,6 @@
   display: none !important;
 }
 
-
-
-
 .new_item_modal {
   width: 400px;
   padding: 20px;
@@ -108,7 +106,6 @@
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   border: 1px solid;
 }
-
 
 
 .new_item_input {
@@ -133,9 +130,41 @@
   gap: 10px;
 }
 
-.mindmap_board_selection_icon{
+.mindmap_board_selection_icon {
   width: 25px;
   height: 25px;
+}
+
+.add_new_node_button {
+  border: none;
+  padding: 5px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 12px;
+  height: 35px;
+  font-weight: bold;
+  transition: all 0.3s ease-in-out;
+}
+
+.add_new_node_button:hover {
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  background-color: seagreen !important;
+}
+
+.reset_positions_button {
+  border: none;
+  padding: 5px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 12px;
+  height: 35px;
+  font-weight: bold;
+  transition: all 0.3s ease-in-out;
+}
+
+.reset_positions_button:hover {
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  background-color: red !important;
 }
 
 
@@ -146,18 +175,6 @@
   min-width: 150px;
   border: 1px solid;
 }
-
-
-
-.mindmap_control_panel_buttons_container {
-  padding: 10px;
-  border-radius: 8px;
-  border: 1px solid;
-  display: flex;
-  gap: 10px;
-  flex-wrap: wrap;
-}
-
 
 
 .mindmap_diagram_container {
