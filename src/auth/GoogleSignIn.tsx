@@ -18,7 +18,7 @@ const GoogleSignIn: React.FC<GoogleSignInProps> = ({ setIsAuthenticated }) => {
   const handleGoogleLoginSuccess = async (response: CredentialResponse) => {
     try {
       const res = await axiosInstance.post('/acc/social/login/token/', {
-        id_token: response.credential, 
+        id_token: response.credential,
       }, {
         headers: {
           'Content-Type': 'application/json',
@@ -62,7 +62,8 @@ const GoogleSignIn: React.FC<GoogleSignInProps> = ({ setIsAuthenticated }) => {
       <GoogleLogin
         onSuccess={handleGoogleLoginSuccess}
         onError={handleGoogleLoginFailure}
-        ux_mode="popup" 
+        ux_mode="redirect"
+        login_uri={`${window.location.origin}/finish-profile/`} // <-- trailing slash!
         useOneTap={true}
         theme="filled_black"  // Options: 'outline' or 'filled'
         size="large"     // Options: 'small', 'medium', 'large'
