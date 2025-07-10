@@ -58,6 +58,22 @@ const App: React.FC = () => {
 
 useEffect(() => {
   console.log('language' + language + ' is set');
+  if (i18n.isInitialized) {
+    i18n.changeLanguage(language);
+  } else {
+    i18n.init({
+      lng: language,
+      fallbackLng: 'en',
+      resources: {
+        en: {
+          translation: require('./locales/en/translation.json'),
+        },
+        ka: {
+          translation: require('./locales/ka/translation.json'),
+        },
+      },
+    });
+  }
 }, [language]);
 
   useEffect(() => {
