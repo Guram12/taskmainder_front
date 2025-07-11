@@ -5,7 +5,6 @@ import axiosInstance from '../utils/axiosinstance';
 import { useNavigate } from 'react-router-dom';
 import { ProfileData } from "../utils/interface";
 
-
 interface GoogleSignInProps {
   setIsAuthenticated: (value: boolean) => void;
 }
@@ -13,7 +12,7 @@ interface GoogleSignInProps {
 const GoogleSignIn: React.FC<GoogleSignInProps> = ({ setIsAuthenticated }) => {
   const navigate = useNavigate();
 
-
+  const google_client_id = import.meta.env.VITE_GOOGLE_CLIENT_ID;
 
   const handleGoogleLoginSuccess = async (response: CredentialResponse) => {
     try {
@@ -58,7 +57,7 @@ const GoogleSignIn: React.FC<GoogleSignInProps> = ({ setIsAuthenticated }) => {
 
 
   return (
-    <GoogleOAuthProvider clientId={import.meta.env.VITE_GOOGLE_CLIENT_ID}>
+    <GoogleOAuthProvider clientId={google_client_id}>
       <GoogleLogin
         onSuccess={handleGoogleLoginSuccess}
         onError={handleGoogleLoginFailure}

@@ -35,6 +35,9 @@ import Select from 'react-select';
 import { PiWarningFill } from "react-icons/pi";
 import { FaClipboardList } from "react-icons/fa";
 import CustomTaskNode from './CustomTaskNode';
+import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
+
 
 
 const nodeTypes = {
@@ -109,7 +112,6 @@ const MindMap: React.FC<MindMapProps> = ({
   const [cannot_connect_to_task_warning, setCannot_connect_to_task_warning] = useState<{ isConnected: boolean, message: string }>({ isConnected: false, message: '' });
 
 
-
   // Add new state for naming new items
   const [newItemModal, setNewItemModal] = useState<{
     isOpen: boolean;
@@ -125,7 +127,12 @@ const MindMap: React.FC<MindMapProps> = ({
     tempNodeId: ''
   });
 
+  const { t } = useTranslation();
+  const navigate = useNavigate();
+
   const prev_mindmap_selected_board = localStorage.getItem('prev_mindmap_selected_board_id');
+
+
 
 
   //-------------  when page opens automatically select boar from localstorage prev selected ---------
@@ -135,7 +142,8 @@ const MindMap: React.FC<MindMapProps> = ({
       if (selectedBoard) {
         setMaindmap_selected_board_data(selectedBoard);
         setViewMode('board');
-        // fetchBoardData(selectedBoard.id.toString());
+        setDiagram_loading(true);
+        fetchBoardData(selectedBoard.id.toString());
       } else {
         return;
       }
@@ -230,9 +238,14 @@ const MindMap: React.FC<MindMapProps> = ({
 
     // Clean up previous socket connection
     if (mindMapSocketRef.current) {
-      mindMapSocketRef.current.close();
+      // Only close if OPEN or CONNECTING
+      if (
+        mindMapSocketRef.current.readyState === WebSocket.OPEN ||
+        mindMapSocketRef.current.readyState === WebSocket.CONNECTING
+      ) {
+        mindMapSocketRef.current.close();
+      }
     }
-
     const token = localStorage.getItem('access_token');
     if (!token) {
       console.error('No access token found');
@@ -800,7 +813,7 @@ const MindMap: React.FC<MindMapProps> = ({
   // ========================================================================================================================
   // ========================================================================================================================
   // ========================================================================================================================
-  //  ============================= Handle new connections with smart detection  ===========================================
+  // ================================== Handle new connections with smart detection  ========================================
 
 
   const onConnect: OnConnect = useCallback(
@@ -822,19 +835,28 @@ const MindMap: React.FC<MindMapProps> = ({
 
         // Prevent connecting task to task
         if (isTaskSource && isTaskTarget) {
-          setCannot_connect_to_task_warning({ isConnected: true, message: 'Cannot connect task to task' });
+          let message = t('cannot_connect_task_to_task');
+          setCannot_connect_to_task_warning({ isConnected: true, message });
           return;
         }
-
         // Prevent connecting list to list
         if (isListSource && isListTarget) {
-          setCannot_connect_to_task_warning({ isConnected: true, message: 'Cannot connect list to list' });
+          let message = t('cannot_connect_list_to_list');
+          setCannot_connect_to_task_warning({ isConnected: true, message });
           return;
         }
 
         // Prevent connecting new node to task or task to new node
         if ((isNewNodeSource && isTaskTarget) || (isNewNodeTarget && isTaskSource)) {
-          setCannot_connect_to_task_warning({ isConnected: true, message: 'Cannot connect new node to task' });
+          let message = t('cannot_connect_new_node_to_task');
+          setCannot_connect_to_task_warning({ isConnected: true, message });
+          return;
+        }
+
+        if ((isTaskSource && params.target?.startsWith('board-')) ||
+          (isTaskTarget && params.source?.startsWith('board-'))) {
+          let message = t('cannot_connect_task_to_board');
+          setCannot_connect_to_task_warning({ isConnected: true, message });
           return;
         }
 
@@ -970,10 +992,10 @@ const MindMap: React.FC<MindMapProps> = ({
 
   // Cancel new item creation
   const handleCancelNewItem = useCallback(() => {
-    // Remove the temporary node
     setNodes((nds) => nds.filter(node => node.id !== newItemModal.tempNodeId));
+    setIsTempNodeCreated(false);
+    setTempNodeId(null);
 
-    // Close modal
     setNewItemModal({
       isOpen: false,
       type: 'task',
@@ -991,9 +1013,11 @@ const MindMap: React.FC<MindMapProps> = ({
     const newNodeId = `temp-${Date.now()}`;
     setTempNodeId(newNodeId); // <-- store the ID
 
+    let label_text = t('connect_board_or_list');
+
     const newNode: Node = {
       id: newNodeId,
-      data: { label: `Connect board to create list. Connect list to create task`, isTemp: true },
+      data: { label: label_text, isTemp: true },
       position: { x: Math.random() * 500 + 200, y: Math.random() * 300 + 200 },
       style: {
         background: currentTheme['--task-background-color'],
@@ -1278,7 +1302,7 @@ const MindMap: React.FC<MindMapProps> = ({
     if (maindmap_selected_board_data.id !== 0 && maindmap_selected_board_data.id !== null) {
       setSelectedBoard(maindmap_selected_board_data)
       setSelectedComponent("Boards"); // Switch to the Boards view
-
+      navigate(`/mainpage/boards/`);
     } else {
       return;
     }
@@ -1357,7 +1381,7 @@ const MindMap: React.FC<MindMapProps> = ({
                 borderColor: currentTheme['--border-color'],
               }}
             >
-              Close
+              {t('close')}
             </button>
           </div>
         </div>
@@ -1378,12 +1402,12 @@ const MindMap: React.FC<MindMapProps> = ({
               marginBottom: '15px',
               fontSize: '16px'
             }}>
-              Create New {newItemModal.type === 'task' ? 'Task' : 'List'}
+              {t('create')} {newItemModal.type === 'task' ? t('task_only') : t('list_only')}
             </h3>
 
             <input
               type="text"
-              placeholder={`Enter ${newItemModal.type} name...`}
+              placeholder={`${t('enter')}  ${t(`${newItemModal.type}`)}  ${t('name')}...`}
               value={newItemModal.name}
               onChange={(e) => setNewItemModal(prev => ({ ...prev, name: e.target.value }))}
               onKeyPress={(e) => {
@@ -1392,42 +1416,40 @@ const MindMap: React.FC<MindMapProps> = ({
                 }
               }}
               className='new_item_input'
+              maxLength={newItemModal.type === 'task' ? 50 : 1000}
               style={{
                 background: currentTheme['--task-background-color'],
                 color: currentTheme['--main-text-coloure'],
-              }}
+                border: `1px solid ${currentTheme['--border-color']}`,
+                ['--placeholder-color']: currentTheme['--due-date-color'],
+              } as React.CSSProperties}
               autoFocus
             />
 
-            <div style={{ display: 'flex', gap: '10px', justifyContent: 'flex-end' }}>
+            <div className='create_new_item_buttons_cont' >
               <button
                 onClick={handleCancelNewItem}
+                className='cancel_new_item_button'
                 style={{
-                  background: '#64748b',
-                  color: 'white',
-                  border: 'none',
-                  padding: '8px 16px',
-                  borderRadius: '4px',
-                  cursor: 'pointer',
-                  fontSize: '12px'
+                  background: currentTheme['--task-background-color'],
+                  color: currentTheme['--main-text-coloure'],
+                  borderColor: currentTheme['--border-color'],
                 }}
               >
-                Cancel
+                {t('cancel')}
               </button>
               <button
                 onClick={handleCreateNewItem}
                 disabled={!newItemModal.name.trim()}
+                className='create_new_item_button'
                 style={{
-                  background: newItemModal.name.trim() ? '#6366f1' : '#64748b',
-                  color: 'white',
-                  border: 'none',
-                  padding: '8px 16px',
-                  borderRadius: '4px',
+                  background: currentTheme['--task-background-color'],
+                  color: currentTheme['--main-text-coloure'],
+                  borderColor: currentTheme['--border-color'],
                   cursor: newItemModal.name.trim() ? 'pointer' : 'not-allowed',
-                  fontSize: '12px'
                 }}
               >
-                Create {newItemModal.type === 'task' ? 'Task' : 'List'}
+                {t('create')}
               </button>
             </div>
           </div>
@@ -1443,16 +1465,19 @@ const MindMap: React.FC<MindMapProps> = ({
             borderColor: currentTheme['--border-color'],
           }}
         >
-          <div
-            className='mindmap_board_return_container'
-            style={{ background: currentTheme['--task-background-color'] }}
-            onClick={returnToBoards}
-          >
-            <FaClipboardList className='mindmap_board_selection_icon'
-              style={{ color: currentTheme['--main-text-coloure'] }}
-            />
-            <p className='return_board_p'> Boards Mode</p>
-          </div>
+
+          {maindmap_selected_board_data.id !== 0 && (
+            <div
+              className='mindmap_board_return_container'
+              style={{ background: currentTheme['--task-background-color'] }}
+              onClick={returnToBoards}
+            >
+              <FaClipboardList className='mindmap_board_selection_icon'
+                style={{ color: currentTheme['--main-text-coloure'] }}
+              />
+              <p className='return_board_p'> {t('boards_mode')}</p>
+            </div>
+          )}
 
 
           <Select
@@ -1464,34 +1489,37 @@ const MindMap: React.FC<MindMapProps> = ({
             isSearchable
           />
 
-
-          {isTempNodeCreated && tempNodeId ? (
-            <button
-              onClick={() => handle_delete_new_node(tempNodeId)}
-              className='delete_new_node_button'
-              style={{
-                background: currentTheme['--task-background-color'],
-                color: currentTheme['--main-text-coloure'],
-              }}
-            >
-              delete node
-            </button>
-          ) : (
-            <button
-              onClick={addNewNode}
-              style={{
-                background: currentTheme['--task-background-color'],
-                color: currentTheme['--main-text-coloure'],
-                border: 'none',
-                padding: '5px 10px',
-                borderRadius: '4px',
-                cursor: 'pointer',
-                fontSize: '12px'
-              }}
-              className='add_new_node_button'
-            >
-              Add List / Task
-            </button>
+          {maindmap_selected_board_data.id !== 0 && (
+            <>
+              {isTempNodeCreated && tempNodeId ? (
+                <button
+                  onClick={() => handle_delete_new_node(tempNodeId)}
+                  className='delete_new_node_button'
+                  style={{
+                    background: currentTheme['--task-background-color'],
+                    color: currentTheme['--main-text-coloure'],
+                  }}
+                >
+                  {t('delete')}
+                </button>
+              ) : (
+                <button
+                  onClick={addNewNode}
+                  style={{
+                    background: currentTheme['--task-background-color'],
+                    color: currentTheme['--main-text-coloure'],
+                    border: 'none',
+                    padding: '5px 10px',
+                    borderRadius: '4px',
+                    cursor: 'pointer',
+                    fontSize: '12px'
+                  }}
+                  className='add_new_node_button'
+                >
+                  {t('add_list_task')}
+                </button>
+              )}
+            </>
           )}
 
           {viewMode === 'board' && maindmap_selected_board_data && (
@@ -1508,7 +1536,7 @@ const MindMap: React.FC<MindMapProps> = ({
               }}
               className='reset_positions_button'
             >
-              Reset positions
+              {t('reset_positions')}
             </button>
           )}
 
