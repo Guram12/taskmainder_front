@@ -35,7 +35,7 @@ import Select from 'react-select';
 import { PiWarningFill } from "react-icons/pi";
 import { FaClipboardList } from "react-icons/fa";
 import CustomTaskNode from './CustomTaskNode';
-
+import { useNavigate } from 'react-router-dom';
 
 const nodeTypes = {
   customTask: CustomTaskNode,
@@ -109,7 +109,6 @@ const MindMap: React.FC<MindMapProps> = ({
   const [cannot_connect_to_task_warning, setCannot_connect_to_task_warning] = useState<{ isConnected: boolean, message: string }>({ isConnected: false, message: '' });
 
 
-
   // Add new state for naming new items
   const [newItemModal, setNewItemModal] = useState<{
     isOpen: boolean;
@@ -125,7 +124,11 @@ const MindMap: React.FC<MindMapProps> = ({
     tempNodeId: ''
   });
 
+  const navigate = useNavigate();
+
   const prev_mindmap_selected_board = localStorage.getItem('prev_mindmap_selected_board_id');
+
+
 
 
   //-------------  when page opens automatically select boar from localstorage prev selected ---------
@@ -135,7 +138,8 @@ const MindMap: React.FC<MindMapProps> = ({
       if (selectedBoard) {
         setMaindmap_selected_board_data(selectedBoard);
         setViewMode('board');
-        // fetchBoardData(selectedBoard.id.toString());
+        setDiagram_loading(true);
+        fetchBoardData(selectedBoard.id.toString());
       } else {
         return;
       }
@@ -800,7 +804,7 @@ const MindMap: React.FC<MindMapProps> = ({
   // ========================================================================================================================
   // ========================================================================================================================
   // ========================================================================================================================
-  //  ============================= Handle new connections with smart detection  ===========================================
+  // ================================== Handle new connections with smart detection  ========================================
 
 
   const onConnect: OnConnect = useCallback(
@@ -1278,7 +1282,7 @@ const MindMap: React.FC<MindMapProps> = ({
     if (maindmap_selected_board_data.id !== 0 && maindmap_selected_board_data.id !== null) {
       setSelectedBoard(maindmap_selected_board_data)
       setSelectedComponent("Boards"); // Switch to the Boards view
-
+      navigate(`/mainpage/boards/`);
     } else {
       return;
     }

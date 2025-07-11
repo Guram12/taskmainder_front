@@ -25,7 +25,6 @@ import { HiXMark } from "react-icons/hi2";
 import { useTranslation } from 'react-i18next';
 import { FaSitemap } from "react-icons/fa";
 
-
 interface SidebarProps {
   currentTheme: ThemeSpecs;
   boards: board[];
@@ -196,6 +195,8 @@ const SidebarComponent: React.FC<SidebarProps> = ({
   const handleBoardClick = async (board: board) => {
     console.log('Selected board:', board);
     setSelectedComponent("Boards");
+    navigate(`/mainpage/boards/`);
+
     // Update the sidebar selection
 
     if (board.id === selectedBoard?.id) {
@@ -220,6 +221,7 @@ const SidebarComponent: React.FC<SidebarProps> = ({
 
       // Update the selected board
       setSelectedBoard(updatedBoard);
+      localStorage.setItem('selectedBoard', JSON.stringify(updatedBoard));
 
       // Update only the specific board in the boards state
       if (setBoards) {
@@ -250,10 +252,35 @@ const SidebarComponent: React.FC<SidebarProps> = ({
     setSelectedComponent(component_name);
     setSelectedBoard(null);
     setIs_sidebar_open_on_mobile(true);
-  }
+
+    // Add navigation for each component
+    switch (component_name) {
+      case "Boards":
+        navigate("/mainpage/boards");
+        break;
+      case "Templates":
+        navigate("/mainpage/templates");
+        break;
+      case "Calendar":
+        navigate("/mainpage/calendar");
+        break;
+      case "Settings":
+        navigate("/mainpage/settings");
+        break;
+      case "Notification":
+        navigate("/mainpage/notification");
+        break;
+      case "MindMap":
+        navigate("/mainpage/mindmap");
+        break;
+      default:
+        navigate("/mainpage/boards");
+    }
+  };
 
   const handle_nnotification_page_click = () => {
     setSelectedComponent("Notification");
+    navigate("/mainpage/notification");
     setIs_new_notification_received(false);
     setSelectedBoard(null);
     setIs_sidebar_open_on_mobile(true);

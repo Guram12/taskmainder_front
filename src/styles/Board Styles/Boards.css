@@ -8,7 +8,13 @@
   width: 100vw;
 }
 
-
+.pls_select_board_cont {
+  width: 95%;
+  height: calc(100vh - 120px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 
 .main_boards_container {
   display: flex;
@@ -102,7 +108,7 @@
   background-color: seagreen !important;
 }
 
-.add_list_button_2_icon{
+.add_list_button_2_icon {
   width: 20px;
   height: 20px;
 }
@@ -118,21 +124,21 @@
   transition: all 0.3s ease;
 }
 
-.cancel_list_button_icon{
+.cancel_list_button_icon {
   width: 20px;
   height: 20px;
 }
 
 .cancel_new_list_btn:hover {
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  background-color:red !important;
+  background-color: red !important;
 }
 
 
 @media screen and (max-width: 768px) {
-.lists_container {
-  gap: 5px;
+  .lists_container {
+    gap: 5px;
 
-}
+  }
 
 }

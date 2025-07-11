@@ -15,7 +15,7 @@ import PasswordReset from './auth/PasswordReset';
 import PasswordResetConfirm from './auth/PasswordResetConfirm';
 import subscribeToPushNotifications from './utils/supbscription';
 import { Board_Users } from './utils/interface';
-import { NotificationPayload } from './utils/interface';
+// import { NotificationPayload } from './utils/interface';
 import ErrorPage from './components/ErrorPage';
 import { useTranslation } from 'react-i18next';
 import MindMap from './components/MindMap';
@@ -27,6 +27,8 @@ import MindMap from './components/MindMap';
 const App: React.FC = () => {
   // ========================================== google gtag function ==============================================
   const gtagId = import.meta.env.VITE_GTAG_ID;
+
+
 
   useEffect(() => {
     const script = document.createElement('script');
@@ -55,26 +57,6 @@ const App: React.FC = () => {
   });
 
   // ==================================== change language =========================================
-
-useEffect(() => {
-  console.log('language' + language + ' is set');
-  if (i18n.isInitialized) {
-    i18n.changeLanguage(language);
-  } else {
-    i18n.init({
-      lng: language,
-      fallbackLng: 'en',
-      resources: {
-        en: {
-          translation: require('./locales/en/translation.json'),
-        },
-        ka: {
-          translation: require('./locales/ka/translation.json'),
-        },
-      },
-    });
-  }
-}, [language]);
 
   useEffect(() => {
     console.log('language changed to:', language);
@@ -172,6 +154,21 @@ useEffect(() => {
 
   const [change_current_theme, setChange_current_theme] = useState(false);
   const [boards, setBoards] = useState<board[]>([]);
+
+
+  useEffect(() => {
+    if (window.location.pathname.includes('mainpage/boards')) {
+      const storedBoard = localStorage.getItem('selectedBoard');
+      if (storedBoard) {
+        try {
+          setSelectedBoard(JSON.parse(storedBoard));
+        } catch (e) {
+          console.error('Error parsing selectedBoard from localStorage', e);
+        }
+      }
+    }
+  }, []);
+
   const [selectedBoard, setSelectedBoard] = useState<board | null>({
     id: 0,
     name: '',
@@ -197,13 +194,13 @@ useEffect(() => {
 
 
 
-  const [notificationData, setNotificationData] = useState<NotificationPayload>({
-    type: "USER_REMOVED_FROM_BOARD",
-    title: '',
-    body: '',
-    notification_id: 0,
-    is_read: false,
-  });
+  // const [notificationData, setNotificationData] = useState<NotificationPayload>({
+  //   type: "USER_REMOVED_FROM_BOARD",
+  //   title: '',
+  //   body: '',
+  //   notification_id: 0,
+  //   is_read: false,
+  // });
 
 
   const [is_new_notification_received, setIs_new_notification_received] = useState<boolean>(false);
@@ -282,7 +279,7 @@ useEffect(() => {
 
             case 'USER_REMOVED_FROM_BOARD':
               console.log(`USER_REMOVED_FROM_BOARD type ==>> Board Name: ${payload.boardName}, Removed User Email: ${payload.removedUserEmail}`);
-              setNotificationData(event.data);
+              // setNotificationData(event.data);
 
               // Update the boards list to remove the board
               setBoards((prevBoards) => {
@@ -305,13 +302,13 @@ useEffect(() => {
 
             case 'BOARD_INVITATION_ACCEPTED':
               console.log('BOARD_INVITATION_ACCEPTED type ==>> Board Name:', payload.boardName);
-              setNotificationData(event.data);
+              // setNotificationData(event.data);
 
               break;
 
             case 'USER_LEFT_BOARD':
               console.log(`USER_LEFT_BOARD type ==>> Board Name: ${payload.boardName}, Left User Email: ${payload.leftUserEmail}, Left User Name: ${payload.leftUserName}`);
-              setNotificationData(event.data);
+              // setNotificationData(event.data);
               break;
 
 
@@ -500,7 +497,7 @@ useEffect(() => {
           isMobile={isMobile}
         />}
         />
-        <Route path="/mainpage"
+        <Route path="/mainpage/*"
           element={<MainPage
             selectedBoard={selectedBoard}
             setSelectedBoard={setSelectedBoard}
@@ -519,7 +516,6 @@ useEffect(() => {
             setIsBoardsLoaded={setIsBoardsLoaded}
             setIsLoading={setIsLoading}
             isLoading={isLoading}
-            notificationData={notificationData}
             setIs_new_notification_received={setIs_new_notification_received}
             is_new_notification_received={is_new_notification_received}
             is_members_refreshing={is_members_refreshing}
@@ -531,6 +527,7 @@ useEffect(() => {
             setSelectedComponent={setSelectedComponent}
             selectedComponent={selectedComponent}
           />} />
+
       </Routes>
     </Router>
 

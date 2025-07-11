@@ -23,6 +23,9 @@ import { ProfileData } from "../utils/interface";
 import { PulseLoader } from "react-spinners";
 import { useTranslation } from 'react-i18next';
 import { BsFillDiagram3Fill } from "react-icons/bs";
+import { useNavigate } from "react-router-dom";
+
+
 
 interface MembersProps {
   selectedBoard: board | null;
@@ -84,6 +87,7 @@ const Members: React.FC<MembersProps> = ({
   const [is_board_invitation_sent, setIs_board_invitation_sent] = useState<boolean>(false);
   const [invitation_loading, setInvitation_loading] = useState<boolean>(false);
 
+  const navigate = useNavigate();
   const { t } = useTranslation();
 
   const is_current_user_owner = current_board_users.find(user => user.email === current_user_email)?.user_status === 'owner'
@@ -384,6 +388,7 @@ const Members: React.FC<MembersProps> = ({
     localStorage.setItem('prev_mindmap_selected_board_id', board_id);
     setSelectedBoard(null)
     setSelectedComponent('MindMap');
+    navigate('/mainpage/mindmap')
   }
 
 
@@ -820,7 +825,7 @@ const Members: React.FC<MembersProps> = ({
                               className="board_user_images"
                             />
                           ) : (
-                            
+
                             <Avatar
                               className="board_user_images"
                               alt={boardUser.username}
