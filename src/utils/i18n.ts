@@ -199,11 +199,28 @@ const resources = {
       // board name update modal;
       'board_name_edit': 'Edit Board Name',
 
+      // taskmodalupdate component
+      'update_task': 'Update Task',
+      'title': 'Title',
+      'characters_left': 'characters left',
+      'description': 'Description',
+      'add_a_description': 'Add a description...',
+      'task_description': 'Task Description',
+      'priority': 'Priority',
+      'low': 'Low'  ,
+      'medium': 'Medium',
+      'high': 'High',
+      'select_date': 'Select Date',
+      'select_time': 'Select Time',
+      'clear_due_date': 'Clear Due Date',
+      'associate_users_to_task': 'Associate Users To Task',
+      'select_users': 'Select Users...',
+      'associated_users': 'Associated Users : ',
+      'clear_all_associated_users': 'Clear All Associated Users'  ,
+      'completed': 'Completed',
+      'delete_task': 'Delete Task',
 
 
-
-
-      
     }
   },
   ka: {
@@ -400,6 +417,30 @@ const resources = {
       'update': 'განახლება',
       // board name update modal;
       'board_name_edit': 'დაფის სახელის შეცვლა',
+
+      // taskmodalupdate component
+      'update_task': 'დავალების განახლება',
+      'title': 'სათაური',
+      'characters_left': 'სიმბოლო დარჩა',
+      'description': 'აღწერა',
+      'add_a_description': 'დაამატე აღწერა...',
+      'task_description': 'დავალების აღწერა',
+      'priority': 'პრიორიტეტი',
+      'low': 'დაბალი',
+      'medium': 'საშუალო',
+      'high': 'მაღალი',
+      'select_date': 'თარიღი',
+      'select_time': 'დრო',
+      'clear_due_date': 'ვადის გასუფთავება',
+      'associate_users_to_task': 'მომხმარებლების მიბმა დავალებაზე',
+      'select_users': 'მომხმარებლების არჩევა...',
+      'associated_users': 'მიბმული მომხმარებლები : ',
+      'clear_all_associated_users': 'ყველა მიბმული მომხმარებლის გასუფთავება',
+      'completed': 'დასრულებული',
+      'delete_task': 'დავალების წაშლა',
+
+
+
 
 
 

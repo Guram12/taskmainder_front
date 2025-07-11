@@ -20,26 +20,26 @@ export const templates: Template[] = [
       {
         name: "Backlog",
         tasks: [
-          { title: "Research API integration", description: "Investigate available APIs and document integration steps.", due_date: null, priority: 'green' },
-          { title: "Design wireframes", description: "", due_date: null, priority: 'orange' },
+          { title: "Research API integration", description: "Investigate available APIs and document integration steps.", due_date: null, priority: 'green', order: 0 },
+          { title: "Design wireframes", description: "", due_date: null, priority: 'orange', order: 1 },
         ],
       },
       {
         name: "In Progress",
         tasks: [
-          { title: "Implement authentication", description: "Set up user login and registration using JWT.", due_date: null, priority: 'red' },
+          { title: "Implement authentication", description: "Set up user login and registration using JWT.", due_date: null, priority: 'red', order: 0 },
         ],
       },
       {
         name: "Review",
         tasks: [
-          { title: "Code review for feature X", description: "", due_date: null, priority: null },
+          { title: "Code review for feature X", description: "", due_date: null, priority: null, order: 0 },
         ],
       },
       {
         name: "Done",
         tasks: [
-          { title: "Set up project repository", description: "Initialized GitHub repository and added README.", due_date: null, priority: 'green' },
+          { title: "Set up project repository", description: "Initialized GitHub repository and added README.", due_date: null, priority: 'green', order: 0 },
         ],
       },
     ],
@@ -55,15 +55,15 @@ export const templates: Template[] = [
       {
         name: "Health Goals",
         tasks: [
-          { title: "Morning workout", description: "30-minute cardio and strength training routine.", due_date: null, priority: 'orange' },
-          { title: "Meal prep", description: "Prepare healthy lunches for the week.", due_date: null, priority: 'red' },
+          { title: "Morning workout", description: "30-minute cardio and strength training routine.", due_date: null, priority: 'orange', order: 0 },
+          { title: "Meal prep", description: "Prepare healthy lunches for the week.", due_date: null, priority: 'red', order: 1 },
         ],
       },
       {
         name: "Learning Goals",
         tasks: [
-          { title: "Complete TypeScript course", description: "Finish all modules and quizzes on the online platform.", due_date: null, priority: 'green' },
-          { title: "Read a book", description: "", due_date: null, priority: null },
+          { title: "Complete TypeScript course", description: "Finish all modules and quizzes on the online platform.", due_date: null, priority: 'green', order: 0 },
+          { title: "Read a book", description: "", due_date: null, priority: null, order: 1 },
         ],
       },
     ],
@@ -79,20 +79,20 @@ export const templates: Template[] = [
       {
         name: "To Do",
         tasks: [
-          { title: "Book venue", description: "", due_date: null, priority: 'red' },
-          { title: "Send invitations", description: "Email digital invitations to all guests.", due_date: null, priority: 'green' },
+          { title: "Book venue", description: "", due_date: null, priority: 'red', order: 0 },
+          { title: "Send invitations", description: "Email digital invitations to all guests.", due_date: null, priority: 'green', order: 1 },
         ],
       },
       {
         name: "In Progress",
         tasks: [
-          { title: "Order decorations", description: "Purchase balloons, banners, and tableware online.", due_date: null, priority: 'orange' },
+          { title: "Order decorations", description: "Purchase balloons, banners, and tableware online.", due_date: null, priority: 'orange', order: 0 },
         ],
       },
       {
         name: "Completed",
         tasks: [
-          { title: "Plan menu", description: "Decided on food and drinks for the event.", due_date: null, priority: null },
+          { title: "Plan menu", description: "Decided on food and drinks for the event.", due_date: null, priority: null, order: 0 },
         ],
       },
     ],
@@ -108,20 +108,20 @@ export const templates: Template[] = [
       {
         name: "გასაკეთებელი",
         tasks: [
-          { title: "შეისწავლე Django Signals", description: "გაიარე ოფიციალური დოკუმენტაცია და შექმენი პრაქტიკული მაგალითი.", due_date: null, priority: 'green' },
-          { title: "დასალაგებელია ფაილები", description: "გადახედე ჩამოტვირთვების საქაღალდეს და გაასუფთავე ზედმეტი ფაილები.", due_date: null, priority: 'orange' },
+          { title: "შეისწავლე Django Signals", description: "გაიარე ოფიციალური დოკუმენტაცია და შექმენი პრაქტიკული მაგალითი.", due_date: null, priority: 'green', order: 0 },
+          { title: "დასალაგებელია ფაილები", description: "გადახედე ჩამოტვირთვების საქაღალდეს და გაასუფთავე ზედმეტი ფაილები.", due_date: null, priority: 'orange', order: 1 },
         ],
       },
       {
         name: "პროცესშია",
         tasks: [
-          { title: "სატესტო პროექტის დიზაინი", description: "შექმენი UI დიზაინის პირველადი ვარიანტი Figma-ში.", due_date: null, priority: 'red' },
+          { title: "სატესტო პროექტის დიზაინი", description: "შექმენი UI დიზაინის პირველადი ვარიანტი Figma-ში.", due_date: null, priority: 'red', order: 0 },
         ],
       },
       {
         name: "დასრულებული",
         tasks: [
-          { title: "CV-ის განახლება", description: "დამატებულია ახალი პროექტები და ტექნიკური უნარები.", due_date: null, priority: 'green' },
+          { title: "CV-ის განახლება", description: "დამატებულია ახალი პროექტები და ტექნიკური უნარები.", due_date: null, priority: 'green', order: 0 },
         ],
       },
     ],

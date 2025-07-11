@@ -73,6 +73,7 @@ export interface Template {
       description: string;
       due_date: string | null;
       priority: 'green' | 'orange' | 'red' | null;
+      order: number; 
     }[];
   }[];
 }

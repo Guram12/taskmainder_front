@@ -21,7 +21,7 @@ import { MdOutlineRemoveCircleOutline } from "react-icons/md";
 import { FaUser } from "react-icons/fa";
 import { MdDeleteForever } from "react-icons/md";
 import { PiTextAlignLeft } from "react-icons/pi";
-// import { useTranslation } from 'react-i18next';
+import { useTranslation } from 'react-i18next';
 
 
 interface TaskUpdateModalProps {
@@ -69,19 +69,19 @@ const TaskUpdateModal: React.FC<TaskUpdateModalProps> = ({
     associatedUsers.map((user) => user.id) // Initialize with existing associated user IDs
   );
 
-  // const { t } = useTranslation();
+  const { t } = useTranslation();
 
 
   const handleUpdate = () => {
     if (updatedTitle.trim() === '') {
       return;
     }
-    
+
     // Only call setUpdatingTaskId if it's provided (optional)
     if (setUpdatingTaskId) {
       setUpdatingTaskId(task.id);
     }
-    
+
     if (updatedTitle.trim()) {
       const combinedDueDateTime =
         updatedDueDate && updatedDueTime
@@ -291,13 +291,17 @@ const TaskUpdateModal: React.FC<TaskUpdateModalProps> = ({
     <div className="task-update-modal">
       <div className="modal-content" style={{ backgroundColor: currentTheme['--background-color'] }}>
         <div className='inputs_container' >
-          <h3 className='update_task_header' >Update Task</h3>
+          <h3 className='update_task_header'
+            style={{
+              color: currentTheme['--main-text-coloure']
+            }}
+          >{t('update_task')}</h3>
           <div className='sistle_and_titleicon_container'>
             <MdOutlineSubtitles className='title_icon' style={{ color: currentTheme['--main-text-coloure'] }} />
-            <h3 className='title_p' style={{ color: currentTheme['--main-text-coloure'] }}>Title</h3>
+            <h3 className='title_p' style={{ color: currentTheme['--main-text-coloure'] }}>{t('title')}</h3>
             <p className='title_char_limit' style={{ color: currentTheme['--due-date-color'] }}
               onClick={() => setCaracter_limit(1000 - updatedTitle.length)}
-            >( {caracter_limit} characters left)</p>
+            >( {caracter_limit} {t('characters_left')} )</p>
           </div>
           {isTitleUpdating ? (
             <div className='task_title_input_container'>
@@ -305,7 +309,7 @@ const TaskUpdateModal: React.FC<TaskUpdateModalProps> = ({
                 type="text"
                 value={updatedTitle}
                 onChange={(e) => setUpdatedTitle(e.target.value)}
-                placeholder="Task Title"
+                placeholder={t('task_title')}
                 className='task_title_input'
                 style={{
                   backgroundColor: currentTheme['--background-color'],
@@ -315,6 +319,7 @@ const TaskUpdateModal: React.FC<TaskUpdateModalProps> = ({
                   transition: 'border-color 0.2s',
                   ['--placeholder-color']: currentTheme['--due-date-color']
                 } as React.CSSProperties}
+                maxLength={1000}
               />
               <GrFormCheckmark
                 className='title_checkmark_icon'
@@ -335,7 +340,7 @@ const TaskUpdateModal: React.FC<TaskUpdateModalProps> = ({
           <div className='description_container' >
             <div className='description_main_cont'>
               <PiTextAlignLeft className='title_icon' style={{ color: currentTheme['--main-text-coloure'] }} />
-              <h3 className='title_p' style={{ color: currentTheme['--main-text-coloure'] }}>Description </h3>
+              <h3 className='title_p' style={{ color: currentTheme['--main-text-coloure'] }}>{t('description')}</h3>
             </div>
             {isDescriptionUpdating ? (
               <div className='description_textarea_container' >
@@ -344,7 +349,7 @@ const TaskUpdateModal: React.FC<TaskUpdateModalProps> = ({
                   className='description_textarea'
                   value={updatedDescription}
                   onChange={(e) => setUpdatedDescription(e.target.value)}
-                  placeholder="Task Description"
+                  placeholder={t('task_description')}
                   style={{
                     backgroundColor: currentTheme['--background-color'],
                     color: currentTheme['--main-text-coloure'],
@@ -364,7 +369,7 @@ const TaskUpdateModal: React.FC<TaskUpdateModalProps> = ({
                 style={{ color: currentTheme['--main-text-coloure'], borderColor: currentTheme['--border-color'] }}
                 onClick={() => setIsDescriptionUpdating(true)}
               >
-                {updatedDescription === '' ? 'Add a description...' : updatedDescription}
+                {updatedDescription === '' ? t('add_a_description') : updatedDescription}
               </div>
             )}
           </div>
@@ -378,7 +383,7 @@ const TaskUpdateModal: React.FC<TaskUpdateModalProps> = ({
         <div className="priority_container"
           style={{ borderColor: currentTheme['--border-color'] }}
         >
-          <p className='priority_p' > Priority:</p>
+          <p className='priority_p' > {t('priority')}:</p>
           <div
             className='each_priority none'
             onClick={() => setUpdatedPriority(null)}
@@ -389,7 +394,7 @@ const TaskUpdateModal: React.FC<TaskUpdateModalProps> = ({
               color: currentTheme['--main-text-coloure'],
             }}
           >
-            No priority
+            ---------
           </div>
           <div
             className='each_priority low'
@@ -399,7 +404,7 @@ const TaskUpdateModal: React.FC<TaskUpdateModalProps> = ({
               borderStyle: updatedPriority === 'green' ? 'solid' : undefined,
               borderColor: currentTheme['--main-text-coloure'],
             }}
-          >Low</div>
+          >{t('low')}</div>
           <div
             className='each_priority medium'
             onClick={() => setUpdatedPriority('orange')}
@@ -408,7 +413,7 @@ const TaskUpdateModal: React.FC<TaskUpdateModalProps> = ({
               borderStyle: updatedPriority === 'orange' ? 'solid' : undefined,
               borderColor: currentTheme['--main-text-coloure'],
             }}
-          >Medium</div>
+          >{t('medium')}</div>
           <div
             className='each_priority high'
             onClick={() => setUpdatedPriority('red')}
@@ -417,7 +422,7 @@ const TaskUpdateModal: React.FC<TaskUpdateModalProps> = ({
               borderStyle: updatedPriority === 'red' ? 'solid' : undefined,
               borderColor: currentTheme['--main-text-coloure'],
             }}
-          >High</div>
+          >{t('high')}</div>
 
         </div>
 
@@ -427,7 +432,7 @@ const TaskUpdateModal: React.FC<TaskUpdateModalProps> = ({
             <LocalizationProvider dateAdapter={AdapterDayjs}   >
               {/* Date Picker */}
               <DatePicker
-                label="Select Date"
+                label={t('select_date')}
                 value={updatedDueDate}
                 onChange={(newValue) => setUpdatedDueDate(newValue)}
                 disablePast
@@ -436,7 +441,7 @@ const TaskUpdateModal: React.FC<TaskUpdateModalProps> = ({
               />
               {/* Time Picker */}
               <DesktopTimePicker
-                label="Select Time"
+                label={t('select_time')}
                 value={updatedDueTime}
                 onChange={(newValue) => setUpdatedDueTime(newValue)}
                 views={['hours', 'minutes']}
@@ -458,7 +463,7 @@ const TaskUpdateModal: React.FC<TaskUpdateModalProps> = ({
               }}
             >
               <MdOutlineRemoveCircleOutline className='remove_date_icon' />
-              Clear Due Date
+              {t('clear_due_date')}
             </button>
           </div>
         </div>
@@ -470,7 +475,7 @@ const TaskUpdateModal: React.FC<TaskUpdateModalProps> = ({
 
         {/* User Select Input */}
         <div className="user-select">
-          <p className='asociate_users_p'  >Asociate Users To Task</p>
+          <p className='asociate_users_p'  >{t('associate_users_to_task')}</p>
           <Select
             isMulti
             options={allCurrentBoardUsers.map((user) => ({
@@ -491,7 +496,7 @@ const TaskUpdateModal: React.FC<TaskUpdateModalProps> = ({
                 setSelectedUsers([]); // Handle the case where no options are selected
               }
             }}
-            placeholder="Select users..."
+            placeholder={t('select_users')}
             styles={selectStyles}
           />
         </div>
@@ -502,7 +507,7 @@ const TaskUpdateModal: React.FC<TaskUpdateModalProps> = ({
             <div className='prev_as_users_header' style={{ color: currentTheme['--main-text-coloure'] }} >
               <div className='icon_as_users_cont' >
                 <FaUser className='as_users_icon' />
-                <h4 className='prev_as_users_h4' >Associated Users :</h4>
+                <h4 className='prev_as_users_h4' >{t('associated_users')}</h4>
               </div>
               <button
                 onClick={handleClearAssociatedUsers}
@@ -513,7 +518,7 @@ const TaskUpdateModal: React.FC<TaskUpdateModalProps> = ({
                 className='clear_associated_users_button'
               >
                 <MdOutlineRemoveCircleOutline className='remove_date_icon' />
-                Clear All Associated Users
+                {t('clear_all_associated_users')}
               </button>
             </div>
             <div className="associated_users_cont">
@@ -561,7 +566,7 @@ const TaskUpdateModal: React.FC<TaskUpdateModalProps> = ({
 
 
         <label className="completed-label" style={{ color: currentTheme['--main-text-coloure'] }}>
-          Completed:
+          {t('completed')}:
           <span className="custom-checkbox-container">
             <input
               type="checkbox"
@@ -598,7 +603,7 @@ const TaskUpdateModal: React.FC<TaskUpdateModalProps> = ({
               backgroundColor: currentTheme['--background-color'],
               borderColor: currentTheme['--border-color'],
             }}>
-              delete task
+              {t('delete_task')}
               <MdDeleteForever className='delete_icon'
                 style={{ color: currentTheme['--main-text-coloure'] }}
               />
@@ -613,7 +618,7 @@ const TaskUpdateModal: React.FC<TaskUpdateModalProps> = ({
                 }}
                 onClick={handleUpdate}
               >
-                Save
+                {t('save')}
               </button>
               <button
                 className='cancel_task_update_button'
@@ -623,7 +628,7 @@ const TaskUpdateModal: React.FC<TaskUpdateModalProps> = ({
                   borderColor: currentTheme['--border-color'],
                 }}
               >
-                Cancel
+                {t('cancel')}
               </button>
             </div>
           </div>
