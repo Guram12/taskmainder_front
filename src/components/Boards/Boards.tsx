@@ -229,37 +229,33 @@ const Boards: React.FC<BoardsProps> = ({
 
   // =================================================  Add task =========================================================
   const addTask = (listId: number, taskTitle: string) => {
-    console.log('Adding task:', { listId, taskTitle });
     const updatedLoadingLists = { ...loadingLists, [listId]: true };
-
     setLoadingLists(updatedLoadingLists);
 
     if (socketRef.current && socketRef.current.readyState === WebSocket.OPEN) {
+      const list = boardData.lists.find(l => l.id === listId);
+      let newOrder = 0;
+      if (list && list.tasks.length > 0) {
+        newOrder = Math.max(...list.tasks.map(t => t.order ?? 0)) + 1;
+      }
+
       const newTask = {
-        id: Date.now(), // Temporary ID, replace with server-generated ID
+        id: Date.now(), // Temporary, backend should assign real ID
         title: taskTitle,
         list: listId,
         created_at: new Date().toISOString(),
+        order: newOrder,
+        // ...other fields as needed
       };
-
-      console.log('Sending add_task message:', {
-        action: 'add_task',
-        payload: newTask,
-      });
 
       socketRef.current.send(JSON.stringify({
         action: 'add_task',
         payload: newTask,
       }));
-
-
     } else {
-      console.error('WebSocket is not open. Cannot send add_task message.');
-      const resetLoadingLists = { ...loadingLists, [listId]: false };
-      setLoadingLists(resetLoadingLists);
+      setLoadingLists({ ...loadingLists, [listId]: false });
       setAdding_new_task_loader({ listId: null });
     }
-
   };
 
   // ================================================== delete task =========================================================

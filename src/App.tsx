@@ -156,18 +156,7 @@ const App: React.FC = () => {
   const [boards, setBoards] = useState<board[]>([]);
 
 
-  useEffect(() => {
-    if (window.location.pathname.includes('mainpage/boards')) {
-      const storedBoard = localStorage.getItem('selectedBoard');
-      if (storedBoard) {
-        try {
-          setSelectedBoard(JSON.parse(storedBoard));
-        } catch (e) {
-          console.error('Error parsing selectedBoard from localStorage', e);
-        }
-      }
-    }
-  }, []);
+
 
   const [selectedBoard, setSelectedBoard] = useState<board | null>({
     id: 0,
