@@ -23,7 +23,7 @@ const resources = {
       'notification': 'Notification',
       "settings": "Settings",
       'diagrams': 'Diagrams',
-      
+
       //template component
       "choose_a_template": "Choose a Template",
       'select_template': "Select Template",
@@ -173,11 +173,37 @@ const resources = {
       'open_email_provider': 'Open Email Provider',
       'password_reset_link_sent_to_your_email_address.': 'Password reset link sent to your email address.',
       'failed_to_send_password_reset_link': 'Failed to send password reset link. Please try again.',
-      'create_new_password': 'Create New Password'
+      'create_new_password': 'Create New Password',
+
+      // diagram component
+      'boards_mode': 'Board Mode',
+      'add_list_task': 'Add List / Task',
+      'reset_positions': 'Reset Positions',
+      "connect_board_or_list": 'Connect board to create list. Connect list to create task',
+      'create': 'Create',
+      'task_only': 'Task',
+      'list_only': 'List',
+      'enter_task_name': 'Enter task name',
+      'task': 'Task',
+      'list': 'List',
+      'enter': 'Enter',
+      'name': 'Name',
+      'cannot_connect_task_to_task': 'Cannot connect task to task',
+      'cannot_connect_list_to_list': 'Cannot connect list to list',
+      'cannot_connect_new_node_to_task': 'Cannot connect new task to task',
+      'cannot_connect_task_to_board': 'Cannot connect task to board',
+      //task name modal
+      'edit_list_name': 'Edit List Name',
+      'enter_list_name': 'Enter list name',
+      'update': 'Update',
+      // board name update modal;
+      'board_name_edit': 'Edit Board Name',
 
 
 
 
+
+      
     }
   },
   ka: {
@@ -313,7 +339,7 @@ const resources = {
       'owner': 'მფლობელი',
       "are_you_sure_you_want_to_delete_the_user": "დარწმუნებული ხართ, რომ გსურთ წაშალოთ მომხმარებელი: ",
       'from the board': " დაფიდან: ",
-      'diagram': "დიაგრამა" ,
+      'diagram': "დიაგრამა",
 
       //board component
       'create_List': 'სიის დამატება',
@@ -349,7 +375,35 @@ const resources = {
       'open_email_provider': 'ელფოსტის გახსნა',
       'password_reset_link_sent_to_your_email_address.': 'პაროლის აღდგენის ბმული გაგზავნილია თქვენს ელფოსტაზე.',
       'failed_to_send_password_reset_link': 'პაროლის აღდგენის ბმულის გაგზავნა ვერ მოხერხდა. გთხოვთ, სცადოთ თავიდან.',
-      'create_new_password': 'შექმენით ახალი პაროლი'
+      'create_new_password': 'შექმენით ახალი პაროლი',
+
+      // diagram component
+      'boards_mode': 'დაფის რეჟიმი',
+      'add_list_task': 'დაამატე სია / დავალება',
+      'reset_positions': 'პოზიციების განულება',
+      "connect_board_or_list": 'დააკავშირეთ დაფასთან სიის შესაქმნელად. დააკავშირეთ სიასთან დავალების შესაქმნელად',
+      'create': 'შექმნა',
+      'task_only': 'დავალება',
+      'list_only': 'სია',
+      'enter_task_name': 'შეიყვანეთ დავალების სახელი',
+      'task': 'დავალების',
+      'list': 'სიის',
+      'enter': 'შეიყვანე',
+      'name': 'სახელი',
+      'cannot_connect_task_to_task': 'დავალების დავალებასთან დაკავშირება შეუძლებელია',
+      'cannot_connect_list_to_list': 'სიის სიასთან დაკავშირება შეუძლებელია',
+      'cannot_connect_new_node_to_task': 'ახალი დავალების დავალებასთან დაკავშირება შეუძლებელია',
+      'cannot_connect_task_to_board': 'დავალების დაფასთან დაკავშირება შეუძლებელია',
+      //task name modal
+      'edit_list_name': 'სიის სახლის შეცვლა',
+      'enter_list_name': 'შეიყვანე სიის სახელი',
+      'update': 'განახლება',
+      // board name update modal;
+      'board_name_edit': 'დაფის სახელის შეცვლა',
+
+
+
+
 
 
 

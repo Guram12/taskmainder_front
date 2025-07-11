@@ -99,13 +99,16 @@
 }
 
 .new_item_modal {
-  width: 400px;
-  padding: 20px;
+  min-width: 300px;
+  padding: 15px;
   border-radius: 8px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   border: 1px solid;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
-
 
 .new_item_input {
   width: 100%;
@@ -115,6 +118,151 @@
   font-size: 14px;
   margin-bottom: 15px;
 }
+
+
+.new_item_input::placeholder {
+  color: var(--placeholder-color);
+}
+
+.create_new_item_buttons_cont{
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 20px;
+  width: 100%;
+}
+
+.cancel_new_item_button{
+  border: 1px solid;
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: bold;
+  transition: all 0.3s ease-in-out;
+}
+
+.cancel_new_item_button:hover {
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  background-color: red !important;
+  border-color: red !important;
+}
+
+.create_new_item_button{
+  border: 1px solid;
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: bold;
+  transition: all 0.3s ease-in-out;
+}
+
+.create_new_item_button:hover {
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  background-color: seagreen !important;
+  border-color: seagreen !important;
+}
+
+/* ==================================================  list name  update modal styles ============================================ */
+
+.listname_update_buttons_cont{
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+}
+
+.listname_button_cancel{
+  border: 1px solid;
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: bold;
+  transition: all 0.3s ease-in-out;
+}
+.listname_button_cancel:hover {
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  background-color: red !important;
+  border-color: red !important;
+}
+
+.listname_button_update{
+  border: 1px solid;
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: bold;
+  transition: all 0.3s ease-in-out;
+}
+
+.listname_button_update:hover {
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  background-color: seagreen !important;
+  border-color: seagreen !important;
+}
+/* ==================================================  board name  update modal styles ============================================ */
+
+.boardname_update_input{
+  width: 100%;
+  padding: 8px;
+  border: 1px solid;
+  border-radius: 4px;
+  font-size: 14px;
+  margin-bottom: 15px;
+}
+
+/* .boardname_update_input::placeholder {
+  color: var(--placeholder-color);
+} */
+
+
+.boardname_update_buttons_cont{
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+}
+
+.boardname_button_cancel{
+  border: 1px solid;
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: bold;
+  transition: all 0.3s ease-in-out;
+}
+.boardname_button_cancel:hover {
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  background-color: red !important;
+  border-color: red !important;
+}
+
+.boardname_button_update{
+  border: 1px solid;
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: bold;
+  transition: all 0.3s ease-in-out;
+}
+.boardname_button_update:hover {
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  background-color: seagreen !important;
+  border-color: seagreen !important;
+}
+
+
+
 
 
 .mindmap_board_selection_panel_container {
@@ -139,8 +287,8 @@
   transition: all 0.3s ease-in-out;
 }
 
-.mindmap_board_return_container:hover{
-  background-color:seagreen !important;
+.mindmap_board_return_container:hover {
+  background-color: seagreen !important;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 

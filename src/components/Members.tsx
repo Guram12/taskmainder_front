@@ -536,6 +536,7 @@ const Members: React.FC<MembersProps> = ({
                     borderColor: is_board_newname_empty ? 'red' : currentTheme['--border-color'],
                     ['--placeholder-color' as any]: currentTheme['--due-date-color'] || '#888',
                   } as React.CSSProperties}
+                  maxLength={25}
                 />
                 <div className="board_name_update_buttons_cont_onmobile" >
 
@@ -586,6 +587,7 @@ const Members: React.FC<MembersProps> = ({
                   borderColor: is_board_newname_empty ? 'red' : currentTheme['--border-color'],
                   ['--placeholder-color' as any]: currentTheme['--due-date-color'] || '#888',
                 } as React.CSSProperties}
+                maxLength={25}
               />
               <GrFormCheckmark
                 style={{ color: `${currentTheme['--main-text-coloure']}` }}

@@ -1,6 +1,7 @@
-
+import '../styles/MindMap.css';
 import { ThemeSpecs } from "../utils/theme";
 import { lists } from '../utils/interface';
+import { useTranslation } from 'react-i18next';
 
 
 interface Mindmap_ListName_ModalProps {
@@ -26,7 +27,7 @@ const Mindmap_ListName_Modal: React.FC<Mindmap_ListName_ModalProps> = ({
   handleListNameUpdate,
 
 }) => {
-
+  const { t } = useTranslation();
 
 
   return (
@@ -46,12 +47,12 @@ const Mindmap_ListName_Modal: React.FC<Mindmap_ListName_ModalProps> = ({
               marginBottom: '15px',
               fontSize: '16px'
             }}>
-              Edit List Name
+              {t('edit_list_name')}
             </h3>
 
             <input
               type="text"
-              placeholder="Enter list name..."
+              placeholder={t('list_name')}
               value={listNameInput}
               onChange={(e) => setListNameInput(e.target.value)}
               onKeyPress={(e) => {
@@ -65,40 +66,36 @@ const Mindmap_ListName_Modal: React.FC<Mindmap_ListName_ModalProps> = ({
               style={{
                 background: currentTheme['--task-background-color'],
                 color: currentTheme['--main-text-coloure'],
+                borderColor: currentTheme['--border-color'],
+
               }}
               autoFocus
               maxLength={21}
             />
 
-            <div style={{ display: 'flex', gap: '10px', justifyContent: 'flex-end', marginTop: '15px' }}>
+            <div className='listname_update_buttons_cont'>
               <button
                 onClick={handleCancelListEdit}
                 style={{
-                  background: '#64748b',
-                  color: 'white',
-                  border: 'none',
-                  padding: '8px 16px',
-                  borderRadius: '4px',
-                  cursor: 'pointer',
-                  fontSize: '12px'
+                  background: currentTheme['--list-background-color'],
+                  borderColor: currentTheme['--border-color'],
+                  color: currentTheme['--main-text-coloure'],
                 }}
+                className='listname_button_cancel'
               >
-                Cancel
+                {t('cancel')}
               </button>
               <button
                 onClick={handleListNameUpdate}
                 disabled={!listNameInput.trim() || listNameInput.trim() === editingList.name}
+                className='listname_button_update'
                 style={{
-                  background: (listNameInput.trim() && listNameInput.trim() !== editingList.name) ? '#6366f1' : '#64748b',
-                  color: 'white',
-                  border: 'none',
-                  padding: '8px 16px',
-                  borderRadius: '4px',
-                  cursor: (listNameInput.trim() && listNameInput.trim() !== editingList.name) ? 'pointer' : 'not-allowed',
-                  fontSize: '12px'
+                  background: currentTheme['--list-background-color'],
+                  borderColor: currentTheme['--border-color'],
+                  color: currentTheme['--main-text-coloure'],
                 }}
               >
-                Update List Name
+                {t('update')}
               </button>
             </div>
           </div>

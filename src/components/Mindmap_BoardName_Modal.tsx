@@ -1,6 +1,8 @@
+import '../styles/MindMap.css';
 import React from 'react';
 import { board } from '../utils/interface';
 import { ThemeSpecs } from '../utils/theme';
+import { useTranslation } from 'react-i18next';
 
 
 
@@ -23,7 +25,11 @@ const Mindmap_BoardName_Modal: React.FC<Props> = ({
   setBoardNameInput,
   handleBoardNameUpdate,
 }) => {
+
   if (!isBoardEditModalOpen || !editingBoard) return null;
+
+  const { t } = useTranslation();
+
 
   return (
     <div className="diagram_new_item_container">
@@ -39,7 +45,7 @@ const Mindmap_BoardName_Modal: React.FC<Props> = ({
           marginBottom: '15px',
           fontSize: '16px'
         }}>
-          Edit Board Name
+          {t('board_name_edit')}
         </h3>
         <input
           type="text"
@@ -50,42 +56,40 @@ const Mindmap_BoardName_Modal: React.FC<Props> = ({
               handleBoardNameUpdate();
             }
           }}
-          className="new_item_input"
+          className="boardname_update_input"
           style={{
             background: currentTheme['--task-background-color'],
             color: currentTheme['--main-text-coloure'],
-          }}
+            ['placeholder-color']: currentTheme['--due-date-color']
+          } as React.CSSProperties}
+          placeholder={t('edit_board_name')}
           autoFocus
+          maxLength={25}
         />
-        <div style={{ display: 'flex', gap: '10px', justifyContent: 'flex-end' }}>
+        <div className='boardname_update_buttons_cont'>
           <button
             onClick={handleCancelBoardEdit}
             style={{
-              background: '#64748b',
-              color: 'white',
-              border: 'none',
-              padding: '8px 16px',
-              borderRadius: '4px',
-              cursor: 'pointer',
-              fontSize: '12px'
+              background: currentTheme['--list-background-color'],
+              borderColor: currentTheme['--border-color'],
+              color: currentTheme['--main-text-coloure'],
             }}
+            className='boardname_button_cancel'
           >
-            Cancel
+            {t('cancel')}
           </button>
           <button
             onClick={handleBoardNameUpdate}
             disabled={!boardNameInput.trim()}
             style={{
-              background: boardNameInput.trim() ? '#6366f1' : '#64748b',
-              color: 'white',
-              border: 'none',
-              padding: '8px 16px',
-              borderRadius: '4px',
+              background: currentTheme['--list-background-color'],
+              borderColor: currentTheme['--border-color'],
+              color: currentTheme['--main-text-coloure'],
               cursor: boardNameInput.trim() ? 'pointer' : 'not-allowed',
-              fontSize: '12px'
             }}
+            className='boardname_button_update'
           >
-            Save
+            {t('save')}
           </button>
         </div>
       </div>

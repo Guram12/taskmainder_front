@@ -498,6 +498,7 @@ const SidebarComponent: React.FC<SidebarProps> = ({
                             value={newBoardName}
                             onChange={(e) => setNewBoardName(e.target.value)}
                             className='add_board_input'
+                            maxLength={25}
                             style={{
                               backgroundColor: currentTheme['--list-background-color'],
                               color: currentTheme['--main-text-coloure'],
