@@ -142,6 +142,7 @@ const resources = {
       //board component
       'create_List': 'Create List',
       'add': 'Add',
+      'please_select_a_board': 'Please select a board.',
 
       // list component 
       'list_name': 'List Name(max 21)',
@@ -361,6 +362,7 @@ const resources = {
       //board component
       'create_List': 'სიის დამატება',
       'add': 'დამატება',
+      'please_select_a_board': 'გთხოვთ, აირჩიოთ დაფა.',
 
       // list component
       'list_name': 'სიის სახელი(მაქს. 21)',

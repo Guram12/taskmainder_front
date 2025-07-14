@@ -26,7 +26,7 @@ import { GrFormCheckmark } from "react-icons/gr";
 import { HiXMark } from "react-icons/hi2";
 import Sortable from 'sortablejs';
 import type { SortableEvent } from 'sortablejs';
-
+import select_board_icon from '../../assets/select_board_icon.png'
 
 
 export interface BoardsProps {
@@ -735,9 +735,10 @@ const Boards: React.FC<BoardsProps> = ({
         <NoBoards currentTheme={currentTheme} />
       )}
 
-      {selectedBoard?.id === 0 && boards.length > 0 ? (
+      {selectedBoard?.id === 0 && boards.length > 0 && isBoardsLoaded ? (
         <div className='pls_select_board_cont'>
-          <p className='pla_select_board' >Please select a board.</p>
+          <img src={select_board_icon} alt="select board icon" className='select_board_icon' />
+          <p className='pla_select_board' >{t('please_select_a_board')}</p>
         </div>
       ) : (
 
