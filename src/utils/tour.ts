@@ -17,81 +17,81 @@ const startTour = (currentTheme: ThemeSpecs, navigate: NavigateFunction, t: (key
     useModalOverlay: true,
   });
 
-  // tour.addStep({
-  //   title: t('dashboard'),
-  //   text: t('dashboard_text'),
-  //   attachTo: { element: '#dashboard_menuitem_shepherd', on: 'right' },
-  //   buttons: [{ text: 'Next', action: tour.next }]
-  // });
+  tour.addStep({
+    title: t('dashboard'),
+    text: t('dashboard_text'),
+    attachTo: { element: '#dashboard_menuitem_shepherd', on: 'right' },
+    buttons: [{ text: 'Next', action: tour.next }]
+  });
 
-  // tour.addStep({
-  //   title: t('boards'),
-  //   text: t('boards_text'),
-  //   attachTo: { element: '#board', on: 'right' },
-  //   buttons: [{ text: 'Next', action: tour.next }]
-  // });
+  tour.addStep({
+    title: t('boards'),
+    text: t('boards_text'),
+    attachTo: { element: '#board', on: 'right' },
+    buttons: [{ text: 'Next', action: tour.next }]
+  });
 
-  // tour.addStep({
-  //   title: t('templates'),
-  //   text: t('template_text'),
-  //   attachTo: { element: '#templates_container_shepherd', on: 'right' },
-  //   buttons: [{ text: 'Next', action: tour.next }]
-  // });
+  tour.addStep({
+    title: t('templates'),
+    text: t('template_text'),
+    attachTo: { element: '#templates_container_shepherd', on: 'right' },
+    buttons: [{ text: 'Next', action: tour.next }]
+  });
 
-  // tour.addStep({
-  //   title: t('calendar'),
-  //   text: t('calendar_text'),
-  //   attachTo: { element: '#calendar_container_shepherd', on: 'right' },
-  //   buttons: [{ text: 'Next', action: tour.next }]
-  // });
+  tour.addStep({
+    title: t('calendar'),
+    text: t('calendar_text'),
+    attachTo: { element: '#calendar_container_shepherd', on: 'right' },
+    buttons: [{ text: 'Next', action: tour.next }]
+  });
 
-  // tour.addStep({
-  //   title: t('notification'),
-  //   text: t('notification_text'),
-  //   attachTo: { element: '#notification_container_shepherd', on: 'right' },
-  //   buttons: [{ text: 'Next', action: tour.next }]
-  // });
+  tour.addStep({
+    title: t('notification'),
+    text: t('notification_text'),
+    attachTo: { element: '#notification_container_shepherd', on: 'right' },
+    buttons: [{ text: 'Next', action: tour.next }]
+  });
 
 
-  // tour.addStep({
-  //   title: t('diagram'),
-  //   text: t('diagram_text'),
-  //   attachTo: { element: '#mindmap_container_shepherd', on: 'right' },
-  //   buttons: [
-  //     {
-  //       text: 'Next',
-  //       action: async () => {
-  //         if (navigate) {
-  //           navigate("/mainpage/settings");
-  //         } else {
-  //           window.location.pathname = '/mainpage/settings';
-  //         }
-  //         // Wait for the profile picture element to appear before continuing
-  //         const waitForElement = (selector: string, timeout = 1000) => {
-  //           return new Promise<void>((resolve, reject) => {
-  //             const start = Date.now();
-  //             const check = () => {
-  //               if (document.querySelector(selector)) {
-  //                 resolve();
-  //               } else if (Date.now() - start > timeout) {
-  //                 reject(new Error('Element not found'));
-  //               } else {
-  //                 setTimeout(check, 100);
-  //               }
-  //             };
-  //             check();
-  //           });
-  //         };
-  //         try {
-  //           await waitForElement('#profile_pic_shepherd');
-  //         } catch (e) {
-  //           // Optionally handle error or continue anyway
-  //         }
-  //         tour.next();
-  //       }
-  //     }
-  //   ]
-  // });
+  tour.addStep({
+    title: t('diagram'),
+    text: t('diagram_text'),
+    attachTo: { element: '#mindmap_container_shepherd', on: 'right' },
+    buttons: [
+      {
+        text: 'Next',
+        action: async () => {
+          if (navigate) {
+            navigate("/mainpage/settings");
+          } else {
+            window.location.pathname = '/mainpage/settings';
+          }
+          // Wait for the profile picture element to appear before continuing
+          const waitForElement = (selector: string, timeout = 1000) => {
+            return new Promise<void>((resolve, reject) => {
+              const start = Date.now();
+              const check = () => {
+                if (document.querySelector(selector)) {
+                  resolve();
+                } else if (Date.now() - start > timeout) {
+                  reject(new Error('Element not found'));
+                } else {
+                  setTimeout(check, 100);
+                }
+              };
+              check();
+            });
+          };
+          try {
+            await waitForElement('#profile_pic_shepherd');
+          } catch (e) {
+            // Optionally handle error or continue anyway
+          }
+          tour.next();
+        }
+      }
+    ]
+  });
 
   // ============================================
 
