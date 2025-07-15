@@ -19,6 +19,7 @@ import { environment_urls } from "../utils/URLS";
 import { ReactFlowProvider } from 'reactflow';
 import { Routes, Route, useNavigate } from "react-router-dom";
 import { startTour } from "../utils/tour";
+import { useTranslation } from 'react-i18next';
 
 
 interface MainPageProps {
@@ -87,6 +88,7 @@ const MainPage: React.FC<MainPageProps> = ({
   const accessToken: string | null = localStorage.getItem('access_token');
   const refreshToken: string | null = localStorage.getItem('refresh_token');
 
+const { t } = useTranslation();
 
 
 
@@ -460,7 +462,7 @@ const MainPage: React.FC<MainPageProps> = ({
     if (window.innerWidth > 768) {
 
       if (localStorage.getItem('first_time_signup') === 'true') {
-        startTour(currentTheme, navigate);
+        startTour(currentTheme, navigate , t);
         localStorage.setItem('first_time_signup', 'false');
 
       }

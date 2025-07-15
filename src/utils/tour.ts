@@ -1,12 +1,9 @@
 import Shepherd from 'shepherd.js';
 import { ThemeSpecs } from './theme';
 import { NavigateFunction } from 'react-router-dom';
-import { useTranslation } from 'react-i18next';
 
 
-const { t } = useTranslation();
-
-const startTour = (currentTheme: ThemeSpecs, navigate: NavigateFunction) => {
+const startTour = (currentTheme: ThemeSpecs, navigate: NavigateFunction, t: (key: string) => string) => {
 
 
 
@@ -20,88 +17,87 @@ const startTour = (currentTheme: ThemeSpecs, navigate: NavigateFunction) => {
     useModalOverlay: true,
   });
 
-  tour.addStep({
-    title: 'Dashboard',
-    text: 'This is the Dashboard section where you can view your main tasks.',
-    attachTo: { element: '#dashboard_menuitem_shepherd', on: 'right' },
-    buttons: [{ text: 'Next', action: tour.next }]
-  });
+  // tour.addStep({
+  //   title: t('dashboard'),
+  //   text: t('dashboard_text'),
+  //   attachTo: { element: '#dashboard_menuitem_shepherd', on: 'right' },
+  //   buttons: [{ text: 'Next', action: tour.next }]
+  // });
 
-  tour.addStep({
-    title: 'Boards',
-    text: 'Here you can manage your boards. Click on a board to view its details.',
-    attachTo: { element: '#board', on: 'right' },
-    buttons: [{ text: 'Next', action: tour.next }]
-  });
+  // tour.addStep({
+  //   title: t('boards'),
+  //   text: t('boards_text'),
+  //   attachTo: { element: '#board', on: 'right' },
+  //   buttons: [{ text: 'Next', action: tour.next }]
+  // });
 
-  tour.addStep({
-    title: 'Templates',
-    text: 'This section contains templates for creating new boards.',
-    attachTo: { element: '#templates_container_shepherd', on: 'right' },
-    buttons: [{ text: 'Next', action: tour.next }]
-  });
+  // tour.addStep({
+  //   title: t('templates'),
+  //   text: t('template_text'),
+  //   attachTo: { element: '#templates_container_shepherd', on: 'right' },
+  //   buttons: [{ text: 'Next', action: tour.next }]
+  // });
 
-  tour.addStep({
-    title: 'Calendar',
-    text: 'The Calendar view highlights days with tasks due. Click here to see your deadlines at a glance.',
-    attachTo: { element: '#calendar_container_shepherd', on: 'right' },
-    buttons: [{ text: 'Next', action: tour.next }]
-  });
+  // tour.addStep({
+  //   title: t('calendar'),
+  //   text: t('calendar_text'),
+  //   attachTo: { element: '#calendar_container_shepherd', on: 'right' },
+  //   buttons: [{ text: 'Next', action: tour.next }]
+  // });
 
-  tour.addStep({
-    title: 'Notification',
-    text: 'Check all your notifications here. You will see reminders, board updates, and more.',
-    attachTo: { element: '#notification_container_shepherd', on: 'right' },
-    buttons: [{ text: 'Next', action: tour.next }]
-  });
+  // tour.addStep({
+  //   title: t('notification'),
+  //   text: t('notification_text'),
+  //   attachTo: { element: '#notification_container_shepherd', on: 'right' },
+  //   buttons: [{ text: 'Next', action: tour.next }]
+  // });
 
 
-
-  tour.addStep({
-    title: 'Diagram',
-    text: 'Visualize your boards and tasks here using interactive diagrams.',
-    attachTo: { element: '#mindmap_container_shepherd', on: 'right' },
-    buttons: [
-      {
-        text: 'Next',
-        action: async () => {
-          if (navigate) {
-            navigate("/mainpage/settings");
-          } else {
-            window.location.pathname = '/mainpage/settings';
-          }
-          // Wait for the profile picture element to appear before continuing
-          const waitForElement = (selector: string, timeout = 1000) => {
-            return new Promise<void>((resolve, reject) => {
-              const start = Date.now();
-              const check = () => {
-                if (document.querySelector(selector)) {
-                  resolve();
-                } else if (Date.now() - start > timeout) {
-                  reject(new Error('Element not found'));
-                } else {
-                  setTimeout(check, 100);
-                }
-              };
-              check();
-            });
-          };
-          try {
-            await waitForElement('#profile_pic_shepherd');
-          } catch (e) {
-            // Optionally handle error or continue anyway
-          }
-          tour.next();
-        }
-      }
-    ]
-  });
+  // tour.addStep({
+  //   title: t('diagram'),
+  //   text: t('diagram_text'),
+  //   attachTo: { element: '#mindmap_container_shepherd', on: 'right' },
+  //   buttons: [
+  //     {
+  //       text: 'Next',
+  //       action: async () => {
+  //         if (navigate) {
+  //           navigate("/mainpage/settings");
+  //         } else {
+  //           window.location.pathname = '/mainpage/settings';
+  //         }
+  //         // Wait for the profile picture element to appear before continuing
+  //         const waitForElement = (selector: string, timeout = 1000) => {
+  //           return new Promise<void>((resolve, reject) => {
+  //             const start = Date.now();
+  //             const check = () => {
+  //               if (document.querySelector(selector)) {
+  //                 resolve();
+  //               } else if (Date.now() - start > timeout) {
+  //                 reject(new Error('Element not found'));
+  //               } else {
+  //                 setTimeout(check, 100);
+  //               }
+  //             };
+  //             check();
+  //           });
+  //         };
+  //         try {
+  //           await waitForElement('#profile_pic_shepherd');
+  //         } catch (e) {
+  //           // Optionally handle error or continue anyway
+  //         }
+  //         tour.next();
+  //       }
+  //     }
+  //   ]
+  // });
 
   // ============================================
 
   tour.addStep({
-    title: 'Profile Picture',
-    text: 'Update your profile picture here to personalize your account.',
+    title: t('profile_picture'),
+    text: t('profile_picture_text'),
     attachTo: { element: '#profile_pic_shepherd', on: 'bottom' },
     when: {
       show: () => {
@@ -120,8 +116,8 @@ const startTour = (currentTheme: ThemeSpecs, navigate: NavigateFunction) => {
 
 
   tour.addStep({
-    title: 'User Info Update',
-    text: 'Here you can update your username, phone number, and timezone.',
+    title: t('user_information_update'),
+    text: t('user_information_update_text'),
     attachTo: { element: '.main_profilinfo_cont', on: 'bottom' },
     when: {
       show: () => {
@@ -141,8 +137,8 @@ const startTour = (currentTheme: ThemeSpecs, navigate: NavigateFunction) => {
 
 
   tour.addStep({
-    title: 'Change Password',
-    text: 'You can change your account password here.',
+    title: t('change_password'),
+    text: t('change_password_text'),
     attachTo: { element: '.main_password_container', on: 'bottom' },
     when: {
       show: () => {
@@ -167,8 +163,8 @@ const startTour = (currentTheme: ThemeSpecs, navigate: NavigateFunction) => {
 
 
   tour.addStep({
-    title: 'Custom Theme',
-    text: 'Here you can customize the colors and background images for your boards.',
+    title: t('custom_theme'),
+    text: t('custom_theme_text'),
     attachTo: { element: '.custom_theme_container', on: 'right' },
     when: {
       show: () => {
@@ -194,8 +190,8 @@ const startTour = (currentTheme: ThemeSpecs, navigate: NavigateFunction) => {
 
 
   tour.addStep({
-    title: 'Delete Account',
-    text: 'This is the danger zone. You can permanently delete your account here.',
+    title: t('delete_account'),
+    text: t('delete_account_text'),
     attachTo: { element: '.main_delete_acc_container', on: 'top' },
     when: {
       show: () => {

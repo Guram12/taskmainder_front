@@ -42,7 +42,7 @@ interface SidebarProps {
   setIs_sidebar_open_on_mobile: (is_sidebar_open_on_mobile: boolean) => void;
   is_sidebar_open_on_mobile: boolean;
   setIsAuthenticated: (isAuthenticated: boolean) => void;
-  startTour: (currentTheme: ThemeSpecs, navigate: NavigateFunction) => void;
+  startTour: (currentTheme: ThemeSpecs, navigate: NavigateFunction, t: (key: string) => string) => void;
 }
 
 
@@ -559,7 +559,7 @@ const SidebarComponent: React.FC<SidebarProps> = ({
                   },
                 }}
               >
-                <button onClick={() => startTour(currentTheme, navigate)} style={{ cursor: 'pointer' }}>
+                <button onClick={() => startTour(currentTheme, navigate , t)} style={{ cursor: 'pointer' }}>
                   Start Tour
                 </button>
                 <MenuItem
