@@ -171,7 +171,7 @@ const ProfilePictureUpdate: React.FC<ProfilePictureUpdateProps> = ({ profileData
 
 
   return (
-    <div className="profil_image_cont" style={{ borderColor: currentTheme["--border-color"] }}>
+    <div className="profil_image_cont" id='profile_pic_shepherd' style={{ borderColor: currentTheme["--border-color"] }}>
 
       <MdDeleteForever className='delete_Prof_picture_icon' onClick={handleDeleteClick} />
       {IsDeletingWindow && (
@@ -183,6 +183,7 @@ const ProfilePictureUpdate: React.FC<ProfilePictureUpdateProps> = ({ profileData
         />
       )}
       <div className="profile_picture_update_p_cont"
+        id='profile_picture_update_shepherd'
         style={{
           backgroundColor: currentTheme["--background-color"],
           borderColor: currentTheme["--border-color"]

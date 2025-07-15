@@ -46,8 +46,7 @@ const CustomTheme: React.FC<CustomThemeProps> = ({
   setDeleting_image_boardId,
   current_user_email,
 }) => {
-  // '--hover-color': '#22313F',
-  // '--due-date-color': '#7FC6D7',
+
 
   const [backgroundColor, setBackgroundColor] = useState<string>(currentTheme['--background-color']);
   const [borderColor, setBorderColor] = useState<string>(currentTheme['--border-color']);
@@ -281,6 +280,7 @@ const CustomTheme: React.FC<CustomThemeProps> = ({
     >
 
       <div className="customtheme_container"
+      id='customtheme_container_shepherd'
         style={{
           backgroundColor: currentTheme["--background-color"],
           borderColor: currentTheme["--border-color"]

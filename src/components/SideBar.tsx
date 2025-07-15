@@ -11,7 +11,6 @@ import { RiSettings4Fill } from "react-icons/ri";
 import { board } from '../utils/interface';
 import { GoRepoTemplate } from "react-icons/go";
 import axiosInstance from '../utils/axiosinstance';
-// import Shepherd from 'shepherd.js';
 import { MdNotificationsActive } from "react-icons/md";
 import { ThemeSpecs } from '../utils/theme';
 import { IoCloseSharp } from "react-icons/io5";
@@ -24,6 +23,8 @@ import { GrFormCheckmark } from "react-icons/gr";
 import { HiXMark } from "react-icons/hi2";
 import { useTranslation } from 'react-i18next';
 import { FaSitemap } from "react-icons/fa";
+import { NavigateFunction } from 'react-router-dom';
+
 
 interface SidebarProps {
   currentTheme: ThemeSpecs;
@@ -41,6 +42,7 @@ interface SidebarProps {
   setIs_sidebar_open_on_mobile: (is_sidebar_open_on_mobile: boolean) => void;
   is_sidebar_open_on_mobile: boolean;
   setIsAuthenticated: (isAuthenticated: boolean) => void;
+  startTour: (currentTheme: ThemeSpecs, navigate: NavigateFunction) => void;
 }
 
 
@@ -61,6 +63,7 @@ const SidebarComponent: React.FC<SidebarProps> = ({
   setIs_sidebar_open_on_mobile,
   is_sidebar_open_on_mobile,
   setIsAuthenticated,
+  startTour
 }) => {
 
   const [isOpen, setIsOpen] = useState<boolean>(true);
@@ -80,64 +83,7 @@ const SidebarComponent: React.FC<SidebarProps> = ({
 
   const { t } = useTranslation();
 
-  // useEffect(() => {
-  //   console.log('boards----------', boards);
-  // }, [boards])\
 
-
-
-  // ======================================== for hilighting the elements in the tour ==========================================
-  // const startTour = () => {
-  //   const tour = new Shepherd.Tour({
-  //     defaultStepOptions: {
-  //       cancelIcon: { enabled: true },
-  //       classes: 'custom-class-name',
-  //       scrollTo: { behavior: 'smooth', block: 'center' },
-  //     },
-  //     useModalOverlay: true, // Enable backdrop to dim the rest of the page
-  //   });
-
-  //   // Step 1: Highlight Dashboard
-  //   tour.addStep({
-  //     title: 'Dashboard',
-  //     text: 'This is the Dashboard section where you can view your main tasks.',
-  //     attachTo: { element: '.dashboard_icon', on: 'right' },
-  //     buttons: [
-  //       {
-  //         text: 'Next',
-  //         action: tour.next,
-  //       },
-  //     ],
-  //   });
-
-  //   // Step 2: Highlight Boards
-  //   tour.addStep({
-  //     title: 'Boards',
-  //     text: 'Here you can manage your boards. Click on a board to view its details.',
-  //     attachTo: { element: '#board', on: 'right' },
-  //     buttons: [
-  //       {
-  //         text: 'Next',
-  //         action: tour.next,
-  //       },
-  //     ],
-  //   });
-
-  //   // Step 3: Highlight Templates
-  //   tour.addStep({
-  //     title: 'Templates',
-  //     text: 'This section contains templates for creating new boards.',
-  //     attachTo: { element: '.sidebar_big_icon', on: 'right' },
-  //     buttons: [
-  //       {
-  //         text: 'Finish',
-  //         action: tour.complete,
-  //       },
-  //     ],
-  //   });
-
-  //   tour.start();
-  // };
 
 
 
@@ -413,7 +359,9 @@ const SidebarComponent: React.FC<SidebarProps> = ({
 
 
                 {/* dashboard  */}
-                <MenuItem icon={<MdSpaceDashboard className="dashboard_icon" />}>
+                <MenuItem
+                  id='dashboard_menuitem_shepherd'
+                  icon={<MdSpaceDashboard className="dashboard_icon" />}>
                   <div className="for_dashboard_child_container">
                     <p> {t('dashboard')}</p>
                     {isMobile ?
@@ -518,8 +466,8 @@ const SidebarComponent: React.FC<SidebarProps> = ({
                   )}
                 </SubMenu>
 
-
                 <MenuItem
+                  id='templates_container_shepherd'
                   icon={<GoRepoTemplate className='sidebar_big_icon' />}
                   onClick={() => handel_sidebar_page_click("Templates")}
                   style={{
@@ -531,8 +479,8 @@ const SidebarComponent: React.FC<SidebarProps> = ({
                   {t('templates')}
                 </MenuItem>
 
-
                 <MenuItem
+                  id='calendar_container_shepherd'
                   style={{
                     color: selectedComponent === "Calendar" ? 'seagreen' : 'white',
                     fontWeight: 'bold',
@@ -540,8 +488,11 @@ const SidebarComponent: React.FC<SidebarProps> = ({
                   }}
                   icon={<FaCalendarAlt className='sidebar_big_icon' />}
                   onClick={() => handel_sidebar_page_click("Calendar")}
-                >{t('calendar')}</MenuItem>
+                >{t('calendar')}
+                </MenuItem>
+
                 <MenuItem
+                  id='notification_container_shepherd'
                   style={{
                     color: selectedComponent === "Notification" ? 'seagreen' : 'white',
                     fontWeight: 'bold',
@@ -573,6 +524,7 @@ const SidebarComponent: React.FC<SidebarProps> = ({
 
 
                 <MenuItem
+                id='mindmap_container_shepherd'
                   style={{
                     color: selectedComponent === "MindMap" ? 'seagreen' : 'white',
                     fontWeight: 'bold',
@@ -607,6 +559,9 @@ const SidebarComponent: React.FC<SidebarProps> = ({
                   },
                 }}
               >
+                <button onClick={() => startTour(currentTheme, navigate)} style={{ cursor: 'pointer' }}>
+                  Start Tour
+                </button>
                 <MenuItem
                   icon={<RiSettings4Fill className="sidebar_big_icon" />}
                   onClick={() => handel_sidebar_page_click("Settings")}
