@@ -17,7 +17,7 @@ const GoogleSignIn: React.FC<GoogleSignInProps> = ({ setIsAuthenticated }) => {
   const handleGoogleLoginSuccess = async (response: CredentialResponse) => {
     try {
       const res = await axiosInstance.post('/acc/social/login/token/', {
-        id_token: response.credential, 
+        id_token: response.credential,
       }, {
         headers: {
           'Content-Type': 'application/json',
@@ -41,6 +41,10 @@ const GoogleSignIn: React.FC<GoogleSignInProps> = ({ setIsAuthenticated }) => {
           setIsAuthenticated(true);
           navigate('/mainpage');
         }
+        const first_sign_up = localStorage.getItem('first_time_signup')
+        if (!first_sign_up) {
+          localStorage.setItem('first_time_signup', 'true');
+        }
       }
     } catch (error) {
       console.error('Error:', error);
@@ -61,7 +65,7 @@ const GoogleSignIn: React.FC<GoogleSignInProps> = ({ setIsAuthenticated }) => {
       <GoogleLogin
         onSuccess={handleGoogleLoginSuccess}
         onError={handleGoogleLoginFailure}
-        ux_mode="popup" 
+        ux_mode="popup"
         useOneTap={true}
         theme="filled_black"  // Options: 'outline' or 'filled'
         size="large"     // Options: 'small', 'medium', 'large'

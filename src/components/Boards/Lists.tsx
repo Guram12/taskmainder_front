@@ -366,5 +366,4 @@ const List: React.FC<ListProps> = ({
   );
 };
 
-export default List;
-
+export default React.memo(List);

@@ -18,7 +18,8 @@ import MindMap from "./MindMap";
 import { environment_urls } from "../utils/URLS";
 import { ReactFlowProvider } from 'reactflow';
 import { Routes, Route, useNavigate } from "react-router-dom";
-
+import { startTour } from "../utils/tour";
+import { useTranslation } from 'react-i18next';
 
 
 interface MainPageProps {
@@ -87,6 +88,7 @@ const MainPage: React.FC<MainPageProps> = ({
   const accessToken: string | null = localStorage.getItem('access_token');
   const refreshToken: string | null = localStorage.getItem('refresh_token');
 
+const { t } = useTranslation();
 
 
 
@@ -452,6 +454,30 @@ const MainPage: React.FC<MainPageProps> = ({
   }, [is_sidebar_open_on_mobile]);
 
 
+  // ======================================== for hilighting the elements in the tour ==========================================
+
+
+  useEffect(() => {
+    // also check MdWidthFull, if it is more than 768, do nothing
+    if (window.innerWidth > 768) {
+
+      if (localStorage.getItem('first_time_signup') === 'true') {
+        startTour(currentTheme, navigate , t);
+        localStorage.setItem('first_time_signup', 'false');
+
+      }
+      // comment temprory for testing tour localy
+      //  else {
+      //   localStorage.setItem('first_time_signup', 'false');
+      // }
+    }else {
+      // If the screen width is less than or equal to 768px, set is_sidebar_open_on_mobile to false
+      setIs_sidebar_open_on_mobile(false);
+    }
+  }, []);
+
+
+  // ====================================================================================================================
 
   return (
     <div className="mainpage_component"
@@ -494,6 +520,7 @@ const MainPage: React.FC<MainPageProps> = ({
         setIs_sidebar_open_on_mobile={setIs_sidebar_open_on_mobile}
         is_sidebar_open_on_mobile={is_sidebar_open_on_mobile}
         setIsAuthenticated={setIsAuthenticated}
+        startTour={startTour}
       />
       <Routes>
         <Route path="boards" element={

@@ -208,7 +208,7 @@ const resources = {
       'add_a_description': 'Add a description...',
       'task_description': 'Task Description',
       'priority': 'Priority',
-      'low': 'Low'  ,
+      'low': 'Low',
       'medium': 'Medium',
       'high': 'High',
       'select_date': 'Select Date',
@@ -217,9 +217,36 @@ const resources = {
       'associate_users_to_task': 'Associate Users To Task',
       'select_users': 'Select Users...',
       'associated_users': 'Associated Users : ',
-      'clear_all_associated_users': 'Clear All Associated Users'  ,
+      'clear_all_associated_users': 'Clear All Associated Users',
       'completed': 'Completed',
       'delete_task': 'Delete Task',
+
+      // ==>> shephard translations 
+      'dashboard_text': 'This is the Dashboard section where you can view your main tasks.',
+      'boards_text': 'Here you can manage your boards. Click on a board to view its details.',
+      'template_text': 'This section contains templates for creating new boards.',
+      'calendar_text': 'The Calendar view highlights days with tasks due. Click here to see your deadlines at a glance.',
+      'notification_text': 'Check all your notifications here. You will see reminders, board updates, and more.',
+      'diagram_text': 'Visualize your boards and tasks here using interactive diagrams.',
+      'profile_picture': 'Profile Picture',
+      'profile_picture_text': 'Update your profile picture here to personalize your account.',
+      'User_info_update': 'User Info Update',
+      'user_information_update_text': 'Here you can update your username, phone number, and timezone.',
+      'change_password': 'Change Password',
+      'change_password_text': 'You can change your account password here. If you are logged in using a social account, this option may not be available.',
+      'custom_theme': 'Custom Theme',
+      'custom_theme_text': 'Here you can customize the colors and background images for your boards.',
+      'Delete Account': 'Delete Account',
+      'delete_account_text': 'This is the danger zone. You can permanently delete your account here. Please proceed with caution.',
+
+
+
+
+
+
+
+
+
 
 
     }
@@ -441,6 +468,23 @@ const resources = {
       'completed': 'დასრულებული',
       'delete_task': 'დავალების წაშლა',
 
+      // ==>> shephard translations 
+      'dashboard_text': 'ეს არის პანელის სექცია, სადაც შეგიძლიათ ნახოთ თქვენი ძირითადი დავალებები.',
+      'boards_text': 'აქ შეგიძლიათ მართოთ თქვენი დაფები. დააწკაპუნეთ დაფაზე დეტალების სანახავად.',
+      'template_text': 'ამ სექციაში შეგიძლიათ ნახოთ შაბლონები ახალი დაფების შესაქმნელად.',
+      'calendar_text': 'კალენდრის ხედი აჩვენებს დღეებს, რომელთათვისაც დაგეგმილია დავალებები. დააწკაპუნეთ აქ, რათა deadlines ერთ ნახვად იხილოთ.',
+      'notification_text': 'იხილეთ ყველა თქვენი შეტყობინება აქ. მიიღებთ შეხსენებებს, დაფების განახლებებს და სხვა ცნობებს.',
+      'diagram_text': 'ვიზუალურად დაათვალიერეთ თქვენი დაფები და დავალებები ინტერაქტიული დიაგრამების საშუალებით.',
+      'profile_picture': 'პროფილის სურათი',
+      'profile_picture_text': 'აქ შეგიძლიათ შეცვალოთ თქვენი პროფილის სურათი და გაათმაგოთ თქვენი ანგარიში.',
+      'User_info_update': 'მომხმარებლის ინფორმაციის განახლება',
+      'user_information_update_text': 'აქ შეგიძლიათ განაახლოთ თქვენი მომხმარებლის სახელი, ტელეფონის ნომერი და დროის სარტყელი.',
+      'change_password': 'პაროლის შეცვლა',
+      'change_password_text': 'აქ შეგიძლიათ შეცვალოთ ანგარიშის პაროლი. თუ შესული ხართ სოციალური ანგარიშით, ეს ფუნქცია ხელმისაწვდომი არ იქნება.',
+      'custom_theme': 'თემის მორგება',
+      'custom_theme_text': 'აქ შეგიძლიათ მორგოთ დაფების ფერები და ფონის სურათები.',
+      'Delete Account': 'ანგარიშის წაშლა',
+      'delete_account_text': 'ეს არის საფრთხის ზონა. აქ შეგიძლიათ სამუდამოდ წაშალოთ თქვენი ანგარიში. გთხოვთ, იყავით ფრთხილად.',
 
 
 

@@ -3,7 +3,7 @@ import React, { useState, useEffect, useRef, useCallback } from "react";
 import { ThemeSpecs } from '../../utils/theme';
 import Members from '../Members';
 import List from './Lists';
-import { board } from '../../utils/interface';
+import { board, tasks } from '../../utils/interface';
 import { ProfileData } from '../../utils/interface';
 import { Board_Users } from '../../utils/interface';
 import SkeletonLoader from './SkeletonLoader';
@@ -118,7 +118,7 @@ const Boards: React.FC<BoardsProps> = ({
   const scrollRef = useRef<{ direction: 'left' | 'right' | null, speed: number }>({ direction: null, speed: 2 }); // Reduced speed
   const isManualScrollRef = useRef(false);
 
-  const [activeTask, setActiveTask] = useState<null | { task: any; listId: number }>(null);
+  const [activeTask, setActiveTask] = useState<null | { task: tasks; listId: number }>(null);
   const [reordering, setReordering] = useState(false); // Add this state
 
 
@@ -821,7 +821,7 @@ const Boards: React.FC<BoardsProps> = ({
                                 background: currentTheme['--task-background-color'],
                                 color: currentTheme['--main-text-coloure'],
                                 borderColor: currentTheme['--border-color'],
-                                ['--placeholder-color' as any]: currentTheme['--due-date-color'] || '#888',
+                                ['--placeholder-color']: currentTheme['--due-date-color'] || '#888',
                               } as React.CSSProperties}
                               className='add_new_list_input'
                             />
@@ -889,4 +889,4 @@ const Boards: React.FC<BoardsProps> = ({
   );
 };
 
-export default Boards;
+export default React.memo(Boards);
