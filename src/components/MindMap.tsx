@@ -1274,6 +1274,18 @@ const MindMap: React.FC<MindMapProps> = ({
       ...provided,
       color: currentTheme['--main-text-coloure'],
     }),
+    placeholder: (provided: any) => ({
+      ...provided,
+      color: currentTheme['--due-date-color'],
+      opacity: 1,
+    }),
+    dropdownIndicator: (provided: any) => ({
+      ...provided,
+      color: currentTheme['--due-date-color'],
+      '&:hover': {
+        color: currentTheme['--due-date-color'],
+      },
+    }),
   };
 
   // ================================= reset positions to default =========================================

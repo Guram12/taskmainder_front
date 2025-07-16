@@ -462,14 +462,13 @@ const { t } = useTranslation();
     if (window.innerWidth > 768) {
 
       if (localStorage.getItem('first_time_signup') === 'true') {
-        startTour(currentTheme, navigate , t);
+        startTour(currentTheme, navigate , t, setSelectedComponent);
         localStorage.setItem('first_time_signup', 'false');
 
       }
-      // comment temprory for testing tour localy
-      //  else {
-      //   localStorage.setItem('first_time_signup', 'false');
-      // }
+       else {
+        localStorage.setItem('first_time_signup', 'false');
+      }
     }else {
       // If the screen width is less than or equal to 768px, set is_sidebar_open_on_mobile to false
       setIs_sidebar_open_on_mobile(false);
@@ -520,7 +519,6 @@ const { t } = useTranslation();
         setIs_sidebar_open_on_mobile={setIs_sidebar_open_on_mobile}
         is_sidebar_open_on_mobile={is_sidebar_open_on_mobile}
         setIsAuthenticated={setIsAuthenticated}
-        startTour={startTour}
       />
       <Routes>
         <Route path="boards" element={

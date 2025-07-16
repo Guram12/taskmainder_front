@@ -18,6 +18,8 @@ import ConfirmationDialog from "../components/Boards/ConfirmationDialog";
 import { useTranslation } from 'react-i18next';
 import { board } from "../utils/interface";
 
+
+
 interface HeaderProps {
   profileData: ProfileData;
   isAuthenticated: boolean;
@@ -33,6 +35,7 @@ interface HeaderProps {
   language: 'en' | 'ka';
   setSelectedComponent: (selectedComponent: string) => void;
   setSelectedBoard: (selectedBoard: board | null) => void;
+  boards: board[]; 
 }
 
 
@@ -51,7 +54,8 @@ const Header: React.FC<HeaderProps> = ({
   setLanguage,
   language,
   setSelectedComponent,
-  setSelectedBoard
+  setSelectedBoard,
+  boards, 
 }) => {
 
 
@@ -83,11 +87,11 @@ const Header: React.FC<HeaderProps> = ({
   // ======================================== language change function =========================================
 
 
-const handleLanguageChange = (selectedLanguage: 'en' | 'ka') => {
-  setLanguage(selectedLanguage);
-  localStorage.setItem('language', selectedLanguage);
-  i18n.changeLanguage(selectedLanguage);
-};
+  const handleLanguageChange = (selectedLanguage: 'en' | 'ka') => {
+    setLanguage(selectedLanguage);
+    localStorage.setItem('language', selectedLanguage);
+    i18n.changeLanguage(selectedLanguage);
+  };
 
 
   // ============================== theme change function ======================================
@@ -145,7 +149,7 @@ const handleLanguageChange = (selectedLanguage: 'en' | 'ka') => {
 
   // ===================================== handle user image click =========================================
   const handleUserImageClick = () => {
-    setSelectedBoard(null); 
+    setSelectedBoard(null);
     setSelectedComponent('Settings');
   };
 
@@ -174,7 +178,7 @@ const handleLanguageChange = (selectedLanguage: 'en' | 'ka') => {
             }}
             onClick={handle_return_to_custom_theme}
           >
-              
+
             {t('customTheme')}
           </div>
         ),
@@ -185,7 +189,7 @@ const handleLanguageChange = (selectedLanguage: 'en' | 'ka') => {
 
 
   // Language dropdown menu
- const languageMenu: MenuProps = {
+  const languageMenu: MenuProps = {
     items: [
       {
         key: 'en',
@@ -216,6 +220,23 @@ const handleLanguageChange = (selectedLanguage: 'en' | 'ka') => {
     ],
   };
 
+  // ================================================  logo click   ======================================================
+
+const handleLogoClick = () => {
+  setSelectedComponent('Boards');
+  navigate('/mainpage/boards/');
+  const prev_selected_board_id = localStorage.getItem('prev_selected_board_id');
+  if(prev_selected_board_id === null) {
+    setSelectedBoard(null);
+    console.log("No previous board selected, setting selected board to null.");
+    return;
+  } 
+  const board_to_be_selected = boards.find(board => board.id === JSON.parse(prev_selected_board_id));
+  if (board_to_be_selected) {
+    setSelectedBoard(board_to_be_selected);
+    console.log("Previous board selected:", board_to_be_selected);
+  }
+}
 
   // =====================================================================================================================
 
@@ -229,7 +250,9 @@ const handleLanguageChange = (selectedLanguage: 'en' | 'ka') => {
         borderColor: currentTheme['--border-color'],
       }}
     >
-      <div className='header_logo_container' >
+      <div className='header_logo_container'
+        onClick={() => handleLogoClick()}
+      >
         <LogoComponent currentTheme={currentTheme} />
       </div>
 

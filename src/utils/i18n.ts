@@ -238,9 +238,9 @@ const resources = {
       'custom_theme_text': 'Here you can customize the colors and background images for your boards.',
       'Delete Account': 'Delete Account',
       'delete_account_text': 'This is the danger zone. You can permanently delete your account here. Please proceed with caution.',
-
-
-
+      'next': 'Next',
+      'previous': 'Previous',
+      'finish': 'Finish',
 
 
 
@@ -485,8 +485,9 @@ const resources = {
       'custom_theme_text': 'აქ შეგიძლიათ მორგოთ დაფების ფერები და ფონის სურათები.',
       'Delete Account': 'ანგარიშის წაშლა',
       'delete_account_text': 'ეს არის საფრთხის ზონა. აქ შეგიძლიათ სამუდამოდ წაშალოთ თქვენი ანგარიში. გთხოვთ, იყავით ფრთხილად.',
-
-
+      'next': 'შემდეგი',
+      'previous': 'წინა',
+      'finish': 'დასრულება',
 
 
 
