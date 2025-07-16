@@ -3,7 +3,12 @@ import { ThemeSpecs } from './theme';
 import { NavigateFunction } from 'react-router-dom';
 
 
-const startTour = (currentTheme: ThemeSpecs, navigate: NavigateFunction, t: (key: string) => string) => {
+const startTour = (
+  currentTheme: ThemeSpecs,
+  navigate: NavigateFunction,
+  t: (key: string) => string,
+  setSelectedComponent: (component: string) => void
+) => {
 
 
 
@@ -21,35 +26,75 @@ const startTour = (currentTheme: ThemeSpecs, navigate: NavigateFunction, t: (key
     title: t('dashboard'),
     text: t('dashboard_text'),
     attachTo: { element: '#dashboard_menuitem_shepherd', on: 'right' },
-    buttons: [{ text: 'Next', action: tour.next }]
+    buttons: [{ text: t('next'), action: tour.next }]
   });
 
   tour.addStep({
     title: t('boards'),
     text: t('boards_text'),
     attachTo: { element: '#board', on: 'right' },
-    buttons: [{ text: 'Next', action: tour.next }]
+    buttons: [
+      {
+        text: t('previous'),
+        action: tour.back,
+
+      },
+      {
+        text: t('next'),
+        action: tour.next
+      }
+    ]
   });
 
   tour.addStep({
     title: t('templates'),
     text: t('template_text'),
     attachTo: { element: '#templates_container_shepherd', on: 'right' },
-    buttons: [{ text: 'Next', action: tour.next }]
+    buttons: [
+      {
+        text: t('previous'),
+        action: tour.back,
+
+      },
+      {
+        text: t('next'),
+        action: tour.next
+      }
+    ]
   });
 
   tour.addStep({
     title: t('calendar'),
     text: t('calendar_text'),
     attachTo: { element: '#calendar_container_shepherd', on: 'right' },
-    buttons: [{ text: 'Next', action: tour.next }]
+    buttons: [
+      {
+        text: t('previous'),
+        action: tour.back,
+
+      },
+      {
+        text: t('next'),
+        action: tour.next
+      }
+    ]
   });
 
   tour.addStep({
     title: t('notification'),
     text: t('notification_text'),
     attachTo: { element: '#notification_container_shepherd', on: 'right' },
-    buttons: [{ text: 'Next', action: tour.next }]
+    buttons: [
+      {
+        text: t('previous'),
+        action: tour.back,
+
+      },
+      {
+        text: t('next'),
+        action: tour.next
+      }
+    ]
   });
 
 
@@ -59,9 +104,15 @@ const startTour = (currentTheme: ThemeSpecs, navigate: NavigateFunction, t: (key
     attachTo: { element: '#mindmap_container_shepherd', on: 'right' },
     buttons: [
       {
-        text: 'Next',
+        text: t('previous'),
+        action: tour.back,
+
+      },
+      {
+        text: t('next'),
         action: async () => {
           if (navigate) {
+            setSelectedComponent('Settings')
             navigate("/mainpage/settings");
           } else {
             window.location.pathname = '/mainpage/settings';
@@ -110,7 +161,17 @@ const startTour = (currentTheme: ThemeSpecs, navigate: NavigateFunction, t: (key
         if (el) el.style.zIndex = '';
       }
     },
-    buttons: [{ text: 'Next', action: tour.next }]
+    buttons: [
+      {
+        text: t('previous'),
+        action: tour.back,
+
+      },
+      {
+        text: t('next'),
+        action: tour.next
+      }
+    ]
   });
 
 
@@ -130,7 +191,17 @@ const startTour = (currentTheme: ThemeSpecs, navigate: NavigateFunction, t: (key
         if (el) el.style.zIndex = '';
       }
     },
-    buttons: [{ text: 'Next', action: tour.next }]
+    buttons: [
+      {
+        text: t('previous'),
+        action: tour.back,
+
+      },
+      {
+        text: t('next'),
+        action: tour.next
+      }
+    ]
   });
 
 
@@ -158,7 +229,17 @@ const startTour = (currentTheme: ThemeSpecs, navigate: NavigateFunction, t: (key
         }
       }
     },
-    buttons: [{ text: 'Next', action: tour.next }]
+    buttons: [
+      {
+        text: t('previous'),
+        action: tour.back,
+
+      },
+      {
+        text: t('next'),
+        action: tour.next
+      }
+    ]
   });
 
 
@@ -184,7 +265,17 @@ const startTour = (currentTheme: ThemeSpecs, navigate: NavigateFunction, t: (key
         }
       }
     },
-    buttons: [{ text: 'Next', action: tour.next }]
+    buttons: [
+      {
+        text: t('previous'),
+        action: tour.back,
+
+      },
+      {
+        text: t('next'),
+        action: tour.next
+      }
+    ]
   });
 
 
@@ -211,7 +302,26 @@ const startTour = (currentTheme: ThemeSpecs, navigate: NavigateFunction, t: (key
         }
       }
     },
-    buttons: [{ text: 'Finish', action: tour.complete }]
+    buttons: [
+      {
+        text: t('previous'),
+        action: tour.back,
+
+      },
+      {
+        text: t('finish'),
+        action: () => {
+          tour.complete();
+          // Optionally, you can redirect or perform another action here
+          if (navigate) {
+            setSelectedComponent('Boards');
+            navigate("/mainpage/boards");
+          } else {
+            window.location.pathname = '/mainpage/dashboard';
+          }
+        }
+      }
+    ]
   });
 
 

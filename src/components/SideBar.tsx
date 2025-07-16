@@ -42,7 +42,6 @@ interface SidebarProps {
   setIs_sidebar_open_on_mobile: (is_sidebar_open_on_mobile: boolean) => void;
   is_sidebar_open_on_mobile: boolean;
   setIsAuthenticated: (isAuthenticated: boolean) => void;
-  startTour: (currentTheme: ThemeSpecs, navigate: NavigateFunction, t: (key: string) => string) => void;
 }
 
 
@@ -63,7 +62,6 @@ const SidebarComponent: React.FC<SidebarProps> = ({
   setIs_sidebar_open_on_mobile,
   is_sidebar_open_on_mobile,
   setIsAuthenticated,
-  startTour
 }) => {
 
   const [isOpen, setIsOpen] = useState<boolean>(true);
@@ -559,9 +557,6 @@ const SidebarComponent: React.FC<SidebarProps> = ({
                   },
                 }}
               >
-                <button onClick={() => startTour(currentTheme, navigate , t)} style={{ cursor: 'pointer' }}>
-                  Start Tour
-                </button>
                 <MenuItem
                   icon={<RiSettings4Fill className="sidebar_big_icon" />}
                   onClick={() => handel_sidebar_page_click("Settings")}
