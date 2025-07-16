@@ -23,7 +23,6 @@ import { GrFormCheckmark } from "react-icons/gr";
 import { HiXMark } from "react-icons/hi2";
 import { useTranslation } from 'react-i18next';
 import { FaSitemap } from "react-icons/fa";
-import { NavigateFunction } from 'react-router-dom';
 
 
 interface SidebarProps {
@@ -138,6 +137,7 @@ const SidebarComponent: React.FC<SidebarProps> = ({
   // =========================================================================================================
   const handleBoardClick = async (board: board) => {
     console.log('Selected board:', board);
+    localStorage.setItem('prev_selected_board_id', JSON.stringify(board.id));
     setSelectedComponent("Boards");
     navigate(`/mainpage/boards/`);
 

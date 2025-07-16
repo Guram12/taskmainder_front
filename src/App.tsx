@@ -455,6 +455,7 @@ const App: React.FC = () => {
         language={language}
         setSelectedComponent={setSelectedComponent}
         setSelectedBoard={setSelectedBoard}
+        boards={boards}
       />
       <Routes>
         <Route path="/"
