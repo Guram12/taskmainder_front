@@ -164,23 +164,6 @@ const MindMap: React.FC<MindMapProps> = ({
   });
 
 
-  // -----------------------------------------------------------
-  // -----------------------------------------------------------
-  // -----------------------------------------------------------
-  // -----------------------------------------------------------
-  useEffect(() => {
-    if (maindmap_selected_board_data.id) {
-      setSelectedBoard(maindmap_selected_board_data);
-      setSelectedComponent('mindmap');
-    } else {
-      setSelectedBoard(null);
-      setSelectedComponent('');
-    }
-  }, [maindmap_selected_board_data, setSelectedBoard, setSelectedComponent]);
-  // -----------------------------------------------------------
-  // -----------------------------------------------------------
-  // -----------------------------------------------------------
-
 
 
   const mindMapSocketRef = useRef<WebSocket | null>(null);
