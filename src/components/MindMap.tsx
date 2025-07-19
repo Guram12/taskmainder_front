@@ -164,7 +164,9 @@ const MindMap: React.FC<MindMapProps> = ({
   });
 
 
-
+useEffect(()=> {
+  
+})
 
   const mindMapSocketRef = useRef<WebSocket | null>(null);
   const saveTimeoutRef = useRef<NodeJS.Timeout | null>(null);
