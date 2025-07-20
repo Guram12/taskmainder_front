@@ -55,7 +55,7 @@ const ChangeNotification: React.FC<ChangeNotificationProps> = ({ profileData, Fe
   }, [profileData.notification_preference]);
 
 
-  // =========================================== save notification preferences ===========================================
+  // =========================================== save webhook URL ===========================================
   const handle_save_webhook_url = async () => {
     if (current_webhook_url === null) {
       alert('Please select a notification preference.');
@@ -113,6 +113,30 @@ const ChangeNotification: React.FC<ChangeNotificationProps> = ({ profileData, Fe
       console.error('Error deleting webhook URL:', error);
     }
   };
+
+  // =========================================== save notification preferences  ===========================================
+
+  const handle_save_notification_preferences = async () => {
+    try {
+      const response = await axiosInstance.put('acc/notification-preference/', {
+        notification_preference: selected_notification_preferences,
+      }, {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${localStorage.getItem('access_token')}`,
+        },
+      });
+      if (response.status === 200) {
+        alert('Notification preferences updated successfully.');
+      } else {
+        alert('Failed to update notification preferences.');
+      }
+    } catch (error) {
+      console.error('Error saving notification preferences:', error);
+    }
+  }
+
+
   // =======================================================================================================
   // useEffect(() => {
   //   console.log("profile data ->>", profileData);
@@ -390,6 +414,7 @@ const ChangeNotification: React.FC<ChangeNotificationProps> = ({ profileData, Fe
               borderColor: currentTheme['--border-color'],
               color: currentTheme['--main-text-coloure'],
             }}
+            onClick={handle_save_notification_preferences}
           >
             Save Preferences
           </button>
