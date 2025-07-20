@@ -21,19 +21,21 @@ const ChangeNotification: React.FC<ChangeNotificationProps> = ({ profileData, cu
   const [selected_notification_preferences, setSelected_notification_preferences] = useState<'email' | 'discord' | 'both' | null>(null);
   const [current_webhook_url, setCurrent_webhook_url] = useState<string | null>(profileData.discord_webhook_url);
   const [is_tutorial_open, setIs_tutorial_open] = useState<boolean>(false);
-
-
-
   const [is_url_updatable, setIs_url_updatable] = useState<boolean>(false);
+
+  const [discord_url_warning_text, setDiscord_url_warning_text] = useState<{ text: string, value: boolean }>({ text: '', value: false });
+  const [show_input_warning, setShow_input_warning] = useState<boolean>(false);
+
+
+
+
 
 
   useEffect(() => {
     if (profileData.discord_webhook_url === null) {
       setCurrent_webhook_url(null);
-      setIs_url_updatable(false);
     } else {
       setCurrent_webhook_url(profileData.discord_webhook_url);
-      setIs_url_updatable(true);
     }
   }, [profileData.discord_webhook_url]);
 
@@ -69,8 +71,9 @@ const ChangeNotification: React.FC<ChangeNotificationProps> = ({ profileData, cu
         },
       });
       if (response.status === 200) {
-        alert('Notification preferences updated successfully.');
         setIs_url_updatable(false);
+        setCurrent_webhook_url(current_webhook_url);
+        alert('Notification preferences updated successfully.');
       } else {
         alert('Failed to update notification preferences.');
       }
@@ -124,19 +127,48 @@ const ChangeNotification: React.FC<ChangeNotificationProps> = ({ profileData, cu
   }
 
   const handle_Discord_Click = () => {
-    setSelected_notification_preferences('discord');
+    if (profileData.discord_webhook_url === null) {
+      setDiscord_url_warning_text({ text: 'To use Discord notifications, please set a Discord webhook URL first.', value: true });
+      setShow_input_warning(true);
+      setTimeout(() => {
+        setDiscord_url_warning_text(prev => ({ ...prev, value: false }));
+        setTimeout(() => {
+          setDiscord_url_warning_text({ text: '', value: false });
+        }, 400); // match your CSS transition duration
+      }, 3000); setDiscord_url_warning_text
+      return;
+    } else {
+      setDiscord_url_warning_text({ text: '', value: false });
+      setSelected_notification_preferences('discord');
+    }
   }
 
   const handle_Both_Click = () => {
-    setSelected_notification_preferences('both');
+    if (profileData.discord_webhook_url === null) {
+      setDiscord_url_warning_text({ text: 'To use both email and Discord notifications, please set a Discord webhook URL first.', value: true });
+      setShow_input_warning(true);
+      setTimeout(() => {
+        setDiscord_url_warning_text(prev => ({ ...prev, value: false }));
+        setTimeout(() => {
+          setDiscord_url_warning_text({ text: '', value: false });
+        }, 400); // match your CSS transition duration
+      }, 3000);
+      return;
+    } else {
+      setDiscord_url_warning_text({ text: '', value: false });
+      setSelected_notification_preferences('both');
+    }
   }
 
   const handle_update_webhook_url_click = () => {
-    console.log('clicked update ')
-
     setIs_url_updatable(true);
-
   }
+
+
+  const truncateUrl = (url: string, maxLength = 50) => {
+    if (!url) return '';
+    return url.length > maxLength ? url.slice(0, maxLength) + '...' : url;
+  };
 
   return (
     <div className="change_notification_main_cont" style={{ borderColor: currentTheme['--border-color'] }} >
@@ -232,7 +264,10 @@ const ChangeNotification: React.FC<ChangeNotificationProps> = ({ profileData, cu
                   borderColor: currentTheme['--border-color'],
                   color: currentTheme['--main-text-coloure'],
                 }}
-                onClick={() => setIs_url_updatable(false)}
+                onClick={() => {
+                  setIs_url_updatable(false);
+                  setShow_input_warning(false);
+                }}
               >
                 Cancel
               </button>
@@ -258,9 +293,9 @@ const ChangeNotification: React.FC<ChangeNotificationProps> = ({ profileData, cu
                 className='no_webhook_url_message'
                 style={{
                   backgroundColor: currentTheme['--list-background-color'],
-                  borderColor: currentTheme['--border-color'],
+                  borderColor: !show_input_warning ? currentTheme['--border-color'] : 'red',
                 }}>
-                No Webhook URL
+                {current_webhook_url ? truncateUrl(current_webhook_url) : 'No Webhook URL'}
               </div>
               <button
                 className='update_webhook_url_button'
@@ -271,7 +306,7 @@ const ChangeNotification: React.FC<ChangeNotificationProps> = ({ profileData, cu
                 }}
                 onClick={handle_update_webhook_url_click}
               >
-                Enter
+                {current_webhook_url ? 'Update Webhook URL' : 'Add Webhook URL'}
               </button>
             </>
           )}
@@ -290,7 +325,13 @@ const ChangeNotification: React.FC<ChangeNotificationProps> = ({ profileData, cu
       </div>
 
       <div className='header_and_pref_container'>
-        <h1 className='select_pref_h1' >Please select where you want to receive notifications:</h1>
+        <h1 className='select_pref_h1' >Please select where you want to receive notifications.</h1>
+
+        <div
+          className={`discord_url_warning_text${discord_url_warning_text.value ? ' visible' : ''}`}
+        >
+          {discord_url_warning_text.text}
+        </div>
 
         <div className='select_pref_big_container' >
 
@@ -339,6 +380,18 @@ const ChangeNotification: React.FC<ChangeNotificationProps> = ({ profileData, cu
               <img src={discord_icon} alt="Discord" className='discord_icon_both' />
             </div>
           </div>
+
+          <button
+            className='save_preferences_button'
+            style={{
+              backgroundColor: currentTheme['--task-background-color'],
+              borderColor: currentTheme['--border-color'],
+              color: currentTheme['--main-text-coloure'],
+            }}
+          >
+            Save Preferences
+          </button>
+
         </div>
 
       </div>

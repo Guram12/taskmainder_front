@@ -170,6 +170,25 @@
   margin: 0px;
 }
 
+
+.discord_url_warning_text {
+  width: 100%;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  font-size: 14px;
+  font-weight: bold;
+  color: red;
+  opacity: 0;
+  max-height: 0;
+  overflow: hidden;
+  transition: opacity 0.4s ease, max-height 0.4s ease;
+}
+
+.discord_url_warning_text.visible {
+  opacity: 1;
+  max-height: 40px; /* adjust as needed */
+}
 .select_pref_big_container {
   display: flex;
   flex-direction: row;
@@ -263,5 +282,23 @@
 
 .select_pref_item_both:hover .discord_icon_both {
   transform: scale(0.9);
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+}
+
+
+.save_preferences_button{
+  border: 1px solid;
+  min-width: 70px;
+  height: 33px;
+  padding: 5px 10px;
+  border-radius: 5px;
+  font-size: 14px;
+  font-weight: bold;
+  cursor: pointer;
+  margin-top: 30px;
+  transition: all 0.3s ease;
+}
+.save_preferences_button:hover {
+  background-color: seagreen !important;
   box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
 }
