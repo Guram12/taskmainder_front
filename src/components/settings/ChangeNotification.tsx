@@ -13,11 +13,12 @@ import axiosInstance from '../../utils/axiosinstance';
 
 interface ChangeNotificationProps {
   profileData: ProfileData;
+  FetchProfileData: () => Promise<void>;
   currentTheme: ThemeSpecs;
 }
 
 
-const ChangeNotification: React.FC<ChangeNotificationProps> = ({ profileData, currentTheme }) => {
+const ChangeNotification: React.FC<ChangeNotificationProps> = ({ profileData, FetchProfileData, currentTheme }) => {
   const [selected_notification_preferences, setSelected_notification_preferences] = useState<'email' | 'discord' | 'both' | null>(null);
   const [current_webhook_url, setCurrent_webhook_url] = useState<string | null>(profileData.discord_webhook_url);
   const [is_tutorial_open, setIs_tutorial_open] = useState<boolean>(false);
@@ -73,6 +74,7 @@ const ChangeNotification: React.FC<ChangeNotificationProps> = ({ profileData, cu
       if (response.status === 200) {
         setIs_url_updatable(false);
         setCurrent_webhook_url(current_webhook_url);
+        FetchProfileData();
         alert('Notification preferences updated successfully.');
       } else {
         alert('Failed to update notification preferences.');

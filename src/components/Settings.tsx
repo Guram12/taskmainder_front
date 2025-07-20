@@ -133,10 +133,11 @@ const Settings: React.FC<SettingsProps> = ({
         currentTheme={currentTheme}
         isMobile={isMobile}
       />
-      <ChangeNotification 
+      <ChangeNotification
         profileData={profileData}
         currentTheme={currentTheme}
-      
+        FetchProfileData={FetchProfileData}
+
       />
 
 

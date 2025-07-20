@@ -187,8 +187,10 @@
 
 .discord_url_warning_text.visible {
   opacity: 1;
-  max-height: 40px; /* adjust as needed */
+  max-height: 40px;
+  /* adjust as needed */
 }
+
 .select_pref_big_container {
   display: flex;
   flex-direction: row;
@@ -230,12 +232,14 @@
 .mail_icon {
   width: 60px;
   transition: all 0.3s ease;
+  border-radius: 50%;
 }
 
 
 .discord_icon {
   width: 60px;
   transition: all 0.3s ease;
+  border-radius: 50%;
 }
 
 .select_pref_item:hover .mail_icon {
@@ -266,11 +270,13 @@
 .mail_icon_both {
   width: 60px;
   transition: all 0.3s ease;
+  border-radius: 50%;
 }
 
 .discord_icon_both {
   width: 60px;
   transition: all 0.3s ease;
+  border-radius: 50%;
   margin-left: -30px;
 }
 
@@ -286,7 +292,7 @@
 }
 
 
-.save_preferences_button{
+.save_preferences_button {
   border: 1px solid;
   min-width: 70px;
   height: 33px;
@@ -298,6 +304,7 @@
   margin-top: 30px;
   transition: all 0.3s ease;
 }
+
 .save_preferences_button:hover {
   background-color: seagreen !important;
   box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
