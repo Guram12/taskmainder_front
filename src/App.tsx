@@ -95,6 +95,8 @@ const App: React.FC = () => {
     username: '',
     timezone: '',
     is_social_account: false,
+    discord_webhook_url: null,
+    notification_preference: 'email', 
   });
 
   const default_is_custom_theme_selected = localStorage.getItem('isCustomThemeSelected') === null ? false : localStorage.getItem('isCustomThemeSelected') === 'true';

@@ -12,7 +12,7 @@ import ConfirmationDialog from "./Boards/ConfirmationDialog";
 import axiosInstance from "../utils/axiosinstance";
 import { useState } from "react";
 import { useTranslation } from 'react-i18next';
-
+import ChangeNotification from "./settings/ChangeNotification";
 
 interface SettingsProps {
   profileData: ProfileData;
@@ -133,6 +133,15 @@ const Settings: React.FC<SettingsProps> = ({
         currentTheme={currentTheme}
         isMobile={isMobile}
       />
+      <ChangeNotification
+        profileData={profileData}
+        currentTheme={currentTheme}
+        FetchProfileData={FetchProfileData}
+
+      />
+
+
+
       <ChangePassword
         profileData={profileData}
         FetchProfileData={FetchProfileData}

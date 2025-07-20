@@ -135,6 +135,8 @@ const Boards: React.FC<BoardsProps> = ({
         timezone: '',
         user_status: user.user_status,
         is_social_account: false,
+        discord_webhook_url: null,
+        notification_preference: 'email', 
       }));
       setAllCurrentBoardUsers(selectedBoardUsers);
     } else {
