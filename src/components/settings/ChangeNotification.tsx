@@ -24,13 +24,21 @@ const ChangeNotification: React.FC<ChangeNotificationProps> = ({ profileData, cu
 
 
 
+  const [is_url_updatable, setIs_url_updatable] = useState<boolean>(false);
+
 
   useEffect(() => {
     if (profileData.discord_webhook_url === null) {
       setCurrent_webhook_url(null);
+      setIs_url_updatable(false);
     } else {
       setCurrent_webhook_url(profileData.discord_webhook_url);
+      setIs_url_updatable(true);
     }
+  }, [profileData.discord_webhook_url]);
+
+  useEffect(() => {
+    console.log('is_tutorial_open', is_tutorial_open)
   }, [profileData.discord_webhook_url]);
 
   useEffect(() => {
@@ -41,19 +49,18 @@ const ChangeNotification: React.FC<ChangeNotificationProps> = ({ profileData, cu
     } else if (profileData.notification_preference === 'both') {
       setSelected_notification_preferences('both');
     }
-  }, [profileData.discord_webhook_url])
+  }, [profileData.notification_preference]);
 
 
   // =========================================== save notification preferences ===========================================
-  const handle_save_notification_preferences = async (preference: 'email' | 'discord' | 'both' | null) => {
-    if (preference === null) {
+  const handle_save_webhook_url = async () => {
+    if (current_webhook_url === null) {
       alert('Please select a notification preference.');
       return;
     }
     try {
-      const response = await axiosInstance.put('acc/notification-preference/',
+      const response = await axiosInstance.put('acc/discord-webhook-url/',
         {
-          notification_preference: preference,
           discord_webhook_url: current_webhook_url
         }, {
         headers: {
@@ -62,8 +69,8 @@ const ChangeNotification: React.FC<ChangeNotificationProps> = ({ profileData, cu
         },
       });
       if (response.status === 200) {
-        setSelected_notification_preferences(preference);
         alert('Notification preferences updated successfully.');
+        setIs_url_updatable(false);
       } else {
         alert('Failed to update notification preferences.');
       }
@@ -73,21 +80,26 @@ const ChangeNotification: React.FC<ChangeNotificationProps> = ({ profileData, cu
   };
 
   // -----------------------------  delete webhook utrl ---------------------------------
+
   const handle_delete_webhook_url = async () => {
     try {
-      const response = await axiosInstance.put('acc/notification-preference/', {
-        data: {
-          notification_preference: 'email',
+      const response = await axiosInstance.put(
+        'acc/discord-webhook-url/',
+        {
           discord_webhook_url: null
         },
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${localStorage.getItem('access_token')}`,
-        },
-      });
+        {
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${localStorage.getItem('access_token')}`,
+          },
+        }
+      );
       if (response.status === 200) {
         setCurrent_webhook_url(null);
         setSelected_notification_preferences('email');
+        setIs_url_updatable(false);
+
         console.log('Webhook URL deleted successfully.');
       } else {
         console.error('Failed to delete webhook URL.');
@@ -95,12 +107,11 @@ const ChangeNotification: React.FC<ChangeNotificationProps> = ({ profileData, cu
     } catch (error) {
       console.error('Error deleting webhook URL:', error);
     }
-  }
-
+  };
   // =======================================================================================================
-  useEffect(() => {
-    console.log("profile data ->>", profileData);
-  }, [profileData]);
+  // useEffect(() => {
+  //   console.log("profile data ->>", profileData);
+  // }, [profileData]);
 
   const handle_tutorial_open = () => {
     setIs_tutorial_open(true);
@@ -120,7 +131,12 @@ const ChangeNotification: React.FC<ChangeNotificationProps> = ({ profileData, cu
     setSelected_notification_preferences('both');
   }
 
+  const handle_update_webhook_url_click = () => {
+    console.log('clicked update ')
 
+    setIs_url_updatable(true);
+
+  }
 
   return (
     <div className="change_notification_main_cont" style={{ borderColor: currentTheme['--border-color'] }} >
@@ -180,46 +196,85 @@ const ChangeNotification: React.FC<ChangeNotificationProps> = ({ profileData, cu
 
 
         <div className='discord_webhook_input_container' >
-          <input
-            type="url"
-            value={current_webhook_url || ''}
-            style={{
-              backgroundColor: currentTheme['--task-background-color'],
-              borderColor: currentTheme['--border-color'],
-              color: currentTheme['--main-text-coloure'],
-              ['--placeholder-color']: currentTheme['--due-date-color'],
-            } as React.CSSProperties}
-            className='discord_webhook_input'
-            onChange={(e) => setCurrent_webhook_url(e.target.value)}
-            placeholder='Enter your Discord webhook URL'
-            autoComplete="off"
-            name="discord-webhook-url-unique"
+          {is_url_updatable ? (
+            <>
+              <input
+                type="url"
+                value={current_webhook_url || ''}
+                style={{
+                  backgroundColor: currentTheme['--task-background-color'],
+                  borderColor: currentTheme['--border-color'],
+                  color: currentTheme['--main-text-coloure'],
+                  ['--placeholder-color']: currentTheme['--due-date-color'],
+                } as React.CSSProperties}
+                className='discord_webhook_input'
+                onChange={(e) => setCurrent_webhook_url(e.target.value)}
+                placeholder='Enter your Discord webhook URL'
+                autoComplete="off"
+                name="discord-webhook-url-unique"
+              />
+              <button
+                className='save_webhook_url_button'
+                style={{
+                  backgroundColor: currentTheme['--task-background-color'],
+                  borderColor: currentTheme['--border-color'],
+                  color: currentTheme['--main-text-coloure'],
+                }}
+                onClick={handle_save_webhook_url}
+              >
+                Save
+              </button>
 
-          />
+              <button
+                className='delete_webhook_url_button'
+                style={{
+                  backgroundColor: currentTheme['--task-background-color'],
+                  borderColor: currentTheme['--border-color'],
+                  color: currentTheme['--main-text-coloure'],
+                }}
+                onClick={() => setIs_url_updatable(false)}
+              >
+                Cancel
+              </button>
 
-          <button
-            className='save_webhook_url_button'
-            style={{
-              backgroundColor: currentTheme['--task-background-color'],
-              borderColor: currentTheme['--border-color'],
-              color: currentTheme['--main-text-coloure'],
-            }}
-            onClick={() => handle_save_notification_preferences(selected_notification_preferences)}
-          >
-            Save
-          </button>
+              <button
+                className='delete_webhook_url_button'
+                style={{
+                  backgroundColor: currentTheme['--task-background-color'],
+                  borderColor: currentTheme['--border-color'],
+                  color: currentTheme['--main-text-coloure'],
+                }}
+                onClick={handle_delete_webhook_url}
+              >
+                Delete
+              </button>
 
-          <button
-            className='delete_webhook_url_button'
-            style={{
-              backgroundColor: currentTheme['--task-background-color'],
-              borderColor: currentTheme['--border-color'],
-              color: currentTheme['--main-text-coloure'],
-            }}
-            onClick={handle_delete_webhook_url}
-          >
-            Delete
-          </button>
+
+
+            </>
+          ) : (
+            <>
+              <div
+                className='no_webhook_url_message'
+                style={{
+                  backgroundColor: currentTheme['--list-background-color'],
+                  borderColor: currentTheme['--border-color'],
+                }}>
+                No Webhook URL
+              </div>
+              <button
+                className='update_webhook_url_button'
+                style={{
+                  backgroundColor: currentTheme['--task-background-color'],
+                  borderColor: currentTheme['--border-color'],
+                  color: currentTheme['--main-text-coloure'],
+                }}
+                onClick={handle_update_webhook_url_click}
+              >
+                Enter
+              </button>
+            </>
+          )}
         </div>
 
 

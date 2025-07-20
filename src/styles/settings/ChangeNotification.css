@@ -66,8 +66,23 @@
   margin-top: 10px;
 }
 
-.discord_webhook_input {
+.no_webhook_url_message {
   width: 400px;
+  border: 1px solid;
+  height: 30px;
+  padding: 5px;
+  padding-left: 15px;
+  border-radius: 5px;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  font-size: 14px;
+  font-weight: bold;
+  box-shadow: inset 0px 0px 10px rgba(0, 0, 0, 0.3);
+}
+
+.discord_webhook_input {
+  width: 410px;
   height: 30px;
   border: 1px solid;
   border-radius: 5px;
@@ -111,6 +126,24 @@
   background-color: red !important;
   box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
 }
+
+.update_webhook_url_button {
+  border: 1px solid;
+  min-width: 70px;
+  height: 33px;
+  padding: 5px 10px;
+  border-radius: 5px;
+  font-size: 14px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.update_webhook_url_button:hover {
+  background-color: seagreen !important;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+}
+
 
 .discord-webhook-tutorial-overlay {
   position: fixed;
