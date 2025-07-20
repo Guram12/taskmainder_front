@@ -6,6 +6,10 @@ import discord_icon from '../../assets/discord.png';
 import email_icon from '../../assets/mail.png';
 import { useState } from 'react';
 import DiscordWebhookTutorial from './DiscordWebhookTutorial';
+import axiosInstance from '../../utils/axiosinstance';
+
+
+
 
 interface ChangeNotificationProps {
   profileData: ProfileData;
@@ -15,18 +19,19 @@ interface ChangeNotificationProps {
 
 const ChangeNotification: React.FC<ChangeNotificationProps> = ({ profileData, currentTheme }) => {
   const [selected_notification_preferences, setSelected_notification_preferences] = useState<'email' | 'discord' | 'both' | null>(null);
-
-
   const [current_webhook_url, setCurrent_webhook_url] = useState<string | null>(profileData.discord_webhook_url);
-
   const [is_tutorial_open, setIs_tutorial_open] = useState<boolean>(false);
 
 
 
 
-
-
-
+  useEffect(() => {
+    if (profileData.discord_webhook_url === null) {
+      setCurrent_webhook_url(null);
+    } else {
+      setCurrent_webhook_url(profileData.discord_webhook_url);
+    }
+  }, [profileData.discord_webhook_url]);
 
   useEffect(() => {
     if (profileData.discord_webhook_url === null || profileData.discord_webhook_url === 'email') {
@@ -39,27 +44,83 @@ const ChangeNotification: React.FC<ChangeNotificationProps> = ({ profileData, cu
   }, [profileData.discord_webhook_url])
 
 
-
-  const handle_not_pref_change = (preference: 'email' | 'discord' | 'both') => {
-    setSelected_notification_preferences(preference);
-    // Here you would typically make an API call to save the preference
-    // For example:
-    // axiosInstance.post('/api/update-notification-preference', { preference })
-    //   .then(response => {
-    //     console.log('Preference updated successfully');
-    //   })
-    //   .catch(error => {
-    //     console.error('Error updating preference:', error);
-    //   });
+  // =========================================== save notification preferences ===========================================
+  const handle_save_notification_preferences = async (preference: 'email' | 'discord' | 'both' | null) => {
+    if (preference === null) {
+      alert('Please select a notification preference.');
+      return;
+    }
+    try {
+      const response = await axiosInstance.put('acc/notification-preference/',
+        {
+          notification_preference: preference,
+          discord_webhook_url: current_webhook_url
+        }, {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${localStorage.getItem('access_token')}`,
+        },
+      });
+      if (response.status === 200) {
+        setSelected_notification_preferences(preference);
+        alert('Notification preferences updated successfully.');
+      } else {
+        alert('Failed to update notification preferences.');
+      }
+    } catch (error) {
+      console.error('Error saving notification preferences:', error);
+    }
   };
+
+  // -----------------------------  delete webhook utrl ---------------------------------
+  const handle_delete_webhook_url = async () => {
+    try {
+      const response = await axiosInstance.put('acc/notification-preference/', {
+        data: {
+          notification_preference: 'email',
+          discord_webhook_url: null
+        },
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${localStorage.getItem('access_token')}`,
+        },
+      });
+      if (response.status === 200) {
+        setCurrent_webhook_url(null);
+        setSelected_notification_preferences('email');
+        console.log('Webhook URL deleted successfully.');
+      } else {
+        console.error('Failed to delete webhook URL.');
+      }
+    } catch (error) {
+      console.error('Error deleting webhook URL:', error);
+    }
+  }
+
+  // =======================================================================================================
   useEffect(() => {
     console.log("profile data ->>", profileData);
   }, [profileData]);
 
-
   const handle_tutorial_open = () => {
     setIs_tutorial_open(true);
   }
+
+  // ===================================================    preferences click     =======================================================
+
+  const handle_Email_Click = () => {
+    setSelected_notification_preferences('email');
+  }
+
+  const handle_Discord_Click = () => {
+    setSelected_notification_preferences('discord');
+  }
+
+  const handle_Both_Click = () => {
+    setSelected_notification_preferences('both');
+  }
+
+
 
   return (
     <div className="change_notification_main_cont" style={{ borderColor: currentTheme['--border-color'] }} >
@@ -99,6 +160,25 @@ const ChangeNotification: React.FC<ChangeNotificationProps> = ({ profileData, cu
           </h2>
         )}
 
+        {profileData.discord_webhook_url !== null && (
+
+          <h2 className='no_discord_webhook_p' >
+            For creating a Discord webhook URL, please click
+            <span
+              onClick={handle_tutorial_open}
+              className='tutorial_link'
+              style={{
+                borderColor: currentTheme['--border-color'],
+                backgroundColor: currentTheme['--task-background-color'],
+              }}
+            >
+              here
+            </span>
+            .
+          </h2>
+        )}
+
+
         <div className='discord_webhook_input_container' >
           <input
             type="url"
@@ -112,7 +192,34 @@ const ChangeNotification: React.FC<ChangeNotificationProps> = ({ profileData, cu
             className='discord_webhook_input'
             onChange={(e) => setCurrent_webhook_url(e.target.value)}
             placeholder='Enter your Discord webhook URL'
+            autoComplete="off"
+            name="discord-webhook-url-unique"
+
           />
+
+          <button
+            className='save_webhook_url_button'
+            style={{
+              backgroundColor: currentTheme['--task-background-color'],
+              borderColor: currentTheme['--border-color'],
+              color: currentTheme['--main-text-coloure'],
+            }}
+            onClick={() => handle_save_notification_preferences(selected_notification_preferences)}
+          >
+            Save
+          </button>
+
+          <button
+            className='delete_webhook_url_button'
+            style={{
+              backgroundColor: currentTheme['--task-background-color'],
+              borderColor: currentTheme['--border-color'],
+              color: currentTheme['--main-text-coloure'],
+            }}
+            onClick={handle_delete_webhook_url}
+          >
+            Delete
+          </button>
         </div>
 
 
@@ -141,7 +248,7 @@ const ChangeNotification: React.FC<ChangeNotificationProps> = ({ profileData, cu
                 borderColor: selected_notification_preferences === 'email' ? currentTheme['--border-color'] : 'transparent',
                 ['--hover-color']: currentTheme['--hover-color']
               } as React.CSSProperties}
-              onClick={() => handle_not_pref_change('email')}
+              onClick={handle_Email_Click}
             >
               <img src={email_icon} alt="Email" className='mail_icon' />
             </div>
@@ -156,7 +263,7 @@ const ChangeNotification: React.FC<ChangeNotificationProps> = ({ profileData, cu
                 borderColor: selected_notification_preferences === 'discord' ? currentTheme['--border-color'] : 'transparent',
                 ['--hover-color']: currentTheme['--hover-color']
               } as React.CSSProperties}
-              onClick={() => handle_not_pref_change('discord')}
+              onClick={handle_Discord_Click}
             >
               <img src={discord_icon} alt="Discord" className='discord_icon' />
             </div>
@@ -171,7 +278,7 @@ const ChangeNotification: React.FC<ChangeNotificationProps> = ({ profileData, cu
                 borderColor: selected_notification_preferences === 'both' ? currentTheme['--border-color'] : 'transparent',
                 ['--hover-color']: currentTheme['--hover-color']
               } as React.CSSProperties}
-              onClick={() => handle_not_pref_change('both')}
+              onClick={handle_Both_Click}
             >
               <img src={email_icon} alt="Both" className='mail_icon_both' />
               <img src={discord_icon} alt="Discord" className='discord_icon_both' />
