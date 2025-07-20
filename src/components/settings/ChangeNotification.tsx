@@ -17,6 +17,8 @@ const ChangeNotification: React.FC<ChangeNotificationProps> = ({ profileData, cu
   const [selected_notification_preferences, setSelected_notification_preferences] = useState<'email' | 'discord' | 'both' | null>(null);
 
 
+  const [current_webhook_url, setCurrent_webhook_url] = useState<string | null>(profileData.discord_webhook_url);
+
   const [is_tutorial_open, setIs_tutorial_open] = useState<boolean>(false);
 
 
@@ -82,64 +84,98 @@ const ChangeNotification: React.FC<ChangeNotificationProps> = ({ profileData, cu
         {profileData.discord_webhook_url === null && (
 
           <h2 className='no_discord_webhook_p' >
-            You have not set a Discord webhook URL.For creating a Discord webhook URL, please click
+            You have not set a Discord webhook URL. For creating a Discord webhook URL, please click
             <span
               onClick={handle_tutorial_open}
               className='tutorial_link'
-                style={{
-                  borderColor: currentTheme['--border-color'],
-                  backgroundColor: currentTheme['--task-background-color'],
-                }}
-              >
+              style={{
+                borderColor: currentTheme['--border-color'],
+                backgroundColor: currentTheme['--task-background-color'],
+              }}
+            >
               here
             </span>
             .
           </h2>
         )}
 
-        {is_tutorial_open && (
-          <DiscordWebhookTutorial
-            onClose={() => setIs_tutorial_open(false)}
-            currentTheme={currentTheme}
+        <div className='discord_webhook_input_container' >
+          <input
+            type="url"
+            value={current_webhook_url || ''}
+            style={{
+              backgroundColor: currentTheme['--task-background-color'],
+              borderColor: currentTheme['--border-color'],
+              color: currentTheme['--main-text-coloure'],
+              ['--placeholder-color']: currentTheme['--due-date-color'],
+            } as React.CSSProperties}
+            className='discord_webhook_input'
+            onChange={(e) => setCurrent_webhook_url(e.target.value)}
+            placeholder='Enter your Discord webhook URL'
           />
+        </div>
+
+
+        {is_tutorial_open && (
+          <>
+            <div className="discord-webhook-tutorial-overlay"></div>
+            <DiscordWebhookTutorial
+              onClose={() => setIs_tutorial_open(false)}
+              currentTheme={currentTheme}
+            />
+          </>
         )}
       </div>
 
       <div className='header_and_pref_container'>
         <h1 className='select_pref_h1' >Please select where you want to receive notifications:</h1>
 
-        <div className='select_pref_container' >
-          <div
-            className='select_pref_item'
-            style={{
-              borderColor: selected_notification_preferences === 'email' ? currentTheme['--border-color'] : 'transparent',
-              ['--hover-color']: currentTheme['--hover-color']
-            } as React.CSSProperties}
-            onClick={() => handle_not_pref_change('email')}
-          >
-            <img src={email_icon} alt="Email" className='mail_icon' />
-          </div>
-          <div
-            className='select_pref_item'
-            style={{
-              borderColor: selected_notification_preferences === 'discord' ? currentTheme['--border-color'] : 'transparent',
-              ['--hover-color']: currentTheme['--hover-color']
-            } as React.CSSProperties}
-            onClick={() => handle_not_pref_change('discord')}
-          >
-            <img src={discord_icon} alt="Discord" className='discord_icon' />
+        <div className='select_pref_big_container' >
+
+          {/* Email option */}
+          <div className='select_pref_item_container' >
+            <p className='select_pref_item_text' style={{ color: currentTheme['--main-text-coloure'] }}>Email</p>
+            <div
+              className='select_pref_item'
+              style={{
+                borderColor: selected_notification_preferences === 'email' ? currentTheme['--border-color'] : 'transparent',
+                ['--hover-color']: currentTheme['--hover-color']
+              } as React.CSSProperties}
+              onClick={() => handle_not_pref_change('email')}
+            >
+              <img src={email_icon} alt="Email" className='mail_icon' />
+            </div>
           </div>
 
-          <div
-            className='select_pref_item_both'
-            style={{
-              borderColor: selected_notification_preferences === 'both' ? currentTheme['--border-color'] : 'transparent',
-              ['--hover-color']: currentTheme['--hover-color']
-            } as React.CSSProperties}
-            onClick={() => handle_not_pref_change('both')}
-          >
-            <img src={email_icon} alt="Both" className='mail_icon_both' />
-            <img src={discord_icon} alt="Discord" className='discord_icon_both' />
+          {/* Discord option */}
+          <div className='select_pref_item_container' >
+            <p className='select_pref_item_text' style={{ color: currentTheme['--main-text-coloure'] }}>Discord</p>
+            <div
+              className='select_pref_item'
+              style={{
+                borderColor: selected_notification_preferences === 'discord' ? currentTheme['--border-color'] : 'transparent',
+                ['--hover-color']: currentTheme['--hover-color']
+              } as React.CSSProperties}
+              onClick={() => handle_not_pref_change('discord')}
+            >
+              <img src={discord_icon} alt="Discord" className='discord_icon' />
+            </div>
+          </div>
+
+          <div className='select_pref_item_container' >
+            <p className='select_pref_item_text' style={{ color: currentTheme['--main-text-coloure'] }}>Both</p>
+            {/* Both option */}
+            <div
+              className='select_pref_item_both'
+              style={{
+                borderColor: selected_notification_preferences === 'both' ? currentTheme['--border-color'] : 'transparent',
+                ['--hover-color']: currentTheme['--hover-color']
+              } as React.CSSProperties}
+              onClick={() => handle_not_pref_change('both')}
+            >
+              <img src={email_icon} alt="Both" className='mail_icon_both' />
+              <img src={discord_icon} alt="Discord" className='discord_icon_both' />
+            </div>
           </div>
         </div>
 
