@@ -163,11 +163,6 @@ const MindMap: React.FC<MindMapProps> = ({
     creation_date: '',
   });
 
-
-useEffect(()=> {
-  
-})
-
   const mindMapSocketRef = useRef<WebSocket | null>(null);
   const saveTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 

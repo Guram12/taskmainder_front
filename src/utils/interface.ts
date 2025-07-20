@@ -7,10 +7,10 @@ export interface ProfileData {
   username: string;
   timezone: string;
   is_social_account: boolean;
+  discord_webhook_url: string | null; 
+  notification_preference: 'email' | 'discord' | 'both'; 
+
 }
-
-
-
 
 
 export interface board {
@@ -73,7 +73,7 @@ export interface Template {
       description: string;
       due_date: string | null;
       priority: 'green' | 'orange' | 'red' | null;
-      order: number; 
+      order: number;
     }[];
   }[];
 }
