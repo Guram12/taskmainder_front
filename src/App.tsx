@@ -183,6 +183,10 @@ const App: React.FC = () => {
     console.log('boards==>>:', boards);
   }, [boards]);
 
+useEffect(()=> {
+  console.log('selectedBoard==>>:', selectedBoard);
+})
+
 
 
   // const [notificationData, setNotificationData] = useState<NotificationPayload>({
