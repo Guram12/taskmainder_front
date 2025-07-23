@@ -179,15 +179,6 @@ const App: React.FC = () => {
   const [current_board_users, setCurrent_board_users] = useState<Board_Users[]>([]);
   const [is_cur_Board_users_fetched, setIs_cur_Board_users_fetched] = useState<boolean>(false);
 
-  useEffect(() => {
-    console.log('boards==>>:', boards);
-  }, [boards]);
-
-useEffect(()=> {
-  console.log('selectedBoard==>>:', selectedBoard);
-})
-
-
 
   // const [notificationData, setNotificationData] = useState<NotificationPayload>({
   //   type: "USER_REMOVED_FROM_BOARD",
