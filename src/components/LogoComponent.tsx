@@ -1,4 +1,3 @@
-import { ThemeSpecs } from "../utils/theme";
 import '../styles/LogoComponent.css';
 
 
