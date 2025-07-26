@@ -4,12 +4,11 @@ import '../styles/LogoComponent.css';
 
 
 interface LogoComponentProps {
-  currentTheme: ThemeSpecs;
+  // currentTheme: ThemeSpecs;
 }
 
-const LogoComponent: React.FC<LogoComponentProps> = ({ currentTheme }) => {
+const LogoComponent: React.FC<LogoComponentProps> = () => {
 
-console.log("LogoComponent rendered with theme:", currentTheme);
 
   return (
     <div>

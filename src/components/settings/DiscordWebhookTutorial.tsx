@@ -2,11 +2,16 @@ import '../../styles/settings/DiscordWebhookTutorial.css'
 import { useState } from 'react';
 import React from 'react';
 import { ThemeSpecs } from '../../utils/theme';
+import w_1 from '../../assets/w_1.png';
+import w_2 from '../../assets/w_2.png';
+import w_3 from '../../assets/w_3.png';
+
+
 
 const steps = [
-  { img: '/screenshots/step1.png', text: 'Go to Discord and open your server settings.' },
-  { img: '/screenshots/step2.png', text: 'Navigate to Integrations > Webhooks.' },
-  { img: '/screenshots/step3.png', text: 'Click "New Webhook" and copy the URL.' },
+  { img: w_1, text: 'Go to Discord and open your server settings.' },
+  { img: w_2, text: 'Navigate to Integrations > Webhooks.' },
+  { img: w_3, text: 'Click "New Webhook" and copy the URL.' },
 ];
 
 
@@ -25,11 +30,22 @@ const DiscordWebhookTutorial: React.FC<DiscordWebhookTutorialProps> = ({ onClose
       }}
     >
       <h2>How to Create a Discord Webhook URL</h2>
-      <img src={steps[step].img} alt={`Step ${step + 1}`} style={{ width: '100%' }} />
+      <div className="discord-webhook-slider-wrapper">
+        {steps.map((stepObj, idx) => (
+          <img
+            key={idx}
+            src={stepObj.img}
+            alt={`Step ${idx + 1}`}
+            className={`discord-webhook-slider-img${step === idx ? ' active' : ''}`}
+          />
+        ))}
+      </div>
       <p>{steps[step].text}</p>
-      <button onClick={() => setStep(s => Math.max(0, s - 1))} disabled={step === 0}>Back</button>
-      <button onClick={() => setStep(s => Math.min(steps.length - 1, s + 1))} disabled={step === steps.length - 1}>Next</button>
-      <button onClick={onClose}>Close</button>
+      <div style={{ display: 'flex', gap: '8px', marginTop: '12px' }}>
+        <button onClick={() => setStep(s => Math.max(0, s - 1))} disabled={step === 0}>Back</button>
+        <button onClick={() => setStep(s => Math.min(steps.length - 1, s + 1))} disabled={step === steps.length - 1}>Next</button>
+        <button onClick={onClose}>Close</button>
+      </div>
     </div>
   );
 }
