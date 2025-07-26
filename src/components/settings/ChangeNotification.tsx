@@ -7,8 +7,7 @@ import email_icon from '../../assets/mail.png';
 import { useState } from 'react';
 import DiscordWebhookTutorial from './DiscordWebhookTutorial';
 import axiosInstance from '../../utils/axiosinstance';
-
-
+import PulseLoader from 'react-spinners/PulseLoader';
 
 
 interface ChangeNotificationProps {
@@ -27,6 +26,8 @@ const ChangeNotification: React.FC<ChangeNotificationProps> = ({ profileData, Fe
   const [discord_url_warning_text, setDiscord_url_warning_text] = useState<{ text: string, value: boolean }>({ text: '', value: false });
   const [show_input_warning, setShow_input_warning] = useState<boolean>(false);
 
+
+  const [url_saved, setUrl_saved] = useState<boolean>(false);
 
 
 
@@ -57,8 +58,8 @@ const ChangeNotification: React.FC<ChangeNotificationProps> = ({ profileData, Fe
 
   // =========================================== save webhook URL ===========================================
   const handle_save_webhook_url = async () => {
+    setUrl_saved(true);
     if (current_webhook_url === null) {
-      alert('Please select a notification preference.');
       return;
     }
     try {
@@ -75,18 +76,20 @@ const ChangeNotification: React.FC<ChangeNotificationProps> = ({ profileData, Fe
         setIs_url_updatable(false);
         setCurrent_webhook_url(current_webhook_url);
         FetchProfileData();
-        alert('Notification preferences updated successfully.');
       } else {
-        alert('Failed to update notification preferences.');
+        console.error('Failed to update notification preferences.');
       }
     } catch (error) {
       console.error('Error saving notification preferences:', error);
+    } finally {
+      setUrl_saved(false);
     }
   };
 
   // -----------------------------  delete webhook utrl ---------------------------------
 
   const handle_delete_webhook_url = async () => {
+    setUrl_saved(true);
     try {
       const response = await axiosInstance.put(
         'acc/discord-webhook-url/',
@@ -111,6 +114,9 @@ const ChangeNotification: React.FC<ChangeNotificationProps> = ({ profileData, Fe
       }
     } catch (error) {
       console.error('Error deleting webhook URL:', error);
+    } finally {
+      setUrl_saved(false);
+      FetchProfileData();
     }
   };
 
@@ -133,6 +139,8 @@ const ChangeNotification: React.FC<ChangeNotificationProps> = ({ profileData, Fe
       }
     } catch (error) {
       console.error('Error saving notification preferences:', error);
+    } finally {
+      FetchProfileData();
     }
   }
 
@@ -254,6 +262,7 @@ const ChangeNotification: React.FC<ChangeNotificationProps> = ({ profileData, Fe
 
 
         <div className='discord_webhook_input_container' >
+
           {is_url_updatable ? (
             <>
               <input
@@ -271,46 +280,56 @@ const ChangeNotification: React.FC<ChangeNotificationProps> = ({ profileData, Fe
                 autoComplete="off"
                 name="discord-webhook-url-unique"
               />
-              <button
-                className='save_webhook_url_button'
-                style={{
-                  backgroundColor: currentTheme['--task-background-color'],
-                  borderColor: currentTheme['--border-color'],
-                  color: currentTheme['--main-text-coloure'],
-                }}
-                onClick={handle_save_webhook_url}
-              >
-                Save
-              </button>
 
-              <button
-                className='delete_webhook_url_button'
-                style={{
-                  backgroundColor: currentTheme['--task-background-color'],
-                  borderColor: currentTheme['--border-color'],
-                  color: currentTheme['--main-text-coloure'],
-                }}
-                onClick={() => {
-                  setIs_url_updatable(false);
-                  setShow_input_warning(false);
-                }}
-              >
-                Cancel
-              </button>
-
-              <button
-                className='delete_webhook_url_button'
-                style={{
-                  backgroundColor: currentTheme['--task-background-color'],
-                  borderColor: currentTheme['--border-color'],
-                  color: currentTheme['--main-text-coloure'],
-                }}
-                onClick={handle_delete_webhook_url}
-              >
-                Delete
-              </button>
+              <div className='discord_webhook_input_buttons' >
+                {url_saved ? (
+                  <PulseLoader color={currentTheme['--main-text-coloure']} speedMultiplier={0.8} />
+                ) : (
 
 
+                  <>
+                    <button
+                      className='save_webhook_url_button'
+                      style={{
+                        backgroundColor: currentTheme['--task-background-color'],
+                        borderColor: currentTheme['--border-color'],
+                        color: currentTheme['--main-text-coloure'],
+                      }}
+                      onClick={handle_save_webhook_url}
+                    >
+                      Save
+                    </button>
+
+                    <button
+                      className='delete_webhook_url_button'
+                      style={{
+                        backgroundColor: currentTheme['--task-background-color'],
+                        borderColor: currentTheme['--border-color'],
+                        color: currentTheme['--main-text-coloure'],
+                      }}
+                      onClick={() => {
+                        setIs_url_updatable(false);
+                        setShow_input_warning(false);
+                      }}
+                    >
+                      Cancel
+                    </button>
+
+                    <button
+                      className='delete_webhook_url_button'
+                      style={{
+                        backgroundColor: currentTheme['--task-background-color'],
+                        borderColor: currentTheme['--border-color'],
+                        color: currentTheme['--main-text-coloure'],
+                      }}
+                      onClick={handle_delete_webhook_url}
+                    >
+                      Delete
+                    </button>
+                  </>
+                )}
+
+              </div>
 
             </>
           ) : (
