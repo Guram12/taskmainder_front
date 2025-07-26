@@ -206,6 +206,37 @@ const startTour = (
 
 
 
+  // tour.addStep({
+  //   title: t('user_information_update'),
+  //   text: t('user_information_update_text'),
+  //   attachTo: { element: '.main_profilinfo_cont', on: 'bottom' },
+  //   when: {
+  //     show: () => {
+  //       const el = document.querySelector('.main_profilinfo_cont') as HTMLElement | null;
+  //       if (el) el.style.zIndex = '999999';
+  //       return new Promise(resolve => setTimeout(resolve, 200));
+  //     },
+  //     hide: () => {
+  //       const el = document.querySelector('.main_profilinfo_cont') as HTMLElement | null;
+  //       if (el) el.style.zIndex = '';
+  //     }
+  //   },
+  //   buttons: [
+  //     {
+  //       text: t('previous'),
+  //       action: tour.back,
+
+  //     },
+  //     {
+  //       text: t('next'),
+  //       action: tour.next
+  //     }
+  //   ]
+  // });
+
+
+
+
 
   tour.addStep({
     title: t('change_password'),

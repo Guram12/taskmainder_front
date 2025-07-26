@@ -9,7 +9,10 @@ interface LogoComponentProps {
 
 const LogoComponent: React.FC<LogoComponentProps> = ({ currentTheme }) => {
 
-console.log("LogoComponent rendered with theme:", currentTheme);
+
+  if (!currentTheme) {
+    return null;
+  }
 
   return (
     <div>

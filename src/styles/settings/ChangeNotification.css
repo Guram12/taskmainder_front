@@ -54,6 +54,12 @@
   border-radius: 10px;
   margin-left: 5px;
   cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.tutorial_link:hover {
+  background-color: seagreen !important;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
 }
 
 .discord_webhook_input_container {
@@ -93,6 +99,16 @@
   color: var(--placeholder-color);
 }
 
+
+.discord_webhook_input_buttons{
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 10px;
+}
+
+
 .save_webhook_url_button {
   border: 1px solid;
   min-width: 70px;
@@ -109,6 +125,9 @@
   background-color: seagreen !important;
   box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
 }
+
+
+
 
 .delete_webhook_url_button {
   border: 1px solid;
