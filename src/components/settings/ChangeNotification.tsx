@@ -30,6 +30,8 @@ const ChangeNotification: React.FC<ChangeNotificationProps> = ({ profileData, Fe
   const [url_saved, setUrl_saved] = useState<boolean>(false);
 
 
+  const [preferences_saved, setPreferences_saved] = useState<boolean>(false);
+
 
 
 
@@ -83,6 +85,7 @@ const ChangeNotification: React.FC<ChangeNotificationProps> = ({ profileData, Fe
       console.error('Error saving notification preferences:', error);
     } finally {
       setUrl_saved(false);
+      setShow_input_warning(false);
     }
   };
 
@@ -123,6 +126,7 @@ const ChangeNotification: React.FC<ChangeNotificationProps> = ({ profileData, Fe
   // =========================================== save notification preferences  ===========================================
 
   const handle_save_notification_preferences = async () => {
+    setPreferences_saved(true);
     try {
       const response = await axiosInstance.put('acc/notification-preference/', {
         notification_preference: selected_notification_preferences,
@@ -133,14 +137,18 @@ const ChangeNotification: React.FC<ChangeNotificationProps> = ({ profileData, Fe
         },
       });
       if (response.status === 200) {
-        alert('Notification preferences updated successfully.');
+        // Update local state immediately so button disappears
+        setSelected_notification_preferences(response.data.notification_preference);
+        // Also update profileData.notification_preference locally
+        profileData.notification_preference = response.data.notification_preference;
+        FetchProfileData();
       } else {
         alert('Failed to update notification preferences.');
       }
     } catch (error) {
       console.error('Error saving notification preferences:', error);
     } finally {
-      FetchProfileData();
+      setPreferences_saved(false);
     }
   }
 
@@ -426,17 +434,26 @@ const ChangeNotification: React.FC<ChangeNotificationProps> = ({ profileData, Fe
             </div>
           </div>
 
-          <button
-            className='save_preferences_button'
-            style={{
-              backgroundColor: currentTheme['--task-background-color'],
-              borderColor: currentTheme['--border-color'],
-              color: currentTheme['--main-text-coloure'],
-            }}
-            onClick={handle_save_notification_preferences}
-          >
-            Save Preferences
-          </button>
+          {selected_notification_preferences !== profileData.notification_preference && (
+            <>
+              {preferences_saved ? (
+                <PulseLoader color={currentTheme['--main-text-coloure']} speedMultiplier={0.8} style={{ marginTop: '30px' }} />
+              ) : (
+                <button
+                  className='save_preferences_button'
+                  style={{
+                    backgroundColor: currentTheme['--task-background-color'],
+                    borderColor: currentTheme['--border-color'],
+                    color: currentTheme['--main-text-coloure'],
+                  }}
+                  onClick={handle_save_notification_preferences}
+                >
+                  Save Preferences
+                </button>
+              )}
+            </>
+
+          )}
 
         </div>
 

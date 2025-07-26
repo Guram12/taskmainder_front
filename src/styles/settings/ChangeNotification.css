@@ -54,6 +54,12 @@
   border-radius: 10px;
   margin-left: 5px;
   cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.tutorial_link:hover {
+  background-color: seagreen !important;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
 }
 
 .discord_webhook_input_container {
