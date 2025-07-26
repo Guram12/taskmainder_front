@@ -10,6 +10,8 @@ import axiosInstance from '../../utils/axiosinstance';
 import PulseLoader from 'react-spinners/PulseLoader';
 
 
+
+
 interface ChangeNotificationProps {
   profileData: ProfileData;
   FetchProfileData: () => Promise<void>;
