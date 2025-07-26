@@ -1,13 +1,18 @@
+import { ThemeSpecs } from "../utils/theme";
 import '../styles/LogoComponent.css';
 
 
 
 interface LogoComponentProps {
-  // currentTheme: ThemeSpecs;
+  currentTheme: ThemeSpecs;
 }
 
-const LogoComponent: React.FC<LogoComponentProps> = () => {
+const LogoComponent: React.FC<LogoComponentProps> = ({ currentTheme }) => {
 
+
+  if (!currentTheme) {
+    return null;
+  }
 
   return (
     <div>
