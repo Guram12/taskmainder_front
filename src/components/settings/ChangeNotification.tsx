@@ -8,6 +8,7 @@ import { useState } from 'react';
 import DiscordWebhookTutorial from './DiscordWebhookTutorial';
 import axiosInstance from '../../utils/axiosinstance';
 import PulseLoader from 'react-spinners/PulseLoader';
+import { useTranslation } from 'react-i18next';
 
 
 
@@ -34,7 +35,7 @@ const ChangeNotification: React.FC<ChangeNotificationProps> = ({ profileData, Fe
 
   const [preferences_saved, setPreferences_saved] = useState<boolean>(false);
 
-
+  const { t } = useTranslation();
 
 
   useEffect(() => {
@@ -228,7 +229,7 @@ const ChangeNotification: React.FC<ChangeNotificationProps> = ({ profileData, Fe
             borderColor: currentTheme["--border-color"]
           }}
         >
-          Notification preferences
+          {t('notification_preferences')}
         </p>
       </div>
 
@@ -237,7 +238,7 @@ const ChangeNotification: React.FC<ChangeNotificationProps> = ({ profileData, Fe
         {profileData.discord_webhook_url === null && (
 
           <h2 className='no_discord_webhook_p' >
-            You have not set a Discord webhook URL. For creating a Discord webhook URL, please click
+            {t('tutorial_big_text')}
             <span
               onClick={handle_tutorial_open}
               className='tutorial_link'
@@ -246,7 +247,7 @@ const ChangeNotification: React.FC<ChangeNotificationProps> = ({ profileData, Fe
                 backgroundColor: currentTheme['--task-background-color'],
               }}
             >
-              here
+              {t('here')}
             </span>
             .
           </h2>
@@ -255,7 +256,7 @@ const ChangeNotification: React.FC<ChangeNotificationProps> = ({ profileData, Fe
         {profileData.discord_webhook_url !== null && (
 
           <h2 className='no_discord_webhook_p' >
-            For creating a Discord webhook URL, please click
+            {t('tutorial_short_text')}
             <span
               onClick={handle_tutorial_open}
               className='tutorial_link'
@@ -264,7 +265,7 @@ const ChangeNotification: React.FC<ChangeNotificationProps> = ({ profileData, Fe
                 backgroundColor: currentTheme['--task-background-color'],
               }}
             >
-              here
+              {t('here')}
             </span>
             .
           </h2>
@@ -307,7 +308,7 @@ const ChangeNotification: React.FC<ChangeNotificationProps> = ({ profileData, Fe
                       }}
                       onClick={handle_save_webhook_url}
                     >
-                      Save
+                      {t('save')}
                     </button>
 
                     <button
@@ -322,7 +323,7 @@ const ChangeNotification: React.FC<ChangeNotificationProps> = ({ profileData, Fe
                         setShow_input_warning(false);
                       }}
                     >
-                      Cancel
+                      {t('cancel')}
                     </button>
 
                     <button
@@ -334,7 +335,7 @@ const ChangeNotification: React.FC<ChangeNotificationProps> = ({ profileData, Fe
                       }}
                       onClick={handle_delete_webhook_url}
                     >
-                      Delete
+                      {t('delete')}
                     </button>
                   </>
                 )}
@@ -346,6 +347,7 @@ const ChangeNotification: React.FC<ChangeNotificationProps> = ({ profileData, Fe
             <>
               <div
                 className='no_webhook_url_message'
+                onClick={handle_update_webhook_url_click}
                 style={{
                   backgroundColor: currentTheme['--list-background-color'],
                   borderColor: !show_input_warning ? currentTheme['--border-color'] : 'red',
@@ -361,7 +363,7 @@ const ChangeNotification: React.FC<ChangeNotificationProps> = ({ profileData, Fe
                 }}
                 onClick={handle_update_webhook_url_click}
               >
-                {current_webhook_url ? 'Update Webhook URL' : 'Add Webhook URL'}
+                {current_webhook_url ? t('update_webhook_url') : t('add_webhook_url')}
               </button>
             </>
           )}
@@ -380,7 +382,7 @@ const ChangeNotification: React.FC<ChangeNotificationProps> = ({ profileData, Fe
       </div>
 
       <div className='header_and_pref_container'>
-        <h1 className='select_pref_h1' >Please select where you want to receive notifications.</h1>
+        <h1 className='select_pref_h1' >{t('select_notification_preferences_text')}</h1>
 
         <div
           className={`discord_url_warning_text${discord_url_warning_text.value ? ' visible' : ''}`}
@@ -392,7 +394,7 @@ const ChangeNotification: React.FC<ChangeNotificationProps> = ({ profileData, Fe
 
           {/* Email option */}
           <div className='select_pref_item_container' >
-            <p className='select_pref_item_text' style={{ color: currentTheme['--main-text-coloure'] }}>Email</p>
+            <p className='select_pref_item_text' style={{ color: currentTheme['--main-text-coloure'] }}>{t('email')}</p>
             <div
               className='select_pref_item'
               style={{
@@ -407,7 +409,7 @@ const ChangeNotification: React.FC<ChangeNotificationProps> = ({ profileData, Fe
 
           {/* Discord option */}
           <div className='select_pref_item_container' >
-            <p className='select_pref_item_text' style={{ color: currentTheme['--main-text-coloure'] }}>Discord</p>
+            <p className='select_pref_item_text' style={{ color: currentTheme['--main-text-coloure'] }}>{t('discord')}</p>
             <div
               className='select_pref_item'
               style={{
@@ -421,7 +423,7 @@ const ChangeNotification: React.FC<ChangeNotificationProps> = ({ profileData, Fe
           </div>
 
           <div className='select_pref_item_container' >
-            <p className='select_pref_item_text' style={{ color: currentTheme['--main-text-coloure'] }}>Both</p>
+            <p className='select_pref_item_text' style={{ color: currentTheme['--main-text-coloure'] }}>{t('both')}</p>
             {/* Both option */}
             <div
               className='select_pref_item_both'
@@ -450,7 +452,7 @@ const ChangeNotification: React.FC<ChangeNotificationProps> = ({ profileData, Fe
                   }}
                   onClick={handle_save_notification_preferences}
                 >
-                  Save Preferences
+                  {t('save_preferences')}
                 </button>
               )}
             </>
@@ -459,7 +461,7 @@ const ChangeNotification: React.FC<ChangeNotificationProps> = ({ profileData, Fe
 
         </div>
 
-      </div>
+      </div>Save Preferences
 
 
 

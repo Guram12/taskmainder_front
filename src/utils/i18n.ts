@@ -242,8 +242,17 @@ const resources = {
       'previous': 'Previous',
       'finish': 'Finish',
 
-
-
+      // notification settings component 
+      'notification_preferences': 'Notification Preferences',
+      'tutorial_big_text': 'You have not set a Discord webhook URL. For creating a Discord webhook URL, please click',
+      'here': 'here',
+      'tutorial_short_text': 'For creating a Discord webhook URL, please click',
+      'update_webhook_url': 'Update Webhook URL',
+      'add_webhook_url': 'Add Webhook URL',
+      'select_notification_preferences_text': 'Please select where you want to receive notifications.',
+      'discord': 'Discord',
+      'both': 'Both',
+      'save_preferences': 'Save Preferences',
 
 
 
@@ -489,6 +498,17 @@ const resources = {
       'previous': 'წინა',
       'finish': 'დასრულება',
 
+      // notification settings component
+      'notification_preferences': 'შეტყობინებების პარამეტრები',
+      'tutorial_big_text': 'თქვენ არ გაქვთ მითითებული Discord-ის webhook მისამართი. მის შესაქმნელად, დააწკაპუნეთ',
+      'here': 'აქ',
+      'tutorial_short_text': 'Discord-ის webhook-ის შესაქმნელად, დააწკაპუნეთ',
+      'update_webhook_url': 'Webhook-ის მისამართის განახლება',
+      'add_webhook_url': 'Webhook-ის მისამართის დამატება',
+      'select_notification_preferences_text': 'გთხოვთ, აირჩიოთ სად გსურთ შეტყობინებების მიღება.',
+      'discord': 'Discord',
+      'both': 'ორივე',
+      'save_preferences': 'პარამეტრების შენახვა',
 
 
 
