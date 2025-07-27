@@ -210,7 +210,7 @@ const ChangeNotification: React.FC<ChangeNotificationProps> = ({ profileData, Fe
   }
 
 
-  const truncateUrl = (url: string, maxLength = 50) => {
+  const truncateUrl = (url: string, maxLength = 40) => {
     if (!url) return '';
     return url.length > maxLength ? url.slice(0, maxLength) + '...' : url;
   };
@@ -391,53 +391,55 @@ const ChangeNotification: React.FC<ChangeNotificationProps> = ({ profileData, Fe
         </div>
 
         <div className='select_pref_big_container' >
+          <div className='select_pref_item_wrapper' >
+            {/* Email option */}
+            <div className='select_pref_item_container' >
+              <p className='select_pref_item_text' style={{ color: currentTheme['--main-text-coloure'] }}>{t('email')}</p>
+              <div
+                className='select_pref_item'
+                style={{
+                  borderColor: selected_notification_preferences === 'email' ? currentTheme['--border-color'] : 'transparent',
+                  ['--hover-color']: currentTheme['--hover-color']
+                } as React.CSSProperties}
+                onClick={handle_Email_Click}
+              >
+                <img src={email_icon} alt="Email" className='mail_icon' />
+              </div>
+            </div>
 
-          {/* Email option */}
-          <div className='select_pref_item_container' >
-            <p className='select_pref_item_text' style={{ color: currentTheme['--main-text-coloure'] }}>{t('email')}</p>
-            <div
-              className='select_pref_item'
-              style={{
-                borderColor: selected_notification_preferences === 'email' ? currentTheme['--border-color'] : 'transparent',
-                ['--hover-color']: currentTheme['--hover-color']
-              } as React.CSSProperties}
-              onClick={handle_Email_Click}
-            >
-              <img src={email_icon} alt="Email" className='mail_icon' />
+            {/* Discord option */}
+            <div className='select_pref_item_container' >
+              <p className='select_pref_item_text' style={{ color: currentTheme['--main-text-coloure'] }}>{t('discord')}</p>
+              <div
+                className='select_pref_item'
+                style={{
+                  borderColor: selected_notification_preferences === 'discord' ? currentTheme['--border-color'] : 'transparent',
+                  ['--hover-color']: currentTheme['--hover-color']
+                } as React.CSSProperties}
+                onClick={handle_Discord_Click}
+              >
+                <img src={discord_icon} alt="Discord" className='discord_icon' />
+              </div>
+            </div>
+
+            <div className='select_pref_item_container' >
+              <p className='select_pref_item_text' style={{ color: currentTheme['--main-text-coloure'] }}>{t('both')}</p>
+              {/* Both option */}
+              <div
+                className='select_pref_item_both'
+                style={{
+                  borderColor: selected_notification_preferences === 'both' ? currentTheme['--border-color'] : 'transparent',
+                  ['--hover-color']: currentTheme['--hover-color']
+                } as React.CSSProperties}
+                onClick={handle_Both_Click}
+              >
+                <img src={email_icon} alt="Both" className='mail_icon_both' />
+                <img src={discord_icon} alt="Discord" className='discord_icon_both' />
+              </div>
             </div>
           </div>
 
-          {/* Discord option */}
-          <div className='select_pref_item_container' >
-            <p className='select_pref_item_text' style={{ color: currentTheme['--main-text-coloure'] }}>{t('discord')}</p>
-            <div
-              className='select_pref_item'
-              style={{
-                borderColor: selected_notification_preferences === 'discord' ? currentTheme['--border-color'] : 'transparent',
-                ['--hover-color']: currentTheme['--hover-color']
-              } as React.CSSProperties}
-              onClick={handle_Discord_Click}
-            >
-              <img src={discord_icon} alt="Discord" className='discord_icon' />
-            </div>
-          </div>
-
-          <div className='select_pref_item_container' >
-            <p className='select_pref_item_text' style={{ color: currentTheme['--main-text-coloure'] }}>{t('both')}</p>
-            {/* Both option */}
-            <div
-              className='select_pref_item_both'
-              style={{
-                borderColor: selected_notification_preferences === 'both' ? currentTheme['--border-color'] : 'transparent',
-                ['--hover-color']: currentTheme['--hover-color']
-              } as React.CSSProperties}
-              onClick={handle_Both_Click}
-            >
-              <img src={email_icon} alt="Both" className='mail_icon_both' />
-              <img src={discord_icon} alt="Discord" className='discord_icon_both' />
-            </div>
-          </div>
-
+          {/* Save preferences button */}
           {selected_notification_preferences !== profileData.notification_preference && (
             <>
               {preferences_saved ? (
@@ -461,7 +463,7 @@ const ChangeNotification: React.FC<ChangeNotificationProps> = ({ profileData, Fe
 
         </div>
 
-      </div>Save Preferences
+      </div>
 
 
 

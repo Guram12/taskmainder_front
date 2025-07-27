@@ -40,7 +40,14 @@ const DiscordWebhookTutorial: React.FC<DiscordWebhookTutorialProps> = ({ onClose
         <CgCloseR size={24} color={currentTheme['--main-text-coloure']} className='close_tutorial_btn_icon' />
       </button>
 
-      <h2>{t('how_to_create_a_discord_webhook_url')}</h2>
+      <h2
+        style={{
+          color: currentTheme['--main-text-coloure'],
+        }} 
+        className='discord-webhook-tutorial-title'
+        >{
+          t('how_to_create_a_discord_webhook_url')}
+      </h2>
       <div className="discord-webhook-slider-wrapper">
         {steps.map((stepObj, idx) => (
           <img
