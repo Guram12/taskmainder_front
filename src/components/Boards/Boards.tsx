@@ -69,6 +69,7 @@ export interface BoardsProps {
   setAdding_new_task_loader: (adding_new_task_loader: { listId: number | null }) => void;
   adding_new_task_loader: { listId: number | null };
   setSelectedComponent: (component: string) => void;
+  setActiveSidebarBoardId: (boardId: number | null) => void;
 }
 
 const Boards: React.FC<BoardsProps> = ({
@@ -110,6 +111,7 @@ const Boards: React.FC<BoardsProps> = ({
   setAdding_new_task_loader,
   adding_new_task_loader,
   setSelectedComponent,
+  setActiveSidebarBoardId,
 }) => {
 
 
@@ -718,8 +720,8 @@ const Boards: React.FC<BoardsProps> = ({
               isMobile={isMobile}
               profileData={profileData}
               setSelectedComponent={setSelectedComponent}
-              setSelectedBoard={setSelectedBoard}
               setIsLoading={setIsLoading}
+              setActiveSidebarBoardId={setActiveSidebarBoardId}
             />
           </div>
         )}

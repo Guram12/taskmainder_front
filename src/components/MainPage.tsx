@@ -170,6 +170,8 @@ const { t } = useTranslation();
 
   const [allCurrentBoardUsers, setAllCurrentBoardUsers] = useState<ProfileData[]>([]);
 
+  const [activeSidebarBoardId, setActiveSidebarBoardId] = useState<number | null>(selectedBoard?.id ?? null);
+
 
   const [isAddingList, setIsAddingList] = useState<boolean>(false);
   const [updatingListNameId, setUpdatingListNameId] = useState<number | null>(null);
@@ -519,6 +521,8 @@ const { t } = useTranslation();
         setIs_sidebar_open_on_mobile={setIs_sidebar_open_on_mobile}
         is_sidebar_open_on_mobile={is_sidebar_open_on_mobile}
         setIsAuthenticated={setIsAuthenticated}
+        setActiveSidebarBoardId={setActiveSidebarBoardId}
+        activeSidebarBoardId={activeSidebarBoardId}
       />
       <Routes>
         <Route path="boards" element={
@@ -563,6 +567,7 @@ const { t } = useTranslation();
             setAdding_new_task_loader={setAdding_new_task_loader}
             adding_new_task_loader={adding_new_task_loader}
             setSelectedComponent={setSelectedComponent}
+            setActiveSidebarBoardId={setActiveSidebarBoardId}
           />
         } />
         <Route path="calendar" element={
@@ -613,6 +618,7 @@ const { t } = useTranslation();
               allCurrentBoardUsers={allCurrentBoardUsers}
               setSelectedBoard={setSelectedBoard}
               setSelectedComponent={setSelectedComponent}
+              setActiveSidebarBoardId={setActiveSidebarBoardId}
             />
           </ReactFlowProvider>
         } />
@@ -659,6 +665,7 @@ const { t } = useTranslation();
             setAdding_new_task_loader={setAdding_new_task_loader}
             adding_new_task_loader={adding_new_task_loader}
             setSelectedComponent={setSelectedComponent}
+            setActiveSidebarBoardId={setActiveSidebarBoardId}
           />
 
         } />

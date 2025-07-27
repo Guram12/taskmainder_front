@@ -172,14 +172,24 @@ const Calendar: React.FC<CalendarProps> = ({ boards, currentTheme, fetchBoards }
 
           {days.map((day) => {
             const dayNumber = day.getDate();
-            const isHighlighted =
-              highlightedDays[monthIndex]?.includes(dayNumber);
+            const isHighlighted = highlightedDays[monthIndex]?.includes(dayNumber);
+
+            // Check if this day is today
+            const isToday =
+              day.getDate() === new Date().getDate() &&
+              day.getMonth() === new Date().getMonth() &&
+              day.getFullYear() === new Date().getFullYear();
 
             return (
               <div
                 key={day.toISOString()}
                 className={`calendar_day ${isHighlighted ? 'highlighted_day' : ''}`}
                 onClick={() => handleDayClick(monthIndex, dayNumber, isHighlighted)}
+                style={
+                  isToday
+                    ? { border: `2px solid ${currentTheme['--border-color']}` }
+                    : undefined
+                }
               >
                 {dayNumber}
               </div>

@@ -19,7 +19,7 @@
   position: relative;
 }
 
-.calendar_tooltip_cont{
+.calendar_tooltip_cont {
   position: absolute;
   left: 0px;
 }
@@ -85,7 +85,9 @@
 
   cursor: pointer;
   min-height: 25px;
-
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 
@@ -93,10 +95,11 @@
   background-color: #583bffab;
   /* Highlight color */
   font-weight: bold;
+  transition: all 0.3s ease-in-out;
 }
 
 .highlighted_day:hover {
-  background-color: #fdd835;
+  background-color: seagreen;
 }
 
 /* =================================== selected day modal on calendar =================================== */
@@ -211,7 +214,7 @@
   font-weight: 500;
 }
 
-.selected_day_each_task_priority{
+.selected_day_each_task_priority {
   width: 100px;
   height: 15px;
   border-radius: 25px;
@@ -223,13 +226,13 @@
   font-size: 18px;
 }
 
-.selected_day_each_task_due_date{
+.selected_day_each_task_due_date {
   font-size: 12px;
   margin: 0px;
 }
 
 
-.selected_day_close_button{
+.selected_day_close_button {
   position: absolute;
   top: 10px;
   right: 10px;
@@ -241,7 +244,7 @@
   cursor: pointer;
 }
 
-.selected_day_close_button:hover{
+.selected_day_close_button:hover {
   background-color: #ff4d4d;
 }
 

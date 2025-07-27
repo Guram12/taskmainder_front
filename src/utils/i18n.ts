@@ -242,6 +242,25 @@ const resources = {
       'previous': 'Previous',
       'finish': 'Finish',
 
+      // notification settings component 
+      'notification_preferences': 'Notification Preferences',
+      'tutorial_big_text': 'You have not set a Discord webhook URL. For creating a Discord webhook URL, please click',
+      'here': 'here',
+      'tutorial_short_text': 'For creating a Discord webhook URL, please click',
+      'update_webhook_url': 'Update Webhook URL',
+      'add_webhook_url': 'Add Webhook URL',
+      'select_notification_preferences_text': 'Please select where you want to receive notifications.',
+      'discord': 'Discord',
+      'both': 'Both',
+      'save_preferences': 'Save Preferences',
+      //tutorial component
+      'how_to_create_a_discord_webhook_url': 'How to create a Discord Webhook URL',
+      'go_to_discord_and_open_your_server_settings.': 'Go to Discord and open your server settings.',
+      'navigate_to_integrations_webhooks.': 'Navigate to Integrations > Webhooks.',
+      'click_new_webhook_and_copy_the_url.': 'Click "New Webhook" and copy the URL.',
+      'back': 'Back',
+
+
 
 
 
@@ -489,7 +508,23 @@ const resources = {
       'previous': 'წინა',
       'finish': 'დასრულება',
 
-
+      // notification settings component
+      'notification_preferences': 'შეტყობინებების პარამეტრები',
+      'tutorial_big_text': 'თქვენ არ გაქვთ მითითებული Discord-ის webhook მისამართი. მის შესაქმნელად, დააწკაპუნეთ',
+      'here': 'აქ',
+      'tutorial_short_text': 'Discord-ის webhook-ის შესაქმნელად, დააწკაპუნეთ',
+      'update_webhook_url': 'Webhook-ის მისამართის განახლება',
+      'add_webhook_url': 'Webhook-ის მისამართის დამატება',
+      'select_notification_preferences_text': 'გთხოვთ, აირჩიოთ სად გსურთ შეტყობინებების მიღება.',
+      'discord': 'Discord',
+      'both': 'ორივე',
+      'save_preferences': 'პარამეტრების შენახვა',
+      //tutorial component
+      'how_to_create_a_discord_webhook_url': 'როგორ შევქმნათ Discord-ის Webhook URL',
+      'go_to_discord_and_open_your_server_settings.': 'გახსენით Discord და შეიყვანეთ სერვერის პარამეტებში.',
+      'navigate_to_integrations_webhooks.': 'გადადით მენიუში: ინტეგრაციები > Webhooks.',
+      'click_new_webhook_and_copy_the_url.': 'დააწკაპუნეთ "ახალი Webhook"-ზე და დააკოპირეთ URL.',
+      'back': 'უკან',
 
 
 

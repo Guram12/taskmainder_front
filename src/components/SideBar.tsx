@@ -41,6 +41,8 @@ interface SidebarProps {
   setIs_sidebar_open_on_mobile: (is_sidebar_open_on_mobile: boolean) => void;
   is_sidebar_open_on_mobile: boolean;
   setIsAuthenticated: (isAuthenticated: boolean) => void;
+  activeSidebarBoardId: number | null;
+  setActiveSidebarBoardId: (boardId: number | null) => void;
 }
 
 
@@ -61,6 +63,8 @@ const SidebarComponent: React.FC<SidebarProps> = ({
   setIs_sidebar_open_on_mobile,
   is_sidebar_open_on_mobile,
   setIsAuthenticated,
+  activeSidebarBoardId,
+  setActiveSidebarBoardId
 }) => {
 
   const [isOpen, setIsOpen] = useState<boolean>(true);
@@ -134,8 +138,10 @@ const SidebarComponent: React.FC<SidebarProps> = ({
   }
 
 
-  // =========================================================================================================
+  // =========================================================================================================z
   const handleBoardClick = async (board: board) => {
+    setActiveSidebarBoardId(board.id); // Only for sidebar styling
+
     console.log('Selected board:', board);
     localStorage.setItem('prev_selected_board_id', JSON.stringify(board.id));
     setSelectedComponent("Boards");
@@ -194,7 +200,9 @@ const SidebarComponent: React.FC<SidebarProps> = ({
 
   const handel_sidebar_page_click = (component_name: string) => {
     setSelectedComponent(component_name);
-    setSelectedBoard(null);
+    // setSelectedBoard(null);
+    setActiveSidebarBoardId(null); // Unselect board in sidebar only
+
     setIs_sidebar_open_on_mobile(true);
 
     // Add navigation for each component
@@ -396,7 +404,7 @@ const SidebarComponent: React.FC<SidebarProps> = ({
                             key={board.id}
                             rootStyles={{
                               transition: 'all 0.3s',
-                              color: selectedBoard?.id === board.id ? 'seagreen' : 'white',
+                              color: activeSidebarBoardId === board.id ? 'seagreen' : 'white',
                               textAlign: 'left',
                               fontWeight: 'bold',
                             }}
@@ -522,7 +530,7 @@ const SidebarComponent: React.FC<SidebarProps> = ({
 
 
                 <MenuItem
-                id='mindmap_container_shepherd'
+                  id='mindmap_container_shepherd'
                   style={{
                     color: selectedComponent === "MindMap" ? 'seagreen' : 'white',
                     fontWeight: 'bold',
