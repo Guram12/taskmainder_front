@@ -44,8 +44,8 @@ interface MembersProps {
   isMobile: boolean;
   profileData: ProfileData;
   setSelectedComponent: (component: string) => void;
-  setSelectedBoard: (board: board | null) => void;
   setIsLoading: (isLoading: boolean) => void;
+  setActiveSidebarBoardId: (boardId: number | null) => void;
 }
 
 const Members: React.FC<MembersProps> = ({
@@ -65,8 +65,8 @@ const Members: React.FC<MembersProps> = ({
   isMobile,
   profileData,
   setSelectedComponent,
-  setSelectedBoard,
   setIsLoading,
+  setActiveSidebarBoardId,
 }) => {
 
   const [isUsersWindowOpen, setIsUsersWindowOpen] = useState<boolean>(false);
@@ -386,7 +386,8 @@ const Members: React.FC<MembersProps> = ({
 
   const handle_diagram_click = (board_id: string) => {
     localStorage.setItem('prev_mindmap_selected_board_id', board_id);
-    setSelectedBoard(null)
+    // setSelectedBoard(null)
+    setActiveSidebarBoardId(null); // Unselect board in sidebar only
     setSelectedComponent('MindMap');
     navigate('/mainpage/mindmap')
   }

@@ -80,7 +80,9 @@ interface MindMapProps {
   allCurrentBoardUsers: ProfileData[];
   setSelectedBoard: (board: board | null) => void;
   setSelectedComponent: (component: string) => void;
+  setActiveSidebarBoardId: (boardId: number | null) => void;
 }
+
 
 
 const MindMap: React.FC<MindMapProps> = ({
@@ -90,6 +92,7 @@ const MindMap: React.FC<MindMapProps> = ({
   setBoards,
   setSelectedBoard,
   setSelectedComponent,
+  setActiveSidebarBoardId,
 }) => {
 
 
@@ -1487,7 +1490,9 @@ const MindMap: React.FC<MindMapProps> = ({
               <FaClipboardList className='mindmap_board_selection_icon'
                 style={{ color: currentTheme['--main-text-coloure'] }}
               />
-              <p className='return_board_p'> {t('boards_mode')}</p>
+              <p className='return_board_p'
+                onClick={() => setActiveSidebarBoardId(maindmap_selected_board_data.id)}
+              > {t('boards_mode')}</p>
             </div>
           )}
 
