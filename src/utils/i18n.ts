@@ -253,6 +253,16 @@ const resources = {
       'discord': 'Discord',
       'both': 'Both',
       'save_preferences': 'Save Preferences',
+      //tutorial component
+      'how_to_create_a_discord_webhook_url': 'How to create a Discord Webhook URL',
+      'go_to_discord_and_open_your_server_settings.': 'Go to Discord and open your server settings.',
+      'navigate_to_integrations_webhooks.': 'Navigate to Integrations > Webhooks.',
+      'click_new_webhook_and_copy_the_url.': 'Click "New Webhook" and copy the URL.',
+      'back': 'Back',
+
+
+
+
 
 
 
@@ -509,7 +519,12 @@ const resources = {
       'discord': 'Discord',
       'both': 'ორივე',
       'save_preferences': 'პარამეტრების შენახვა',
-
+      //tutorial component
+      'how_to_create_a_discord_webhook_url': 'როგორ შევქმნათ Discord-ის Webhook URL',
+      'go_to_discord_and_open_your_server_settings.': 'გახსენით Discord და შეიყვანეთ სერვერის პარამეტებში.',
+      'navigate_to_integrations_webhooks.': 'გადადით მენიუში: ინტეგრაციები > Webhooks.',
+      'click_new_webhook_and_copy_the_url.': 'დააწკაპუნეთ "ახალი Webhook"-ზე და დააკოპირეთ URL.',
+      'back': 'უკან',
 
 
 
