@@ -523,7 +523,7 @@
 @media screen and (max-width: 768px) {
   .add_user_icon {
 
-    margin-right: 0px;
+    margin-right: 10px;
   }
 
 
@@ -535,6 +535,11 @@
 
   .board_name_cont {
     margin-left: 0px;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 5px;
+    transition: all 0.3s ease;
   }
 
   .board_name_input {
@@ -560,20 +565,26 @@
     width: fit-content;
     padding: 5px 10px;
     height: 30px;
-    font-size: 16px;
+    font-size: 14px;
     font-weight: bold;
     border-radius: 5px;
     background-color: seagreen;
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
 
   .cancel_btn_onmobile {
     width: fit-content;
     padding: 5px 10px;
     height: 30px;
-    font-size: 16px;
+    font-size: 14px;
     font-weight: bold;
     border-radius: 5px;
     background-color: red;
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
 
   /*iuzerebis damatebis  modali mobailze  */
