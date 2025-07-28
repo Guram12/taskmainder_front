@@ -102,6 +102,19 @@ const Login: React.FC<loginProps> = ({ setIsAuthenticated, currentTheme, languag
     i18n.changeLanguage(selectedLanguage);
   };
 
+// ========================================== logo snimations ===========================================
+
+
+
+
+
+
+
+
+
+
+
+
   return (
     <div
       className="login-container"
@@ -111,6 +124,43 @@ const Login: React.FC<loginProps> = ({ setIsAuthenticated, currentTheme, languag
         minHeight: '100vh',
       }}
     >
+
+
+
+      
+      {/* Logo Component */}
+      <div className="logo-wrapper"> {/* <-- Add this wrapper */}
+        <svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 517.14 758.16"
+          width="60"
+          height="60"
+        >
+          <polygon
+            className="logo-polygon logo-path-draw"
+            style={{
+              fill: currentTheme['--main-text-coloure'],
+              stroke: currentTheme['--main-text-coloure'],
+              strokeWidth: 12,
+            }}
+            points="0 0 73 0 73 429.33 36.5 385.33 0 429.33 0 0"
+          />
+          <path
+            className="cls-2 logo-path"
+            style={{
+              fill: currentTheme['--main-text-coloure'],
+              stroke: currentTheme['--main-text-coloure'],
+              strokeWidth: 12,
+            }}
+            d="M925.67,249v77.33s368.66-56.66,316,352C1237.54,709,1224.35,772.94,1174,830c-99.17,112.38-252.29,96-268,94l-66.17,74.33A595.52,595.52,0,0,0,967,1004c51.54-3.23,115.06-7.2,183-44,15-8.1,64.88-36.61,109-93,87-111.13,80.35-239.69,78-275-2.77-41.65-9.27-139.56-81-224C1138.22,229.34,946.34,246.79,925.67,249Z"
+            transform="translate(-821 -247)" />
+        </svg>
+      </div>
+
+
+
+
+
+
+
       <h2 className="login-title" style={{ color: currentTheme['--main-text-coloure'] }}>{t('login')}</h2>
 
       {/* Language Dropdown */}
