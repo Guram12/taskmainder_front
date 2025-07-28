@@ -7,6 +7,7 @@ import { MdOutlineAlternateEmail } from "react-icons/md";
 import { useNavigate } from 'react-router-dom';
 import { TbArrowBackUp } from "react-icons/tb";
 import { useTranslation } from 'react-i18next';
+import { Helmet } from "react-helmet";
 
 
 interface PasswordResetProps {
@@ -68,78 +69,88 @@ const PasswordReset: React.FC<PasswordResetProps> = ({ currentTheme }) => {
 
 
   return (
-    <div className='main_reset_container' >
-      <h2 style={{ color: currentTheme['--main-text-coloure'] }} >{t('password_reset')}</h2>
-      <div className='send_reset_email_container' style={{ borderColor: currentTheme['--border-color'] }} >
+    <>
+      <Helmet>
+        <title>Password Reset | DailyDoer</title>
+        <meta name="description" content="Reset your DailyDoer account password securely and regain access to your tasks and boards." />
+        <meta name="robots" content="noindex, follow" />
+        <link rel="canonical" href="https://dailydoer.space/password-reset" />
+      </Helmet>
+      
+      <div className='main_reset_container' >
+        <h2 style={{ color: currentTheme['--main-text-coloure'] }} >{t('password_reset')}</h2>
+        <div className='send_reset_email_container' style={{ borderColor: currentTheme['--border-color'] }} >
 
-        <form onSubmit={handleSubmit}>
+          <form onSubmit={handleSubmit}>
 
-          <div className='reset_email_input_container' >
-            <MdOutlineAlternateEmail style={{ color: currentTheme['--main-text-coloure'] }} className='reset_email_icon' />
-            <input
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-              className='reset_email_input'
-              placeholder={t('enter_your_email')}
-              style={{
-                borderColor: currentTheme['--border-color'],
-                color: currentTheme['--main-text-coloure'],
-                backgroundColor: currentTheme['--list-background-color'],
-                ['--placeholder-color']: currentTheme['--due-date-color'],
-              } as React.CSSProperties}
-            />
+            <div className='reset_email_input_container' >
+              <MdOutlineAlternateEmail style={{ color: currentTheme['--main-text-coloure'] }} className='reset_email_icon' />
+              <input
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+                className='reset_email_input'
+                placeholder={t('enter_your_email')}
+                style={{
+                  borderColor: currentTheme['--border-color'],
+                  color: currentTheme['--main-text-coloure'],
+                  backgroundColor: currentTheme['--list-background-color'],
+                  ['--placeholder-color']: currentTheme['--due-date-color'],
+                } as React.CSSProperties}
+              />
+            </div>
+
+            {show_reset_button ? (
+              <button
+                type="submit"
+                style={{
+                  backgroundColor: currentTheme['--list-background-color'],
+                  color: currentTheme['--main-text-coloure'],
+                  borderColor: currentTheme['--border-color'],
+                  cursor: email.trim() === '' || email.includes('@') === false ? 'not-allowed' : 'pointer',
+                }}
+                disabled={email.trim() === '' || email.includes('@') === false}
+                className='send_reset_email_button'
+              >
+                {t('send_reset_link')}
+              </button>
+            ) : (
+              <button
+                onClick={openEmailProvider}
+                style={{
+                  backgroundColor: currentTheme['--list-background-color'],
+                  color: currentTheme['--main-text-coloure'],
+                  borderColor: currentTheme['--border-color'],
+                }}
+                className='open_email_prov_open_btn'
+              >
+                {t('open_email_provider')}
+              </button>
+            )}
+
+
+
+          </form>
+          {message && <p style={{ color: 'seagreen', marginTop: '10px', fontWeight: 'bold' }}>{message}</p>}
+          {error && <p style={{ color: 'red', marginTop: '10px', fontWeight: 'bold' }}>{error}</p>}
+
+          {/* =======================  go back to login ======================= */}
+          <div className="back_to_login_container">
+            <p
+              onClick={handleLogin}
+              className="back_to_login_p"
+              style={{ color: currentTheme['--main-text-coloure'], }}
+            >
+              {t('go_back_to_login')}
+            </p>
+            <TbArrowBackUp style={{ color: currentTheme['--main-text-coloure'] }} className="back_to_login_icon" />
           </div>
 
-          {show_reset_button ? (
-            <button
-              type="submit"
-              style={{
-                backgroundColor: currentTheme['--list-background-color'],
-                color: currentTheme['--main-text-coloure'],
-                borderColor: currentTheme['--border-color'],
-                cursor: email.trim() === '' || email.includes('@') === false ? 'not-allowed' : 'pointer',
-              }}
-              disabled={email.trim() === '' || email.includes('@') === false}
-              className='send_reset_email_button'
-            >
-              {t('send_reset_link')}
-            </button>
-          ) : (
-            <button
-              onClick={openEmailProvider}
-              style={{
-                backgroundColor: currentTheme['--list-background-color'],
-                color: currentTheme['--main-text-coloure'],
-                borderColor: currentTheme['--border-color'],
-              }}
-              className='open_email_prov_open_btn'
-            >
-              {t('open_email_provider')}
-            </button>
-          )}
-
-
-
-        </form>
-        {message && <p style={{ color: 'seagreen', marginTop: '10px', fontWeight: 'bold' }}>{message}</p>}
-        {error && <p style={{ color: 'red', marginTop: '10px', fontWeight: 'bold' }}>{error}</p>}
-
-        {/* =======================  go back to login ======================= */}
-        <div className="back_to_login_container">
-          <p
-            onClick={handleLogin}
-            className="back_to_login_p"
-            style={{ color: currentTheme['--main-text-coloure'], }}
-          >
-            {t('go_back_to_login')}
-          </p>
-          <TbArrowBackUp style={{ color: currentTheme['--main-text-coloure'] }} className="back_to_login_icon" />
         </div>
-
       </div>
-    </div>
+    </>
+
   );
 };
 

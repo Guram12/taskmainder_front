@@ -10,6 +10,7 @@ import PhoneInput from 'react-phone-input-2';
 import { IoEarth } from "react-icons/io5";
 import { Select } from 'antd';
 import PulseLoader from "react-spinners/PulseLoader";
+import { Helmet } from "react-helmet";
 
 
 
@@ -39,7 +40,7 @@ const FinishGoogleSignIn: React.FC<FinishGoogleSignInProps> = ({ setIsAuthentica
 
     setLoading(true);
     setMessage(''); // Clear any previous messages
-    
+
     // Add a small delay to ensure the loader renders
     await new Promise(resolve => setTimeout(resolve, 100));
 
@@ -87,116 +88,126 @@ const FinishGoogleSignIn: React.FC<FinishGoogleSignInProps> = ({ setIsAuthentica
 
 
   return (
-    <div
-      className="main_finish_profile_container"
-    >
-      <div className="finish_profile_container">
+    <>
+      <Helmet>
+        <title>Finish Profile | DailyDoer</title>
+        <meta name="description" content="Complete your profile to start using DailyDoer." />
+        <meta name="robots" content="noindex, nofollow" />
+        <link rel="canonical" href="https://dailydoer.space/finish-profile" />
+      </Helmet>
+      
+      <div
+        className="main_finish_profile_container"
+      >
+        <div className="finish_profile_container">
 
-        <h1 style={{ color: currentTheme['--main-text-coloure'] }}>Finish Profile</h1>
+          <h1 style={{ color: currentTheme['--main-text-coloure'] }}>Finish Profile</h1>
 
-        <form onSubmit={handleSubmit}
-          style={{
-            background: currentTheme['--list-background-color'],
-            border: `1px solid ${currentTheme['--border-color']}`,
-            color: currentTheme['--main-text-coloure'],
-            borderRadius: '10px',
+          <form onSubmit={handleSubmit}
+            style={{
+              background: currentTheme['--list-background-color'],
+              border: `1px solid ${currentTheme['--border-color']}`,
+              color: currentTheme['--main-text-coloure'],
+              borderRadius: '10px',
 
-          }}
-          className="finish_profile_form"
-        >
-          <div className="register_form_group" >
-            <FaUser className='register_icons' style={{ color: currentTheme['--main-text-coloure'] }} />
-            <input
-              type="text"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
-              required
-              placeholder="Username"
-              className="register_input"
-              style={{
-                background: currentTheme['--task-background-color'],
-                color: currentTheme['--main-text-coloure'],
-                border: `1px solid ${currentTheme['--border-color']}`,
-                ['--placeholder-color']: currentTheme['--due-date-color'],
-
-              } as React.CSSProperties}
-            />
-          </div>
-
-          <div className="register_form_group"  >
-            <FaPhone className='register_icons' style={{ color: currentTheme['--main-text-coloure'] }} />
-            <PhoneInput
-              country={'us'}
-              value={phoneNumber}
-              onChange={setPhoneNumber}
-              inputStyle={{
-                background: currentTheme['--task-background-color'],
-                color: currentTheme['--main-text-coloure'],
-                border: `1px solid ${currentTheme['--border-color']}`,
-                width: isMobile ? '290px' : '320px',
-                height: '40px',
-
-              }}
-              buttonStyle={{
-                border: `1px solid ${currentTheme['--border-color']}`,
-                background: currentTheme['--task-background-color'],
-              }}
-              // containerStyle={{
-              //   width: '320px',
-              // }}
-              dropdownClass="custom-phone-dropdown"
-              containerClass="custom-phone-container"
-              placeholder="Phone number"
-            />
-          </div>
-
-          <div className="register_form_group">
-            <IoEarth className='register_icons' style={{ color: currentTheme['--main-text-coloure'] }} />
-            <Select
-              showSearch
-              value={selectedTimeZone || undefined} // <-- change here
-              onChange={(value) => {
-                setSelectedTimeZone(value);
-              }}
-              options={timezoneOptions}
-              placeholder="Select country for timezone"
-              style={{
-                width: isMobile ? '290px' : '320px',
-                height: '40px',
-                background: currentTheme['--task-background-color'],
-                color: currentTheme['--main-text-coloure'],
-                border: `1px solid ${currentTheme['--border-color']}`,
-              }}
-              filterOption={(input, option) =>
-                (option?.label ?? '').toLowerCase().includes(input.toLowerCase())
-              }
-            />
-          </div>
-
-          {loading ? (
-            <div style={{ display: 'flex', justifyContent: 'center', padding: '10px' }}>
-              <PulseLoader color={currentTheme['--main-text-coloure']} size={8} />
-            </div>
-          ) : (
-            !isSuccessful && (
-              <button
-                type="submit"
-                disabled={loading}
-                className="finish_btn"
+            }}
+            className="finish_profile_form"
+          >
+            <div className="register_form_group" >
+              <FaUser className='register_icons' style={{ color: currentTheme['--main-text-coloure'] }} />
+              <input
+                type="text"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+                required
+                placeholder="Username"
+                className="register_input"
                 style={{
-                  color: currentTheme['--main-text-coloure'],
                   background: currentTheme['--task-background-color'],
+                  color: currentTheme['--main-text-coloure'],
+                  border: `1px solid ${currentTheme['--border-color']}`,
+                  ['--placeholder-color']: currentTheme['--due-date-color'],
+
+                } as React.CSSProperties}
+              />
+            </div>
+
+            <div className="register_form_group"  >
+              <FaPhone className='register_icons' style={{ color: currentTheme['--main-text-coloure'] }} />
+              <PhoneInput
+                country={'us'}
+                value={phoneNumber}
+                onChange={setPhoneNumber}
+                inputStyle={{
+                  background: currentTheme['--task-background-color'],
+                  color: currentTheme['--main-text-coloure'],
+                  border: `1px solid ${currentTheme['--border-color']}`,
+                  width: isMobile ? '290px' : '320px',
+                  height: '40px',
+
+                }}
+                buttonStyle={{
+                  border: `1px solid ${currentTheme['--border-color']}`,
+                  background: currentTheme['--task-background-color'],
+                }}
+                // containerStyle={{
+                //   width: '320px',
+                // }}
+                dropdownClass="custom-phone-dropdown"
+                containerClass="custom-phone-container"
+                placeholder="Phone number"
+              />
+            </div>
+
+            <div className="register_form_group">
+              <IoEarth className='register_icons' style={{ color: currentTheme['--main-text-coloure'] }} />
+              <Select
+                showSearch
+                value={selectedTimeZone || undefined} // <-- change here
+                onChange={(value) => {
+                  setSelectedTimeZone(value);
+                }}
+                options={timezoneOptions}
+                placeholder="Select country for timezone"
+                style={{
+                  width: isMobile ? '290px' : '320px',
+                  height: '40px',
+                  background: currentTheme['--task-background-color'],
+                  color: currentTheme['--main-text-coloure'],
                   border: `1px solid ${currentTheme['--border-color']}`,
                 }}
-              >
-                Finish
-              </button>
-            )
-          )}
-        </form>
-        {message && <p>{message}</p>}
+                filterOption={(input, option) =>
+                  (option?.label ?? '').toLowerCase().includes(input.toLowerCase())
+                }
+              />
+            </div>
+
+            {loading ? (
+              <div style={{ display: 'flex', justifyContent: 'center', padding: '10px' }}>
+                <PulseLoader color={currentTheme['--main-text-coloure']} size={8} />
+              </div>
+            ) : (
+              !isSuccessful && (
+                <button
+                  type="submit"
+                  disabled={loading}
+                  className="finish_btn"
+                  style={{
+                    color: currentTheme['--main-text-coloure'],
+                    background: currentTheme['--task-background-color'],
+                    border: `1px solid ${currentTheme['--border-color']}`,
+                  }}
+                >
+                  Finish
+                </button>
+              )
+            )}
+          </form>
+          {message && <p>{message}</p>}
+        </div>
       </div>
-    </div>
+    </>
+
   );
 };
 

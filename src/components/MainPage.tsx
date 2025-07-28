@@ -21,7 +21,7 @@ import { Routes, Route, useNavigate } from "react-router-dom";
 import { startTour } from "../utils/tour";
 import { useTranslation } from 'react-i18next';
 import { useLocation } from "react-router-dom";
-
+import { Helmet } from "react-helmet";
 
 interface MainPageProps {
   currentTheme: ThemeSpecs;
@@ -481,7 +481,7 @@ const MainPage: React.FC<MainPageProps> = ({
       else {
         localStorage.setItem('first_time_signup', 'false');
       }
-    } 
+    }
   }, []);
 
 
@@ -489,194 +489,203 @@ const MainPage: React.FC<MainPageProps> = ({
   // ====================================================================================================================
 
   return (
-    <div className="mainpage_component"
+    <>
+      <Helmet>
+        <title>Main Page | DailyDoer</title>
+        <meta name="description" content="Organize your tasks, boards, calendar, and more with DailyDoer. Collaborate, customize, and boost your productivity on your main dashboard." />
+        <meta name="robots" content="index, follow" />
+        <link rel="canonical" href="https://dailydoer.space/mainpage" />
+      </Helmet>
+      <div className="mainpage_component"
 
-    >
-      {isLoading && (
-        <div className="main_loader_container" >
-          <GridLoader color={`${currentTheme['--main-text-coloure']}`} size={20} className="gridloader" />
-        </div>
-      )}
+      >
+        {isLoading && (
+          <div className="main_loader_container" >
+            <GridLoader color={`${currentTheme['--main-text-coloure']}`} size={20} className="gridloader" />
+          </div>
+        )}
 
-      {showSidebarOpenArrow && isMobile && (
-        <div
-          className="side_open_rectangle_container"
-          onClick={() => setIs_sidebar_open_on_mobile(false)}
-          style={{
-            backgroundColor: currentTheme['--list-background-color'],
-            borderColor: currentTheme['--main-text-coloure'],
-          }}
-        >
-          <VscTriangleRight
-            className='close_sidebar_icon_triangle_icon'
-          />
-        </div>
-      )}
+        {showSidebarOpenArrow && isMobile && (
+          <div
+            className="side_open_rectangle_container"
+            onClick={() => setIs_sidebar_open_on_mobile(false)}
+            style={{
+              backgroundColor: currentTheme['--list-background-color'],
+              borderColor: currentTheme['--main-text-coloure'],
+            }}
+          >
+            <VscTriangleRight
+              className='close_sidebar_icon_triangle_icon'
+            />
+          </div>
+        )}
 
-      <SidebarComponent
-        currentTheme={currentTheme}
-        boards={boards}
-        setBoards={setBoards}
-        setSelectedBoard={setSelectedBoard}
-        selectedComponent={selectedComponent}
-        setSelectedComponent={setSelectedComponent}
-        setIs_new_notification_received={setIs_new_notification_received}
-        is_new_notification_received={is_new_notification_received}
-        setIsBoardsLoaded={setIsBoardsLoaded}
-        isBoardsLoaded={isBoardsLoaded}
-        selectedBoard={selectedBoard}
-        isMobile={isMobile}
-        setIs_sidebar_open_on_mobile={setIs_sidebar_open_on_mobile}
-        is_sidebar_open_on_mobile={is_sidebar_open_on_mobile}
-        setIsAuthenticated={setIsAuthenticated}
-        setActiveSidebarBoardId={setActiveSidebarBoardId}
-        activeSidebarBoardId={activeSidebarBoardId}
-      />
-      <Routes>
-        <Route path="boards" element={
-          <Boards
-            currentTheme={currentTheme}
-            setSelectedBoard={setSelectedBoard}
-            selectedBoard={selectedBoard}
-            current_user_email={current_user_email}
-            profileData={profileData}
-            setBoards={setBoards}
-            boards={boards}
-            current_board_users={current_board_users}
-            is_cur_Board_users_fetched={is_cur_Board_users_fetched}
-            setCurrent_board_users={setCurrent_board_users}
-            fetch_current_board_users={fetch_current_board_users}
-            isBoardsLoaded={isBoardsLoaded}
-            setIsLoading={setIsLoading}
-            is_members_refreshing={is_members_refreshing}
-            isMobile={isMobile}
-
-            socketRef={socketRef}
-            listsContainerRef={listsContainerRef}
-            boardData={boardData}
-            setBoardData={setBoardData}
-            loadingLists={loadingLists}
-            setLoadingLists={setLoadingLists}
-            isAddingList={isAddingList}
-            setIsAddingList={setIsAddingList}
-            updatingListNameId={updatingListNameId}
-            setUpdatingListNameId={setUpdatingListNameId}
-
-            setUpdatingTaskId={setUpdatingTaskId}
-            updatingTaskId={updatingTaskId}
-            setCompletingTaskId={setCompletingTaskId}
-            completingTaskId={completingTaskId}
-            setAdding_new_list={setAdding_new_list}
-            Adding_new_list={Adding_new_list}
-            setListName={setListName}
-            ListName={ListName}
-            setAllCurrentBoardUsers={setAllCurrentBoardUsers}
-            allCurrentBoardUsers={allCurrentBoardUsers}
-            setAdding_new_task_loader={setAdding_new_task_loader}
-            adding_new_task_loader={adding_new_task_loader}
-            setSelectedComponent={setSelectedComponent}
-            setActiveSidebarBoardId={setActiveSidebarBoardId}
-          />
-        } />
-        <Route path="calendar" element={
-          <Calendar
-            boards={boards}
-            currentTheme={currentTheme}
-            fetchBoards={fetchBoards}
-          />
-
-        } />
-        <Route path="settings" element={
-          <Settings
-            profileData={profileData}
-            FetchProfileData={FetchProfileData}
-            currentTheme={currentTheme}
-            setCurrentTheme={setCurrentTheme}
-            setIsCustomThemeSelected={setIsCustomThemeSelected}
-            setSaved_custom_theme={setSaved_custom_theme}
-            boards={boards}
-            setBoards={setBoards}
-            current_user_email={current_user_email}
-            isMobile={isMobile}
-          />
-        } />
-        <Route path="templates" element={
-          <Templates
-            handleTemplateSelect={handleTemplateSelect}
-            currentTheme={currentTheme}
-            setIsLoading={setIsLoading}
-          />
-
-        } />
-        <Route path="notification" element={
-          <Notification
-            currentTheme={currentTheme}
-            setIsLoading={setIsLoading}
-            isMobile={isMobile}
-          />
-        } />
-        <Route path="mindmap" element={
-          <ReactFlowProvider>
-            <MindMap
+        <SidebarComponent
+          currentTheme={currentTheme}
+          boards={boards}
+          setBoards={setBoards}
+          setSelectedBoard={setSelectedBoard}
+          selectedComponent={selectedComponent}
+          setSelectedComponent={setSelectedComponent}
+          setIs_new_notification_received={setIs_new_notification_received}
+          is_new_notification_received={is_new_notification_received}
+          setIsBoardsLoaded={setIsBoardsLoaded}
+          isBoardsLoaded={isBoardsLoaded}
+          selectedBoard={selectedBoard}
+          isMobile={isMobile}
+          setIs_sidebar_open_on_mobile={setIs_sidebar_open_on_mobile}
+          is_sidebar_open_on_mobile={is_sidebar_open_on_mobile}
+          setIsAuthenticated={setIsAuthenticated}
+          setActiveSidebarBoardId={setActiveSidebarBoardId}
+          activeSidebarBoardId={activeSidebarBoardId}
+        />
+        <Routes>
+          <Route path="boards" element={
+            <Boards
               currentTheme={currentTheme}
-              boards={boards}
-              setBoards={setBoards}
-              allCurrentBoardUsers={allCurrentBoardUsers}
               setSelectedBoard={setSelectedBoard}
+              selectedBoard={selectedBoard}
+              current_user_email={current_user_email}
+              profileData={profileData}
+              setBoards={setBoards}
+              boards={boards}
+              current_board_users={current_board_users}
+              is_cur_Board_users_fetched={is_cur_Board_users_fetched}
+              setCurrent_board_users={setCurrent_board_users}
+              fetch_current_board_users={fetch_current_board_users}
+              isBoardsLoaded={isBoardsLoaded}
+              setIsLoading={setIsLoading}
+              is_members_refreshing={is_members_refreshing}
+              isMobile={isMobile}
+
+              socketRef={socketRef}
+              listsContainerRef={listsContainerRef}
+              boardData={boardData}
+              setBoardData={setBoardData}
+              loadingLists={loadingLists}
+              setLoadingLists={setLoadingLists}
+              isAddingList={isAddingList}
+              setIsAddingList={setIsAddingList}
+              updatingListNameId={updatingListNameId}
+              setUpdatingListNameId={setUpdatingListNameId}
+
+              setUpdatingTaskId={setUpdatingTaskId}
+              updatingTaskId={updatingTaskId}
+              setCompletingTaskId={setCompletingTaskId}
+              completingTaskId={completingTaskId}
+              setAdding_new_list={setAdding_new_list}
+              Adding_new_list={Adding_new_list}
+              setListName={setListName}
+              ListName={ListName}
+              setAllCurrentBoardUsers={setAllCurrentBoardUsers}
+              allCurrentBoardUsers={allCurrentBoardUsers}
+              setAdding_new_task_loader={setAdding_new_task_loader}
+              adding_new_task_loader={adding_new_task_loader}
               setSelectedComponent={setSelectedComponent}
               setActiveSidebarBoardId={setActiveSidebarBoardId}
             />
-          </ReactFlowProvider>
-        } />
-        {/* Default route */}
-        <Route index element={
-          <Boards
-            currentTheme={currentTheme}
-            setSelectedBoard={setSelectedBoard}
-            selectedBoard={selectedBoard}
-            current_user_email={current_user_email}
-            profileData={profileData}
-            setBoards={setBoards}
-            boards={boards}
-            current_board_users={current_board_users}
-            is_cur_Board_users_fetched={is_cur_Board_users_fetched}
-            setCurrent_board_users={setCurrent_board_users}
-            fetch_current_board_users={fetch_current_board_users}
-            isBoardsLoaded={isBoardsLoaded}
-            setIsLoading={setIsLoading}
-            is_members_refreshing={is_members_refreshing}
-            isMobile={isMobile}
+          } />
+          <Route path="calendar" element={
+            <Calendar
+              boards={boards}
+              currentTheme={currentTheme}
+              fetchBoards={fetchBoards}
+            />
 
-            socketRef={socketRef}
-            listsContainerRef={listsContainerRef}
-            boardData={boardData}
-            setBoardData={setBoardData}
-            loadingLists={loadingLists}
-            setLoadingLists={setLoadingLists}
-            isAddingList={isAddingList}
-            setIsAddingList={setIsAddingList}
-            updatingListNameId={updatingListNameId}
-            setUpdatingListNameId={setUpdatingListNameId}
+          } />
+          <Route path="settings" element={
+            <Settings
+              profileData={profileData}
+              FetchProfileData={FetchProfileData}
+              currentTheme={currentTheme}
+              setCurrentTheme={setCurrentTheme}
+              setIsCustomThemeSelected={setIsCustomThemeSelected}
+              setSaved_custom_theme={setSaved_custom_theme}
+              boards={boards}
+              setBoards={setBoards}
+              current_user_email={current_user_email}
+              isMobile={isMobile}
+            />
+          } />
+          <Route path="templates" element={
+            <Templates
+              handleTemplateSelect={handleTemplateSelect}
+              currentTheme={currentTheme}
+              setIsLoading={setIsLoading}
+            />
 
-            setUpdatingTaskId={setUpdatingTaskId}
-            updatingTaskId={updatingTaskId}
-            setCompletingTaskId={setCompletingTaskId}
-            completingTaskId={completingTaskId}
-            setAdding_new_list={setAdding_new_list}
-            Adding_new_list={Adding_new_list}
-            setListName={setListName}
-            ListName={ListName}
-            setAllCurrentBoardUsers={setAllCurrentBoardUsers}
-            allCurrentBoardUsers={allCurrentBoardUsers}
-            setAdding_new_task_loader={setAdding_new_task_loader}
-            adding_new_task_loader={adding_new_task_loader}
-            setSelectedComponent={setSelectedComponent}
-            setActiveSidebarBoardId={setActiveSidebarBoardId}
-          />
+          } />
+          <Route path="notification" element={
+            <Notification
+              currentTheme={currentTheme}
+              setIsLoading={setIsLoading}
+              isMobile={isMobile}
+            />
+          } />
+          <Route path="mindmap" element={
+            <ReactFlowProvider>
+              <MindMap
+                currentTheme={currentTheme}
+                boards={boards}
+                setBoards={setBoards}
+                allCurrentBoardUsers={allCurrentBoardUsers}
+                setSelectedBoard={setSelectedBoard}
+                setSelectedComponent={setSelectedComponent}
+                setActiveSidebarBoardId={setActiveSidebarBoardId}
+              />
+            </ReactFlowProvider>
+          } />
+          {/* Default route */}
+          <Route index element={
+            <Boards
+              currentTheme={currentTheme}
+              setSelectedBoard={setSelectedBoard}
+              selectedBoard={selectedBoard}
+              current_user_email={current_user_email}
+              profileData={profileData}
+              setBoards={setBoards}
+              boards={boards}
+              current_board_users={current_board_users}
+              is_cur_Board_users_fetched={is_cur_Board_users_fetched}
+              setCurrent_board_users={setCurrent_board_users}
+              fetch_current_board_users={fetch_current_board_users}
+              isBoardsLoaded={isBoardsLoaded}
+              setIsLoading={setIsLoading}
+              is_members_refreshing={is_members_refreshing}
+              isMobile={isMobile}
 
-        } />
-      </Routes>
-    </div>
+              socketRef={socketRef}
+              listsContainerRef={listsContainerRef}
+              boardData={boardData}
+              setBoardData={setBoardData}
+              loadingLists={loadingLists}
+              setLoadingLists={setLoadingLists}
+              isAddingList={isAddingList}
+              setIsAddingList={setIsAddingList}
+              updatingListNameId={updatingListNameId}
+              setUpdatingListNameId={setUpdatingListNameId}
+
+              setUpdatingTaskId={setUpdatingTaskId}
+              updatingTaskId={updatingTaskId}
+              setCompletingTaskId={setCompletingTaskId}
+              completingTaskId={completingTaskId}
+              setAdding_new_list={setAdding_new_list}
+              Adding_new_list={Adding_new_list}
+              setListName={setListName}
+              ListName={ListName}
+              setAllCurrentBoardUsers={setAllCurrentBoardUsers}
+              allCurrentBoardUsers={allCurrentBoardUsers}
+              setAdding_new_task_loader={setAdding_new_task_loader}
+              adding_new_task_loader={adding_new_task_loader}
+              setSelectedComponent={setSelectedComponent}
+              setActiveSidebarBoardId={setActiveSidebarBoardId}
+            />
+
+          } />
+        </Routes>
+      </div>
+    </>
+
   );
 };
 
