@@ -43,6 +43,7 @@ interface SidebarProps {
   setIsAuthenticated: (isAuthenticated: boolean) => void;
   activeSidebarBoardId: number | null;
   setActiveSidebarBoardId: (boardId: number | null) => void;
+  setRemove_sidebar_arrow_of_first_open: (value: boolean) => void;
 }
 
 
@@ -64,7 +65,8 @@ const SidebarComponent: React.FC<SidebarProps> = ({
   is_sidebar_open_on_mobile,
   setIsAuthenticated,
   activeSidebarBoardId,
-  setActiveSidebarBoardId
+  setActiveSidebarBoardId,
+  setRemove_sidebar_arrow_of_first_open
 }) => {
 
   const [isOpen, setIsOpen] = useState<boolean>(true);
@@ -134,6 +136,9 @@ const SidebarComponent: React.FC<SidebarProps> = ({
 
   const handle_burger_icon_click = () => {
     setIs_sidebar_open_on_mobile(!is_sidebar_open_on_mobile);
+    setTimeout(() => {
+      setRemove_sidebar_arrow_of_first_open(true);
+    }, 500);
     console.log('burger icon clicked, sidebar open state:', is_sidebar_open_on_mobile);
   }
 

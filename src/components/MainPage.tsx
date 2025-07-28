@@ -88,7 +88,7 @@ const MainPage: React.FC<MainPageProps> = ({
   const accessToken: string | null = localStorage.getItem('access_token');
   const refreshToken: string | null = localStorage.getItem('refresh_token');
 
-const { t } = useTranslation();
+  const { t } = useTranslation();
 
 
 
@@ -445,6 +445,10 @@ const { t } = useTranslation();
   const [is_sidebar_open_on_mobile, setIs_sidebar_open_on_mobile] = useState<boolean>(true);
   const [showSidebarOpenArrow, setShowSidebarOpenArrow] = useState<boolean>(false);
 
+
+
+  const [remove_sidebar_arrow_of_first_open, setRemove_sidebar_arrow_of_first_open] = useState(false);
+
   useEffect(() => {
     if (is_sidebar_open_on_mobile) {
       setTimeout(() => {
@@ -464,16 +468,18 @@ const { t } = useTranslation();
     if (window.innerWidth > 768) {
 
       if (localStorage.getItem('first_time_signup') === 'true') {
-        startTour(currentTheme, navigate , t, setSelectedComponent);
+        startTour(currentTheme, navigate, t, setSelectedComponent);
         localStorage.setItem('first_time_signup', 'false');
 
       }
-       else {
+      else {
         localStorage.setItem('first_time_signup', 'false');
       }
-    }else {
+    } else {
       // If the screen width is less than or equal to 768px, set is_sidebar_open_on_mobile to false
       setIs_sidebar_open_on_mobile(false);
+
+      setShowSidebarOpenArrow(false);
     }
   }, []);
 
@@ -490,7 +496,7 @@ const { t } = useTranslation();
         </div>
       )}
 
-      {showSidebarOpenArrow && isMobile && (
+      {showSidebarOpenArrow && isMobile && remove_sidebar_arrow_of_first_open && (
         <div
           className="side_open_rectangle_container"
           onClick={() => setIs_sidebar_open_on_mobile(false)}
@@ -523,6 +529,7 @@ const { t } = useTranslation();
         setIsAuthenticated={setIsAuthenticated}
         setActiveSidebarBoardId={setActiveSidebarBoardId}
         activeSidebarBoardId={activeSidebarBoardId}
+        setRemove_sidebar_arrow_of_first_open={setRemove_sidebar_arrow_of_first_open}
       />
       <Routes>
         <Route path="boards" element={
