@@ -8,7 +8,7 @@ import { ThemeSpecs } from "../utils/theme";
 import { board } from "../utils/interface";
 import Templates from "./Templates";
 import { ProfileData } from "../utils/interface";
-import { StyledEngineProvider } from '@mui/material/styles';
+// import { StyledEngineProvider } from '@mui/material/styles';
 import axiosInstance from "../utils/axiosinstance";
 import { Board_Users } from "../utils/interface";
 import Notification from "./Notification";
@@ -20,6 +20,7 @@ import { ReactFlowProvider } from 'reactflow';
 import { Routes, Route, useNavigate } from "react-router-dom";
 import { startTour } from "../utils/tour";
 import { useTranslation } from 'react-i18next';
+import { useLocation } from "react-router-dom";
 
 
 interface MainPageProps {
@@ -88,6 +89,8 @@ const MainPage: React.FC<MainPageProps> = ({
   const accessToken: string | null = localStorage.getItem('access_token');
   const refreshToken: string | null = localStorage.getItem('refresh_token');
 
+  const location = useLocation();
+
   const { t } = useTranslation();
 
 
@@ -132,7 +135,11 @@ const MainPage: React.FC<MainPageProps> = ({
   // Update body's background image with smooth animation
   useEffect(() => {
     const body = document.body;
-    if (selectedBoard?.background_image) {
+    // Only show background image on boards route
+    if (
+      selectedBoard?.background_image &&
+      location.pathname.startsWith("/mainpage/boards")
+    ) {
       body.style.transition = "background-image 0.5s ease-in-out, background-color 0.5s ease-in-out";
       body.style.backgroundImage = `url(${selectedBoard.background_image})`;
       body.style.backgroundSize = "cover";
@@ -141,8 +148,7 @@ const MainPage: React.FC<MainPageProps> = ({
       body.style.transition = "background-image 0.5s ease-in-out, background-color 0.5s ease-in-out";
       body.style.backgroundImage = ""; // Reset background image
     }
-  }, [selectedBoard]);
-
+  }, [selectedBoard, location.pathname]);
 
 
 
@@ -446,9 +452,6 @@ const MainPage: React.FC<MainPageProps> = ({
   const [showSidebarOpenArrow, setShowSidebarOpenArrow] = useState<boolean>(false);
 
 
-
-  const [remove_sidebar_arrow_of_first_open, setRemove_sidebar_arrow_of_first_open] = useState(false);
-
   useEffect(() => {
     if (is_sidebar_open_on_mobile) {
       setTimeout(() => {
@@ -475,13 +478,9 @@ const MainPage: React.FC<MainPageProps> = ({
       else {
         localStorage.setItem('first_time_signup', 'false');
       }
-    } else {
-      // If the screen width is less than or equal to 768px, set is_sidebar_open_on_mobile to false
-      setIs_sidebar_open_on_mobile(false);
-
-      setShowSidebarOpenArrow(false);
-    }
+    } 
   }, []);
+
 
 
   // ====================================================================================================================
@@ -496,7 +495,7 @@ const MainPage: React.FC<MainPageProps> = ({
         </div>
       )}
 
-      {showSidebarOpenArrow && isMobile && remove_sidebar_arrow_of_first_open && (
+      {showSidebarOpenArrow && isMobile && (
         <div
           className="side_open_rectangle_container"
           onClick={() => setIs_sidebar_open_on_mobile(false)}
@@ -529,7 +528,6 @@ const MainPage: React.FC<MainPageProps> = ({
         setIsAuthenticated={setIsAuthenticated}
         setActiveSidebarBoardId={setActiveSidebarBoardId}
         activeSidebarBoardId={activeSidebarBoardId}
-        setRemove_sidebar_arrow_of_first_open={setRemove_sidebar_arrow_of_first_open}
       />
       <Routes>
         <Route path="boards" element={
@@ -578,13 +576,11 @@ const MainPage: React.FC<MainPageProps> = ({
           />
         } />
         <Route path="calendar" element={
-          <StyledEngineProvider injectFirst>
-            <Calendar
-              boards={boards}
-              currentTheme={currentTheme}
-              fetchBoards={fetchBoards}
-            />
-          </StyledEngineProvider>
+          <Calendar
+            boards={boards}
+            currentTheme={currentTheme}
+            fetchBoards={fetchBoards}
+          />
 
         } />
         <Route path="settings" element={

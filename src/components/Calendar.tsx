@@ -220,7 +220,11 @@ const Calendar: React.FC<CalendarProps> = ({ boards, currentTheme, fetchBoards }
 
 
   return (
-    <div className="main_calendar_container">
+    <div className="main_calendar_container"
+      style={{
+        backgroundColor: currentTheme['--background-color']
+      }}
+    >
       <div className="calendar_year_controls">
         < MdOutlineKeyboardDoubleArrowLeft onClick={() => handleYearChange('prev')} style={{ color: currentTheme["--main-text-coloure"] }} className='year_change_arrow_icon' />
         <h2 className='currentyear_h2' style={{ color: currentTheme["--main-text-coloure"] }} >{currentYear}</h2>

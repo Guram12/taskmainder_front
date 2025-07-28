@@ -96,7 +96,12 @@ const Templates: React.FC<TemplatesProps> = ({ handleTemplateSelect, currentThem
 
 
   return (
-    <div className="templates_container"   >
+    <div className="templates_container" 
+    
+          style={{
+        backgroundColor: currentTheme['--background-color']
+      }}
+    >
       <h2>{t("choose_a_template")}</h2>
       <div className="templates-list">
         {templates.map((template) => (

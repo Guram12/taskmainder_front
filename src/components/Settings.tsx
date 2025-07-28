@@ -107,7 +107,11 @@ const Settings: React.FC<SettingsProps> = ({
   // ================================================================================================================================
 
   return (
-    <div className="main_settings_container">
+    <div className="main_settings_container"
+      style={{
+        backgroundColor: currentTheme['--background-color']
+      }}
+    >
       {/* confirmation dialog  */}
       {isImageDeleting && (
         <ConfirmationDialog
