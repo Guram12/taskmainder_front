@@ -37,7 +37,7 @@
   position: relative;
 }
 
-.dashboard_icon{
+.dashboard_icon {
   color: white;
   width: 30px;
   height: 30px;
@@ -141,7 +141,7 @@
   gap: 20px;
 }
 
-.add_board_icon{
+.add_board_icon {
   width: 30px;
   height: 30px;
   color: seagreen;
@@ -155,10 +155,10 @@
 }
 
 
-.cancel_add_board_icon{
+.cancel_add_board_icon {
   width: 30px;
   height: 30px;
-  fill : firebrick;
+  fill: firebrick;
   transition: all 0.3s ease;
 }
 
@@ -175,6 +175,9 @@
     transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     z-index: 9;
     overflow: hidden;
+
+    height: 100vh;
+    max-height: 100vh;
   }
 
   .sidebar_lbrary {
@@ -183,7 +186,11 @@
 
   .sidebar_container {
     width: 100% !important;
-
+    
+    height: calc(100vh - 70px);
+    max-height: 100vh;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch; /* for smooth scrolling on iOS */
   }
 
   .sidebar_closed_on_mobile {
