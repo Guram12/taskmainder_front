@@ -530,6 +530,7 @@
 
   .main_members_container {
     justify-content: space-between;
+    max-width: 100vw;
   }
 
   .board_name_cont {
