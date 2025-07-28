@@ -36,6 +36,7 @@ interface HeaderProps {
   setSelectedComponent: (selectedComponent: string) => void;
   setSelectedBoard: (selectedBoard: board | null) => void;
   boards: board[]; 
+  setActiveSidebarBoardId: (boardId: number | null) => void;
 }
 
 
@@ -56,6 +57,7 @@ const Header: React.FC<HeaderProps> = ({
   setSelectedComponent,
   setSelectedBoard,
   boards, 
+  setActiveSidebarBoardId,
 }) => {
 
 
@@ -232,6 +234,7 @@ const handleLogoClick = () => {
     return;
   } 
   const board_to_be_selected = boards.find(board => board.id === JSON.parse(prev_selected_board_id));
+  setActiveSidebarBoardId(board_to_be_selected?.id ?? null);
   if (board_to_be_selected) {
     setSelectedBoard(board_to_be_selected);
     console.log("Previous board selected:", board_to_be_selected);

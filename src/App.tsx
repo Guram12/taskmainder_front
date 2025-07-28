@@ -82,6 +82,8 @@ const App: React.FC = () => {
   // ==============================================================================================
   const [selectedComponent, setSelectedComponent] = useState<string>("Boards");
 
+
+  
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [profileData, setProfileData] = useState<ProfileData>({
@@ -169,6 +171,9 @@ const App: React.FC = () => {
     background_image: null,
     creation_date: '',
   });
+
+
+  const [activeSidebarBoardId, setActiveSidebarBoardId] = useState<number | null>(selectedBoard?.id ?? null);
 
   const [isBoardsLoaded, setIsBoardsLoaded] = useState<boolean>(false);
 
@@ -450,6 +455,7 @@ const App: React.FC = () => {
         setSelectedComponent={setSelectedComponent}
         setSelectedBoard={setSelectedBoard}
         boards={boards}
+        setActiveSidebarBoardId={setActiveSidebarBoardId}
       />
       <Routes>
         <Route path="/"
@@ -502,6 +508,8 @@ const App: React.FC = () => {
             setIsAuthenticated={setIsAuthenticated}
             setSelectedComponent={setSelectedComponent}
             selectedComponent={selectedComponent}
+            setActiveSidebarBoardId={setActiveSidebarBoardId}
+            activeSidebarBoardId={activeSidebarBoardId}
           />} />
 
       </Routes>

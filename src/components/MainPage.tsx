@@ -52,6 +52,8 @@ interface MainPageProps {
   setIsAuthenticated: (isAuthenticated: boolean) => void;
   setSelectedComponent: (selectedComponent: string) => void;
   selectedComponent: string;
+  setActiveSidebarBoardId: (boardId: number | null) => void;
+  activeSidebarBoardId: number | null;
 }
 
 const MainPage: React.FC<MainPageProps> = ({
@@ -81,7 +83,9 @@ const MainPage: React.FC<MainPageProps> = ({
   isMobile,
   setIsAuthenticated,
   setSelectedComponent,
-  selectedComponent
+  selectedComponent,
+  setActiveSidebarBoardId,
+  activeSidebarBoardId
 }) => {
 
   const navigate = useNavigate();
@@ -176,7 +180,6 @@ const MainPage: React.FC<MainPageProps> = ({
 
   const [allCurrentBoardUsers, setAllCurrentBoardUsers] = useState<ProfileData[]>([]);
 
-  const [activeSidebarBoardId, setActiveSidebarBoardId] = useState<number | null>(selectedBoard?.id ?? null);
 
 
   const [isAddingList, setIsAddingList] = useState<boolean>(false);
