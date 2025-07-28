@@ -137,6 +137,7 @@ const Settings: React.FC<SettingsProps> = ({
         profileData={profileData}
         currentTheme={currentTheme}
         FetchProfileData={FetchProfileData}
+        isMobile={isMobile}
 
       />
 

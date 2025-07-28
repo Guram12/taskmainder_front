@@ -18,7 +18,6 @@
 }
 
 
-
 .user_profile_images {
   width: 30px;
   height: 30px;
@@ -68,6 +67,7 @@
   font-weight: bold;
   margin: 0px;
 }
+
 /* when hover  members_diagram_icon_cont, change colore of members_diagram_icon */
 .members_diagram_icon_cont:hover .members_diagram_icon {
   transform: scale(1.2);
@@ -521,10 +521,17 @@
 
 
 @media screen and (max-width: 768px) {
+  .add_user_icon {
 
-.main_members_container {
-  justify-content: space-between;
-}
+    margin-right: 0px;
+  }
+
+
+
+  .main_members_container {
+    justify-content: space-between;
+  }
+
   .board_name_cont {
     margin-left: 0px;
   }
@@ -693,19 +700,20 @@
     font-weight: bold;
 
   }
-.members_diagram_icon_cont {
-  height: 27px;
-  margin-left: 0px;
-  display: flex;
-  justify-content: flex-end;
-  align-items: center;
-  gap: 0px;
-  cursor: pointer;
-  width: min-content;
 
-}
+  .members_diagram_icon_cont {
+    height: 27px;
+    margin-left: 0px;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 0px;
+    cursor: pointer;
+    width: min-content;
 
-  .diagram_p{
+  }
+
+  .diagram_p {
     display: none;
   }
 }

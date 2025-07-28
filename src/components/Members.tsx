@@ -415,7 +415,7 @@ const Members: React.FC<MembersProps> = ({
             width={30}
             style={{ marginLeft: '-10px' }}
             baseColor={currentTheme['--list-background-color']}
-            highlightColor="#e0e0e0"
+            highlightColor={currentTheme['--main-text-coloure']}
           />
           <Skeleton
             circle
@@ -423,7 +423,7 @@ const Members: React.FC<MembersProps> = ({
             width={30}
             style={{ marginLeft: '-10px' }}
             baseColor={currentTheme['--list-background-color']}
-            highlightColor="#e0e0e0"
+            highlightColor={currentTheme['--main-text-coloure']}
           />
           <Skeleton
             circle
@@ -431,7 +431,7 @@ const Members: React.FC<MembersProps> = ({
             width={30}
             style={{ marginLeft: '-10px' }}
             baseColor={currentTheme['--list-background-color']}
-            highlightColor="#e0e0e0"
+            highlightColor={currentTheme['--main-text-coloure']}
           />
         </div>
       )
