@@ -17,10 +17,11 @@ interface ChangeNotificationProps {
   profileData: ProfileData;
   FetchProfileData: () => Promise<void>;
   currentTheme: ThemeSpecs;
+  isMobile: boolean;
 }
 
 
-const ChangeNotification: React.FC<ChangeNotificationProps> = ({ profileData, FetchProfileData, currentTheme }) => {
+const ChangeNotification: React.FC<ChangeNotificationProps> = ({ profileData, FetchProfileData, currentTheme, isMobile }) => {
   const [selected_notification_preferences, setSelected_notification_preferences] = useState<'email' | 'discord' | 'both' | null>(null);
   const [current_webhook_url, setCurrent_webhook_url] = useState<string | null>(profileData.discord_webhook_url);
   const [is_tutorial_open, setIs_tutorial_open] = useState<boolean>(false);
@@ -210,7 +211,7 @@ const ChangeNotification: React.FC<ChangeNotificationProps> = ({ profileData, Fe
   }
 
 
-  const truncateUrl = (url: string, maxLength = 40) => {
+  const truncateUrl = (url: string, maxLength = isMobile ? 30 : 50) => {
     if (!url) return '';
     return url.length > maxLength ? url.slice(0, maxLength) + '...' : url;
   };
