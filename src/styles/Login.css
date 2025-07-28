@@ -8,9 +8,10 @@
 
 .login-title {
   margin-bottom: 20px;
+  margin-top: 0px;
 }
 
-.onloginpage{
+.onloginpage {
   margin-bottom: 20px;
 }
 
@@ -28,12 +29,12 @@
 
 }
 
-.login_icons{
+.login_icons {
   font-size: 25px;
   margin-right: 10px;
 }
 
-.showpassword{
+.showpassword {
   cursor: pointer;
 }
 
@@ -79,7 +80,7 @@
 
 .register-button {
   margin-top: 10px;
-  width:200px;
+  width: 200px;
   padding: 10px;
   border: none;
   border-radius: 4px;
@@ -97,3 +98,67 @@
   margin-top: 10px;
   font-size: 14px;
 }
+
+/* =================================================  logos animations ================================================== */
+
+.logo-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 10px;
+  animation: logoFadeInBounce 1.2s cubic-bezier(.68, -0.55, .27, 1.55);
+}
+
+@keyframes logoFadeInBounce {
+  0% {
+    opacity: 0;
+    transform: scale(0.7) rotate(-10deg);
+  }
+
+  60% {
+    opacity: 1;
+    transform: scale(1.15) rotate(2deg);
+  }
+
+  80% {
+    transform: scale(0.95) rotate(-2deg);
+  }
+
+  100% {
+    opacity: 1;
+    transform: scale(1) rotate(0deg);
+  }
+}
+
+
+
+.path-element {
+  transform: translate(30px, 0);
+  animation: move-right 1.5s infinite alternate;
+}
+
+
+@keyframes move-right {
+  0% {
+    transform: translateX(40px);
+  }
+
+  100% {
+    transform: translateX(0px);
+  }
+}
+
+.animate-down-up {
+  animation: downUp 1.5s infinite alternate;
+}
+
+@keyframes downUp {
+  0% {
+    transform: translateY(0);
+  }
+
+  100% {
+    transform: translateY(-30px);
+  }
+}
+

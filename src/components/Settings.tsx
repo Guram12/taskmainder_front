@@ -13,6 +13,10 @@ import axiosInstance from "../utils/axiosinstance";
 import { useState } from "react";
 import { useTranslation } from 'react-i18next';
 import ChangeNotification from "./settings/ChangeNotification";
+import { Helmet } from "react-helmet";
+
+
+
 
 interface SettingsProps {
   profileData: ProfileData;
@@ -107,67 +111,80 @@ const Settings: React.FC<SettingsProps> = ({
   // ================================================================================================================================
 
   return (
-    <div className="main_settings_container">
-      {/* confirmation dialog  */}
-      {isImageDeleting && (
-        <ConfirmationDialog
-          message={t("are_you_sure_you_want_to_delete_this_background_image")}
-          onConfirm={() => handle_image_delete(deleting_image_boardId)}
-          onCancel={() => {
-            setIsImageDeleting(false);
-            setNew_image_for_board({ boardId: 0, NewImage: new File([], "") });
-          }}
+    <>
+      <Helmet>
+        <title>Settings | DailyDoer</title>
+        <meta name="description" content="Manage your profile, notifications, themes, and account settings on DailyDoer." />
+        <meta name="robots" content="index, follow" />
+        <link rel="canonical" href="https://dailydoer.space/mainpage/settings" />
+      </Helmet>
+      <div className="main_settings_container"
+        style={{
+          backgroundColor: currentTheme['--background-color']
+        }}
+      >
+        {/* confirmation dialog  */}
+        {isImageDeleting && (
+          <ConfirmationDialog
+            message={t("are_you_sure_you_want_to_delete_this_background_image")}
+            onConfirm={() => handle_image_delete(deleting_image_boardId)}
+            onCancel={() => {
+              setIsImageDeleting(false);
+              setNew_image_for_board({ boardId: 0, NewImage: new File([], "") });
+            }}
+            currentTheme={currentTheme}
+          />
+        )}
+
+        <ProfilePictureUpdate
+          profileData={profileData}
+          FetchProfileData={FetchProfileData}
+          currentTheme={currentTheme}
+          isMobile={isMobile}
+        />
+        <Profile_Info_update
+          profileData={profileData}
+          FetchProfileData={FetchProfileData}
+          currentTheme={currentTheme}
+          isMobile={isMobile}
+        />
+        <ChangeNotification
+          profileData={profileData}
+          currentTheme={currentTheme}
+          FetchProfileData={FetchProfileData}
+          isMobile={isMobile}
+
+        />
+
+
+
+        <ChangePassword
+          profileData={profileData}
+          FetchProfileData={FetchProfileData}
           currentTheme={currentTheme}
         />
-      )}
+        <CustomTheme
+          currentTheme={currentTheme}
+          setCurrentTheme={setCurrentTheme}
+          setIsCustomThemeSelected={setIsCustomThemeSelected}
+          setSaved_custom_theme={setSaved_custom_theme}
+          boards={boards}
+          setBoards={setBoards}
+          setNew_image_for_board={setNew_image_for_board}
+          new_image_for_board={new_image_for_board}
+          setLoading_image={setLoading_image}
+          loading_image={loading_image}
+          setIsImageDeleting={setIsImageDeleting}
+          setDeleting_image_boardId={setDeleting_image_boardId}
+          current_user_email={current_user_email}
 
-      <ProfilePictureUpdate
-        profileData={profileData}
-        FetchProfileData={FetchProfileData}
-        currentTheme={currentTheme}
-        isMobile={isMobile}
-      />
-      <Profile_Info_update
-        profileData={profileData}
-        FetchProfileData={FetchProfileData}
-        currentTheme={currentTheme}
-        isMobile={isMobile}
-      />
-      <ChangeNotification
-        profileData={profileData}
-        currentTheme={currentTheme}
-        FetchProfileData={FetchProfileData}
-        isMobile={isMobile}
+        />
+        <DeleteAccount
+          currentTheme={currentTheme}
+        />
+      </div>
+    </>
 
-      />
-
-
-
-      <ChangePassword
-        profileData={profileData}
-        FetchProfileData={FetchProfileData}
-        currentTheme={currentTheme}
-      />
-      <CustomTheme
-        currentTheme={currentTheme}
-        setCurrentTheme={setCurrentTheme}
-        setIsCustomThemeSelected={setIsCustomThemeSelected}
-        setSaved_custom_theme={setSaved_custom_theme}
-        boards={boards}
-        setBoards={setBoards}
-        setNew_image_for_board={setNew_image_for_board}
-        new_image_for_board={new_image_for_board}
-        setLoading_image={setLoading_image}
-        loading_image={loading_image}
-        setIsImageDeleting={setIsImageDeleting}
-        setDeleting_image_boardId={setDeleting_image_boardId}
-        current_user_email={current_user_email}
-
-      />
-      <DeleteAccount
-        currentTheme={currentTheme}
-      />
-    </div>
   );
 };
 

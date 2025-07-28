@@ -27,7 +27,7 @@ import { HiXMark } from "react-icons/hi2";
 import Sortable from 'sortablejs';
 import type { SortableEvent } from 'sortablejs';
 import select_board_icon from '../../assets/select_board_icon.png'
-
+import { Helmet } from "react-helmet";
 
 export interface BoardsProps {
   selectedBoard: board | null;
@@ -138,7 +138,7 @@ const Boards: React.FC<BoardsProps> = ({
         user_status: user.user_status,
         is_social_account: false,
         discord_webhook_url: null,
-        notification_preference: 'email', 
+        notification_preference: 'email',
       }));
       setAllCurrentBoardUsers(selectedBoardUsers);
     } else {
@@ -697,199 +697,208 @@ const Boards: React.FC<BoardsProps> = ({
 
 
   return (
-    <div className='members_container'
-    >
-      {/* {boards.length > 0 && ( */}
-      <div >
-        {isBoardsLoaded && boards.length > 0 && selectedBoard?.id !== 0 && (
-          <div>
-            <Members
-              selectedBoard={selectedBoard}
-              socketRef={socketRef}
-              current_user_email={current_user_email}
-              currentTheme={currentTheme}
-              update_board_name={update_board_name}
-              deleteBoard={deleteBoard}
-              setCurrent_board_users={setCurrent_board_users}
-              current_board_users={current_board_users}
-              is_cur_Board_users_fetched={is_cur_Board_users_fetched}
-              fetch_current_board_users={fetch_current_board_users}
-              setBoards={setBoards}
-              boards={boards}
-              is_members_refreshing={is_members_refreshing}
-              isMobile={isMobile}
-              profileData={profileData}
-              setSelectedComponent={setSelectedComponent}
-              setIsLoading={setIsLoading}
-              setActiveSidebarBoardId={setActiveSidebarBoardId}
-            />
-          </div>
-        )}
-      </div>
-
-
-      {/* Show skeleton only when boards are not loaded */}
-      {!isBoardsLoaded && (
-        <div className='skeleton_in_board'>
-          <SkeletonMember currentTheme={currentTheme} isMobile={isMobile} />
-        </div>
-      )}
-
-      {isBoardsLoaded && boards.length === 0 && (
-        <NoBoards currentTheme={currentTheme} />
-      )}
-
-      {selectedBoard?.id === 0 && boards.length > 0 && isBoardsLoaded ? (
-        <div className='pls_select_board_cont'>
-          <img src={select_board_icon} alt="select board icon" className='select_board_icon' />
-          <p className='pla_select_board' >{t('please_select_a_board')}</p>
-        </div>
-      ) : (
-
-        <div className={`main_boards_container ${boards.length === 0 && isBoardsLoaded ? 'remove_height' : 'add_height'}`}  >
-          {!isBoardsLoaded ? (
-            <SkeletonLoader currentTheme={currentTheme} />
-          ) : (
-            // DND-KIT: Wrap lists in DndContext
-            <DndContext
-              sensors={sensors}
-              collisionDetection={closestCenter}
-              onDragStart={handleDragStart}
-              onDragEnd={handleDragEnd}
-            >
-              <div className='lists_container' ref={listsContainerRef}>
-
-                {boardData.lists.map((list) => (
-                  <List
-                    key={list.id}
-                    list={list}
-                    moveTask={moveTask}
-                    addTask={addTask}
-                    deleteTask={deleteTask}
-                    updateTask={updateTask}
-                    setUpdatingListNameId={setUpdatingListNameId}
-                    updatingListNameId={updatingListNameId}
-                    socketRef={socketRef}
-                    currentTheme={currentTheme}
-                    deleteList={deleteList}
-                    updateListName={updateListName}
-                    allCurrentBoardUsers={allCurrentBoardUsers}
-                    isLoading={loadingLists[list.id] || false}
-                    setBoardData={setBoardData}
-                    boardData={boardData}
-                    dndListId={list.id}
-                    setUpdatingTaskId={setUpdatingTaskId}
-                    updatingTaskId={updatingTaskId}
-                    setCompletingTaskId={setCompletingTaskId}
-                    completingTaskId={completingTaskId}
-                    setAdding_new_task_loader={setAdding_new_task_loader}
-                    adding_new_task_loader={adding_new_task_loader}
-                  />
-
-                ))}
-                {isAddingList && (
-                  <SkeletonListLoader currentTheme={currentTheme} />
-                )}
-
-                <div className='add_new_list_big_container'>
-                  {is_any_board_selected && (
-                    <div className='list'
-                      style={{ backgroundColor: `${currentTheme['--list-background-color']}` }}
-                    >
-                      {!Adding_new_list ?
-                        (
-                          <button
-                            onClick={() => setAdding_new_list(true)}
-                            className='add_new_list_btn'
-                            style={{
-                              backgroundColor: currentTheme['--task-background-color'],
-                              color: currentTheme['--main-text-coloure'],
-                              borderColor: currentTheme['--border-color'],
-
-                            }}
-                          >
-                            {t('create_List')}
-                          </button>
-                        )
-                        :
-                        (
-                          <div className='add_new_list_cont' >
-                            <input
-                              type="text"
-                              placeholder={t('list_name')}
-                              value={ListName}
-                              onChange={(e) => setListName(e.target.value)}
-                              required
-                              autoFocus
-                              style={{
-                                background: currentTheme['--task-background-color'],
-                                color: currentTheme['--main-text-coloure'],
-                                borderColor: currentTheme['--border-color'],
-                                ['--placeholder-color']: currentTheme['--due-date-color'] || '#888',
-                              } as React.CSSProperties}
-                              className='add_new_list_input'
-                            />
-                            <button
-                              onClick={() => addList()}
-                              style={{
-                                backgroundColor: currentTheme['--task-background-color'],
-                                color: currentTheme['--main-text-coloure'],
-                                borderColor: currentTheme['--border-color'],
-                                cursor: ListName.trim() === '' ? 'not-allowed' : 'pointer',
-                              }}
-                              className='save_new_list_btn'
-                              disabled={ListName.trim() === ''}
-                            >
-                              <GrFormCheckmark className='add_list_button_2_icon' />
-
-                            </button>
-                            <button
-                              onClick={() => {
-                                setAdding_new_list(false);
-                                setListName('');
-                              }}
-                              style={{
-                                backgroundColor: currentTheme['--task-background-color'],
-                                color: currentTheme['--main-text-coloure'],
-                                borderColor: currentTheme['--border-color'],
-                              }}
-                              className='cancel_new_list_btn'
-
-                            >
-                              <HiXMark className='cancel_list_button_icon' />
-                            </button>
-                          </div>
-                        )
-                      }
-                    </div>
-                  )}
-                </div>
-
-
-              </div>
-              {/* DND-KIT: DragOverlay for ghost */}
-              <DragOverlay>
-                {activeTask ? (
-                  <Task
-                    task={activeTask.task}
-                    deleteTask={() => { }}
-                    updateTask={() => { }}
-                    setUpdatingTaskId={() => { }}
-                    updatingTaskId={null}
-                    currentTheme={currentTheme}
-                    allCurrentBoardUsers={allCurrentBoardUsers}
-                    dndListId={activeTask.listId}
-                    setCompletingTaskId={setCompletingTaskId}
-                    completingTaskId={completingTaskId}
-                  />
-                ) : null}
-              </DragOverlay>
-            </DndContext>
+    <>
+      <Helmet>
+        <title>Boards | DailyDoer</title>
+        <meta name="description" content="View, create, and manage your boards. Organize your projects and collaborate with your team on DailyDoer." />
+        <meta name="robots" content="index, follow" />
+        <link rel="canonical" href="https://dailydoer.space/mainpage/boards" />
+      </Helmet>
+      <div className='members_container'
+      >
+        {/* {boards.length > 0 && ( */}
+        <div >
+          {isBoardsLoaded && boards.length > 0 && selectedBoard?.id !== 0 && (
+            <div>
+              <Members
+                selectedBoard={selectedBoard}
+                socketRef={socketRef}
+                current_user_email={current_user_email}
+                currentTheme={currentTheme}
+                update_board_name={update_board_name}
+                deleteBoard={deleteBoard}
+                setCurrent_board_users={setCurrent_board_users}
+                current_board_users={current_board_users}
+                is_cur_Board_users_fetched={is_cur_Board_users_fetched}
+                fetch_current_board_users={fetch_current_board_users}
+                setBoards={setBoards}
+                boards={boards}
+                is_members_refreshing={is_members_refreshing}
+                isMobile={isMobile}
+                profileData={profileData}
+                setSelectedComponent={setSelectedComponent}
+                setIsLoading={setIsLoading}
+                setActiveSidebarBoardId={setActiveSidebarBoardId}
+              />
+            </div>
           )}
         </div>
-      )}
 
-    </div>
+
+        {/* Show skeleton only when boards are not loaded */}
+        {!isBoardsLoaded && (
+          <div className='skeleton_in_board'>
+            <SkeletonMember currentTheme={currentTheme} isMobile={isMobile} />
+          </div>
+        )}
+
+        {isBoardsLoaded && boards.length === 0 && (
+          <NoBoards currentTheme={currentTheme} />
+        )}
+
+        {selectedBoard?.id === 0 && boards.length > 0 && isBoardsLoaded ? (
+          <div className='pls_select_board_cont'>
+            <img src={select_board_icon} alt="select board icon" className='select_board_icon' />
+            <p className='pla_select_board' >{t('please_select_a_board')}</p>
+          </div>
+        ) : (
+
+          <div className={`main_boards_container ${boards.length === 0 && isBoardsLoaded ? 'remove_height' : 'add_height'}`}  >
+            {!isBoardsLoaded ? (
+              <SkeletonLoader currentTheme={currentTheme} />
+            ) : (
+              // DND-KIT: Wrap lists in DndContext
+              <DndContext
+                sensors={sensors}
+                collisionDetection={closestCenter}
+                onDragStart={handleDragStart}
+                onDragEnd={handleDragEnd}
+              >
+                <div className='lists_container' ref={listsContainerRef}>
+
+                  {boardData.lists.map((list) => (
+                    <List
+                      key={list.id}
+                      list={list}
+                      moveTask={moveTask}
+                      addTask={addTask}
+                      deleteTask={deleteTask}
+                      updateTask={updateTask}
+                      setUpdatingListNameId={setUpdatingListNameId}
+                      updatingListNameId={updatingListNameId}
+                      socketRef={socketRef}
+                      currentTheme={currentTheme}
+                      deleteList={deleteList}
+                      updateListName={updateListName}
+                      allCurrentBoardUsers={allCurrentBoardUsers}
+                      isLoading={loadingLists[list.id] || false}
+                      setBoardData={setBoardData}
+                      boardData={boardData}
+                      dndListId={list.id}
+                      setUpdatingTaskId={setUpdatingTaskId}
+                      updatingTaskId={updatingTaskId}
+                      setCompletingTaskId={setCompletingTaskId}
+                      completingTaskId={completingTaskId}
+                      setAdding_new_task_loader={setAdding_new_task_loader}
+                      adding_new_task_loader={adding_new_task_loader}
+                    />
+
+                  ))}
+                  {isAddingList && (
+                    <SkeletonListLoader currentTheme={currentTheme} />
+                  )}
+
+                  <div className='add_new_list_big_container'>
+                    {is_any_board_selected && (
+                      <div className='list'
+                        style={{ backgroundColor: `${currentTheme['--list-background-color']}` }}
+                      >
+                        {!Adding_new_list ?
+                          (
+                            <button
+                              onClick={() => setAdding_new_list(true)}
+                              className='add_new_list_btn'
+                              style={{
+                                backgroundColor: currentTheme['--task-background-color'],
+                                color: currentTheme['--main-text-coloure'],
+                                borderColor: currentTheme['--border-color'],
+
+                              }}
+                            >
+                              {t('create_List')}
+                            </button>
+                          )
+                          :
+                          (
+                            <div className='add_new_list_cont' >
+                              <input
+                                type="text"
+                                placeholder={t('list_name')}
+                                value={ListName}
+                                onChange={(e) => setListName(e.target.value)}
+                                required
+                                autoFocus
+                                style={{
+                                  background: currentTheme['--task-background-color'],
+                                  color: currentTheme['--main-text-coloure'],
+                                  borderColor: currentTheme['--border-color'],
+                                  ['--placeholder-color']: currentTheme['--due-date-color'] || '#888',
+                                } as React.CSSProperties}
+                                className='add_new_list_input'
+                              />
+                              <button
+                                onClick={() => addList()}
+                                style={{
+                                  backgroundColor: currentTheme['--task-background-color'],
+                                  color: currentTheme['--main-text-coloure'],
+                                  borderColor: currentTheme['--border-color'],
+                                  cursor: ListName.trim() === '' ? 'not-allowed' : 'pointer',
+                                }}
+                                className='save_new_list_btn'
+                                disabled={ListName.trim() === ''}
+                              >
+                                <GrFormCheckmark className='add_list_button_2_icon' />
+
+                              </button>
+                              <button
+                                onClick={() => {
+                                  setAdding_new_list(false);
+                                  setListName('');
+                                }}
+                                style={{
+                                  backgroundColor: currentTheme['--task-background-color'],
+                                  color: currentTheme['--main-text-coloure'],
+                                  borderColor: currentTheme['--border-color'],
+                                }}
+                                className='cancel_new_list_btn'
+
+                              >
+                                <HiXMark className='cancel_list_button_icon' />
+                              </button>
+                            </div>
+                          )
+                        }
+                      </div>
+                    )}
+                  </div>
+
+
+                </div>
+                {/* DND-KIT: DragOverlay for ghost */}
+                <DragOverlay>
+                  {activeTask ? (
+                    <Task
+                      task={activeTask.task}
+                      deleteTask={() => { }}
+                      updateTask={() => { }}
+                      setUpdatingTaskId={() => { }}
+                      updatingTaskId={null}
+                      currentTheme={currentTheme}
+                      allCurrentBoardUsers={allCurrentBoardUsers}
+                      dndListId={activeTask.listId}
+                      setCompletingTaskId={setCompletingTaskId}
+                      completingTaskId={completingTaskId}
+                    />
+                  ) : null}
+                </DragOverlay>
+              </DndContext>
+            )}
+          </div>
+        )}
+
+      </div>
+    </>
+
   );
 };
 

@@ -9,7 +9,7 @@ import no_notification_image from "../assets/no_notification.png";
 import { NotificationPayload } from "../utils/interface";
 import { FetchedNotificationData } from "../utils/interface";
 import { useTranslation } from 'react-i18next';
-
+import { Helmet } from "react-helmet";
 
 interface NotificationProps {
   currentTheme: ThemeSpecs;
@@ -80,7 +80,7 @@ const Notification: React.FC<NotificationProps> = ({ currentTheme, setIsLoading,
     return translated !== translationKey ? translated : body;
   };
 
-// ==================================================================================================
+  // ==================================================================================================
 
 
   useEffect(() => {
@@ -186,65 +186,74 @@ const Notification: React.FC<NotificationProps> = ({ currentTheme, setIsLoading,
   const showDeleteAllButton = notifications.length > 0;
 
   return (
-    <div className="main_notification_container">
-      <div className="delete_all_buttion_container">
-        {showDeleteAllButton &&
-          <button
-            className="delete_all_notification"
-            onClick={handleDeleteAllNotifications}
-            style={{ backgroundColor: currentTheme['--task-background-color'] }}
-          >
-            {t('delete_all')}
-          </button>
-        }
-      </div>
-
-      {isFetching ? (
-        <div className="imported_all_skeletons_cont">
-          <SkeletonNotification currentTheme={currentTheme} isMobile={isMobile} />
-          <SkeletonNotification currentTheme={currentTheme} isMobile={isMobile} />
-          <SkeletonNotification currentTheme={currentTheme} isMobile={isMobile} />
-          <SkeletonNotification currentTheme={currentTheme} isMobile={isMobile} />
-        </div>
-      ) : notifications.length === 0 ? (
-        <div className="no_notification_container">
-          <img src={no_notification_image} alt="No Notifications" className="no_notification_image" />
-          <h3 className="no_notification_text">{t('no_notifications')}</h3>
-        </div>
-      ) : (
-        <>
-          {notifications.map((notification) => (
-            <div
-              key={notification.id}
-              className="notification_card"
-              style={{
-                borderColor: currentTheme["--border-color"],
-                fontSize: notification.is_read ? "0.9rem" : "1rem",
-                backgroundColor: currentTheme["--list-background-color"],
-              }}
+    <>
+      <Helmet>
+        <title>Notifications | DailyDoer</title>
+        <meta name="description" content="View all your notifications, reminders, and updates on DailyDoer. Stay informed about your boards and tasks." />
+        <meta name="robots" content="index, follow" />
+        <link rel="canonical" href="https://dailydoer.space/mainpage/notification" />
+      </Helmet>
+      <div className="main_notification_container">
+        <div className="delete_all_buttion_container">
+          {showDeleteAllButton &&
+            <button
+              className="delete_all_notification"
+              onClick={handleDeleteAllNotifications}
+              style={{ backgroundColor: currentTheme['--task-background-color'] }}
             >
-              <RiDeleteBin4Fill
-                className="delete_notif_icon"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  handleDeleteNotification(notification.id);
-                }}
-              />
-              <h3 className="notification_title">
-                {translateNotificationTitle(notification.title)}
+              {t('delete_all')}
+            </button>
+          }
+        </div>
 
-              </h3>
-              <p className="notification_body_text">
-                {translateNotificationBody(notification.body, notification.title)}
-              </p>
-              <p className="notification_date" style={{ color: currentTheme['--due-date-color'] }}>
-                {new Date(notification.created_at).toLocaleString()}
-              </p>
-            </div>
-          ))}
-        </>
-      )}
-    </div>
+        {isFetching ? (
+          <div className="imported_all_skeletons_cont">
+            <SkeletonNotification currentTheme={currentTheme} isMobile={isMobile} />
+            <SkeletonNotification currentTheme={currentTheme} isMobile={isMobile} />
+            <SkeletonNotification currentTheme={currentTheme} isMobile={isMobile} />
+            <SkeletonNotification currentTheme={currentTheme} isMobile={isMobile} />
+          </div>
+        ) : notifications.length === 0 ? (
+          <div className="no_notification_container">
+            <img src={no_notification_image} alt="No Notifications" className="no_notification_image" />
+            <h3 className="no_notification_text">{t('no_notifications')}</h3>
+          </div>
+        ) : (
+          <>
+            {notifications.map((notification) => (
+              <div
+                key={notification.id}
+                className="notification_card"
+                style={{
+                  borderColor: currentTheme["--border-color"],
+                  fontSize: notification.is_read ? "0.9rem" : "1rem",
+                  backgroundColor: currentTheme["--list-background-color"],
+                }}
+              >
+                <RiDeleteBin4Fill
+                  className="delete_notif_icon"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleDeleteNotification(notification.id);
+                  }}
+                />
+                <h3 className="notification_title">
+                  {translateNotificationTitle(notification.title)}
+
+                </h3>
+                <p className="notification_body_text">
+                  {translateNotificationBody(notification.body, notification.title)}
+                </p>
+                <p className="notification_date" style={{ color: currentTheme['--due-date-color'] }}>
+                  {new Date(notification.created_at).toLocaleString()}
+                </p>
+              </div>
+            ))}
+          </>
+        )}
+      </div>
+    </>
+
   );
 };
 

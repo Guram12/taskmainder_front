@@ -64,7 +64,8 @@ const SidebarComponent: React.FC<SidebarProps> = ({
   is_sidebar_open_on_mobile,
   setIsAuthenticated,
   activeSidebarBoardId,
-  setActiveSidebarBoardId
+  setActiveSidebarBoardId,
+
 }) => {
 
   const [isOpen, setIsOpen] = useState<boolean>(true);
@@ -134,7 +135,6 @@ const SidebarComponent: React.FC<SidebarProps> = ({
 
   const handle_burger_icon_click = () => {
     setIs_sidebar_open_on_mobile(!is_sidebar_open_on_mobile);
-    console.log('burger icon clicked, sidebar open state:', is_sidebar_open_on_mobile);
   }
 
 
@@ -145,6 +145,7 @@ const SidebarComponent: React.FC<SidebarProps> = ({
     console.log('Selected board:', board);
     localStorage.setItem('prev_selected_board_id', JSON.stringify(board.id));
     setSelectedComponent("Boards");
+    setIs_sidebar_open_on_mobile(true);
     navigate(`/mainpage/boards/`);
 
     // Update the sidebar selection
@@ -154,7 +155,6 @@ const SidebarComponent: React.FC<SidebarProps> = ({
       return; // Exit early if the board is already selected
     }
     try {
-      setIs_sidebar_open_on_mobile(true);
 
       if (setIsBoardsLoaded) {
         setIsBoardsLoaded(false); // Show skeleton loader
@@ -235,6 +235,7 @@ const SidebarComponent: React.FC<SidebarProps> = ({
     navigate("/mainpage/notification");
     setIs_new_notification_received(false);
     setSelectedBoard(null);
+    setActiveSidebarBoardId(null); 
     setIs_sidebar_open_on_mobile(true);
 
   }

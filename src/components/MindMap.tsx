@@ -37,7 +37,7 @@ import { FaClipboardList } from "react-icons/fa";
 import CustomTaskNode from './CustomTaskNode';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-
+import { Helmet } from "react-helmet";
 
 
 const nodeTypes = {
@@ -1325,306 +1325,316 @@ const MindMap: React.FC<MindMapProps> = ({
 
 
   return (
-    <div className='mindmap_main_container'>
-      {/* Task Update Modal */}
-      {isEditModalOpen && editingTask && (
-        <TaskUpdateModal
-          task={editingTask}
-          onClose={() => {
-            setIsEditModalOpen(false);
-            setEditingTask(null);
-          }}
-          updateTask={handleTaskUpdate}
-          deleteTask={handleTaskDelete}
-          currentTheme={currentTheme}
-          allCurrentBoardUsers={allCurrentBoardUsers}
-          associatedUsers={getAssociatedUsers(editingTask)}
-        />
-      )}
-
-      {isListEditModalOpen && editingList && (
-        <Mindmap_ListName_Modal
-          editingList={editingList}
-          isListEditModalOpen={isListEditModalOpen}
-          currentTheme={currentTheme}
-          handleCancelListEdit={handleCancelListEdit}
-          listNameInput={listNameInput}
-          setListNameInput={setListNameInput}
-          handleListNameUpdate={handleListNameUpdate}
-
-        />
-      )}
-      {isBoardEditModalOpen && editingBoard && (
-        <Mindmap_BoardName_Modal
-          editingBoard={editingBoard}
-          isBoardEditModalOpen={isBoardEditModalOpen}
-          currentTheme={currentTheme}
-          handleCancelBoardEdit={handleCancelBoardEdit}
-          boardNameInput={boardNameInput}
-          setBoardNameInput={setBoardNameInput}
-          handleBoardNameUpdate={handleBoardNameUpdate}
-        />
-      )}
-
-      {cannot_connect_to_task_warning.isConnected && (
-        <div className='warning_message_container'>
-          <div className='dark_background'> </div>
-          <div
-            className='warning_text'
-            style={{
-              color: currentTheme['--main-text-coloure'],
-              background: currentTheme['--list-background-color'],
-              borderColor: currentTheme['--border-color'],
+    <>
+      <Helmet>
+        <title>Mind Map | DailyDoer</title>
+        <meta name="description" content="Visualize your boards and tasks as a mind map. Organize, connect, and manage your workflow visually with DailyDoer's Mind Map feature." />
+        <meta name="robots" content="index, follow" />
+        <link rel="canonical" href="https://dailydoer.space/mainpage/mindmap" />
+      </Helmet>
+      
+      <div className='mindmap_main_container'>
+        {/* Task Update Modal */}
+        {isEditModalOpen && editingTask && (
+          <TaskUpdateModal
+            task={editingTask}
+            onClose={() => {
+              setIsEditModalOpen(false);
+              setEditingTask(null);
             }}
-          >
-            <div className='warning_little_container'>
-              <PiWarningFill className='taskwarning_icon' />
-              <p className='warning_text_message'
-                style={{
-                  color: currentTheme['--main-text-coloure'],
+            updateTask={handleTaskUpdate}
+            deleteTask={handleTaskDelete}
+            currentTheme={currentTheme}
+            allCurrentBoardUsers={allCurrentBoardUsers}
+            associatedUsers={getAssociatedUsers(editingTask)}
+          />
+        )}
 
-                }}
-              >
-                {cannot_connect_to_task_warning.message}
-              </p>
-            </div>
-            <button
-              onClick={() => setCannot_connect_to_task_warning({ isConnected: false, message: '' })}
-              className='warning_close_button'
+        {isListEditModalOpen && editingList && (
+          <Mindmap_ListName_Modal
+            editingList={editingList}
+            isListEditModalOpen={isListEditModalOpen}
+            currentTheme={currentTheme}
+            handleCancelListEdit={handleCancelListEdit}
+            listNameInput={listNameInput}
+            setListNameInput={setListNameInput}
+            handleListNameUpdate={handleListNameUpdate}
+
+          />
+        )}
+        {isBoardEditModalOpen && editingBoard && (
+          <Mindmap_BoardName_Modal
+            editingBoard={editingBoard}
+            isBoardEditModalOpen={isBoardEditModalOpen}
+            currentTheme={currentTheme}
+            handleCancelBoardEdit={handleCancelBoardEdit}
+            boardNameInput={boardNameInput}
+            setBoardNameInput={setBoardNameInput}
+            handleBoardNameUpdate={handleBoardNameUpdate}
+          />
+        )}
+
+        {cannot_connect_to_task_warning.isConnected && (
+          <div className='warning_message_container'>
+            <div className='dark_background'> </div>
+            <div
+              className='warning_text'
               style={{
-                backgroundColor: currentTheme['--task-background-color'],
+                color: currentTheme['--main-text-coloure'],
+                background: currentTheme['--list-background-color'],
                 borderColor: currentTheme['--border-color'],
               }}
             >
-              {t('close')}
-            </button>
-          </div>
-        </div>
-      )}
+              <div className='warning_little_container'>
+                <PiWarningFill className='taskwarning_icon' />
+                <p className='warning_text_message'
+                  style={{
+                    color: currentTheme['--main-text-coloure'],
 
-      {/* New Item Creation Modal */}
-      {newItemModal.isOpen && (
-        <div className='diagram_new_item_container'>
-          <div
-            className='new_item_modal'
-            style={{
-              background: currentTheme['--background-color'],
-              border: `1px solid ${currentTheme['--border-color']}`,
-            }}
-          >
-            <h3 style={{
-              color: currentTheme['--main-text-coloure'],
-              marginBottom: '15px',
-              fontSize: '16px'
-            }}>
-              {t('create')} {newItemModal.type === 'task' ? t('task_only') : t('list_only')}
-            </h3>
-
-            <input
-              type="text"
-              placeholder={`${t('enter')}  ${t(`${newItemModal.type}`)}  ${t('name')}...`}
-              value={newItemModal.name}
-              onChange={(e) => setNewItemModal(prev => ({ ...prev, name: e.target.value }))}
-              onKeyPress={(e) => {
-                if (e.key === 'Enter' && newItemModal.name.trim()) {
-                  handleCreateNewItem();
-                }
-              }}
-              className='new_item_input'
-              maxLength={newItemModal.type === 'task' ? 50 : 1000}
-              style={{
-                background: currentTheme['--task-background-color'],
-                color: currentTheme['--main-text-coloure'],
-                border: `1px solid ${currentTheme['--border-color']}`,
-                ['--placeholder-color']: currentTheme['--due-date-color'],
-              } as React.CSSProperties}
-              autoFocus
-            />
-
-            <div className='create_new_item_buttons_cont' >
+                  }}
+                >
+                  {cannot_connect_to_task_warning.message}
+                </p>
+              </div>
               <button
-                onClick={handleCancelNewItem}
-                className='cancel_new_item_button'
+                onClick={() => setCannot_connect_to_task_warning({ isConnected: false, message: '' })}
+                className='warning_close_button'
                 style={{
-                  background: currentTheme['--task-background-color'],
-                  color: currentTheme['--main-text-coloure'],
+                  backgroundColor: currentTheme['--task-background-color'],
                   borderColor: currentTheme['--border-color'],
                 }}
               >
-                {t('cancel')}
-              </button>
-              <button
-                onClick={handleCreateNewItem}
-                disabled={!newItemModal.name.trim()}
-                className='create_new_item_button'
-                style={{
-                  background: currentTheme['--task-background-color'],
-                  color: currentTheme['--main-text-coloure'],
-                  borderColor: currentTheme['--border-color'],
-                  cursor: newItemModal.name.trim() ? 'pointer' : 'not-allowed',
-                }}
-              >
-                {t('create')}
+                {t('close')}
               </button>
             </div>
           </div>
-        </div>
-      )}
+        )}
 
-      {/* Board Selection Panel */}
-      {boards.length > 0 && (
-        <div
-          className='mindmap_board_selection_panel_container'
-          style={{
-            background: currentTheme['--background-color'],
-            borderColor: currentTheme['--border-color'],
-          }}
-        >
-
-          {maindmap_selected_board_data.id !== 0 && (
+        {/* New Item Creation Modal */}
+        {newItemModal.isOpen && (
+          <div className='diagram_new_item_container'>
             <div
-              className='mindmap_board_return_container'
-              style={{ background: currentTheme['--task-background-color'] }}
-              onClick={returnToBoards}
-            >
-              <FaClipboardList className='mindmap_board_selection_icon'
-                style={{ color: currentTheme['--main-text-coloure'] }}
-              />
-              <p className='return_board_p'
-                onClick={() => setActiveSidebarBoardId(maindmap_selected_board_data.id)}
-              > {t('boards_mode')}</p>
-            </div>
-          )}
-
-
-          <Select
-            value={boardOptions.find(opt => opt.value === maindmap_selected_board_data?.id)}
-            onChange={option => handleBoardChange(String(option?.value))}
-            options={boardOptions}
-            styles={customStyles}
-            placeholder="Select a board..."
-            isSearchable
-          />
-
-          {maindmap_selected_board_data.id !== 0 && (
-            <>
-              {isTempNodeCreated && tempNodeId ? (
-                <button
-                  onClick={() => handle_delete_new_node(tempNodeId)}
-                  className='delete_new_node_button'
-                  style={{
-                    background: currentTheme['--task-background-color'],
-                    color: currentTheme['--main-text-coloure'],
-                  }}
-                >
-                  {t('delete')}
-                </button>
-              ) : (
-                <button
-                  onClick={addNewNode}
-                  style={{
-                    background: currentTheme['--task-background-color'],
-                    color: currentTheme['--main-text-coloure'],
-                    border: 'none',
-                    padding: '5px 10px',
-                    borderRadius: '4px',
-                    cursor: 'pointer',
-                    fontSize: '12px'
-                  }}
-                  className='add_new_node_button'
-                >
-                  {t('add_list_task')}
-                </button>
-              )}
-            </>
-          )}
-
-          {viewMode === 'board' && maindmap_selected_board_data && (
-            <button
-              onClick={handleResetPositions}
+              className='new_item_modal'
               style={{
-                background: currentTheme['--task-background-color'],
-                color: currentTheme['--main-text-coloure'],
-                border: 'none',
-                padding: '5px 10px',
-                borderRadius: '4px',
-                cursor: 'pointer',
-                fontSize: '12px'
+                background: currentTheme['--background-color'],
+                border: `1px solid ${currentTheme['--border-color']}`,
               }}
-              className='reset_positions_button'
             >
-              {t('reset_positions')}
-            </button>
-          )}
+              <h3 style={{
+                color: currentTheme['--main-text-coloure'],
+                marginBottom: '15px',
+                fontSize: '16px'
+              }}>
+                {t('create')} {newItemModal.type === 'task' ? t('task_only') : t('list_only')}
+              </h3>
 
-        </div>
+              <input
+                type="text"
+                placeholder={`${t('enter')}  ${t(`${newItemModal.type}`)}  ${t('name')}...`}
+                value={newItemModal.name}
+                onChange={(e) => setNewItemModal(prev => ({ ...prev, name: e.target.value }))}
+                onKeyPress={(e) => {
+                  if (e.key === 'Enter' && newItemModal.name.trim()) {
+                    handleCreateNewItem();
+                  }
+                }}
+                className='new_item_input'
+                maxLength={newItemModal.type === 'task' ? 50 : 1000}
+                style={{
+                  background: currentTheme['--task-background-color'],
+                  color: currentTheme['--main-text-coloure'],
+                  border: `1px solid ${currentTheme['--border-color']}`,
+                  ['--placeholder-color']: currentTheme['--due-date-color'],
+                } as React.CSSProperties}
+                autoFocus
+              />
 
-      )}
+              <div className='create_new_item_buttons_cont' >
+                <button
+                  onClick={handleCancelNewItem}
+                  className='cancel_new_item_button'
+                  style={{
+                    background: currentTheme['--task-background-color'],
+                    color: currentTheme['--main-text-coloure'],
+                    borderColor: currentTheme['--border-color'],
+                  }}
+                >
+                  {t('cancel')}
+                </button>
+                <button
+                  onClick={handleCreateNewItem}
+                  disabled={!newItemModal.name.trim()}
+                  className='create_new_item_button'
+                  style={{
+                    background: currentTheme['--task-background-color'],
+                    color: currentTheme['--main-text-coloure'],
+                    borderColor: currentTheme['--border-color'],
+                    cursor: newItemModal.name.trim() ? 'pointer' : 'not-allowed',
+                  }}
+                >
+                  {t('create')}
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
 
-
-      <div className='mindmap_diagram_container'>
-        {diagram_loading ? (
-          <div className="diagram_loader_container"><HashLoader color={currentTheme['--main-text-coloure']} className='hashloader' /></div>
-        ) : (
-          <ReactFlow
-            nodes={nodes}
-            edges={edges}
-            onNodesChange={handleNodesChange}
-            onEdgesChange={onEdgesChange}
-            onConnect={onConnect}
-            onNodeClick={onNodeClick}
-            fitView={true}
-            multiSelectionKeyCode="Shift"
-            deleteKeyCode={null}
-            nodesDraggable={true}
-            nodesConnectable={true}
-            elementsSelectable={true}
-            nodeTypes={nodeTypes}
+        {/* Board Selection Panel */}
+        {boards.length > 0 && (
+          <div
+            className='mindmap_board_selection_panel_container'
             style={{
               background: currentTheme['--background-color'],
-              width: '800px',
-              height: '600px',
-            }}
-            onInit={(instance) => {
-              reactFlowInstanceRef.current = instance;
+              borderColor: currentTheme['--border-color'],
             }}
           >
-            <Controls />
-            <MiniMap
-              nodeColor={(node) => {
-                if (node.id.startsWith('board-')) return '#6366f1';
-                if (node.id.startsWith('list-')) return '#10b981';
-                if (node.id.startsWith('task-')) {
-                  const taskData = node.data as any;
-                  if (taskData.completed) return '#6b7280';
-                  if (taskData.priority === 'red') return '#ef4444';
-                  if (taskData.priority === 'orange') return '#f59e0b';
-                  if (taskData.priority === 'green') return '#22c55e';
-                  return `${currentTheme['--task-background-color']}`;
-                }
-                return '#10b981';
-              }}
-              nodeStrokeWidth={3}
-              zoomable
-              pannable
-              maskColor="rgba(30, 41, 59, 0.8)"
-              style={{
-                backgroundColor: currentTheme['--background-color'],
-              }}
+
+            {maindmap_selected_board_data.id !== 0 && (
+              <div
+                className='mindmap_board_return_container'
+                style={{ background: currentTheme['--task-background-color'] }}
+                onClick={returnToBoards}
+              >
+                <FaClipboardList className='mindmap_board_selection_icon'
+                  style={{ color: currentTheme['--main-text-coloure'] }}
+                />
+                <p className='return_board_p'
+                  onClick={() => setActiveSidebarBoardId(maindmap_selected_board_data.id)}
+                > {t('boards_mode')}</p>
+              </div>
+            )}
+
+
+            <Select
+              value={boardOptions.find(opt => opt.value === maindmap_selected_board_data?.id)}
+              onChange={option => handleBoardChange(String(option?.value))}
+              options={boardOptions}
+              styles={customStyles}
+              placeholder="Select a board..."
+              isSearchable
             />
 
-            <Background
-              variant={BackgroundVariant.Dots}
-              gap={20}
-              size={1}
-              color={currentTheme['--due-date-color']}
-            />
-          </ReactFlow>
+            {maindmap_selected_board_data.id !== 0 && (
+              <>
+                {isTempNodeCreated && tempNodeId ? (
+                  <button
+                    onClick={() => handle_delete_new_node(tempNodeId)}
+                    className='delete_new_node_button'
+                    style={{
+                      background: currentTheme['--task-background-color'],
+                      color: currentTheme['--main-text-coloure'],
+                    }}
+                  >
+                    {t('delete')}
+                  </button>
+                ) : (
+                  <button
+                    onClick={addNewNode}
+                    style={{
+                      background: currentTheme['--task-background-color'],
+                      color: currentTheme['--main-text-coloure'],
+                      border: 'none',
+                      padding: '5px 10px',
+                      borderRadius: '4px',
+                      cursor: 'pointer',
+                      fontSize: '12px'
+                    }}
+                    className='add_new_node_button'
+                  >
+                    {t('add_list_task')}
+                  </button>
+                )}
+              </>
+            )}
+
+            {viewMode === 'board' && maindmap_selected_board_data && (
+              <button
+                onClick={handleResetPositions}
+                style={{
+                  background: currentTheme['--task-background-color'],
+                  color: currentTheme['--main-text-coloure'],
+                  border: 'none',
+                  padding: '5px 10px',
+                  borderRadius: '4px',
+                  cursor: 'pointer',
+                  fontSize: '12px'
+                }}
+                className='reset_positions_button'
+              >
+                {t('reset_positions')}
+              </button>
+            )}
+
+          </div>
 
         )}
-      </div>
 
-    </div>
+
+        <div className='mindmap_diagram_container'>
+          {diagram_loading ? (
+            <div className="diagram_loader_container"><HashLoader color={currentTheme['--main-text-coloure']} className='hashloader' /></div>
+          ) : (
+            <ReactFlow
+              nodes={nodes}
+              edges={edges}
+              onNodesChange={handleNodesChange}
+              onEdgesChange={onEdgesChange}
+              onConnect={onConnect}
+              onNodeClick={onNodeClick}
+              fitView={true}
+              multiSelectionKeyCode="Shift"
+              deleteKeyCode={null}
+              nodesDraggable={true}
+              nodesConnectable={true}
+              elementsSelectable={true}
+              nodeTypes={nodeTypes}
+              style={{
+                background: currentTheme['--background-color'],
+                width: '800px',
+                height: '600px',
+              }}
+              onInit={(instance) => {
+                reactFlowInstanceRef.current = instance;
+              }}
+            >
+              <Controls />
+              <MiniMap
+                nodeColor={(node) => {
+                  if (node.id.startsWith('board-')) return '#6366f1';
+                  if (node.id.startsWith('list-')) return '#10b981';
+                  if (node.id.startsWith('task-')) {
+                    const taskData = node.data as any;
+                    if (taskData.completed) return '#6b7280';
+                    if (taskData.priority === 'red') return '#ef4444';
+                    if (taskData.priority === 'orange') return '#f59e0b';
+                    if (taskData.priority === 'green') return '#22c55e';
+                    return `${currentTheme['--task-background-color']}`;
+                  }
+                  return '#10b981';
+                }}
+                nodeStrokeWidth={3}
+                zoomable
+                pannable
+                maskColor="rgba(30, 41, 59, 0.8)"
+                style={{
+                  backgroundColor: currentTheme['--background-color'],
+                }}
+              />
+
+              <Background
+                variant={BackgroundVariant.Dots}
+                gap={20}
+                size={1}
+                color={currentTheme['--due-date-color']}
+              />
+            </ReactFlow>
+
+          )}
+        </div>
+
+      </div>
+    </>
+
   );
 };
 

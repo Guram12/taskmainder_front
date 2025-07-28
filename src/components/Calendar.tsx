@@ -8,7 +8,7 @@ import { FaClipboardList } from "react-icons/fa";
 import { IoMdListBox } from "react-icons/io";
 import { Tooltip } from 'antd';
 import { useTranslation } from 'react-i18next';
-
+import { Helmet } from "react-helmet";
 
 
 interface CalendarProps {
@@ -220,85 +220,99 @@ const Calendar: React.FC<CalendarProps> = ({ boards, currentTheme, fetchBoards }
 
 
   return (
-    <div className="main_calendar_container">
-      <div className="calendar_year_controls">
-        < MdOutlineKeyboardDoubleArrowLeft onClick={() => handleYearChange('prev')} style={{ color: currentTheme["--main-text-coloure"] }} className='year_change_arrow_icon' />
-        <h2 className='currentyear_h2' style={{ color: currentTheme["--main-text-coloure"] }} >{currentYear}</h2>
-        <MdOutlineKeyboardDoubleArrowRight onClick={() => handleYearChange('next')} style={{ color: currentTheme["--main-text-coloure"] }} className='year_change_arrow_icon' />
-        <div className="calendar_tooltip_cont">
+    <>
+      <Helmet>
+        <title>Calendar | DailyDoer</title>
+        <meta name="description" content="View all your tasks and due dates in a yearly calendar. Stay organized and never miss a deadline with DailyDoer's calendar view." />
+        <meta name="robots" content="index, follow" />
+        <link rel="canonical" href="https://dailydoer.space/mainpage/calendar" />
+      </Helmet>
 
-          <Tooltip
-            title={t('no_tasks_due_on_this_day')}
-            placement="right"
-            color={currentTheme["--list-background-color"]}
-            styles={{
-              body: {
-                color: currentTheme["--main-text-coloure"],
-                background: currentTheme["--list-background-color"],
-              },
-            }}
-            open={showCalendarTooltip}
-          >
-            <span style={{ marginLeft: 8, cursor: 'pointer', fontSize: 18, color: currentTheme["--main-text-coloure"] }}>🛈</span>
-          </Tooltip>
-        </div>
-      </div>
+      <div className="main_calendar_container"
+        style={{
+          backgroundColor: currentTheme['--background-color']
+        }}
+      >
+        <div className="calendar_year_controls">
+          < MdOutlineKeyboardDoubleArrowLeft onClick={() => handleYearChange('prev')} style={{ color: currentTheme["--main-text-coloure"] }} className='year_change_arrow_icon' />
+          <h2 className='currentyear_h2' style={{ color: currentTheme["--main-text-coloure"] }} >{currentYear}</h2>
+          <MdOutlineKeyboardDoubleArrowRight onClick={() => handleYearChange('next')} style={{ color: currentTheme["--main-text-coloure"] }} className='year_change_arrow_icon' />
+          <div className="calendar_tooltip_cont">
 
-      <div className="yearly_calendar">
-        {months.map((_, index) => renderMonth(index))}
-      </div>
-
-      {selectedDay && (
-        <div className="modal_overlay" onClick={closeModal}>
-          <div
-            className="selected_day_info"
-            style={{ backgroundColor: `${currentTheme['--list-background-color']}` }}
-            onClick={(e) => e.stopPropagation()}
-          >
-            <h3 style={{ color: currentTheme['--main-text-coloure'] }} >{t('tasks_for')} {selectedDay} {t('tvis')}</h3>
-
-            {tasksForSelectedDay.length > 0 && (
-              <div className="selected_day_container_list">
-                {tasksForSelectedDay.map((board, boardIndex) => (
-                  <div key={boardIndex} className="selected_day_task_container" style={{ borderColor: currentTheme['--border-color'] }}>
-                    <div className="selected_day_task_board_container" style={{ backgroundColor: `${currentTheme['--list-background-color']}` }}>
-                      <div className="selected_day_task_board">
-                        <FaClipboardList />
-                        <h2 className='selected_day_boardname_h2'>{board.boardName}</h2>
-                      </div>
-                    </div>
-                    {Object.entries(board.lists).map(([listName, tasks], listIndex) => (
-                      <div key={listIndex} className="selected_day_task_list" style={{ borderColor: currentTheme['--border-color'] }}>
-                        <div className='selected_day_icon_list_h2' style={{ backgroundColor: `${currentTheme['--list-background-color']}` }}>
-                          <IoMdListBox />
-                          <h3 className='selected_day_h2' >{listName}</h3>
-                        </div>
-
-                        {tasks.map((task, taskIndex) => (
-                          <div key={taskIndex} className="selected_day_each_task" style={{ backgroundColor: currentTheme['--task-background-color'] }}>
-                            {task.priority && (
-                              <div className='selected_day_each_task_priority' style={getPriorityStyle(task.priority)}>  </div>
-                            )}
-                            <p className='selected_day_each_task_title' style={{ color: currentTheme['--main-text-coloure'] }} >{task.taskTitle}</p>
-                            <p className='selected_day_each_task_due_date' style={{ color: currentTheme['--due-date-color'] }}>
-                              {t('due_date')}
-                              {task.dueDate ? new Date(task.dueDate).toLocaleTimeString([],
-                                { hour: '2-digit', minute: '2-digit' }) : ''}
-                            </p>
-                          </div>
-                        ))}
-
-                      </div>
-                    ))}
-                  </div>
-                ))}
-              </div>
-            )}
-            <button onClick={closeModal} className='selected_day_close_button'>{t('close')}</button>
+            <Tooltip
+              title={t('no_tasks_due_on_this_day')}
+              placement="right"
+              color={currentTheme["--list-background-color"]}
+              styles={{
+                body: {
+                  color: currentTheme["--main-text-coloure"],
+                  background: currentTheme["--list-background-color"],
+                },
+              }}
+              open={showCalendarTooltip}
+            >
+              <span style={{ marginLeft: 8, cursor: 'pointer', fontSize: 18, color: currentTheme["--main-text-coloure"] }}>🛈</span>
+            </Tooltip>
           </div>
         </div>
-      )}
-    </div>
+
+        <div className="yearly_calendar">
+          {months.map((_, index) => renderMonth(index))}
+        </div>
+
+        {selectedDay && (
+          <div className="modal_overlay" onClick={closeModal}>
+            <div
+              className="selected_day_info"
+              style={{ backgroundColor: `${currentTheme['--list-background-color']}` }}
+              onClick={(e) => e.stopPropagation()}
+            >
+              <h3 style={{ color: currentTheme['--main-text-coloure'] }} >{t('tasks_for')} {selectedDay} {t('tvis')}</h3>
+
+              {tasksForSelectedDay.length > 0 && (
+                <div className="selected_day_container_list">
+                  {tasksForSelectedDay.map((board, boardIndex) => (
+                    <div key={boardIndex} className="selected_day_task_container" style={{ borderColor: currentTheme['--border-color'] }}>
+                      <div className="selected_day_task_board_container" style={{ backgroundColor: `${currentTheme['--list-background-color']}` }}>
+                        <div className="selected_day_task_board">
+                          <FaClipboardList />
+                          <h2 className='selected_day_boardname_h2'>{board.boardName}</h2>
+                        </div>
+                      </div>
+                      {Object.entries(board.lists).map(([listName, tasks], listIndex) => (
+                        <div key={listIndex} className="selected_day_task_list" style={{ borderColor: currentTheme['--border-color'] }}>
+                          <div className='selected_day_icon_list_h2' style={{ backgroundColor: `${currentTheme['--list-background-color']}` }}>
+                            <IoMdListBox />
+                            <h3 className='selected_day_h2' >{listName}</h3>
+                          </div>
+
+                          {tasks.map((task, taskIndex) => (
+                            <div key={taskIndex} className="selected_day_each_task" style={{ backgroundColor: currentTheme['--task-background-color'] }}>
+                              {task.priority && (
+                                <div className='selected_day_each_task_priority' style={getPriorityStyle(task.priority)}>  </div>
+                              )}
+                              <p className='selected_day_each_task_title' style={{ color: currentTheme['--main-text-coloure'] }} >{task.taskTitle}</p>
+                              <p className='selected_day_each_task_due_date' style={{ color: currentTheme['--due-date-color'] }}>
+                                {t('due_date')}
+                                {task.dueDate ? new Date(task.dueDate).toLocaleTimeString([],
+                                  { hour: '2-digit', minute: '2-digit' }) : ''}
+                              </p>
+                            </div>
+                          ))}
+
+                        </div>
+                      ))}
+                    </div>
+                  ))}
+                </div>
+              )}
+              <button onClick={closeModal} className='selected_day_close_button'>{t('close')}</button>
+            </div>
+          </div>
+        )}
+      </div>
+    </>
+
   );
 };
 

@@ -82,6 +82,8 @@ const App: React.FC = () => {
   // ==============================================================================================
   const [selectedComponent, setSelectedComponent] = useState<string>("Boards");
 
+
+
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [profileData, setProfileData] = useState<ProfileData>({
@@ -93,7 +95,7 @@ const App: React.FC = () => {
     timezone: '',
     is_social_account: false,
     discord_webhook_url: null,
-    notification_preference: 'email', 
+    notification_preference: 'email',
   });
 
   const default_is_custom_theme_selected = localStorage.getItem('isCustomThemeSelected') === null ? false : localStorage.getItem('isCustomThemeSelected') === 'true';
@@ -169,6 +171,9 @@ const App: React.FC = () => {
     background_image: null,
     creation_date: '',
   });
+
+
+  const [activeSidebarBoardId, setActiveSidebarBoardId] = useState<number | null>(selectedBoard?.id ?? null);
 
   const [isBoardsLoaded, setIsBoardsLoaded] = useState<boolean>(false);
 
@@ -450,6 +455,7 @@ const App: React.FC = () => {
         setSelectedComponent={setSelectedComponent}
         setSelectedBoard={setSelectedBoard}
         boards={boards}
+        setActiveSidebarBoardId={setActiveSidebarBoardId}
       />
       <Routes>
         <Route path="/"
@@ -502,6 +508,8 @@ const App: React.FC = () => {
             setIsAuthenticated={setIsAuthenticated}
             setSelectedComponent={setSelectedComponent}
             selectedComponent={selectedComponent}
+            setActiveSidebarBoardId={setActiveSidebarBoardId}
+            activeSidebarBoardId={activeSidebarBoardId}
           />} />
 
       </Routes>
@@ -511,3 +519,40 @@ const App: React.FC = () => {
 };
 
 export default App;
+
+
+
+// import { Helmet } from "react-helmet";
+// import { useTranslation } from "react-i18next";
+
+// const MyPage = () => {
+//   const { t, i18n } = useTranslation();
+
+//   return (
+//     <>
+//       <Helmet>
+//         <title>{t("mainpage_title")}</title>
+//         <meta name="description" content={t("mainpage_description")} />
+//         <meta name="robots" content="index, follow" />
+//         <link rel="canonical" href="https://dailydoer.space/mainpage" />
+//         {/* Optional: set the language for the page */}
+//         <html lang={i18n.language} />
+//       </Helmet>
+//       {/* ...existing code... */}
+//     </>
+//   );
+// };
+
+
+
+
+// // en.json
+// {
+//   "mainpage_title": "Main Page | DailyDoer",
+//   "mainpage_description": "Organize your tasks, boards, calendar, and more with DailyDoer."
+// }
+// // ka.json
+// {
+//   "mainpage_title": "მთავარი გვერდი | DailyDoer",
+//   "mainpage_description": "დაალაგეთ თქვენი ამოცანები, დაფები, კალენდარი და სხვა DailyDoer-თან ერთად."
+// }

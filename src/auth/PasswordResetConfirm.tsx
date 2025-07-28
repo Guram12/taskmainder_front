@@ -7,6 +7,7 @@ import { PiPassword } from "react-icons/pi";
 import { FaRegEye } from "react-icons/fa";
 import { FaRegEyeSlash } from "react-icons/fa";
 import { useTranslation } from 'react-i18next';
+import { Helmet } from "react-helmet";
 
 
 
@@ -91,107 +92,116 @@ const PasswordResetConfirm: React.FC<PasswordResetConfirmProps> = ({ currentThem
 
 
   return (
-    <div className='confirm_reset_container' >
+    <>
+      <Helmet>
+        <title>Set New Password | DailyDoer</title>
+        <meta name="description" content="Set a new password for your DailyDoer account." />
+        <meta name="robots" content="noindex, nofollow" />
+        <link rel="canonical" href="https://dailydoer.space/password-reset-confirm" />
+      </Helmet>
+      <div className='confirm_reset_container' >
 
-      <h2 style={{ color: currentTheme['--main-text-coloure'] }}>{t('create_new_password')}</h2>
-      <div className='confirm_reset_child_container' style={{ borderColor: currentTheme['--border-color'] }}>
-        <form onSubmit={handleSubmit} className='confirm_reset_form'>
+        <h2 style={{ color: currentTheme['--main-text-coloure'] }}>{t('create_new_password')}</h2>
+        <div className='confirm_reset_child_container' style={{ borderColor: currentTheme['--border-color'] }}>
+          <form onSubmit={handleSubmit} className='confirm_reset_form'>
 
-          <div className='confirm_password_group'>
-            <PiPassword style={{ color: currentTheme['--main-text-coloure'] }} className='confirm_reset_icon' />
-            <input
-              type={show_password ? 'text' : 'password'}
-              className='confirm_password_input'
-              value={newPassword}
-              onChange={(e) => setNewPassword(e.target.value)}
-              required
-              placeholder={t('new_Password')}
-              style={{
-                borderColor: currentTheme['--border-color'],
-                color: currentTheme['--main-text-coloure'],
-                backgroundColor: currentTheme['--list-background-color'],
-                ['--placeholder-color']: currentTheme['--due-date-color'],
-              } as React.CSSProperties}
-            />
-          </div>
+            <div className='confirm_password_group'>
+              <PiPassword style={{ color: currentTheme['--main-text-coloure'] }} className='confirm_reset_icon' />
+              <input
+                type={show_password ? 'text' : 'password'}
+                className='confirm_password_input'
+                value={newPassword}
+                onChange={(e) => setNewPassword(e.target.value)}
+                required
+                placeholder={t('new_Password')}
+                style={{
+                  borderColor: currentTheme['--border-color'],
+                  color: currentTheme['--main-text-coloure'],
+                  backgroundColor: currentTheme['--list-background-color'],
+                  ['--placeholder-color']: currentTheme['--due-date-color'],
+                } as React.CSSProperties}
+              />
+            </div>
 
-          <div className='confirm_password_group'>
-            <PiPassword style={{ color: currentTheme['--main-text-coloure'] }} className='confirm_reset_icon' />
-            <input
-              type={show_password ? 'text' : 'password'}
-              className='confirm_password_input'
-              value={confirmPassword}
-              onChange={(e) => setConfirmPassword(e.target.value)}
-              required
-              placeholder={t('confirm_new_Password')}
-              style={{
-                borderColor: currentTheme['--border-color'],
-                color: currentTheme['--main-text-coloure'],
-                backgroundColor: currentTheme['--list-background-color'],
-                ['--placeholder-color']: currentTheme['--due-date-color'],
-              } as React.CSSProperties}
-            />
-          </div>
+            <div className='confirm_password_group'>
+              <PiPassword style={{ color: currentTheme['--main-text-coloure'] }} className='confirm_reset_icon' />
+              <input
+                type={show_password ? 'text' : 'password'}
+                className='confirm_password_input'
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+                required
+                placeholder={t('confirm_new_Password')}
+                style={{
+                  borderColor: currentTheme['--border-color'],
+                  color: currentTheme['--main-text-coloure'],
+                  backgroundColor: currentTheme['--list-background-color'],
+                  ['--placeholder-color']: currentTheme['--due-date-color'],
+                } as React.CSSProperties}
+              />
+            </div>
 
-          <div className="show_password_container" >
-            {show_password ? (
-              <FaRegEye className='show_password' onClick={() => setShow_password(!show_password)} />
-            ) : (
-              <FaRegEyeSlash className='show_password' onClick={() => setShow_password(!show_password)} />
-            )}
-            <p onClick={() => setShow_password(!show_password)}
-              style={{
-                cursor: 'pointer',
-                color: currentTheme['--main-text-coloure'],
-                margin: '0px',
-              }}
-            >
-              {show_password ? t('hide_password') : t('show_password')}
-            </p>
-          </div>
-
-
-          {/* password validations  */}
-          <div className='register_password_validations_container'>
-            <p className='register_password_validations' style={{ color: isLongEnough ? 'mediumseagreen' : 'red' }}>
-              {!isLongEnough && <span>*</span>} {t('minimum_8_symbols')}
-            </p>
-            <p className='register_password_validations' style={{ color: hasUppercase ? 'mediumseagreen' : 'red' }}>
-              {!hasUppercase && <span>*</span>} {t('at_least_one_uppercase_letter')}
-            </p>
-            <p className='register_password_validations' style={{ color: hasNumber ? 'mediumseagreen' : 'red' }}>
-              {!hasNumber && <span>*</span>} {t('at_least_one_number')}
-            </p>
-            <p className='register_password_validations' style={{ color: isPasswordValid ? 'mediumseagreen' : 'red' }}>
-              {isPasswordValid ? (
-                <span>{t('passwords_match')}</span>
+            <div className="show_password_container" >
+              {show_password ? (
+                <FaRegEye className='show_password' onClick={() => setShow_password(!show_password)} />
               ) : (
-                <span> {t('Passwords_do_not_match')}</span>
+                <FaRegEyeSlash className='show_password' onClick={() => setShow_password(!show_password)} />
               )}
-            </p>
-          </div>
-
-          <button
-            type="submit"
-            style={{
-              backgroundColor: currentTheme['--list-background-color'],
-              borderColor: currentTheme['--border-color'],
-              color: currentTheme['--main-text-coloure'],
-              cursor: isLongEnough && hasUppercase && hasNumber && isPasswordValid ? 'pointer' : 'not-allowed',
-            }}
-            className='confirm_reset_button'
-            disabled={!isPasswordAcceptable}
-          >
-            {t('confirm')}
-          </button>
-
-          {message && <p style={{ color: 'seagreen', marginTop: '10px' }}>{message}</p>}
-          {error && <p style={{ color: 'red', marginTop: '10px' }}>{error}</p>}
-        </form>
+              <p onClick={() => setShow_password(!show_password)}
+                style={{
+                  cursor: 'pointer',
+                  color: currentTheme['--main-text-coloure'],
+                  margin: '0px',
+                }}
+              >
+                {show_password ? t('hide_password') : t('show_password')}
+              </p>
+            </div>
 
 
+            {/* password validations  */}
+            <div className='register_password_validations_container'>
+              <p className='register_password_validations' style={{ color: isLongEnough ? 'mediumseagreen' : 'red' }}>
+                {!isLongEnough && <span>*</span>} {t('minimum_8_symbols')}
+              </p>
+              <p className='register_password_validations' style={{ color: hasUppercase ? 'mediumseagreen' : 'red' }}>
+                {!hasUppercase && <span>*</span>} {t('at_least_one_uppercase_letter')}
+              </p>
+              <p className='register_password_validations' style={{ color: hasNumber ? 'mediumseagreen' : 'red' }}>
+                {!hasNumber && <span>*</span>} {t('at_least_one_number')}
+              </p>
+              <p className='register_password_validations' style={{ color: isPasswordValid ? 'mediumseagreen' : 'red' }}>
+                {isPasswordValid ? (
+                  <span>{t('passwords_match')}</span>
+                ) : (
+                  <span> {t('Passwords_do_not_match')}</span>
+                )}
+              </p>
+            </div>
+
+            <button
+              type="submit"
+              style={{
+                backgroundColor: currentTheme['--list-background-color'],
+                borderColor: currentTheme['--border-color'],
+                color: currentTheme['--main-text-coloure'],
+                cursor: isLongEnough && hasUppercase && hasNumber && isPasswordValid ? 'pointer' : 'not-allowed',
+              }}
+              className='confirm_reset_button'
+              disabled={!isPasswordAcceptable}
+            >
+              {t('confirm')}
+            </button>
+
+            {message && <p style={{ color: 'seagreen', marginTop: '10px' }}>{message}</p>}
+            {error && <p style={{ color: 'red', marginTop: '10px' }}>{error}</p>}
+          </form>
+
+
+        </div>
       </div>
-    </div>
+    </>
+
   );
 };
 
