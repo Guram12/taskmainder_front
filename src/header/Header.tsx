@@ -156,7 +156,9 @@ const Header: React.FC<HeaderProps> = ({
   // ===================================== handle user image click =========================================
   const handleUserImageClick = () => {
     setSelectedBoard(null);
+    setActiveSidebarBoardId(null);
     setSelectedComponent('Settings');
+    navigate('/mainpage/settings/');
   };
 
 
