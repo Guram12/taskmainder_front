@@ -13,7 +13,7 @@ import type { MenuProps } from 'antd';
 import { Dropdown } from 'antd';
 import { useTranslation } from 'react-i18next';
 import { GlobalOutlined } from '@ant-design/icons';
-import { Helmet } from "react-helmet";
+import { Helmet } from "react-helmet-async";
 
 
 interface loginProps {
@@ -101,17 +101,6 @@ const Login: React.FC<loginProps> = ({ setIsAuthenticated, currentTheme, languag
     localStorage.setItem('language', selectedLanguage);
     i18n.changeLanguage(selectedLanguage);
   };
-
-  // ========================================== logo snimations ===========================================
-
-
-
-
-
-
-
-
-
 
 
 

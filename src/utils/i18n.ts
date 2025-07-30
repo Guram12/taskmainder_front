@@ -253,6 +253,7 @@ const resources = {
       'discord': 'Discord',
       'both': 'Both',
       'save_preferences': 'Save Preferences',
+      'notification_preferences_text': "Here you can choose how you'd like to receive notifications: by email, Discord, or both. Set up your Discord webhook to enable Discord notifications. Don't forget to save your preferences!",
       //tutorial component
       'how_to_create_a_discord_webhook_url': 'How to create a Discord Webhook URL',
       'go_to_discord_and_open_your_server_settings.': 'Go to Discord and open your server settings.',
@@ -501,7 +502,7 @@ const resources = {
       'change_password': 'პაროლის შეცვლა',
       'change_password_text': 'აქ შეგიძლიათ შეცვალოთ ანგარიშის პაროლი. თუ შესული ხართ სოციალური ანგარიშით, ეს ფუნქცია ხელმისაწვდომი არ იქნება.',
       'custom_theme': 'თემის მორგება',
-      'custom_theme_text': 'აქ შეგიძლიათ მორგოთ დაფების ფერები და ფონის სურათები.',
+      'custom_theme_text': 'აქ შეგიძლიათ შეცვალოთ დაფების ფერები და ფონის სურათები.',
       'Delete Account': 'ანგარიშის წაშლა',
       'delete_account_text': 'ეს არის საფრთხის ზონა. აქ შეგიძლიათ სამუდამოდ წაშალოთ თქვენი ანგარიში. გთხოვთ, იყავით ფრთხილად.',
       'next': 'შემდეგი',
@@ -519,6 +520,7 @@ const resources = {
       'discord': 'Discord',
       'both': 'ორივე',
       'save_preferences': 'პარამეტრების შენახვა',
+      'notification_preferences_text': 'აქ შეგიძლიათ აირჩიოთ, როგორ გსურთ შეტყობინებების მიღება: ელფოსტით, Discord-ზე ან ორივეგან. Discord შეტყობინებების მისაღებად დააყენეთ თქვენი Discord webhook მისამართი. არ დაგავიწყდეთ პარამეტრების შენახვა!',
       //tutorial component
       'how_to_create_a_discord_webhook_url': 'როგორ შევქმნათ Discord-ის Webhook URL',
       'go_to_discord_and_open_your_server_settings.': 'გახსენით Discord და შეიყვანეთ სერვერის პარამეტებში.',

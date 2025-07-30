@@ -8,7 +8,7 @@ import { FaClipboardList } from "react-icons/fa";
 import { IoMdListBox } from "react-icons/io";
 import { Tooltip } from 'antd';
 import { useTranslation } from 'react-i18next';
-import { Helmet } from "react-helmet";
+import { Helmet } from "react-helmet-async";
 
 
 interface CalendarProps {
