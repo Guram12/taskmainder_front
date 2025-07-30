@@ -1,11 +1,10 @@
 import './App.css'
-import React, { useEffect } from 'react'
+import React, { useEffect, useState, useRef } from 'react'
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import MainPage from './components/MainPage'
 import Login from './auth/login'
 import Register from './auth/register'
 import Header from './header/Header';
-import { useState } from 'react';
 import axiosInstance from './utils/axiosinstance';
 import { ThemeSpecs } from './utils/theme';
 import { board } from './utils/interface';
@@ -172,6 +171,8 @@ const App: React.FC = () => {
     creation_date: '',
   });
 
+  const selectedBoardRef = useRef<board | null>(selectedBoard);
+
 
   const [activeSidebarBoardId, setActiveSidebarBoardId] = useState<number | null>(selectedBoard?.id ?? null);
 
@@ -244,10 +245,34 @@ const App: React.FC = () => {
       setIs_members_refreshing(false);
     }
   };
+  // ------------------------------------- update board users after notification received ---------------------------------------
 
-
+  const update_board_users = async (boardId: string) => {
+    console.log('Updating board users for board ID:---', boardId);
+    try {
+      const response = await axiosInstance.get(`/api/boards/${boardId}/users/`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('access_token')}`
+        }
+      });
+      if (response.status === 200) {
+        console.log('Board users fetched successfully');
+        setCurrent_board_users(response.data);
+        setIs_cur_Board_users_fetched(true);
+        setSelectedBoard(prev => prev ? { ...prev, board_users: response.data } : prev);
+      }
+    } catch (error) {
+      console.error('Error fetching board users:', error);
+    }
+  };
 
   // =========================================  handle push notification types for updates ===============================================
+
+  // Update the selected board reference whenever selectedBoard changes
+  useEffect(() => {
+    selectedBoardRef.current = selectedBoard;
+  }, [selectedBoard]);
+
 
   useEffect(() => {
     if ('serviceWorker' in navigator) {
@@ -288,15 +313,35 @@ const App: React.FC = () => {
 
               break;
 
+            // ...inside serviceWorker message event...
             case 'BOARD_INVITATION_ACCEPTED':
               console.log('BOARD_INVITATION_ACCEPTED type ==>> Board Name:', payload.boardName);
-              // setNotificationData(event.data);
-
+              console.log('selectedboard ==>>>', selectedBoardRef.current);
+              console.log('===---==>>', payload.boardName, '===>>>', selectedBoardRef.current?.name);
+              if (
+                String(payload.boardName).toLowerCase() ===
+                String(selectedBoardRef.current?.name).toLowerCase()
+              ) {
+                console.log('Updating board users for the selected board:', selectedBoardRef.current?.name, 'payload:', payload.boardName);
+                update_board_users(String(selectedBoardRef.current?.id));
+              }
               break;
 
             case 'USER_LEFT_BOARD':
               console.log(`USER_LEFT_BOARD type ==>> Board Name: ${payload.boardName}, Left User Email: ${payload.leftUserEmail}, Left User Name: ${payload.leftUserName}`);
-              // setNotificationData(event.data);
+              fetchBoards();
+
+
+
+              if (payload.boardName === selectedBoardRef.current?.name) {
+                console.log('Updating board users for the selected board:', selectedBoardRef.current?.name, 'payload:', payload.boardName);
+                console.log('ipdating-after-leaving-board');
+                update_board_users(String(selectedBoardRef.current?.id));
+              }
+
+
+
+
               break;
 
 

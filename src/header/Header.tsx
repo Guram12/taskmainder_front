@@ -17,6 +17,8 @@ import { LuLogOut } from "react-icons/lu";
 import ConfirmationDialog from "../components/Boards/ConfirmationDialog";
 import { useTranslation } from 'react-i18next';
 import { board } from "../utils/interface";
+import { IoIosArrowDropleftCircle } from "react-icons/io";
+import { IoIosArrowDroprightCircle } from "react-icons/io";
 
 
 
@@ -35,7 +37,7 @@ interface HeaderProps {
   language: 'en' | 'ka';
   setSelectedComponent: (selectedComponent: string) => void;
   setSelectedBoard: (selectedBoard: board | null) => void;
-  boards: board[]; 
+  boards: board[];
   setActiveSidebarBoardId: (boardId: number | null) => void;
 }
 
@@ -56,10 +58,12 @@ const Header: React.FC<HeaderProps> = ({
   language,
   setSelectedComponent,
   setSelectedBoard,
-  boards, 
+  boards,
   setActiveSidebarBoardId,
 }) => {
 
+  const [showColorContainer, setShowColorContainer] = useState<boolean>(true);
+  const [show_theme_open_icon, setShow_theme_open_icon] = useState<boolean>(false);
 
 
   const [confirmation_for_logout, setConfirmation_for_logout] = useState<boolean>(false);
@@ -152,7 +156,9 @@ const Header: React.FC<HeaderProps> = ({
   // ===================================== handle user image click =========================================
   const handleUserImageClick = () => {
     setSelectedBoard(null);
+    setActiveSidebarBoardId(null);
     setSelectedComponent('Settings');
+    navigate('/mainpage/settings/');
   };
 
 
@@ -224,25 +230,35 @@ const Header: React.FC<HeaderProps> = ({
 
   // ================================================  logo click   ======================================================
 
-const handleLogoClick = () => {
-  setSelectedComponent('Boards');
-  navigate('/mainpage/boards/');
-  const prev_selected_board_id = localStorage.getItem('prev_selected_board_id');
-  if(prev_selected_board_id === null) {
-    setSelectedBoard(null);
-    console.log("No previous board selected, setting selected board to null.");
-    return;
-  } 
-  const board_to_be_selected = boards.find(board => board.id === JSON.parse(prev_selected_board_id));
-  setActiveSidebarBoardId(board_to_be_selected?.id ?? null);
-  if (board_to_be_selected) {
-    setSelectedBoard(board_to_be_selected);
-    console.log("Previous board selected:", board_to_be_selected);
+  const handleLogoClick = () => {
+    setSelectedComponent('Boards');
+    navigate('/mainpage/boards/');
+    const prev_selected_board_id = localStorage.getItem('prev_selected_board_id');
+    if (prev_selected_board_id === null) {
+      setSelectedBoard(null);
+      console.log("No previous board selected, setting selected board to null.");
+      return;
+    }
+    const board_to_be_selected = boards.find(board => board.id === JSON.parse(prev_selected_board_id));
+    setActiveSidebarBoardId(board_to_be_selected?.id ?? null);
+    if (board_to_be_selected) {
+      setSelectedBoard(board_to_be_selected);
+      console.log("Previous board selected:", board_to_be_selected);
+    }
   }
-}
 
   // =====================================================================================================================
+  const handle_open_theme_container = () => {
+    setShowColorContainer(false);
+    setTimeout(() => {
+      setShow_theme_open_icon(true);
+    }, 600);
+  };
 
+  const handle_close_theme_container = () => {
+    setShowColorContainer(true);
+    setShow_theme_open_icon(false);
+  };
 
   return (
     <div className={`main_Header_container ${!isAuthenticated ? "hide_container" : ''}  ${!showHeader ? 'hide_header' : ""} `}
@@ -260,10 +276,21 @@ const handleLogoClick = () => {
       </div>
 
 
+
+
       {/* theme and language dropdowns*/}
       <div className="header_all_dropdowns_container" >
+        {!showColorContainer && !isMobile && show_theme_open_icon && (
+          <IoIosArrowDroprightCircle
+            size={27}
+            onClick={handle_close_theme_container}
+            className="header_theme_icon"
+          />
+        )}
         {!isMobile ? (
-          <div className='header_coloure_container'>
+          <div
+            className={`header_coloure_container${showColorContainer ? '' : ' hide_color_container'}`}
+          >
             <div className='header_coloure_child_container example2'
               onClick={() => changeTheme(themes.dark_gray)}></div>
             <div className='header_coloure_child_container example3'
@@ -298,6 +325,14 @@ const handleLogoClick = () => {
             >
               {t('customTheme')}
             </div>
+
+            <IoIosArrowDropleftCircle
+              size={27}
+              onClick={handle_open_theme_container}
+              className="header_theme_icon"
+
+            />
+
           </div>
 
         ) : (

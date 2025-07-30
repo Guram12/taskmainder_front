@@ -187,7 +187,7 @@ const Calendar: React.FC<CalendarProps> = ({ boards, currentTheme, fetchBoards }
                 onClick={() => handleDayClick(monthIndex, dayNumber, isHighlighted)}
                 style={
                   isToday
-                    ? { border: `2px solid ${currentTheme['--border-color']}` }
+                    ? { border: `2px solid seagreen` }
                     : undefined
                 }
               >

@@ -440,7 +440,7 @@ const Members: React.FC<MembersProps> = ({
           <>
             {isMobile ? (
               <>
-                {current_board_users.slice(0,2).map((boardUser) =>
+                {current_board_users.slice(0, 2).map((boardUser) =>
                   boardUser.profile_picture !== null ? (
                     <img
                       key={boardUser.id}

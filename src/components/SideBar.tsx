@@ -235,7 +235,7 @@ const SidebarComponent: React.FC<SidebarProps> = ({
     navigate("/mainpage/notification");
     setIs_new_notification_received(false);
     setSelectedBoard(null);
-    setActiveSidebarBoardId(null); 
+    setActiveSidebarBoardId(null);
     setIs_sidebar_open_on_mobile(true);
 
   }
@@ -474,16 +474,15 @@ const SidebarComponent: React.FC<SidebarProps> = ({
                 </SubMenu>
 
                 <MenuItem
-                  id='templates_container_shepherd'
-                  icon={<GoRepoTemplate className='sidebar_big_icon' />}
-                  onClick={() => handel_sidebar_page_click("Templates")}
+                  id='mindmap_container_shepherd'
                   style={{
-                    color: selectedComponent === "Templates" ? 'seagreen' : 'white',
+                    color: selectedComponent === "MindMap" ? 'seagreen' : 'white',
                     fontWeight: 'bold',
                     transition: 'all 0.3s',
                   }}
-                >
-                  {t('templates')}
+                  icon={<FaSitemap className='sidebar_big_icon' />}
+                  onClick={() => handel_sidebar_page_click("MindMap")}
+                >{t('diagrams')}
                 </MenuItem>
 
                 <MenuItem
@@ -497,6 +496,20 @@ const SidebarComponent: React.FC<SidebarProps> = ({
                   onClick={() => handel_sidebar_page_click("Calendar")}
                 >{t('calendar')}
                 </MenuItem>
+
+                <MenuItem
+                  id='templates_container_shepherd'
+                  icon={<GoRepoTemplate className='sidebar_big_icon' />}
+                  onClick={() => handel_sidebar_page_click("Templates")}
+                  style={{
+                    color: selectedComponent === "Templates" ? 'seagreen' : 'white',
+                    fontWeight: 'bold',
+                    transition: 'all 0.3s',
+                  }}
+                >
+                  {t('templates')}
+                </MenuItem>
+
 
                 <MenuItem
                   id='notification_container_shepherd'
@@ -530,16 +543,7 @@ const SidebarComponent: React.FC<SidebarProps> = ({
                 </MenuItem>
 
 
-                <MenuItem
-                  id='mindmap_container_shepherd'
-                  style={{
-                    color: selectedComponent === "MindMap" ? 'seagreen' : 'white',
-                    fontWeight: 'bold',
-                    transition: 'all 0.3s',
-                  }}
-                  icon={<FaSitemap className='sidebar_big_icon' />}
-                  onClick={() => handel_sidebar_page_click("MindMap")}
-                >{t('diagrams')}</MenuItem>
+
               </Menu>
 
 
