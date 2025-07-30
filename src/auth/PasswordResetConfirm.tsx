@@ -7,7 +7,7 @@ import { PiPassword } from "react-icons/pi";
 import { FaRegEye } from "react-icons/fa";
 import { FaRegEyeSlash } from "react-icons/fa";
 import { useTranslation } from 'react-i18next';
-import { Helmet } from "react-helmet";
+import { Helmet } from "react-helmet-async";
 
 
 

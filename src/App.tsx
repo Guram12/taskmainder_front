@@ -17,6 +17,7 @@ import { Board_Users } from './utils/interface';
 // import { NotificationPayload } from './utils/interface';
 import ErrorPage from './components/ErrorPage';
 import { useTranslation } from 'react-i18next';
+import { HelmetProvider } from "react-helmet-async";
 
 
 
@@ -482,83 +483,85 @@ const App: React.FC = () => {
   // ========================================================================================================
 
   return (
+    <HelmetProvider>
 
-    <Router>
-      <Header
-        profileData={profileData}
-        isAuthenticated={isAuthenticated}
-        setIsAuthenticated={setIsAuthenticated}
-        setChange_current_theme={setChange_current_theme}
-        change_current_theme={change_current_theme}
-        currentTheme={currentTheme}
-        isCustomThemeSelected={isCustomThemeSelected}
-        saved_custom_theme={saved_custom_theme}
-        setCurrentTheme={setCurrentTheme}
-        isMobile={isMobile}
-        setLanguage={setLanguage}
-        language={language}
-        setSelectedComponent={setSelectedComponent}
-        setSelectedBoard={setSelectedBoard}
-        boards={boards}
-        setActiveSidebarBoardId={setActiveSidebarBoardId}
-      />
-      <Routes>
-        <Route path="/"
-          element={<Login
-            setIsAuthenticated={setIsAuthenticated}
-            currentTheme={currentTheme}
-            language={language}
-            setLanguage={setLanguage}
-          />}
-        />
-        <Route path="/register" element={<Register currentTheme={currentTheme} isMobile={isMobile} />} />
-        <Route path="/password-reset" element={<PasswordReset currentTheme={currentTheme} />} />
-        <Route path="/password-reset-confirm/:uid/:token" element={<PasswordResetConfirm currentTheme={currentTheme} />} />
-
-
-
-        <Route path="/error" element={<ErrorPage currentTheme={currentTheme} />} />
-        <Route path="/finish-profile" element={<FinishGoogleSignIn
+      <Router>
+        <Header
+          profileData={profileData}
+          isAuthenticated={isAuthenticated}
           setIsAuthenticated={setIsAuthenticated}
+          setChange_current_theme={setChange_current_theme}
+          change_current_theme={change_current_theme}
           currentTheme={currentTheme}
+          isCustomThemeSelected={isCustomThemeSelected}
+          saved_custom_theme={saved_custom_theme}
+          setCurrentTheme={setCurrentTheme}
           isMobile={isMobile}
-        />}
+          setLanguage={setLanguage}
+          language={language}
+          setSelectedComponent={setSelectedComponent}
+          setSelectedBoard={setSelectedBoard}
+          boards={boards}
+          setActiveSidebarBoardId={setActiveSidebarBoardId}
         />
-        <Route path="/mainpage/*"
-          element={<MainPage
-            selectedBoard={selectedBoard}
-            setSelectedBoard={setSelectedBoard}
-            currentTheme={currentTheme}
-            boards={boards}
-            setBoards={setBoards}
-            current_user_email={profileData.email}
-            profileData={profileData}
-            FetchProfileData={FetchProfileData}
-            fetchBoards={fetchBoards}
-            setCurrent_board_users={setCurrent_board_users}
-            current_board_users={current_board_users}
-            is_cur_Board_users_fetched={is_cur_Board_users_fetched}
-            fetch_current_board_users={fetch_current_board_users}
-            isBoardsLoaded={isBoardsLoaded}
-            setIsBoardsLoaded={setIsBoardsLoaded}
-            setIsLoading={setIsLoading}
-            isLoading={isLoading}
-            setIs_new_notification_received={setIs_new_notification_received}
-            is_new_notification_received={is_new_notification_received}
-            is_members_refreshing={is_members_refreshing}
-            setCurrentTheme={setCurrentTheme}
-            setIsCustomThemeSelected={setIsCustomThemeSelected}
-            setSaved_custom_theme={setSaved_custom_theme}
-            isMobile={isMobile}
-            setIsAuthenticated={setIsAuthenticated}
-            setSelectedComponent={setSelectedComponent}
-            selectedComponent={selectedComponent}
-            setActiveSidebarBoardId={setActiveSidebarBoardId}
-            activeSidebarBoardId={activeSidebarBoardId}
-          />} />
+        <Routes>
+          <Route path="/"
+            element={<Login
+              setIsAuthenticated={setIsAuthenticated}
+              currentTheme={currentTheme}
+              language={language}
+              setLanguage={setLanguage}
+            />}
+          />
+          <Route path="/register" element={<Register currentTheme={currentTheme} isMobile={isMobile} />} />
+          <Route path="/password-reset" element={<PasswordReset currentTheme={currentTheme} />} />
+          <Route path="/password-reset-confirm/:uid/:token" element={<PasswordResetConfirm currentTheme={currentTheme} />} />
 
-      </Routes>
-    </Router>
+
+
+          <Route path="/error" element={<ErrorPage currentTheme={currentTheme} />} />
+          <Route path="/finish-profile" element={<FinishGoogleSignIn
+            setIsAuthenticated={setIsAuthenticated}
+            currentTheme={currentTheme}
+            isMobile={isMobile}
+          />}
+          />
+          <Route path="/mainpage/*"
+            element={<MainPage
+              selectedBoard={selectedBoard}
+              setSelectedBoard={setSelectedBoard}
+              currentTheme={currentTheme}
+              boards={boards}
+              setBoards={setBoards}
+              current_user_email={profileData.email}
+              profileData={profileData}
+              FetchProfileData={FetchProfileData}
+              fetchBoards={fetchBoards}
+              setCurrent_board_users={setCurrent_board_users}
+              current_board_users={current_board_users}
+              is_cur_Board_users_fetched={is_cur_Board_users_fetched}
+              fetch_current_board_users={fetch_current_board_users}
+              isBoardsLoaded={isBoardsLoaded}
+              setIsBoardsLoaded={setIsBoardsLoaded}
+              setIsLoading={setIsLoading}
+              isLoading={isLoading}
+              setIs_new_notification_received={setIs_new_notification_received}
+              is_new_notification_received={is_new_notification_received}
+              is_members_refreshing={is_members_refreshing}
+              setCurrentTheme={setCurrentTheme}
+              setIsCustomThemeSelected={setIsCustomThemeSelected}
+              setSaved_custom_theme={setSaved_custom_theme}
+              isMobile={isMobile}
+              setIsAuthenticated={setIsAuthenticated}
+              setSelectedComponent={setSelectedComponent}
+              selectedComponent={selectedComponent}
+              setActiveSidebarBoardId={setActiveSidebarBoardId}
+              activeSidebarBoardId={activeSidebarBoardId}
+            />} />
+
+        </Routes>
+      </Router>
+    </HelmetProvider>
 
   );
 };

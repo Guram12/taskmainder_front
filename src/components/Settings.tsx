@@ -13,7 +13,7 @@ import axiosInstance from "../utils/axiosinstance";
 import { useState } from "react";
 import { useTranslation } from 'react-i18next';
 import ChangeNotification from "./settings/ChangeNotification";
-import { Helmet } from "react-helmet";
+import { Helmet } from "react-helmet-async";
 
 
 

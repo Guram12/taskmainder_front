@@ -17,7 +17,7 @@ import { FaRegEyeSlash } from "react-icons/fa";
 import { TbArrowBackUp } from "react-icons/tb";
 import PulseLoader from "react-spinners/PulseLoader";
 import { useTranslation } from 'react-i18next';
-import { Helmet } from "react-helmet";
+import { Helmet } from "react-helmet-async";
 
 
 

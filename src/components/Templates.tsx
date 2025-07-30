@@ -7,7 +7,7 @@ import { templates } from "../utils/Templates";
 import { ThemeSpecs } from "../utils/theme";
 import ConfirmationDialog from "./Boards/ConfirmationDialog";
 import { useTranslation } from 'react-i18next';
-import { Helmet } from "react-helmet";
+import { Helmet } from "react-helmet-async";
 
 interface TemplatesProps {
   handleTemplateSelect: (template: number) => void;

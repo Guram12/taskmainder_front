@@ -27,7 +27,7 @@ import { HiXMark } from "react-icons/hi2";
 import Sortable from 'sortablejs';
 import type { SortableEvent } from 'sortablejs';
 import select_board_icon from '../../assets/select_board_icon.png'
-import { Helmet } from "react-helmet";
+import { Helmet } from "react-helmet-async";
 
 export interface BoardsProps {
   selectedBoard: board | null;

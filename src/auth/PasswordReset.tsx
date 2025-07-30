@@ -7,7 +7,7 @@ import { MdOutlineAlternateEmail } from "react-icons/md";
 import { useNavigate } from 'react-router-dom';
 import { TbArrowBackUp } from "react-icons/tb";
 import { useTranslation } from 'react-i18next';
-import { Helmet } from "react-helmet";
+import { Helmet } from "react-helmet-async";
 
 
 interface PasswordResetProps {

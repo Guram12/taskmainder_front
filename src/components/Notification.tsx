@@ -9,7 +9,7 @@ import no_notification_image from "../assets/no_notification.png";
 import { NotificationPayload } from "../utils/interface";
 import { FetchedNotificationData } from "../utils/interface";
 import { useTranslation } from 'react-i18next';
-import { Helmet } from "react-helmet";
+import { Helmet } from "react-helmet-async";
 
 interface NotificationProps {
   currentTheme: ThemeSpecs;

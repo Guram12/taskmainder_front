@@ -21,7 +21,7 @@ import { Routes, Route, useNavigate } from "react-router-dom";
 import { startTour } from "../utils/tour";
 import { useTranslation } from 'react-i18next';
 import { useLocation } from "react-router-dom";
-import { Helmet } from "react-helmet";
+import { Helmet } from "react-helmet-async";
 
 interface MainPageProps {
   currentTheme: ThemeSpecs;

@@ -10,7 +10,7 @@ import PhoneInput from 'react-phone-input-2';
 import { IoEarth } from "react-icons/io5";
 import { Select } from 'antd';
 import PulseLoader from "react-spinners/PulseLoader";
-import { Helmet } from "react-helmet";
+import { Helmet } from "react-helmet-async";
 
 
 
