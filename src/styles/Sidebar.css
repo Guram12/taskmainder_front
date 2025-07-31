@@ -101,14 +101,25 @@
 }
 
 
-/* ====================================================== mapped boards  styles  for mobile ===================================== */
-*/
 /* ======================================== icon styles in sidebar ===================================== */
 
 .dashboard_icon {
   font-size: 30px !important;
   height: 30px !important;
 }
+
+.add_new_board_container {
+  width: 99%;
+  height: 0px;
+  max-height: 200px;
+}
+
+.add_new_board_container_close {
+  height: 50px;
+  overflow: hidden;
+}
+
+
 
 .sidebar_big_icon {
   font-size: 25px;
@@ -186,11 +197,12 @@
 
   .sidebar_container {
     width: 100% !important;
-    
+
     height: calc(100vh - 70px);
     max-height: 100vh;
     overflow-y: auto;
-    -webkit-overflow-scrolling: touch; /* for smooth scrolling on iOS */
+    -webkit-overflow-scrolling: touch;
+    /* for smooth scrolling on iOS */
   }
 
   .sidebar_closed_on_mobile {

@@ -13,12 +13,12 @@ import { Dropdown } from 'antd';
 import { AiFillSkin } from "react-icons/ai";
 import { GlobalOutlined } from '@ant-design/icons';
 import type { MenuProps } from 'antd';
-import { LuLogOut } from "react-icons/lu";
 import ConfirmationDialog from "../components/Boards/ConfirmationDialog";
 import { useTranslation } from 'react-i18next';
 import { board } from "../utils/interface";
 import { IoIosArrowDropleftCircle } from "react-icons/io";
 import { IoIosArrowDroprightCircle } from "react-icons/io";
+import { SettingOutlined, LogoutOutlined } from '@ant-design/icons';
 
 
 
@@ -65,7 +65,6 @@ const Header: React.FC<HeaderProps> = ({
   const [showColorContainer, setShowColorContainer] = useState<boolean>(true);
   const [show_theme_open_icon, setShow_theme_open_icon] = useState<boolean>(false);
 
-
   const [confirmation_for_logout, setConfirmation_for_logout] = useState<boolean>(false);
 
   const [showHeader, setShowHeader] = useState<boolean>(true);
@@ -101,7 +100,44 @@ const Header: React.FC<HeaderProps> = ({
 
 
   // ============================== theme change function ======================================
-  const changeTheme = (themeSpecs: ThemeSpecs) => {
+  const [header_selected_theme, setHeader_selected_theme] = useState<string>('');
+
+  useEffect(() => {
+    // On mount, set theme from localStorage if available
+    const storedTheme = localStorage.getItem('theme') as string | null;
+    if (storedTheme) {
+      const themeObj = JSON.parse(storedTheme);
+      // Find the theme key that matches the stored theme
+      const foundThemeKey = Object.keys(themes).find(key => {
+        const theme = themes[key as keyof typeof themes];
+        // Compare all theme properties
+        return Object.keys(themeObj).every(prop => theme[prop as keyof ThemeSpecs] === themeObj[prop]);
+      });
+      if (foundThemeKey) {
+        setHeader_selected_theme(foundThemeKey);
+        setCurrentTheme(themes[foundThemeKey as keyof typeof themes]);
+        // Optionally, apply theme to document
+        Object.entries(themes[foundThemeKey as keyof typeof themes]).forEach(([key, value]) => {
+          document.documentElement.style.setProperty(key, value);
+        });
+        document.body.style.backgroundColor = themes[foundThemeKey as keyof typeof themes]['--background-color'];
+        document.body.style.color = themes[foundThemeKey as keyof typeof themes]['--main-text-coloure'];
+      } else {
+        // If not found, just apply the stored theme
+        setCurrentTheme(themeObj);
+        Object.entries(themeObj).forEach(([key, value]) => {
+          document.documentElement.style.setProperty(key, value as string);
+        });
+        document.body.style.backgroundColor = themeObj['--background-color'];
+        document.body.style.color = themeObj['--main-text-coloure'];
+      }
+    }
+  }, []);
+
+
+
+  const changeTheme = (themeSpecs: ThemeSpecs, themeName: string) => {
+    setHeader_selected_theme(String(themeName));
     for (const [key, value] of Object.entries(themeSpecs)) {
       document.documentElement.style.setProperty(key, value)
     }
@@ -169,8 +205,11 @@ const Header: React.FC<HeaderProps> = ({
         label: (
           <div
             className={`header_coloure_child_container  example${idx + 2}`}
-            onClick={() => changeTheme(themes[key as keyof typeof themes])}
+            onClick={() => changeTheme(themes[key as keyof typeof themes], key)}
             id="ttt"
+            style={{
+              borderColor: header_selected_theme === key ? 'seagreen' : 'black',
+            }}
           />
         ),
       })),
@@ -228,12 +267,36 @@ const Header: React.FC<HeaderProps> = ({
     ],
   };
 
+
+  const profileMenu: MenuProps = {
+    items: [
+      {
+        key: 'settings',
+        icon: <SettingOutlined />,
+        label: (
+          <span className="profile-dropdown-item" onClick={handleUserImageClick} >
+            {t('settings')}
+          </span>
+        ),
+      },
+      {
+        key: 'logout',
+        icon: <LogoutOutlined />,
+        label: (
+          <span className="profile-dropdown-item" onClick={handle_logout_icon_click}>
+            {t('logout')}
+          </span>
+        ),
+      },
+    ],
+  };
+
   // ================================================  logo click   ======================================================
 
   const handleLogoClick = () => {
     setSelectedComponent('Boards');
-    navigate('/mainpage/boards/');
     const prev_selected_board_id = localStorage.getItem('prev_selected_board_id');
+    navigate(`/mainpage/boards/${prev_selected_board_id}`);
     if (prev_selected_board_id === null) {
       setSelectedBoard(null);
       console.log("No previous board selected, setting selected board to null.");
@@ -287,32 +350,32 @@ const Header: React.FC<HeaderProps> = ({
             className="header_theme_icon"
           />
         )}
-        {!isMobile ? (
+        {!isMobile && (
           <div
             className={`header_coloure_container${showColorContainer ? '' : ' hide_color_container'}`}
           >
-            <div className='header_coloure_child_container example2'
-              onClick={() => changeTheme(themes.dark_gray)}></div>
-            <div className='header_coloure_child_container example3'
-              onClick={() => changeTheme(themes.forest_night)}></div>
-            <div className='header_coloure_child_container example4'
-              onClick={() => changeTheme(themes.neon_void)}></div>
-            <div className='header_coloure_child_container example5'
-              onClick={() => changeTheme(themes.deep_aqua)}></div>
-            <div className='header_coloure_child_container example6'
-              onClick={() => changeTheme(themes.ink_cobalt)}></div>
-            <div className='header_coloure_child_container example7'
-              onClick={() => changeTheme(themes.blue_steel)}></div>
-            <div className='header_coloure_child_container example8'
-              onClick={() => changeTheme(themes.hologram_glow)}></div>
-            <div className='header_coloure_child_container example9'
-              onClick={() => changeTheme(themes.sky_breeze)}></div>
-            <div className='header_coloure_child_container example10'
-              onClick={() => changeTheme(themes.mint_ice)}></div>
-            <div className='header_coloure_child_container example11'
-              onClick={() => changeTheme(themes.sage_paper)}></div>
-            <div className='header_coloure_child_container example12'
-              onClick={() => changeTheme(themes.glacier_bite)}></div>
+            <div className='header_coloure_child_container example2' style={{ borderColor: header_selected_theme === 'dark_gray' ? 'seagreen' : 'black' }}
+              onClick={() => changeTheme(themes.dark_gray, 'dark_gray')}></div>
+            <div className='header_coloure_child_container example3' style={{ borderColor: header_selected_theme === 'forest_night' ? 'seagreen' : 'black' }}
+              onClick={() => changeTheme(themes.forest_night, 'forest_night')}></div>
+            <div className='header_coloure_child_container example4' style={{ borderColor: header_selected_theme === 'neon_void' ? 'seagreen' : 'black' }}
+              onClick={() => changeTheme(themes.neon_void, 'neon_void')}></div>
+            <div className='header_coloure_child_container example5' style={{ borderColor: header_selected_theme === 'deep_aqua' ? 'seagreen' : 'black' }}
+              onClick={() => changeTheme(themes.deep_aqua, 'deep_aqua')}></div>
+            <div className='header_coloure_child_container example6' style={{ borderColor: header_selected_theme === 'ink_cobalt' ? 'seagreen' : 'black' }}
+              onClick={() => changeTheme(themes.ink_cobalt, 'ink_cobalt')}></div>
+            <div className='header_coloure_child_container example7' style={{ borderColor: header_selected_theme === 'blue_steel' ? 'seagreen' : 'black' }}
+              onClick={() => changeTheme(themes.blue_steel, 'blue_steel')}></div>
+            <div className='header_coloure_child_container example8' style={{ borderColor: header_selected_theme === 'hologram_glow' ? 'seagreen' : 'black' }}
+              onClick={() => changeTheme(themes.hologram_glow, 'hologram_glow')}></div>
+            <div className='header_coloure_child_container example9' style={{ borderColor: header_selected_theme === 'sky_breeze' ? 'seagreen' : 'black' }}
+              onClick={() => changeTheme(themes.sky_breeze, 'sky_breeze')}></div>
+            <div className='header_coloure_child_container example10' style={{ borderColor: header_selected_theme === 'mint_ice' ? 'seagreen' : 'black' }}
+              onClick={() => changeTheme(themes.mint_ice, 'mint_ice')}></div>
+            <div className='header_coloure_child_container example11' style={{ borderColor: header_selected_theme === 'sage_paper' ? 'seagreen' : 'black' }}
+              onClick={() => changeTheme(themes.sage_paper, 'sage_paper')}></div>
+            <div className='header_coloure_child_container example12' style={{ borderColor: header_selected_theme === 'glacier_bite' ? 'seagreen' : 'black' }}
+              onClick={() => changeTheme(themes.glacier_bite, 'glacier_bite')}></div>
 
 
 
@@ -335,31 +398,33 @@ const Header: React.FC<HeaderProps> = ({
 
           </div>
 
-        ) : (
-          <div className="mobile_theme_dropdown_wrapper"
-          >
-            <Dropdown
-              menu={themeMenu}
-              placement="bottomLeft"
-              arrow
-              overlayClassName="custom-centered-dropdown"
-
-            >
-              <button className="mobile_theme_dropdown_btn"
-                style={{
-                  backgroundColor: currentTheme['--list-background-color'],
-                }}
-              >
-                <AiFillSkin size={20} style={{ color: currentTheme['--main-text-coloure'] }} />
-              </button>
-            </Dropdown>
-          </div>
         )}
 
 
       </div>
 
+      {isMobile && (
+        <div className="mobile_theme_dropdown_wrapper"
+        >
+          <Dropdown
+            menu={themeMenu}
+            placement="bottomLeft"
+            arrow
+            overlayClassName="custom-centered-dropdown"
 
+          >
+            <button className="mobile_theme_dropdown_btn"
+              style={{
+                backgroundColor: currentTheme['--list-background-color'],
+              }}
+            >
+              <AiFillSkin size={20} style={{ color: currentTheme['--main-text-coloure'] }} />
+            </button>
+          </Dropdown>
+        </div>
+      )
+
+      }
 
       <div className="language_and_user_in_header" >
         {/* Language Dropdown */}
@@ -385,41 +450,47 @@ const Header: React.FC<HeaderProps> = ({
           </Dropdown>
         </div>
 
-        <div className="header_profile_container"
-          onClick={handleUserImageClick}
 
+        {/* Profile Dropdown */}
+        <div className="header_profile_dropdown_container"
+          style={{
+            backgroundColor: currentTheme['--list-background-color'],
+            borderColor: currentTheme['--border-color'],
+            color: currentTheme['--main-text-coloure'],
+          }}
         >
-          <h3 className="header_profile_username">{profileData.username}</h3>
-          {profileData?.profile_picture ? (
-            <img
-              src={profileData.profile_picture}
-              alt="profile"
-              className="header_profile_picture"
-            />
-          ) : (
-            <Avatar
-              style={{
-                backgroundColor: getAvatarStyles(profileData.username.charAt(0)).backgroundColor,
-                color: getAvatarStyles(profileData.username.charAt(0)).color
-              }}
-            >
-              {profileData.username.charAt(0).toUpperCase()}
-            </Avatar>
-          )}
+          <Dropdown
+            menu={profileMenu}
+            placement="bottomRight"
+            arrow
+            overlayClassName="custom-centered-dropdown"
+            trigger={['hover', 'click']}
+          >
+            <div className="header_profile_container" style={{ cursor: 'pointer' }}>
+              <h3 className="header_profile_username">{profileData.username}</h3>
+              {profileData?.profile_picture ? (
+                <img
+                  src={profileData.profile_picture}
+                  alt="profile"
+                  className="header_profile_picture"
+                />
+              ) : (
+                <Avatar
+                  style={{
+                    backgroundColor: getAvatarStyles(profileData.username.charAt(0)).backgroundColor,
+                    color: getAvatarStyles(profileData.username.charAt(0)).color,
+                    width: '30px',
+                    height: '30px',
+                  }}
+
+                >
+                  {profileData.username.charAt(0).toUpperCase()}
+                </Avatar>
+              )}
+            </div>
+          </Dropdown>
         </div>
 
-        {!isMobile && (
-          <div
-            onClick={handle_logout_icon_click}
-            className="header_profile_container"
-          >
-            <LuLogOut
-              size={26}
-              style={{ color: currentTheme['--main-text-coloure'] }}
-              className="header_logout_icon"
-            />
-          </div>
-        )}
 
         {confirmation_for_logout && (
           <ConfirmationDialog
@@ -427,6 +498,7 @@ const Header: React.FC<HeaderProps> = ({
             onConfirm={handleLogOut}
             onCancel={() => setConfirmation_for_logout(false)}
             currentTheme={currentTheme}
+            isOpen={confirmation_for_logout}
           />
         )}
 

@@ -640,6 +640,7 @@ const TaskUpdateModal: React.FC<TaskUpdateModalProps> = ({
               onConfirm={confirmDelete}
               onCancel={cancelDelete}
               currentTheme={currentTheme}
+              isOpen={showDialog}
             />
           )}
 

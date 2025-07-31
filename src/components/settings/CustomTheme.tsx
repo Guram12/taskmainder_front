@@ -444,9 +444,7 @@ const CustomTheme: React.FC<CustomThemeProps> = ({
       <div className='second_h1_and_tooltip_container' >
         <h1 className='second_h1' >{t('select_colors')}</h1>
         <Tooltip
-          title="Your selected colors will be saved as a custom theme.  
-                To apply your custom theme, select it from the header.  
-                You can update these colors at any time."
+          title={t('customtheme_tooltip_text')}
           placement="right"
           color={currentTheme["--list-background-color"]}
         >

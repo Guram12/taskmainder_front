@@ -1,5 +1,6 @@
 import "../styles/MainPage.css";
 import React, { useState, useEffect, useRef } from "react";
+import { useParams } from "react-router-dom";
 import SidebarComponent from "./SideBar";
 import Settings from "./Settings";
 import Calendar from "./Calendar";
@@ -484,7 +485,59 @@ const MainPage: React.FC<MainPageProps> = ({
     }
   }, []);
 
+  // ============================================= set id in params =================================================
+  const params = useParams();
+  const { boardId } = useParams();
 
+  const boardIdFromUrl = params['*']?.split('/')[1]; // Gets the board ID from /mainpage/boards/:id
+
+
+  useEffect(() => {
+    if (boardIdFromUrl && boards.length > 0) {
+      const foundBoard = boards.find(b => String(b.id) === boardIdFromUrl);
+      if (foundBoard && location.pathname.startsWith("/mainpage/boards")) {
+        console.log({ 'foundBoard': foundBoard, 'pathname': !location.pathname.startsWith("/mainpage/boards") });
+        setSelectedBoard(foundBoard);
+        setActiveSidebarBoardId(foundBoard.id);
+      }
+    }
+  }, [boardIdFromUrl, boards]);
+
+
+  useEffect(() => {
+    if (boardId && boards.length > 0) {
+      const foundBoard = boards.find(b => String(b.id) === boardId);
+      if (foundBoard) {
+        setSelectedBoard(foundBoard);
+        if (!location.pathname.startsWith("/mainpage/mindmap")) {
+          setActiveSidebarBoardId(foundBoard.id);
+        } else {
+          setActiveSidebarBoardId(null);
+        }
+      }
+    }
+  }, [boardId, boards, location.pathname]);
+
+  // ===============================  set selected component based on the current route ======================================
+  useEffect(() => {
+    if (location.pathname.startsWith("/mainpage/boards")) {
+      setSelectedComponent("Boards");
+    } else if (location.pathname.startsWith("/mainpage/calendar")) {
+      setSelectedComponent("Calendar");
+      setActiveSidebarBoardId(null);
+    } else if (location.pathname.startsWith("/mainpage/settings")) {
+      setSelectedComponent("Settings");
+      setActiveSidebarBoardId(null);
+    } else if (location.pathname.startsWith("/mainpage/templates")) {
+      setSelectedComponent("Templates");
+      setActiveSidebarBoardId(null);
+    } else if (location.pathname.startsWith("/mainpage/notification")) {
+      setSelectedComponent("Notification");
+      setActiveSidebarBoardId(null);
+    } else if (location.pathname.startsWith("/mainpage/mindmap")) {
+      setSelectedComponent("MindMap");
+    }
+  }, [location.pathname]);
 
   // ====================================================================================================================
 
@@ -540,7 +593,7 @@ const MainPage: React.FC<MainPageProps> = ({
           activeSidebarBoardId={activeSidebarBoardId}
         />
         <Routes>
-          <Route path="boards" element={
+          <Route path="boards/:boardId?" element={
             <Boards
               currentTheme={currentTheme}
               setSelectedBoard={setSelectedBoard}
@@ -622,7 +675,7 @@ const MainPage: React.FC<MainPageProps> = ({
               isMobile={isMobile}
             />
           } />
-          <Route path="mindmap" element={
+          <Route path="mindmap/:boardId?" element={
             <ReactFlowProvider>
               <MindMap
                 currentTheme={currentTheme}

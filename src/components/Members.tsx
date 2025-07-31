@@ -387,9 +387,9 @@ const Members: React.FC<MembersProps> = ({
   const handle_diagram_click = (board_id: string) => {
     localStorage.setItem('prev_mindmap_selected_board_id', board_id);
     // setSelectedBoard(null)
-    setActiveSidebarBoardId(null); // Unselect board in sidebar only
+    setActiveSidebarBoardId(null); 
     setSelectedComponent('MindMap');
-    navigate('/mainpage/mindmap')
+    navigate(`/mainpage/mindmap/${board_id}`)
   }
 
 
@@ -643,6 +643,7 @@ const Members: React.FC<MembersProps> = ({
                   onConfirm={delete_board}
                   onCancel={canselBoardDelete}
                   currentTheme={currentTheme}
+                  isOpen={isBoardDeleting}
                 />
               )}
             </>
@@ -893,6 +894,7 @@ const Members: React.FC<MembersProps> = ({
                       onConfirm={handleLeaveBoard}
                       onCancel={() => setIs_leaving_board(false)}
                       currentTheme={currentTheme}
+                      isOpen={is_leaving_board}
                     />
                   )}
                 </div>
@@ -904,6 +906,7 @@ const Members: React.FC<MembersProps> = ({
                   onConfirm={() => handleDeleteUser(current_board_user_to_delete.id)}
                   onCancel={() => setIsDeletingSelectedUser(false)}
                   currentTheme={currentTheme}
+                  isOpen={isDeletingSelectedUser}
                 />
               )}
 

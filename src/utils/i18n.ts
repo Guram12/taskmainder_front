@@ -6,7 +6,7 @@ const resources = {
   en: {
     translation: {
       // header component
-      "customTheme": "Custom Theme",
+      "customTheme": "Custom",
       'are_you_sure_you_want_to_log_out?': 'Are you sure you want to log out?',
       'yes': 'Yes',
       'no': 'No',
@@ -115,6 +115,9 @@ const resources = {
       'cancel_image_save': 'Cancel',
       'select_colors': 'Select Colors',
       'save_theme': 'Save Theme',
+      'customtheme_tooltip_text': "Your selected colors will be saved as a custom theme. To apply your custom theme, select it from the header.You can update these colors at any time.",
+
+
 
       // deleteAccount component
       'danger_zone': 'Danger Zone',
@@ -274,7 +277,7 @@ const resources = {
   ka: {
     translation: {
       // header component
-      "customTheme": "მორგებული თემა",
+      "customTheme": "მორგებული",
       'are_you_sure_you_want_to_log_out?': 'დარწმუნებული ხართ, რომ გსურთ გასვლა?',
       'yes': 'კი',
       'no': 'არა',
@@ -382,6 +385,10 @@ const resources = {
       'cancel_image_save': 'გაუქმება',
       'select_colors': 'აირჩიე ფერები',
       'save_theme': 'თემის შენახვა',
+      'customtheme_tooltip_text': "არჩეული ფერები შეინახება როგორც პერსონალური თემა. თემის გამოსაყენებლად აირჩიეთ იგი ზედა მენიუდან. ფერების შეცვლა ნებისმიერ დროს შეგიძლიათ.",
+
+
+
 
       // deleteAccount component
       'danger_zone': 'საფრთხის ზონა',

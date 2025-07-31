@@ -163,6 +163,7 @@ const Templates: React.FC<TemplatesProps> = ({ handleTemplateSelect, currentThem
                     onCancel={() => setDialogTemplateId(null)}
                     message={`${t('are_you_sure_you_want_to_select_the_template')} "${template.name}"?`}
                     currentTheme={currentTheme}
+                    isOpen={dialogTemplateId === template.id}
                   />
                 )}
               </div>
