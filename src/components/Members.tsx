@@ -387,9 +387,9 @@ const Members: React.FC<MembersProps> = ({
   const handle_diagram_click = (board_id: string) => {
     localStorage.setItem('prev_mindmap_selected_board_id', board_id);
     // setSelectedBoard(null)
-    setActiveSidebarBoardId(null); // Unselect board in sidebar only
+    setActiveSidebarBoardId(null); 
     setSelectedComponent('MindMap');
-    navigate('/mainpage/mindmap')
+    navigate(`/mainpage/mindmap/${board_id}`)
   }
 
 

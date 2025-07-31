@@ -1,5 +1,6 @@
 import '../styles/MindMap.css';
 import React, { useCallback, useState, useRef } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
 import ReactFlow, {
   MiniMap,
   Controls,
@@ -35,7 +36,6 @@ import Select from 'react-select';
 import { PiWarningFill } from "react-icons/pi";
 import { FaClipboardList } from "react-icons/fa";
 import CustomTaskNode from './CustomTaskNode';
-import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { Helmet } from "react-helmet-async";
 
@@ -131,7 +131,6 @@ const MindMap: React.FC<MindMapProps> = ({
   });
 
   const { t } = useTranslation();
-  const navigate = useNavigate();
 
   const prev_mindmap_selected_board = localStorage.getItem('prev_mindmap_selected_board_id');
 
@@ -171,12 +170,44 @@ const MindMap: React.FC<MindMapProps> = ({
 
   const reactFlowInstanceRef = useRef<ReactFlowInstance | null>(null);
 
-  // Function to get localStorage key for board positions
+
+  // ================================= Function to get board ID from URL =========================================
+  const { boardId } = useParams();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (boardId && boards.length > 0) {
+      const foundBoard = boards.find(b => String(b.id) === boardId);
+      if (foundBoard) {
+        setSelectedBoard(foundBoard);
+        // Only highlight sidebar if NOT on mindmap route
+        if (!location.pathname.startsWith("/mainpage/mindmap")) {
+          setActiveSidebarBoardId(foundBoard.id);
+        } else {
+          setActiveSidebarBoardId(null);
+        }
+      }
+    }
+  }, [boardId, boards, location.pathname]);
+
+  useEffect(() => {
+    if (boardId && boards.length > 0) {
+      const foundBoard = boards.find(b => String(b.id) === boardId);
+      if (foundBoard) {
+        setMaindmap_selected_board_data(foundBoard); // <-- Select board for MindMap
+        setSelectedBoard(foundBoard);
+        setViewMode('board');
+        setActiveSidebarBoardId(null);
+      }
+    }
+  }, [boardId, boards]);
+
+  //  ===================================== Function to get localStorage key for board positions  ====================
   const getPositionStorageKey = useCallback((boardId: number) => {
     return `mindmap_positions_board_${boardId}`;
   }, []);
 
-  // Function to save positions to localStorage with debouncing
+  // ===========================   Function to save positions to localStorage with debouncing   ====================================
   const savePositionsToStorage = useCallback((boardId: number, positions: SavedPositions) => {
     if (saveTimeoutRef.current) {
       clearTimeout(saveTimeoutRef.current);
@@ -626,8 +657,10 @@ const MindMap: React.FC<MindMapProps> = ({
       const { nodes: boardNodes, edges: boardEdges } = convertBoardToMindMap(board);
       setNodes(boardNodes);
       setEdges(boardEdges);
+      setActiveSidebarBoardId(null); // <-- Clear sidebar highlight in MindMap
+      navigate(`/mainpage/mindmap/${boardId}`);
     }
-  }, [boards, convertBoardToMindMap, setNodes, setEdges]);
+  }, [boards, convertBoardToMindMap, setNodes, setEdges, navigate, setActiveSidebarBoardId]);
 
 
   // ========================================================================================================================
@@ -1317,7 +1350,8 @@ const MindMap: React.FC<MindMapProps> = ({
     if (maindmap_selected_board_data.id !== 0 && maindmap_selected_board_data.id !== null) {
       setSelectedBoard(maindmap_selected_board_data)
       setSelectedComponent("Boards"); // Switch to the Boards view
-      navigate(`/mainpage/boards/`);
+      navigate(`/mainpage/boards/${maindmap_selected_board_data.id}`);
+
     } else {
       return;
     }
@@ -1332,7 +1366,7 @@ const MindMap: React.FC<MindMapProps> = ({
         <meta name="robots" content="index, follow" />
         <link rel="canonical" href="https://dailydoer.space/mainpage/mindmap" />
       </Helmet>
-      
+
       <div className='mindmap_main_container'>
         {/* Task Update Modal */}
         {isEditModalOpen && editingTask && (

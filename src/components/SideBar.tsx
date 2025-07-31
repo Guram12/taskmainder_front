@@ -146,7 +146,7 @@ const SidebarComponent: React.FC<SidebarProps> = ({
     localStorage.setItem('prev_selected_board_id', JSON.stringify(board.id));
     setSelectedComponent("Boards");
     setIs_sidebar_open_on_mobile(true);
-    navigate(`/mainpage/boards/`);
+    navigate(`/mainpage/boards/${board.id}`)
 
     // Update the sidebar selection
 
@@ -257,7 +257,7 @@ const SidebarComponent: React.FC<SidebarProps> = ({
 
   useEffect(() => {
     if (isOpen) {
-        setShow_board_add_section(true);
+      setShow_board_add_section(true);
     } else {
       setShow_board_add_section(false);
     }
