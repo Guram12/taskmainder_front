@@ -6,7 +6,7 @@ const resources = {
   en: {
     translation: {
       // header component
-      "customTheme": "Custom Theme",
+      "customTheme": "Custom",
       'are_you_sure_you_want_to_log_out?': 'Are you sure you want to log out?',
       'yes': 'Yes',
       'no': 'No',
@@ -277,7 +277,7 @@ const resources = {
   ka: {
     translation: {
       // header component
-      "customTheme": "მორგებული თემა",
+      "customTheme": "მორგებული",
       'are_you_sure_you_want_to_log_out?': 'დარწმუნებული ხართ, რომ გსურთ გასვლა?',
       'yes': 'კი',
       'no': 'არა',

@@ -51,10 +51,12 @@
   align-items: center;
   height: 60px;
   gap: 30px;
-  max-width: 1700px; /* Set a reasonable max-width */
+  max-width: 1700px;
+  /* Set a reasonable max-width */
   width: 100%;
   transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
-  overflow: hidden; /* Prevent stacking/overflow */
+  overflow: hidden;
+  /* Prevent stacking/overflow */
 }
 
 .hide_color_container {
@@ -79,11 +81,15 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  border: 1px solid rgb(0, 0, 0);
+  border: 1px solid black;
   max-width: 60px;
   min-width: 15px;
   height: 20px !important;
   border-radius: 30px;
+  width: 100%;
+  height: 28px;
+  border-radius: 18px;
+  margin-bottom: 4px;
 }
 
 
@@ -150,6 +156,41 @@
 
 }
 
+/* ========================================= language dropdown styles ========================================= */
+
+.header_profile_dropdown_container {
+  border: 1px solid red;
+  padding: 2px 0px 2px 10px;
+  border-radius: 24px;
+  margin-right: 20px;
+}
+
+
+.custom-centered-dropdown .ant-dropdown-menu {
+  background: var(--dropdown-background, var(--background-color));
+  border: 1px solid var(--dropdown-border, var(--border-color));
+  border-radius: 10px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.18);
+}
+
+.custom-centered-dropdown .ant-dropdown-menu-item {
+  color: var(--main-text-coloure) !important;
+  font-size: 14px;
+  padding: 8px 16px;
+  border-radius: 8px;
+  transition: background 0.2s;
+  display: flex !important;
+  justify-content: space-between !important;
+}
+
+.custom-centered-dropdown .ant-dropdown-menu-item:hover {
+  background: var(--list-background-color, #f0f0f0);
+}
+
+.profile-dropdown-item {
+  color: var(--main-text-coloure);
+}
+
 /* ------------------------------------- mobile theme dropdown  styles -------------------------------------------------- */
 
 
@@ -199,14 +240,7 @@
 }
 
 
-.header_coloure_child_container {
-  width: 100%;
-  height: 28px;
-  border-radius: 18px;
-  border: 1px solid #333;
-  margin-bottom: 4px;
 
-}
 
 .theme_dropdown .custom_theme_container_in_header {
   width: 100%;
@@ -237,8 +271,8 @@
 }
 
 .header_profile_picture {
-  width: 40px;
-  height: 40px;
+  width: 30px;
+  height: 30px;
   border-radius: 50%;
 }
 
@@ -250,6 +284,7 @@
   overflow: hidden;
   text-overflow: ellipsis;
   max-width: 150px;
+  margin: 0px;
   /* Adjust this value based on your design needs */
 }
 

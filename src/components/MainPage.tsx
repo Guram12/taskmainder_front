@@ -524,12 +524,16 @@ const MainPage: React.FC<MainPageProps> = ({
       setSelectedComponent("Boards");
     } else if (location.pathname.startsWith("/mainpage/calendar")) {
       setSelectedComponent("Calendar");
+      setActiveSidebarBoardId(null);
     } else if (location.pathname.startsWith("/mainpage/settings")) {
       setSelectedComponent("Settings");
+      setActiveSidebarBoardId(null);
     } else if (location.pathname.startsWith("/mainpage/templates")) {
       setSelectedComponent("Templates");
+      setActiveSidebarBoardId(null);
     } else if (location.pathname.startsWith("/mainpage/notification")) {
       setSelectedComponent("Notification");
+      setActiveSidebarBoardId(null);
     } else if (location.pathname.startsWith("/mainpage/mindmap")) {
       setSelectedComponent("MindMap");
     }

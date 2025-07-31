@@ -19,6 +19,7 @@ import { useTranslation } from 'react-i18next';
 import { board } from "../utils/interface";
 import { IoIosArrowDropleftCircle } from "react-icons/io";
 import { IoIosArrowDroprightCircle } from "react-icons/io";
+import { SettingOutlined, LogoutOutlined } from '@ant-design/icons';
 
 
 
@@ -228,6 +229,30 @@ const Header: React.FC<HeaderProps> = ({
     ],
   };
 
+
+  const profileMenu: MenuProps = {
+    items: [
+      {
+        key: 'settings',
+        icon: <SettingOutlined />,
+        label: (
+          <span className="profile-dropdown-item" onClick={handleUserImageClick} >
+            {t('settings')}
+          </span>
+        ),
+      },
+      {
+        key: 'logout',
+        icon: <LogoutOutlined />,
+        label: (
+          <span className="profile-dropdown-item" onClick={handle_logout_icon_click}>
+            {t('logout')}
+          </span>
+        ),
+      },
+    ],
+  };
+
   // ================================================  logo click   ======================================================
 
   const handleLogoClick = () => {
@@ -385,41 +410,47 @@ const Header: React.FC<HeaderProps> = ({
           </Dropdown>
         </div>
 
-        <div className="header_profile_container"
-          onClick={handleUserImageClick}
 
+        {/* Profile Dropdown */}
+        <div className="header_profile_dropdown_container"
+          style={{
+            backgroundColor: currentTheme['--list-background-color'],
+            borderColor: currentTheme['--border-color'],
+            color: currentTheme['--main-text-coloure'],
+          }}
         >
-          <h3 className="header_profile_username">{profileData.username}</h3>
-          {profileData?.profile_picture ? (
-            <img
-              src={profileData.profile_picture}
-              alt="profile"
-              className="header_profile_picture"
-            />
-          ) : (
-            <Avatar
-              style={{
-                backgroundColor: getAvatarStyles(profileData.username.charAt(0)).backgroundColor,
-                color: getAvatarStyles(profileData.username.charAt(0)).color
-              }}
-            >
-              {profileData.username.charAt(0).toUpperCase()}
-            </Avatar>
-          )}
+          <Dropdown
+            menu={profileMenu}
+            placement="bottomRight"
+            arrow
+            overlayClassName="custom-centered-dropdown"
+            trigger={['hover', 'click']}
+          >
+            <div className="header_profile_container" style={{ cursor: 'pointer' }}>
+              <h3 className="header_profile_username">{profileData.username}</h3>
+              {profileData?.profile_picture ? (
+                <img
+                  src={profileData.profile_picture}
+                  alt="profile"
+                  className="header_profile_picture"
+                />
+              ) : (
+                <Avatar
+                  style={{
+                    backgroundColor: getAvatarStyles(profileData.username.charAt(0)).backgroundColor,
+                    color: getAvatarStyles(profileData.username.charAt(0)).color,
+                    width: '30px',
+                    height: '30px',
+                  }}
+
+                >
+                  {profileData.username.charAt(0).toUpperCase()}
+                </Avatar>
+              )}
+            </div>
+          </Dropdown>
         </div>
 
-        {!isMobile && (
-          <div
-            onClick={handle_logout_icon_click}
-            className="header_profile_container"
-          >
-            <LuLogOut
-              size={26}
-              style={{ color: currentTheme['--main-text-coloure'] }}
-              className="header_logout_icon"
-            />
-          </div>
-        )}
 
         {confirmation_for_logout && (
           <ConfirmationDialog
