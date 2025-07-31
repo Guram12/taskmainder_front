@@ -625,7 +625,7 @@ const MindMap: React.FC<MindMapProps> = ({
     });
 
     return { nodes: newNodes, edges: newEdges };
-  }, [loadPositionsFromStorage]);
+  }, [loadPositionsFromStorage, currentTheme]);
 
   // ================================  Handle board selection change ==========================================================
 
