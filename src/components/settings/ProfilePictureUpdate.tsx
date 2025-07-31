@@ -180,6 +180,7 @@ const ProfilePictureUpdate: React.FC<ProfilePictureUpdateProps> = ({ profileData
           onConfirm={deleteProfilePicture}
           onCancel={handleCancelDelete}
           currentTheme={currentTheme}
+          isOpen={IsDeletingWindow}
         />
       )}
       <div className="profile_picture_update_p_cont"

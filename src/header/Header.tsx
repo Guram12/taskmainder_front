@@ -427,6 +427,7 @@ const Header: React.FC<HeaderProps> = ({
             onConfirm={handleLogOut}
             onCancel={() => setConfirmation_for_logout(false)}
             currentTheme={currentTheme}
+            isOpen={confirmation_for_logout}
           />
         )}
 

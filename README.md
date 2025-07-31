@@ -1,6 +1,6 @@
-# TaskMinder – Task Management App
+# DailyDoer – Task Management App
 
-TaskMinder is a modern, collaborative task management web application built with React, TypeScript, and a rich set of UI libraries. It supports real-time collaboration, customizable themes, notifications, and advanced user management.
+DailyDoer is a modern, collaborative task management web application built with React, TypeScript, and a rich set of UI libraries. It supports real-time collaboration, customizable themes, notifications, and advanced user management.
 
 ---
 
@@ -15,6 +15,12 @@ TaskMinder is a modern, collaborative task management web application built with
   - Drag & drop tasks between lists (DND-Kit & SortableJS)
   - Task priorities, due dates, and user assignment
   - Real-time updates via WebSockets
+- **MindMap Visualization**
+  - Visualize board structure and relationships as a mind map
+  - Drag & drop nodes (tasks, lists, boards)
+  - Edit, connect, and organize tasks visually
+  - Save node positions per board
+  - Real-time updates
 - **User & Member Management**
   - Invite users to boards, set roles (owner, admin, member)
   - Edit board names, remove users, leave boards
@@ -61,7 +67,7 @@ TaskMinder is a modern, collaborative task management web application built with
 1. **Clone the repository:**
 
    ```bash
-   git clone https://github.com/yourusername/taskminder.git
+   git clone https://github.com/Guram12/taskmainder_front.git
    cd taskminder
    ```
 
@@ -115,6 +121,11 @@ TaskMinder is a modern, collaborative task management web application built with
   - Task creation, editing, and assignment
   - Member management and invitations
   - Board background customization
+- **MindMap** - Visual board and task mapping
+  - Interactive mind map of boards, lists, and tasks
+  - Drag & drop node organization
+  - Edit tasks/lists/board names directly on the map
+  - Real-time updates and position saving
 - **Calendar** - Calendar view of tasks and due dates
   - Yearly calendar with task highlights
   - Daily task overview
@@ -156,7 +167,8 @@ App.tsx
 │   │   ├── Profile_Info_update.tsx
 │   │   ├── ChangePassword.tsx
 │   │   ├── CustomTheme.tsx
-│   │   └── DeleteAccount.tsx
+│   │   ├── DeleteAccount.tsx
+│   │   └── ChangeNotification.tsx
 │   ├── Members.tsx
 │   ├── NoBoards.tsx (Empty state)
 │   └── ErrorPage.tsx
@@ -198,7 +210,8 @@ src/
 │   │   ├── CustomTheme.tsx
 │   │   ├── DeleteAccount.tsx
 │   │   ├── Profile_Info_update.tsx
-│   │   └── ProfilePictureUpdate.tsx
+│   │   ├── ProfilePictureUpdate.tsx
+│   │   └── ChangeNotification.tsx
 │   ├── Calendar.tsx
 │   ├── ErrorPage.tsx
 │   ├── LogoComponent.tsx

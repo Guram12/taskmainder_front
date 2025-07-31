@@ -242,15 +242,27 @@ const SidebarComponent: React.FC<SidebarProps> = ({
 
 
   // ========================================== add new board =================================================
+
+  const [show_board_add_section, setShow_board_add_section] = useState(true);
+
   const handleBoardAddClick = () => {
     setAddingNewBoard(true);
   }
 
-  const canselBoardAdding = () => {
+  const cancelBoardAdding = () => {
     setAddingNewBoard(false);
     setNewBoardName('');
   }
 
+
+  useEffect(() => {
+    if (isOpen) {
+        setShow_board_add_section(true);
+    } else {
+      setShow_board_add_section(false);
+    }
+
+  }, [isOpen]);
 
 
   const handle_create_new_board = async () => {
@@ -321,6 +333,7 @@ const SidebarComponent: React.FC<SidebarProps> = ({
             onCancel={() => setIsConfirmationDialogOpen(false)}
             onConfirm={handleLogOut}
             currentTheme={currentTheme}
+            isOpen={isConfirmationDialogOpen}
           />
         )}
         <Sidebar
@@ -425,20 +438,23 @@ const SidebarComponent: React.FC<SidebarProps> = ({
                     </>
                   )}
 
-                  {/* add new boarf  */}
-                  {!addingNewBoard && (
-                    <MenuItem
-                      icon={<IoIosAddCircleOutline className='sidebar_big_icon' />}
-                      onClick={handleBoardAddClick}
-                      rootStyles={{
-                        transition: 'all 0.3s',
-                        textAlign: 'left',
-                        fontWeight: 'bold',
-                      }}
-                    >
-                      {t('add_new_board')}
-                    </MenuItem>
-                  )}
+                  {/* add new board  */}
+                  <div className={`add_new_board_container  ${show_board_add_section && "add_new_board_container_close"} `}>
+
+                    {!addingNewBoard && (
+                      <MenuItem
+                        icon={<IoIosAddCircleOutline className='sidebar_big_icon' />}
+                        onClick={handleBoardAddClick}
+                        rootStyles={{
+                          transition: 'all 0.3s',
+                          textAlign: 'left',
+                          fontWeight: 'bold',
+                        }}
+                      >
+                        {t('add_new_board')}
+                      </MenuItem>
+                    )}
+                  </div>
 
 
                   {addingNewBoard && (
@@ -465,7 +481,7 @@ const SidebarComponent: React.FC<SidebarProps> = ({
                           />
                           <div className='add_board_button_container' >
                             <GrFormCheckmark onClick={() => handle_create_new_board()} className='add_board_icon' />
-                            <HiXMark onClick={canselBoardAdding} className='cancel_add_board_icon' />
+                            <HiXMark onClick={cancelBoardAdding} className='cancel_add_board_icon' />
                           </div>
                         </>
                       )}

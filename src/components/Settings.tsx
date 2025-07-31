@@ -133,6 +133,7 @@ const Settings: React.FC<SettingsProps> = ({
               setNew_image_for_board({ boardId: 0, NewImage: new File([], "") });
             }}
             currentTheme={currentTheme}
+            isOpen={isImageDeleting}
           />
         )}
 

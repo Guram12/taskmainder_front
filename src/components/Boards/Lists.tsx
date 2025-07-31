@@ -273,6 +273,7 @@ const List: React.FC<ListProps> = ({
             onConfirm={confirmDelete}
             onCancel={cancelListDelete}
             currentTheme={currentTheme}
+            isOpen={isListDeleting}
           />
         )}
       </div>
