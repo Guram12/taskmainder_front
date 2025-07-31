@@ -65,8 +65,6 @@ const Header: React.FC<HeaderProps> = ({
   const [showColorContainer, setShowColorContainer] = useState<boolean>(true);
   const [show_theme_open_icon, setShow_theme_open_icon] = useState<boolean>(false);
 
-  const [header_selected_theme, setHeader_selected_theme] = useState<string>('');
-
   const [confirmation_for_logout, setConfirmation_for_logout] = useState<boolean>(false);
 
   const [showHeader, setShowHeader] = useState<boolean>(true);
@@ -102,6 +100,42 @@ const Header: React.FC<HeaderProps> = ({
 
 
   // ============================== theme change function ======================================
+  const [header_selected_theme, setHeader_selected_theme] = useState<string>('');
+
+  useEffect(() => {
+    // On mount, set theme from localStorage if available
+    const storedTheme = localStorage.getItem('theme') as string | null;
+    if (storedTheme) {
+      const themeObj = JSON.parse(storedTheme);
+      // Find the theme key that matches the stored theme
+      const foundThemeKey = Object.keys(themes).find(key => {
+        const theme = themes[key as keyof typeof themes];
+        // Compare all theme properties
+        return Object.keys(themeObj).every(prop => theme[prop as keyof ThemeSpecs] === themeObj[prop]);
+      });
+      if (foundThemeKey) {
+        setHeader_selected_theme(foundThemeKey);
+        setCurrentTheme(themes[foundThemeKey as keyof typeof themes]);
+        // Optionally, apply theme to document
+        Object.entries(themes[foundThemeKey as keyof typeof themes]).forEach(([key, value]) => {
+          document.documentElement.style.setProperty(key, value);
+        });
+        document.body.style.backgroundColor = themes[foundThemeKey as keyof typeof themes]['--background-color'];
+        document.body.style.color = themes[foundThemeKey as keyof typeof themes]['--main-text-coloure'];
+      } else {
+        // If not found, just apply the stored theme
+        setCurrentTheme(themeObj);
+        Object.entries(themeObj).forEach(([key, value]) => {
+          document.documentElement.style.setProperty(key, value as string);
+        });
+        document.body.style.backgroundColor = themeObj['--background-color'];
+        document.body.style.color = themeObj['--main-text-coloure'];
+      }
+    }
+  }, []);
+
+
+
   const changeTheme = (themeSpecs: ThemeSpecs, themeName: string) => {
     setHeader_selected_theme(String(themeName));
     for (const [key, value] of Object.entries(themeSpecs)) {
