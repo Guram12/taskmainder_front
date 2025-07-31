@@ -13,7 +13,6 @@ import { Dropdown } from 'antd';
 import { AiFillSkin } from "react-icons/ai";
 import { GlobalOutlined } from '@ant-design/icons';
 import type { MenuProps } from 'antd';
-import { LuLogOut } from "react-icons/lu";
 import ConfirmationDialog from "../components/Boards/ConfirmationDialog";
 import { useTranslation } from 'react-i18next';
 import { board } from "../utils/interface";
@@ -66,6 +65,7 @@ const Header: React.FC<HeaderProps> = ({
   const [showColorContainer, setShowColorContainer] = useState<boolean>(true);
   const [show_theme_open_icon, setShow_theme_open_icon] = useState<boolean>(false);
 
+  const [header_selected_theme, setHeader_selected_theme] = useState<string>('');
 
   const [confirmation_for_logout, setConfirmation_for_logout] = useState<boolean>(false);
 
@@ -102,7 +102,8 @@ const Header: React.FC<HeaderProps> = ({
 
 
   // ============================== theme change function ======================================
-  const changeTheme = (themeSpecs: ThemeSpecs) => {
+  const changeTheme = (themeSpecs: ThemeSpecs, themeName: string) => {
+    setHeader_selected_theme(String(themeName));
     for (const [key, value] of Object.entries(themeSpecs)) {
       document.documentElement.style.setProperty(key, value)
     }
@@ -170,8 +171,11 @@ const Header: React.FC<HeaderProps> = ({
         label: (
           <div
             className={`header_coloure_child_container  example${idx + 2}`}
-            onClick={() => changeTheme(themes[key as keyof typeof themes])}
+            onClick={() => changeTheme(themes[key as keyof typeof themes], key)}
             id="ttt"
+            style={{
+              borderColor: header_selected_theme === key ? 'seagreen' : 'black',
+            }}
           />
         ),
       })),
@@ -257,8 +261,8 @@ const Header: React.FC<HeaderProps> = ({
 
   const handleLogoClick = () => {
     setSelectedComponent('Boards');
-    navigate('/mainpage/boards/');
     const prev_selected_board_id = localStorage.getItem('prev_selected_board_id');
+    navigate(`/mainpage/boards/${prev_selected_board_id}`);
     if (prev_selected_board_id === null) {
       setSelectedBoard(null);
       console.log("No previous board selected, setting selected board to null.");
@@ -312,32 +316,32 @@ const Header: React.FC<HeaderProps> = ({
             className="header_theme_icon"
           />
         )}
-        {!isMobile ? (
+        {!isMobile && (
           <div
             className={`header_coloure_container${showColorContainer ? '' : ' hide_color_container'}`}
           >
-            <div className='header_coloure_child_container example2'
-              onClick={() => changeTheme(themes.dark_gray)}></div>
-            <div className='header_coloure_child_container example3'
-              onClick={() => changeTheme(themes.forest_night)}></div>
-            <div className='header_coloure_child_container example4'
-              onClick={() => changeTheme(themes.neon_void)}></div>
-            <div className='header_coloure_child_container example5'
-              onClick={() => changeTheme(themes.deep_aqua)}></div>
-            <div className='header_coloure_child_container example6'
-              onClick={() => changeTheme(themes.ink_cobalt)}></div>
-            <div className='header_coloure_child_container example7'
-              onClick={() => changeTheme(themes.blue_steel)}></div>
-            <div className='header_coloure_child_container example8'
-              onClick={() => changeTheme(themes.hologram_glow)}></div>
-            <div className='header_coloure_child_container example9'
-              onClick={() => changeTheme(themes.sky_breeze)}></div>
-            <div className='header_coloure_child_container example10'
-              onClick={() => changeTheme(themes.mint_ice)}></div>
-            <div className='header_coloure_child_container example11'
-              onClick={() => changeTheme(themes.sage_paper)}></div>
-            <div className='header_coloure_child_container example12'
-              onClick={() => changeTheme(themes.glacier_bite)}></div>
+            <div className='header_coloure_child_container example2' style={{ borderColor: header_selected_theme === 'dark_gray' ? 'seagreen' : 'black' }}
+              onClick={() => changeTheme(themes.dark_gray, 'dark_gray')}></div>
+            <div className='header_coloure_child_container example3' style={{ borderColor: header_selected_theme === 'forest_night' ? 'seagreen' : 'black' }}
+              onClick={() => changeTheme(themes.forest_night, 'forest_night')}></div>
+            <div className='header_coloure_child_container example4' style={{ borderColor: header_selected_theme === 'neon_void' ? 'seagreen' : 'black' }}
+              onClick={() => changeTheme(themes.neon_void, 'neon_void')}></div>
+            <div className='header_coloure_child_container example5' style={{ borderColor: header_selected_theme === 'deep_aqua' ? 'seagreen' : 'black' }}
+              onClick={() => changeTheme(themes.deep_aqua, 'deep_aqua')}></div>
+            <div className='header_coloure_child_container example6' style={{ borderColor: header_selected_theme === 'ink_cobalt' ? 'seagreen' : 'black' }}
+              onClick={() => changeTheme(themes.ink_cobalt, 'ink_cobalt')}></div>
+            <div className='header_coloure_child_container example7' style={{ borderColor: header_selected_theme === 'blue_steel' ? 'seagreen' : 'black' }}
+              onClick={() => changeTheme(themes.blue_steel, 'blue_steel')}></div>
+            <div className='header_coloure_child_container example8' style={{ borderColor: header_selected_theme === 'hologram_glow' ? 'seagreen' : 'black' }}
+              onClick={() => changeTheme(themes.hologram_glow, 'hologram_glow')}></div>
+            <div className='header_coloure_child_container example9' style={{ borderColor: header_selected_theme === 'sky_breeze' ? 'seagreen' : 'black' }}
+              onClick={() => changeTheme(themes.sky_breeze, 'sky_breeze')}></div>
+            <div className='header_coloure_child_container example10' style={{ borderColor: header_selected_theme === 'mint_ice' ? 'seagreen' : 'black' }}
+              onClick={() => changeTheme(themes.mint_ice, 'mint_ice')}></div>
+            <div className='header_coloure_child_container example11' style={{ borderColor: header_selected_theme === 'sage_paper' ? 'seagreen' : 'black' }}
+              onClick={() => changeTheme(themes.sage_paper, 'sage_paper')}></div>
+            <div className='header_coloure_child_container example12' style={{ borderColor: header_selected_theme === 'glacier_bite' ? 'seagreen' : 'black' }}
+              onClick={() => changeTheme(themes.glacier_bite, 'glacier_bite')}></div>
 
 
 
@@ -360,31 +364,33 @@ const Header: React.FC<HeaderProps> = ({
 
           </div>
 
-        ) : (
-          <div className="mobile_theme_dropdown_wrapper"
-          >
-            <Dropdown
-              menu={themeMenu}
-              placement="bottomLeft"
-              arrow
-              overlayClassName="custom-centered-dropdown"
-
-            >
-              <button className="mobile_theme_dropdown_btn"
-                style={{
-                  backgroundColor: currentTheme['--list-background-color'],
-                }}
-              >
-                <AiFillSkin size={20} style={{ color: currentTheme['--main-text-coloure'] }} />
-              </button>
-            </Dropdown>
-          </div>
         )}
 
 
       </div>
 
+      {isMobile && (
+        <div className="mobile_theme_dropdown_wrapper"
+        >
+          <Dropdown
+            menu={themeMenu}
+            placement="bottomLeft"
+            arrow
+            overlayClassName="custom-centered-dropdown"
 
+          >
+            <button className="mobile_theme_dropdown_btn"
+              style={{
+                backgroundColor: currentTheme['--list-background-color'],
+              }}
+            >
+              <AiFillSkin size={20} style={{ color: currentTheme['--main-text-coloure'] }} />
+            </button>
+          </Dropdown>
+        </div>
+      )
+
+      }
 
       <div className="language_and_user_in_header" >
         {/* Language Dropdown */}
