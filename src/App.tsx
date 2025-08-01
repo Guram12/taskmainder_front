@@ -102,15 +102,6 @@ const App: React.FC = () => {
 
   const [isCustomThemeSelected, setIsCustomThemeSelected] = useState<boolean>(default_is_custom_theme_selected);
 
-  useEffect(() => {
-    console.log('language changed to:', language);
-  }, [language]);
-
-  useEffect(() => {
-    console.log('isCustomThemeSelected changed to:', isCustomThemeSelected);
-    localStorage.setItem('isCustomThemeSelected', String(isCustomThemeSelected));
-  }, [isCustomThemeSelected]);
-
 
   const background_color = localStorage.getItem('background_color') || '#1A252F';
   const border_color = localStorage.getItem('border_color') || '#EAF6FB';
@@ -231,7 +222,6 @@ const App: React.FC = () => {
     setIs_cur_Board_users_fetched(false);
     setIs_members_refreshing(true);
     try {
-      console.log("selected board users are fetching");
       const response = await axiosInstance.get(`/api/boards/${selectedBoard?.id}/users/`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem('access_token')}`
@@ -288,6 +278,7 @@ const App: React.FC = () => {
               console.log(
                 `TASK_DUE_REMINDER type ==>> Task Name: ${payload.taskName}, Due Date: ${payload.dueDate}, Priority: ${payload.priority}`
               );
+
               break;
 
 
@@ -314,11 +305,7 @@ const App: React.FC = () => {
 
               break;
 
-            // ...inside serviceWorker message event...
             case 'BOARD_INVITATION_ACCEPTED':
-              console.log('BOARD_INVITATION_ACCEPTED type ==>> Board Name:', payload.boardName);
-              console.log('selectedboard ==>>>', selectedBoardRef.current);
-              console.log('===---==>>', payload.boardName, '===>>>', selectedBoardRef.current?.name);
               if (
                 String(payload.boardName).toLowerCase() ===
                 String(selectedBoardRef.current?.name).toLowerCase()
@@ -336,7 +323,6 @@ const App: React.FC = () => {
 
               if (payload.boardName === selectedBoardRef.current?.name) {
                 console.log('Updating board users for the selected board:', selectedBoardRef.current?.name, 'payload:', payload.boardName);
-                console.log('ipdating-after-leaving-board');
                 update_board_users(String(selectedBoardRef.current?.id));
               }
 
