@@ -125,14 +125,6 @@ const SidebarComponent: React.FC<SidebarProps> = ({
   };
 
 
-
-
-  useEffect(() => {
-    console.log('mobile ', isMobile);
-  }, [isMobile]);
-
-
-
   const handle_burger_icon_click = () => {
     setIs_sidebar_open_on_mobile(!is_sidebar_open_on_mobile);
   }
@@ -142,16 +134,12 @@ const SidebarComponent: React.FC<SidebarProps> = ({
   const handleBoardClick = async (board: board) => {
     setActiveSidebarBoardId(board.id); // Only for sidebar styling
 
-    console.log('Selected board:', board);
     localStorage.setItem('prev_selected_board_id', JSON.stringify(board.id));
     setSelectedComponent("Boards");
     setIs_sidebar_open_on_mobile(true);
     navigate(`/mainpage/boards/${board.id}`)
 
-    // Update the sidebar selection
-
     if (board.id === selectedBoard?.id) {
-      console.log('This board is already selected. No need to fetch data.');
       return; // Exit early if the board is already selected
     }
     try {
