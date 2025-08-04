@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import '../styles/IntroPage.css';
 import { Helmet } from "react-helmet-async";
 import { ThemeSpecs } from '../utils/theme';
@@ -41,16 +41,25 @@ const IntroPage: React.FC<IntroPageProps> = ({
   const { t, i18n } = useTranslation();
 
   // =====================================================  header text animation =========================================
+
+
+const [teststate, setTeststate] = useState('');
+
+useEffect(()=> {
+  setTeststate('test');
+  console.log('teststate', teststate);
+})
+
   const headerRef = useRef<HTMLHeadingElement>(null);
 
   useEffect(() => {
     gsap.registerPlugin(SplitText);
 
 
-    let split: any = undefined;
-    let animation: gsap.core.Animation | undefined = undefined;
-
     if (headerRef.current) {
+      let split: any = undefined;
+      let animation: gsap.core.Animation | undefined = undefined;
+
       split = SplitText.create(headerRef.current);
 
       // Animate on mount (refresh)
