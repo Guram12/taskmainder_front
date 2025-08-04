@@ -67,3 +67,8 @@
 .intro_image{
   width: 200px;
 }
+
+
+.intro_header{
+  transition: all 0.3s ease;
+}

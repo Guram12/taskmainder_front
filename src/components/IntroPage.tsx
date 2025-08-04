@@ -105,8 +105,12 @@ const IntroPage: React.FC<IntroPageProps> = ({
   useEffect(() => {
     if (polygonRef.current) {
       const pathLength = polygonRef.current.getTotalLength();
+      // Reset styles before animating
       polygonRef.current.style.strokeDasharray = `${pathLength}`;
       polygonRef.current.style.strokeDashoffset = `${pathLength}`;
+      polygonRef.current.style.opacity = '0';
+      polygonRef.current.style.fill = 'none';
+
       gsap.to(polygonRef.current, {
         strokeDashoffset: 0,
         duration: 1.2,
@@ -124,8 +128,12 @@ const IntroPage: React.FC<IntroPageProps> = ({
     }
     if (pathRef.current) {
       const pathLength = pathRef.current.getTotalLength();
+      // Reset styles before animating
       pathRef.current.style.strokeDasharray = `${pathLength}`;
       pathRef.current.style.strokeDashoffset = `${pathLength}`;
+      pathRef.current.style.opacity = '0';
+      pathRef.current.style.fill = 'none';
+
       gsap.to(pathRef.current, {
         strokeDashoffset: 0,
         duration: 1.2,
@@ -202,15 +210,18 @@ const IntroPage: React.FC<IntroPageProps> = ({
 
 
 
-      <div className="main_intropage_container" >
+      <div className="main_intropage_container" style={{
+        color: currentTheme['--main-text-coloure'],
+        transition: 'all'
+      }}>
         <div className='mainpage_child_main_cont' >
 
           <div className='landing_header_cont' >
             {/* Logo Component */}
             <div className="landing_logo_container" onClick={handleLogoClick} >
               <svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 517.14 758.16"
-                width="40"
-                height="40"
+                width="50"
+                height="50"
               >
                 <g >
                   <polygon
@@ -220,7 +231,7 @@ const IntroPage: React.FC<IntroPageProps> = ({
                     style={{
                       fill: "none",
                       stroke: currentTheme['--main-text-coloure'],
-                      strokeWidth: 4,
+                      strokeWidth: 10,
                       opacity: 0,
                       transition: "fill 0.3s",
                     }}
@@ -234,7 +245,7 @@ const IntroPage: React.FC<IntroPageProps> = ({
                     style={{
                       fill: "none",
                       stroke: currentTheme['--main-text-coloure'],
-                      strokeWidth: 4,
+                      strokeWidth: 10,
                       opacity: 0,
                       transition: "fill 0.3s",
                     }}
@@ -293,7 +304,8 @@ const IntroPage: React.FC<IntroPageProps> = ({
           </div>
 
 
-          <h1 className='intro_header' ref={headerRef}>Welcome to DailyDoer</h1>
+          <h1 className='intro_header' ref={headerRef}
+          >Welcome to DailyDoer</h1>
 
           <h2 ref={sloganRef}></h2>
 
