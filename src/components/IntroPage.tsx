@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect , useRef } from 'react';
 import '../styles/IntroPage.css';
 import { Helmet } from "react-helmet-async";
 import { ThemeSpecs } from '../utils/theme';
