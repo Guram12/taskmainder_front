@@ -41,30 +41,20 @@ const IntroPage: React.FC<IntroPageProps> = ({
   const { t, i18n } = useTranslation();
 
   // =====================================================  header text animation =========================================
-
-
-const [teststate, setTeststate] = useState('');
-
-useEffect(()=> {
-  setTeststate('test');
-  console.log('teststate', teststate);
-})
-
   const headerRef = useRef<HTMLHeadingElement>(null);
 
   useEffect(() => {
     gsap.registerPlugin(SplitText);
 
-
     if (headerRef.current) {
       let split: any = undefined;
-      let animation: gsap.core.Animation | undefined = undefined;
+      // let animation: gsap.core.Animation | undefined = undefined; // <-- Remove this line
 
       split = SplitText.create(headerRef.current);
 
       // Animate on mount (refresh)
       if (split && split.chars) {
-        animation = gsap.from(split.chars, {
+        gsap.from(split.chars, {
           x: 150,
           opacity: 0,
           duration: 1,
