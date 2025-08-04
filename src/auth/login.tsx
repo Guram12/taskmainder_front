@@ -110,7 +110,7 @@ const Login: React.FC<loginProps> = ({ setIsAuthenticated, currentTheme, languag
         <title>Login | DailyDoer</title>
         <meta name="description" content="Login to your DailyDoer account to manage your tasks, boards, and projects efficiently." />
         <meta name="robots" content="index, follow" />
-        <link rel="canonical" href="https://dailydoer.space/" />
+        <link rel="canonical" href="https://dailydoer.space/login" />
       </Helmet>
 
 

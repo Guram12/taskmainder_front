@@ -18,8 +18,8 @@ import { Board_Users } from './utils/interface';
 import ErrorPage from './components/ErrorPage';
 import { useTranslation } from 'react-i18next';
 import { HelmetProvider } from "react-helmet-async";
-
-
+import IntroPage from './components/IntroPage';
+import themes from './utils/theme';
 
 
 
@@ -103,14 +103,14 @@ const App: React.FC = () => {
   const [isCustomThemeSelected, setIsCustomThemeSelected] = useState<boolean>(default_is_custom_theme_selected);
 
 
-  const background_color = localStorage.getItem('background_color') || '#1A252F';
-  const border_color = localStorage.getItem('border_color') || '#EAF6FB';
-  const main_text_coloure = localStorage.getItem('main_text_coloure') || '#274357';
-  const scrollbar_thumb_color = localStorage.getItem('scrollbar_thumb_color') || '#3B6E7A';
-  const list_background_color = localStorage.getItem('list_background_color') || '#22313F';
-  const task_background_color = localStorage.getItem('task_background_color') || '#2B4D5C';
-  const hover_color = localStorage.getItem('hover_color') || '#22313F';
-  const due_date_color = localStorage.getItem('due_date_color') || '#7FC6D7'; 1
+  const background_color = localStorage.getItem('background_color') || '#202B38';
+  const border_color = localStorage.getItem('border_color') || '#E3ECF7';
+  const main_text_coloure = localStorage.getItem('main_text_coloure') || '#31475E';
+  const scrollbar_thumb_color = localStorage.getItem('scrollbar_thumb_color') || '#46627F';
+  const list_background_color = localStorage.getItem('list_background_color') || '#263445';
+  const task_background_color = localStorage.getItem('task_background_color') || '#2F4258';
+  const hover_color = localStorage.getItem('hover_color') || '#263445';
+  const due_date_color = localStorage.getItem('due_date_color') || '#7FA6C9'; 1
 
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
 
@@ -134,14 +134,14 @@ const App: React.FC = () => {
   });
 
   const [currentTheme, setCurrentTheme] = useState<ThemeSpecs>({
-    '--background-color': '#1A252F',
-    '--border-color': '#EAF6FB',
-    '--main-text-coloure': '#274357',
-    '--scrollbar-thumb-color': '#3B6E7A',
-    '--list-background-color': '#22313F',
-    '--task-background-color': '#2B4D5C',
-    '--hover-color': '#22313F',
-    '--due-date-color': '#7FC6D7',
+    '--background-color': '#202B38',
+    '--main-text-coloure': '#E3ECF7',
+    '--border-color': '#31475E',
+    '--scrollbar-thumb-color': '#46627F',
+    '--list-background-color': '#263445',
+    '--task-background-color': '#2F4258',
+    '--hover-color': '#263445',
+    '--due-date-color': '#7FA6C9'
   });
 
   const [change_current_theme, setChange_current_theme] = useState(false);
@@ -161,6 +161,17 @@ const App: React.FC = () => {
     board_users: [],
     background_image: null,
     creation_date: '',
+  });
+  const [currentThemeKey, setCurrentThemeKey] = useState(() => {
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme) {
+      const themeSpecs = JSON.parse(savedTheme);
+      const foundKey = Object.keys(themes).find(
+        key => JSON.stringify(themes[key]) === JSON.stringify(themeSpecs)
+      );
+      return foundKey || 'blue_steel';
+    }
+    return 'blue_steel';
   });
 
   const selectedBoardRef = useRef<board | null>(selectedBoard);
@@ -492,6 +503,18 @@ const App: React.FC = () => {
         />
         <Routes>
           <Route path="/"
+            element={
+              <IntroPage
+                currentTheme={currentTheme}
+                language={language}
+                setLanguage={setLanguage}
+                // setIsAuthenticated={setIsAuthenticated}
+                setCurrentTheme={setCurrentTheme}
+                currentThemeKey={currentThemeKey}
+                setCurrentThemeKey={setCurrentThemeKey}
+              />}
+          />
+          <Route path="/login"
             element={<Login
               setIsAuthenticated={setIsAuthenticated}
               currentTheme={currentTheme}

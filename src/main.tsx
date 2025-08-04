@@ -6,7 +6,7 @@ import themes from './utils/theme.ts'
 import './utils/i18n.ts' 
 
 if (!localStorage.getItem('theme')) {
-  const deepAquaTheme = themes.deep_aqua;
+  const deepAquaTheme = themes.blue_steel;
   localStorage.setItem('theme', JSON.stringify(deepAquaTheme));
   for (const [key, value] of Object.entries(deepAquaTheme)) {
     document.documentElement.style.setProperty(key, value);

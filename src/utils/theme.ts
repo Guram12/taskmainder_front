@@ -10,7 +10,7 @@ export interface ThemeSpecs {
 }
 
 
-const themes = {
+const themes: Record<string, ThemeSpecs> = {
   dark_gray: {
     '--background-color': '#181A1B',           // Deep charcoal
     '--main-text-coloure': '#F5F6FA',          // Very light gray for high contrast
