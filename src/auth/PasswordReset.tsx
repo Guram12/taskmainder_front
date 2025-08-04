@@ -57,7 +57,7 @@ const PasswordReset: React.FC<PasswordResetProps> = ({ currentTheme }) => {
 
 
   const handleLogin = () => {
-    navigate('/');
+    navigate('/login');
   };
 
   const openEmailProvider = () => {

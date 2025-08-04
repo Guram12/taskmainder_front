@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
 import '../styles/IntroPage.css';
 import { Helmet } from "react-helmet-async";
 import { ThemeSpecs } from '../utils/theme';
@@ -65,7 +65,7 @@ const IntroPage: React.FC<IntroPageProps> = ({
       }
     }
 
-  }, [language]);
+  }, []);
 
   // -------------------------- slogan animation ------------------------
 
@@ -287,7 +287,7 @@ const IntroPage: React.FC<IntroPageProps> = ({
                   color: currentTheme['--background-color']
                 }}
               >
-                Login
+                {t('login')}
               </button>
               <button
                 onClick={() => navigate('/register')}
@@ -297,7 +297,7 @@ const IntroPage: React.FC<IntroPageProps> = ({
                   color: currentTheme['--background-color']
                 }}
               >
-                Sign Up
+                {t('register')}
               </button>
             </div>
 

@@ -43,6 +43,7 @@
   transition: all 0.3s ease;
   font-size: 14px;
   font-weight: bold;
+  min-height: 40px;
 }
 
 .login_button:hover {
@@ -57,6 +58,8 @@
   cursor: pointer;
   font-size: 14px;
   font-weight: bold;
+  min-height: 40px;
+
 
 }
 
