@@ -86,9 +86,11 @@ width: 100%;
   overflow: hidden !important;
   min-height: 150px; 
   background-image: url('../assets/test_1.jpg');
+
 }
 
 .slogan_h2 {
   position: relative;
   z-index: 1;
+  
 }
