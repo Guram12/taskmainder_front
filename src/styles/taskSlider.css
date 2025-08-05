@@ -1,0 +1,26 @@
+.slider-wrapper {
+  overflow: hidden;
+  width: 100%;
+  padding: 20px 0;
+}
+
+.slider-track {
+  display: flex;
+  width: max-content;
+  animation: slide 30s linear infinite alternate;
+}
+
+
+@keyframes slide {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+
+.sluider_task_title_container{
+  max-width: 270px;
+}

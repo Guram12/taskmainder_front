@@ -12,8 +12,7 @@
 
 
 .mainpage_child_main_cont {
-  width: 80%;
-  max-width: 1400px;
+width: 100%;
 }
 
 .landing_header_cont {
@@ -74,4 +73,21 @@
 
 .intro_header{
   transition: all 0.3s ease;
+}
+
+.slogan_container{
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  min-height: 76px;
+  position: relative;
+  overflow: hidden !important;
+  min-height: 120px; 
+}
+
+.slogan_h2 {
+  position: relative;
+  z-index: 1;
 }
