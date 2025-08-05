@@ -8,18 +8,22 @@ import { ThemeSpecs } from "../utils/theme";
 import ConfirmationDialog from "./Boards/ConfirmationDialog";
 import { useTranslation } from 'react-i18next';
 import { Helmet } from "react-helmet-async";
+import { useNavigate } from "react-router-dom";
+
 
 interface TemplatesProps {
   handleTemplateSelect: (template: number) => void;
   currentTheme: ThemeSpecs;
   setIsLoading: (isLoading: boolean) => void;
+  setActiveSidebarBoardId: (boardId: number) => void;
 }
 
 
-const Templates: React.FC<TemplatesProps> = ({ handleTemplateSelect, currentTheme, setIsLoading }) => {
+const Templates: React.FC<TemplatesProps> = ({ handleTemplateSelect, currentTheme, setIsLoading, setActiveSidebarBoardId }) => {
 
   const [dialogTemplateId, setDialogTemplateId] = useState<number | null>(null);
 
+  const navigate = useNavigate();
   const { t } = useTranslation();
 
   const handleTemplateClick = (templateId: number) => {
@@ -73,6 +77,8 @@ const Templates: React.FC<TemplatesProps> = ({ handleTemplateSelect, currentThem
 
       // Notify the parent component to update the selected board
       handleTemplateSelect(newBoard.id);
+      navigate(`/mainpage/boards/${newBoard.id}`);
+      setActiveSidebarBoardId(newBoard.id);
     } catch (error) {
       console.error("Error creating template:", error);
     } finally {

@@ -1,4 +1,4 @@
-import React, { useEffect , useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
 import '../styles/IntroPage.css';
 import { Helmet } from "react-helmet-async";
 import { ThemeSpecs } from '../utils/theme';
@@ -10,9 +10,11 @@ import { GlobalOutlined } from '@ant-design/icons';
 import type { MenuProps } from 'antd';
 import { useTranslation } from 'react-i18next';
 // import GoogleSignIn from '../auth/GoogleSignIn';
-import main_image from '../assets/main_image.png'
+// import main_image from '../assets/main_image.png'
 import { ScrambleTextPlugin } from "gsap/ScrambleTextPlugin";
 import themes from '../utils/theme';
+// import { ScrollTrigger } from "gsap/ScrollTrigger";
+import TaskSlider from './TaskSlider';
 
 
 interface IntroPageProps {
@@ -185,7 +187,6 @@ const IntroPage: React.FC<IntroPageProps> = ({
 
   // ========================================= theme change on logo sclick  =============================================
 
-
   const handleLogoClick = () => {
     const themeKeys = Object.keys(themes);
     const currentIndex = themeKeys.indexOf(currentThemeKey);
@@ -198,6 +199,11 @@ const IntroPage: React.FC<IntroPageProps> = ({
   };
 
 
+  // ==================================================== background curve animation =========================================
+
+
+
+
   return (
     <>
       <Helmet>
@@ -207,14 +213,12 @@ const IntroPage: React.FC<IntroPageProps> = ({
       </Helmet>
 
 
-
-
       <div className="main_intropage_container" style={{
         color: currentTheme['--main-text-coloure'],
         transition: 'all'
       }}>
-        <div className='mainpage_child_main_cont' >
 
+        <div className='mainpage_child_main_cont' >
           <div className='landing_header_cont' >
             {/* Logo Component */}
             <div className="landing_logo_container" onClick={handleLogoClick} >
@@ -226,7 +230,7 @@ const IntroPage: React.FC<IntroPageProps> = ({
                   <polygon
                     ref={polygonRef}
 
-                    className="poligon_element"
+                    className=""
                     style={{
                       fill: "none",
                       stroke: currentTheme['--main-text-coloure'],
@@ -237,10 +241,10 @@ const IntroPage: React.FC<IntroPageProps> = ({
                     points="0 0 73 0 73 429.33 36.5 385.33 0 429.33 0 0"
                   />
                 </g>
-                <g className="path_element">
+                <g className="">
                   <path
                     ref={pathRef}
-                    className="path_element"
+                    className=""
                     style={{
                       fill: "none",
                       stroke: currentTheme['--main-text-coloure'],
@@ -302,17 +306,19 @@ const IntroPage: React.FC<IntroPageProps> = ({
 
           </div>
 
+          <h1 className='intro_header' ref={headerRef} >Welcome to DailyDoer</h1>
 
-          <h1 className='intro_header' ref={headerRef}
-          >Welcome to DailyDoer</h1>
+          <div className='slogan_container'
+          >
+            <h2 className="slogan_h2"  ref={sloganRef}></h2>
 
-          <h2 ref={sloganRef}></h2>
+          </div>
+
+          <TaskSlider
+            currentTheme={currentTheme}
+          />
 
 
-          <img src={main_image} alt="Main Illustration" className='intro_image' />
-          <p>Your personal task management app.</p>
-          <p>Manage your tasks, boards, and projects efficiently.</p>
-          <p>Get started by logging in or signing up!</p>
 
         </div>
 
