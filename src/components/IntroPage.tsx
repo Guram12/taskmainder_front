@@ -14,7 +14,6 @@ import { useTranslation } from 'react-i18next';
 import { ScrambleTextPlugin } from "gsap/ScrambleTextPlugin";
 import themes from '../utils/theme';
 // import { ScrollTrigger } from "gsap/ScrollTrigger";
-// import testimage from '../assets/test.png';
 import TaskSlider from './TaskSlider';
 
 
@@ -200,26 +199,6 @@ const IntroPage: React.FC<IntroPageProps> = ({
   };
 
 
-  // =============================================== image border animation =============================================
-
-  // const imageBorderRef = useRef<SVGRectElement>(null);
-
-
-  // useEffect(() => {
-  //   if (imageBorderRef.current) {
-  //     const length = imageBorderRef.current.getTotalLength();
-  //     imageBorderRef.current.style.strokeDasharray = `${length}`;
-  //     imageBorderRef.current.style.strokeDashoffset = `${length}`;
-  //     imageBorderRef.current.style.opacity = '1';
-  //     gsap.to(imageBorderRef.current, {
-  //       strokeDashoffset: 0,
-  //       duration: 1.2,
-  //       ease: "power2.out"
-  //     });
-  //   }
-  // }, []);
-
-
   // ==================================================== background curve animation =========================================
 
 
@@ -329,8 +308,9 @@ const IntroPage: React.FC<IntroPageProps> = ({
 
           <h1 className='intro_header' ref={headerRef} >Welcome to DailyDoer</h1>
 
-          <div className='slogan_container'>
-            <h2 className="slogan_h2" ref={sloganRef}></h2>
+          <div className='slogan_container'
+          >
+            <h2 className="slogan_h2"  ref={sloganRef}></h2>
 
           </div>
 

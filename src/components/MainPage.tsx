@@ -127,7 +127,6 @@ const MainPage: React.FC<MainPageProps> = ({
       if (newBoard) {
         setSelectedBoard(newBoard);
         setSelectedComponent("Boards"); // Switch to the Boards view
-        navigate("/mainpage/boards"); // <--- change here
 
       }
     } catch (error) {
@@ -665,6 +664,7 @@ const MainPage: React.FC<MainPageProps> = ({
               handleTemplateSelect={handleTemplateSelect}
               currentTheme={currentTheme}
               setIsLoading={setIsLoading}
+              setActiveSidebarBoardId={setActiveSidebarBoardId}
             />
 
           } />
