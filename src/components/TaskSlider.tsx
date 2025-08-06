@@ -1,6 +1,7 @@
 import '../styles/taskSlider.css';
-import '../styles/Board Styles/Task.css'; // Import real task styles
+import '../styles/Board Styles/Task.css';
 import React from 'react';
+import { useState } from 'react';
 import { ThemeSpecs } from '../utils/theme';
 import { MdRadioButtonChecked } from "react-icons/md";
 
@@ -17,28 +18,22 @@ const slides = [
 ];
 
 
-// const priorityColors = {
-//   High: '#d60000',
-//   Medium: '#fcc603',
-//   Low: '#15cf8a',
-// };
-
-
 interface TaskSliderProps {
   currentTheme: ThemeSpecs;
 }
 
 
-
 const TaskSlider: React.FC<TaskSliderProps> = ({ currentTheme }) => {
-
-
+  const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
 
   return (
     <div className="slider-wrapper">
-      <div className="slider-track">
+      <div
+        className={`slider-track${hoveredIndex !== null ? ' hovering' : ''}`}
+      >
         {[...slides, ...slides].map((task, index) => (
-          <div className="each_task"
+          <div
+            className={`each_task${hoveredIndex === index ? ' hovered' : ''}`}
             key={index}
             style={{
               backgroundColor: currentTheme['--task-background-color'],
@@ -48,7 +43,10 @@ const TaskSlider: React.FC<TaskSliderProps> = ({ currentTheme }) => {
               borderRadius: 10,
               boxShadow: '0 2px 10px rgba(0,0,0,0.1)',
               flexShrink: 0,
-            }}>
+            }}
+            onMouseEnter={() => setHoveredIndex(index)}
+            onMouseLeave={() => setHoveredIndex(null)}
+          >
             <div className="task_complition_checkbox_container" style={{ borderColor: currentTheme['--border-color'] }}>
               <div className="completed_task_icon_cont">
                 <MdRadioButtonChecked
@@ -57,7 +55,6 @@ const TaskSlider: React.FC<TaskSliderProps> = ({ currentTheme }) => {
                     fontSize: '1.5rem',
                   }}
                 />
-
               </div>
             </div>
             <div className="conteiner_for_task_title  sluider_task_title_container">
@@ -68,7 +65,6 @@ const TaskSlider: React.FC<TaskSliderProps> = ({ currentTheme }) => {
             </div>
             <div className="task_description_and_due_date_container">
               <p className="due_Date_p" style={{ color: currentTheme['--due-date-color'] }} >Due: {task.due}</p>
-              {/* <p className="no_associated_users_p">No users</p> */}
             </div>
           </div>
         ))}
@@ -76,5 +72,6 @@ const TaskSlider: React.FC<TaskSliderProps> = ({ currentTheme }) => {
     </div>
   );
 }
+
 
 export default TaskSlider;

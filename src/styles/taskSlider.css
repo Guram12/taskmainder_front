@@ -24,3 +24,24 @@
 .sluider_task_title_container{
   max-width: 270px;
 }
+
+.slider-track {
+  display: flex;
+  width: max-content;
+  animation: slide 30s linear infinite alternate;
+}
+
+.each_task {
+  transition: filter 0.3s, opacity 0.3s;
+}
+
+/* When hovering a task, darken siblings */
+.slider-track.hovering .each_task {
+  filter: brightness(0.6);
+  opacity: 0.7;
+}
+
+.slider-track.hovering .each_task.hovered {
+  filter: none;
+  opacity: 1;
+}

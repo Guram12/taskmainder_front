@@ -15,6 +15,15 @@ import { ScrambleTextPlugin } from "gsap/ScrambleTextPlugin";
 import themes from '../utils/theme';
 // import { ScrollTrigger } from "gsap/ScrollTrigger";
 import TaskSlider from './TaskSlider';
+import task_managment_image from '../assets/task_management_icon.png';
+import diagram_image from '../assets/diagram_image.png';
+import calendar_image from '../assets/calendar_image.png';
+import team_image from '../assets/team_image.png';
+import customtheme_image from '../assets/customtheme_image.png';
+import SvgBackground from './SvgBackground';
+
+
+
 
 
 interface IntroPageProps {
@@ -308,9 +317,8 @@ const IntroPage: React.FC<IntroPageProps> = ({
 
           <h1 className='intro_header' ref={headerRef} >Welcome to DailyDoer</h1>
 
-          <div className='slogan_container'
-          >
-            <h2 className="slogan_h2"  ref={sloganRef}></h2>
+          <div className='slogan_container'>
+            <h2 className="slogan_h2" ref={sloganRef}></h2>
 
           </div>
 
@@ -319,10 +327,113 @@ const IntroPage: React.FC<IntroPageProps> = ({
           />
 
 
+          <div className="features_section_container">
+            <svg className="svg_wave_bg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320">
+              <path fill={currentTheme['--task-background-color']} d="M0,160L80,165.3C160,171,320,181,480,165.3C640,149,800,107,960,112C1120,117,1280,171,1360,197.3L1440,224L1440,0L1360,0C1280,0,1120,0,960,0C800,0,640,0,480,0C320,0,160,0,80,0L0,0Z"></path>
+            </svg>
+            <h2 className="features_title"  >Why Choose DailyDoer?</h2>
+
+
+
+            {/* features containers  */}
+            <div className="features_all_card_container">
+
+
+              <div className="feature_card">
+                <div className='feature_text_cont' >
+                  <SvgBackground path_variant={1} currentTheme={currentTheme} />
+                  <h3> Task Management</h3>
+                  <div className='feature_line' style={{ borderColor: currentTheme['--border-color'] }}  ></div>
+                  <p>Create, prioritize, and track tasks with intuitive boards.</p>
+                </div>
+                <img src={task_managment_image} alt="Task Management image" className='feature_image' />
+              </div>
+
+
+              <div className="feature_card">
+                <div className='feature_text_cont' >
+                  <SvgBackground path_variant={2} currentTheme={currentTheme} />
+                  <h3> Visualize Tasks as a Flow Diagram</h3>
+                  <div className='feature_line' style={{ borderColor: currentTheme['--border-color'] }}  ></div>
+                  <p>
+                    Switch from board to flow mode effortlessly.
+                    Plan, connect, and brainstorm your tasks visually using
+                    our diagram view by single click.</p>
+                </div>
+                <img src={diagram_image} alt="Diagram image" className='feature_image' />
+              </div>
+
+
+              <div className="feature_card">
+                <div className='feature_text_cont' >
+                  <SvgBackground path_variant={3} currentTheme={currentTheme} />
+
+                  <h3>Calendar View</h3>
+                  <div className='feature_line' style={{ borderColor: currentTheme['--border-color'] }}  ></div>
+                  <p>Visualize tasks in a calendar and never miss deadlines.</p>
+                </div>
+                <img src={calendar_image} alt="Calendar image" className='feature_image' />
+              </div>
+
+
+              <div className="feature_card">
+                <div className='feature_text_cont' >
+                  <SvgBackground path_variant={4} currentTheme={currentTheme} />
+
+                  <h3>Team Collaboration</h3>
+                  <div className='feature_line' style={{ borderColor: currentTheme['--border-color'] }}  ></div>
+                  <p>Invite team members, assign tasks, and work together in real time.</p>
+                </div>
+                <img src={team_image} alt="Team image" className='feature_image' />
+              </div>
+
+              <div className="feature_card">
+                <div className='feature_text_cont' >
+                  <SvgBackground path_variant={5} currentTheme={currentTheme} />
+
+                  <h3>Custom Themes</h3>
+                  <div className='feature_line' style={{ borderColor: currentTheme['--border-color'] }}  ></div>
+                  <p>Personalize your workspace with beautiful themes.</p>
+                </div>
+                <img src={customtheme_image} alt="Custom Theme image" className='feature_image' />
+              </div>
+
+              <div className="cta_section">
+                <h2>Ready to boost your productivity?</h2>
+                <p>Join us for organizing your work with DailyDoer.</p>
+                <button
+                  onClick={() => navigate('/register')}
+                  className="register_cta_btn"
+                  style={{
+                    backgroundColor: currentTheme['--list-background-color'],
+                    color: currentTheme['--main-text-coloure'],
+                  }}
+                >
+                  Get Started – It’s Free!
+                </button>
+              </div>
+
+
+              <svg className="svg_wave_bg_bottom" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320">
+                <path fill={currentTheme['--task-background-color']} d="M0,96L80,112C160,128,320,160,480,160C640,160,800,128,960,101.3C1120,75,1280,53,1360,42.7L1440,32L1440,320L1360,320C1280,320,1120,320,960,320C800,320,640,320,480,320C320,320,160,320,80,320L0,320Z"></path>
+              </svg>
+
+            </div>
+          </div>
+
+
+
 
         </div>
 
         {/* <GoogleSignIn setIsAuthenticated={setIsAuthenticated} /> */}
+        <p style={{
+          position: 'absolute',
+          bottom: '-12px',
+          right: '2px',
+          zIndex: 1000,
+          color: currentTheme['--due-date-color'],
+        }}>© 2025 DailyDoer</p>
       </div>
     </>
   );

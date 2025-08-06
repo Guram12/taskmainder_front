@@ -60,7 +60,9 @@
 
 }
 
-
+.ant-tooltip-inner {
+  color: var(--main-text-coloure); /* Or use your theme variable */
+}
 .boards_and_background_images_container {
   display: flex;
   flex-direction: row;

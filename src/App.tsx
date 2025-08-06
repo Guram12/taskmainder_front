@@ -1,7 +1,7 @@
 import './App.css'
 import React, { useEffect, useState, useRef } from 'react'
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import MainPage from './components/MainPage'
+import MainPage from './components/Main_Page'
 import Login from './auth/login'
 import Register from './auth/register'
 import Header from './header/Header';
