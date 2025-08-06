@@ -382,7 +382,7 @@ const IntroPage: React.FC<IntroPageProps> = ({
 
                   <h3>Team Collaboration</h3>
                   <div className='feature_line' style={{ borderColor: currentTheme['--border-color'] }}  ></div>
-                  <p>Share boards, assign tasks, and work together in real time.</p>
+                  <p>Invite team members, assign tasks, and work together in real time.</p>
                 </div>
                 <img src={team_image} alt="Team image" className='feature_image' />
               </div>
@@ -398,9 +398,22 @@ const IntroPage: React.FC<IntroPageProps> = ({
                 <img src={customtheme_image} alt="Custom Theme image" className='feature_image' />
               </div>
 
-              <div>
-                fwefwe fw
+              <div className="cta_section">
+                <h2>Ready to boost your productivity?</h2>
+                <p>Join us for organizing your work with DailyDoer.</p>
+                <button
+                  onClick={() => navigate('/register')}
+                  className="register_cta_btn"
+                  style={{
+                    backgroundColor: currentTheme['--list-background-color'],
+                    color: currentTheme['--main-text-coloure'],
+                  }}
+                >
+                  Get Started – It’s Free!
+                </button>
               </div>
+
+
               <svg className="svg_wave_bg_bottom" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320">
                 <path fill={currentTheme['--task-background-color']} d="M0,96L80,112C160,128,320,160,480,160C640,160,800,128,960,101.3C1120,75,1280,53,1360,42.7L1440,32L1440,320L1360,320C1280,320,1120,320,960,320C800,320,640,320,480,320C320,320,160,320,80,320L0,320Z"></path>
               </svg>
