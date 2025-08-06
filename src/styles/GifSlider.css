@@ -1,0 +1,49 @@
+.slider-wrapper_gif {
+  overflow: hidden;
+  width: 100%;
+  padding: 20px 0;
+}
+
+.slider-track_gif {
+  display: flex;
+  width: max-content;
+  animation: slide 30s linear infinite alternate;
+}
+
+
+@keyframes slide {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+
+.sluider_task_title_container_gif{
+  max-width: 270px;
+}
+
+.slider-track_gif {
+  display: flex;
+  width: max-content;
+  animation: slide 30s linear infinite alternate;
+}
+
+.each_task_gif {
+  transition: filter 0.3s, opacity 0.3s;
+  filter: brightness(0.9);
+
+}
+
+/* When hovering a task, darken siblings */
+.slider-track_gif.hovering .each_task_gif {
+  filter: brightness(0.6);
+  opacity: 0.7;
+}
+
+.slider-track_gif.hovering .each_task_gif.hovered {
+  filter: none;
+  opacity: 1;
+}
