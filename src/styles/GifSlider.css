@@ -7,7 +7,7 @@
 .slider-track_gif {
   display: flex;
   width: max-content;
-  animation: slide 30s linear infinite alternate;
+  animation: slide 50s linear infinite alternate;
 }
 
 

@@ -9,17 +9,20 @@ interface GifSliderProps {
   currentTheme: ThemeSpecs;
 }
 
-const GifSlider: React.FC<GifSliderProps> = ({  currentTheme }) => {
+const GifSlider: React.FC<GifSliderProps> = ({ currentTheme }) => {
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
 
-console.log('Current Theme:', currentTheme);
+  console.log('Current Theme:', currentTheme);
 
 
-const gifUrls = [
-'https://res.cloudinary.com/ddy2f7uoa/image/upload/v1754489815/chrome-capture-2025-08-06_u7ytbj.gif',
+  const gifUrls = [
+    'https://res.cloudinary.com/dnnyjuc9u/image/upload/v1754494912/chrome-capture-2025-08-06_4_z9sbzi.gif',
+    'https://res.cloudinary.com/dnnyjuc9u/image/upload/v1754494394/chrome-capture-2025-08-06_3_w46nts.gif',
+    'https://res.cloudinary.com/dnnyjuc9u/image/upload/v1754494256/chrome-capture-2025-08-06_2_rqj4s1.gif',
+    'https://res.cloudinary.com/dnnyjuc9u/image/upload/v1754494111/chrome-capture-2025-08-06_gj3igb.gif',
+    'https://res.cloudinary.com/dnnyjuc9u/image/upload/v1754494106/chrome-capture-2025-08-06_1_f35och.gif',
 
-
-];
+  ];
 
 
 
