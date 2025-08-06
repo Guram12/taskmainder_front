@@ -21,8 +21,7 @@ import calendar_image from '../assets/calendar_image.png';
 import team_image from '../assets/team_image.png';
 import customtheme_image from '../assets/customtheme_image.png';
 import SvgBackground from './SvgBackground';
-
-
+import GifSlider from './GifSlider.tsx';
 
 
 
@@ -397,6 +396,8 @@ const IntroPage: React.FC<IntroPageProps> = ({
                 </div>
                 <img src={customtheme_image} alt="Custom Theme image" className='feature_image' />
               </div>
+
+              <GifSlider currentTheme={currentTheme} />
 
               <div className="cta_section">
                 <h2>Ready to boost your productivity?</h2>
