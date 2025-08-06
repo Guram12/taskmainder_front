@@ -12,6 +12,9 @@ interface GifSliderProps {
 const GifSlider: React.FC<GifSliderProps> = ({  currentTheme }) => {
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
 
+console.log('Current Theme:', currentTheme);
+
+
 const gifUrls = [
 'https://res.cloudinary.com/ddy2f7uoa/image/upload/v1754489815/chrome-capture-2025-08-06_u7ytbj.gif',
 
