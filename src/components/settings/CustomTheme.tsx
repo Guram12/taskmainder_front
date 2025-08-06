@@ -280,7 +280,7 @@ const CustomTheme: React.FC<CustomThemeProps> = ({
     >
 
       <div className="customtheme_container"
-      id='customtheme_container_shepherd'
+        id='customtheme_container_shepherd'
         style={{
           backgroundColor: currentTheme["--background-color"],
           borderColor: currentTheme["--border-color"]
@@ -295,11 +295,18 @@ const CustomTheme: React.FC<CustomThemeProps> = ({
         <div className='background_image_tooltip_container'>
           <h1 className='background_image_set_h1'>{t('click_image_to_select_new_background')}</h1>
           <Tooltip
-            title= {t('you_can_change_board_background')}
+            title={t('you_can_change_board_background')}
             placement="right"
             color={currentTheme["--list-background-color"]}
+            styles={{
+              body: {
+                color: currentTheme["--main-text-coloure"],
+                background: currentTheme["--list-background-color"],
+              },
+            }}
             open={showToolTip || undefined} // Show on hover and when showToolTip is true
           >
+
             <span style={{ marginLeft: 8, cursor: 'pointer', fontSize: 18, color: currentTheme["--main-text-coloure"] }}>🛈</span>
           </Tooltip>
         </div>

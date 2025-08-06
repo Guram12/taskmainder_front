@@ -15,6 +15,17 @@ import { ScrambleTextPlugin } from "gsap/ScrambleTextPlugin";
 import themes from '../utils/theme';
 // import { ScrollTrigger } from "gsap/ScrollTrigger";
 import TaskSlider from './TaskSlider';
+import task_managment_image from '../assets/task_management_icon.png';
+import diagram_image from '../assets/diagram_image.png';
+import calendar_image from '../assets/calendar_image.png';
+import team_image from '../assets/team_image.png';
+import customtheme_image from '../assets/customtheme_image.png';
+
+
+
+
+
+
 
 
 interface IntroPageProps {
@@ -308,15 +319,80 @@ const IntroPage: React.FC<IntroPageProps> = ({
 
           <h1 className='intro_header' ref={headerRef} >Welcome to DailyDoer</h1>
 
-          <div className='slogan_container'
-          >
-            <h2 className="slogan_h2"  ref={sloganRef}></h2>
+          <div className='slogan_container'>
+            <h2 className="slogan_h2" ref={sloganRef}></h2>
 
           </div>
 
           <TaskSlider
             currentTheme={currentTheme}
           />
+
+          <div className="features_section_container">
+            <h2 className="features_title"  >Why Choose DailyDoer?</h2>
+
+            <div className="features_all_card_container">
+
+              <div className="feature_card">
+                <div className='feature_text_cont' >
+                  <h3> Task Management</h3>
+                  <div className='feature_line' style={{ borderColor: currentTheme['--border-color'] }}  ></div>
+                  <p>Create, prioritize, and track tasks with intuitive boards.</p>
+                </div>
+                <img src={task_managment_image} alt="Task Management image" className='feature_image' />
+              </div>
+
+
+
+              <div className="feature_card">
+                <div className='feature_text_cont' >
+                  <h3> Visualize Tasks as a Flow Diagram</h3>
+                  <div className='feature_line' style={{ borderColor: currentTheme['--border-color'] }}  ></div>
+                  <p>
+                    Switch from board to flow mode effortlessly.
+                    Plan, connect, and brainstorm your tasks visually using
+                    our diagram view by single click.</p>
+                </div>
+                <img src={diagram_image} alt="Diagram image" className='feature_image' />
+              </div>
+
+
+              <div className="feature_card">
+                <div className='feature_text_cont' >
+                  <h3>Calendar View</h3>
+                  <div className='feature_line' style={{ borderColor: currentTheme['--border-color'] }}  ></div>
+                  <p>Visualize tasks in a calendar and never miss deadlines.</p>
+
+                </div>
+                <img src={calendar_image} alt="Calendar image" className='feature_image' />
+              </div>
+
+
+              <div className="feature_card">
+                <div className='feature_text_cont' >
+                  <h3>Team Collaboration</h3>
+                  <div className='feature_line' style={{ borderColor: currentTheme['--border-color'] }}  ></div>
+                  <p>Share boards, assign tasks, and work together in real time.</p>
+
+                </div>
+                <img src={team_image} alt="Team image" className='feature_image' />
+              </div>
+
+              <div className="feature_card">
+                <div className='feature_text_cont' >
+                  <h3>Custom Themes</h3>
+                  <div className='feature_line' style={{ borderColor: currentTheme['--border-color'] }}  ></div>
+                  <p>Personalize your workspace with beautiful themes.</p>
+
+                </div>
+                <img src={customtheme_image} alt="Custom Theme image" className='feature_image' />
+              </div>
+
+
+
+            </div>
+          </div>
+
 
 
 

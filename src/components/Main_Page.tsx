@@ -202,7 +202,6 @@ const MainPage: React.FC<MainPageProps> = ({
 
     const token = localStorage.getItem('access_token');
     const newSocket = new WebSocket(`${environment_urls.URLS.websockersURL}${selectedBoard.id}/?token=${token}`);
-    // const newSocket = new WebSocket(`ws://localhost:8000/ws/boards/${selectedBoard.id}/?token=${token}`);
 
     socketRef.current = newSocket;
 
