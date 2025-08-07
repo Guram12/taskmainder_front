@@ -299,7 +299,6 @@ const Header: React.FC<HeaderProps> = ({
     const prev_selected_board_id = localStorage.getItem('prev_selected_board_id');
     navigate(`/mainpage/boards/${prev_selected_board_id}`);
     if (prev_selected_board_id === null) {
-      setSelectedBoard(null);
       console.log("No previous board selected, setting selected board to null.");
       return;
     }
