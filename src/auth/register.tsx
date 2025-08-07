@@ -301,6 +301,7 @@ const Register: React.FC<RegisterProps> = ({ currentTheme, isMobile }) => {
             >
               <IoEarth className='register_icons' style={{ color: currentTheme['--main-text-coloure'] }} />
               <Select
+
                 showSearch
                 value={selectedTimeZone}
                 onChange={(value) => {
@@ -308,13 +309,17 @@ const Register: React.FC<RegisterProps> = ({ currentTheme, isMobile }) => {
                 }}
                 options={timezoneOptions}
                 placeholder={t('select_timezone')}
-                style={{
-                  width: isMobile ? '290px' : '320px',
-                  height: '40px',
-                }}
+
                 filterOption={(input, option) =>
                   (option?.label ?? '').toLowerCase().includes(input.toLowerCase())
                 }
+                style={{
+                  width: isMobile ? '290px' : '320px',
+                  height: '40px',
+                  background: currentTheme['--task-background-color'],
+                  color: currentTheme['--main-text-coloure'],
+                  border: `1px solid ${currentTheme['--border-color']}`,
+                }}
               />
             </div>
 

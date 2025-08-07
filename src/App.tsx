@@ -56,7 +56,6 @@ const App: React.FC = () => {
   // ==================================== change language =========================================
 
   useEffect(() => {
-    console.log('language changed to:', language);
     if (i18n.isInitialized) {
       i18n.changeLanguage(language);
     }
@@ -508,7 +507,7 @@ const App: React.FC = () => {
                 currentTheme={currentTheme}
                 language={language}
                 setLanguage={setLanguage}
-                // setIsAuthenticated={setIsAuthenticated}
+                setIsAuthenticated={setIsAuthenticated}
                 setCurrentTheme={setCurrentTheme}
                 currentThemeKey={currentThemeKey}
                 setCurrentThemeKey={setCurrentThemeKey}

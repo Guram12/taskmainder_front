@@ -30,7 +30,7 @@ interface IntroPageProps {
   currentTheme: ThemeSpecs;
   language: string;
   setLanguage: (lang: 'en' | 'ka') => void;
-  // setIsAuthenticated: (value: boolean) => void;
+  setIsAuthenticated: (value: boolean) => void;
   setCurrentTheme: (theme: ThemeSpecs) => void;
   currentThemeKey: string;
   setCurrentThemeKey: (key: string) => void;
@@ -249,6 +249,11 @@ const IntroPage: React.FC<IntroPageProps> = ({
     setCurrentThemeKey(nextThemeKey);
     localStorage.setItem('theme', JSON.stringify(themes[nextThemeKey]));
     document.body.style.backgroundColor = themes[nextThemeKey]['--background-color'];
+
+    // Add this to apply all CSS custom properties including scrollbar
+    for (const [key, value] of Object.entries(themes[nextThemeKey])) {
+      document.documentElement.style.setProperty(key, value);
+    }
   };
 
 
@@ -442,7 +447,7 @@ const IntroPage: React.FC<IntroPageProps> = ({
                 <img src={customtheme_image} alt="Custom Theme image" className='feature_image' />
               </div>
 
-              <GifSlider currentTheme={currentTheme} />
+              <GifSlider />
 
               <div className="cta_section">
                 <h2>Ready to boost your productivity?</h2>
@@ -463,7 +468,13 @@ const IntroPage: React.FC<IntroPageProps> = ({
               <svg className="svg_wave_bg_bottom" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320">
                 <path fill={currentTheme['--task-background-color']} d="M0,96L80,112C160,128,320,160,480,160C640,160,800,128,960,101.3C1120,75,1280,53,1360,42.7L1440,32L1440,320L1360,320C1280,320,1120,320,960,320C800,320,640,320,480,320C320,320,160,320,80,320L0,320Z"></path>
               </svg>
-
+              <p style={{
+                position: 'absolute',
+                bottom: '-12px',
+                right: '2px',
+                zIndex: 1000,
+                color: currentTheme['--due-date-color'],
+              }}>© 2025 DailyDoer</p>
             </div>
           </div>
 
@@ -471,15 +482,7 @@ const IntroPage: React.FC<IntroPageProps> = ({
 
 
         </div>
-
         {/* <GoogleSignIn setIsAuthenticated={setIsAuthenticated} /> */}
-        <p style={{
-          position: 'absolute',
-          bottom: '-12px',
-          right: '2px',
-          zIndex: 1000,
-          color: currentTheme['--due-date-color'],
-        }}>© 2025 DailyDoer</p>
       </div>
     </>
   );
