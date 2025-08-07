@@ -2,7 +2,7 @@ import React, { useEffect, useRef } from 'react';
 import '../styles/IntroPage.css';
 import { Helmet } from "react-helmet-async";
 import { ThemeSpecs } from '../utils/theme';
-import gsap from 'gsap'; // <-- Import GSAP
+import gsap from 'gsap';
 import { useNavigate } from 'react-router-dom';
 import { SplitText } from "gsap/SplitText";
 import { Dropdown } from 'antd';
@@ -22,14 +22,15 @@ import team_image from '../assets/team_image.png';
 import customtheme_image from '../assets/customtheme_image.png';
 import SvgBackground from './SvgBackground';
 import GifSlider from './GifSlider.tsx';
-
+import { ScrollSmoother } from "gsap/ScrollSmoother";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 
 interface IntroPageProps {
   currentTheme: ThemeSpecs;
   language: string;
   setLanguage: (lang: 'en' | 'ka') => void;
-  // setIsAuthenticated: (value: boolean) => void;
+  setIsAuthenticated: (value: boolean) => void;
   setCurrentTheme: (theme: ThemeSpecs) => void;
   currentThemeKey: string;
   setCurrentThemeKey: (key: string) => void;
@@ -49,6 +50,23 @@ const IntroPage: React.FC<IntroPageProps> = ({
 
   const navigate = useNavigate();
   const { t, i18n } = useTranslation();
+
+  // =============================================== smooth scroll ==================================================
+  useEffect(() => {
+    gsap.registerPlugin(ScrollTrigger, ScrollSmoother);
+
+    const smoother = ScrollSmoother.create({
+      wrapper: ".main_intropage_container",
+      content: ".mainpage_child_main_cont",
+      smooth: 2, // Smoothness level (0-3, higher = smoother)
+      effects: true,
+      normalizeScroll: true, // Handles different scroll behaviors across devices
+    });
+
+    return () => {
+      smoother?.kill();
+    };
+  }, []);
 
   // =====================================================  header text animation =========================================
   const headerRef = useRef<HTMLHeadingElement>(null);
@@ -106,6 +124,33 @@ const IntroPage: React.FC<IntroPageProps> = ({
     i18n.changeLanguage(selectedLanguage);
   };
 
+  // ===================================== welcome text animation ================================================
+  const chooseDailyDoerRef = useRef<HTMLHeadingElement>(null);
+
+  useEffect(() => {
+
+    gsap.registerPlugin(SplitText);
+
+    if (chooseDailyDoerRef.current) {
+      let split: any = undefined;
+
+      split = SplitText.create(chooseDailyDoerRef.current);
+
+      // Animate on mount (refresh)
+      if (split && split.chars) {
+        gsap.from(split.chars, {
+          x: 150,
+          opacity: 0,
+          duration: 1,
+          ease: "power4",
+          stagger: 0.04,
+          delay: 0.5
+        });
+      }
+    }
+
+
+  }, []);
 
   // ===================================================   logo animations =========================================
   const polygonRef = useRef<SVGPolygonElement>(null);
@@ -204,6 +249,11 @@ const IntroPage: React.FC<IntroPageProps> = ({
     setCurrentThemeKey(nextThemeKey);
     localStorage.setItem('theme', JSON.stringify(themes[nextThemeKey]));
     document.body.style.backgroundColor = themes[nextThemeKey]['--background-color'];
+
+    // Add this to apply all CSS custom properties including scrollbar
+    for (const [key, value] of Object.entries(themes[nextThemeKey])) {
+      document.documentElement.style.setProperty(key, value);
+    }
   };
 
 
@@ -330,7 +380,7 @@ const IntroPage: React.FC<IntroPageProps> = ({
             <svg className="svg_wave_bg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320">
               <path fill={currentTheme['--task-background-color']} d="M0,160L80,165.3C160,171,320,181,480,165.3C640,149,800,107,960,112C1120,117,1280,171,1360,197.3L1440,224L1440,0L1360,0C1280,0,1120,0,960,0C800,0,640,0,480,0C320,0,160,0,80,0L0,0Z"></path>
             </svg>
-            <h2 className="features_title"  >Why Choose DailyDoer?</h2>
+            <h2 className="features_title" ref={chooseDailyDoerRef} >Why Choose DailyDoer?</h2>
 
 
 
@@ -397,7 +447,7 @@ const IntroPage: React.FC<IntroPageProps> = ({
                 <img src={customtheme_image} alt="Custom Theme image" className='feature_image' />
               </div>
 
-              <GifSlider currentTheme={currentTheme} />
+              <GifSlider />
 
               <div className="cta_section">
                 <h2>Ready to boost your productivity?</h2>
@@ -418,7 +468,13 @@ const IntroPage: React.FC<IntroPageProps> = ({
               <svg className="svg_wave_bg_bottom" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320">
                 <path fill={currentTheme['--task-background-color']} d="M0,96L80,112C160,128,320,160,480,160C640,160,800,128,960,101.3C1120,75,1280,53,1360,42.7L1440,32L1440,320L1360,320C1280,320,1120,320,960,320C800,320,640,320,480,320C320,320,160,320,80,320L0,320Z"></path>
               </svg>
-
+              <p style={{
+                position: 'absolute',
+                bottom: '-12px',
+                right: '2px',
+                zIndex: 1000,
+                color: currentTheme['--due-date-color'],
+              }}>© 2025 DailyDoer</p>
             </div>
           </div>
 
@@ -426,15 +482,7 @@ const IntroPage: React.FC<IntroPageProps> = ({
 
 
         </div>
-
         {/* <GoogleSignIn setIsAuthenticated={setIsAuthenticated} /> */}
-        <p style={{
-          position: 'absolute',
-          bottom: '-12px',
-          right: '2px',
-          zIndex: 1000,
-          color: currentTheme['--due-date-color'],
-        }}>© 2025 DailyDoer</p>
       </div>
     </>
   );

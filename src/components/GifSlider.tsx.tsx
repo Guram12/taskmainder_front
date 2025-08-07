@@ -1,18 +1,12 @@
 import '../styles/GifSlider.css';
 import React, { useState } from 'react';
-import { ThemeSpecs } from '../utils/theme';
 
 
 
 
-interface GifSliderProps {
-  currentTheme: ThemeSpecs;
-}
-
-const GifSlider: React.FC<GifSliderProps> = ({ currentTheme }) => {
+const GifSlider: React.FC = () => {
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
 
-  console.log('Current Theme:', currentTheme);
 
 
   const gifUrls = [

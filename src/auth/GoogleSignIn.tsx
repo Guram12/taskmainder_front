@@ -57,11 +57,14 @@ const GoogleSignIn: React.FC<GoogleSignInProps> = ({ setIsAuthenticated }) => {
   }
 
   // Log the redirect URI
-  console.log("Redirect URI:", `${window.location.origin}/finish_profile`);
-
+  // console.log("Redirect URI:", `${window.location.origin}/finish_profile`);
 
   return (
-    <GoogleOAuthProvider clientId={google_client_id}>
+    <GoogleOAuthProvider
+      clientId={google_client_id}
+      onScriptLoadError={() => console.log('Google Script Load Error')}
+      onScriptLoadSuccess={() => console.log('Google Script Loaded Successfully')}
+    >
       <GoogleLogin
         onSuccess={handleGoogleLoginSuccess}
         onError={handleGoogleLoginFailure}

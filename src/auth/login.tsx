@@ -102,6 +102,11 @@ const Login: React.FC<loginProps> = ({ setIsAuthenticated, currentTheme, languag
     i18n.changeLanguage(selectedLanguage);
   };
 
+  // =================================================== logo click =============================================
+  const handleLogoClick = () => {
+    navigate('/');
+  };
+
 
 
   return (
@@ -124,7 +129,7 @@ const Login: React.FC<loginProps> = ({ setIsAuthenticated, currentTheme, languag
       >
 
         {/* Logo Component */}
-        <div className="logo-wrapper"> {/* <-- Add this wrapper */}
+        <div className="logo-wrapper" onClick={handleLogoClick} style={{ cursor: 'pointer' }}>
           <svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 517.14 758.16"
             width="60"
             height="60"
