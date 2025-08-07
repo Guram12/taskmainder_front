@@ -2,7 +2,7 @@ import React, { useEffect, useRef } from 'react';
 import '../styles/IntroPage.css';
 import { Helmet } from "react-helmet-async";
 import { ThemeSpecs } from '../utils/theme';
-import gsap from 'gsap'; // <-- Import GSAP
+import gsap from 'gsap';
 import { useNavigate } from 'react-router-dom';
 import { SplitText } from "gsap/SplitText";
 import { Dropdown } from 'antd';
@@ -22,7 +22,8 @@ import team_image from '../assets/team_image.png';
 import customtheme_image from '../assets/customtheme_image.png';
 import SvgBackground from './SvgBackground';
 import GifSlider from './GifSlider.tsx';
-
+import { ScrollSmoother } from "gsap/ScrollSmoother";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 
 interface IntroPageProps {
@@ -49,6 +50,23 @@ const IntroPage: React.FC<IntroPageProps> = ({
 
   const navigate = useNavigate();
   const { t, i18n } = useTranslation();
+
+  // =============================================== smooth scroll ==================================================
+  useEffect(() => {
+    gsap.registerPlugin(ScrollTrigger, ScrollSmoother);
+
+    const smoother = ScrollSmoother.create({
+      wrapper: ".main_intropage_container",
+      content: ".mainpage_child_main_cont",
+      smooth: 2, // Smoothness level (0-3, higher = smoother)
+      effects: true,
+      normalizeScroll: true, // Handles different scroll behaviors across devices
+    });
+
+    return () => {
+      smoother?.kill();
+    };
+  }, []);
 
   // =====================================================  header text animation =========================================
   const headerRef = useRef<HTMLHeadingElement>(null);

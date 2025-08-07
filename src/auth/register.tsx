@@ -161,6 +161,15 @@ const Register: React.FC<RegisterProps> = ({ currentTheme, isMobile }) => {
   }));
 
 
+  // =================================================== logo click =============================================
+  const handleLogoClick = () => {
+    navigate('/');
+  };
+
+
+
+
+
   return (
     <>
       <Helmet>
@@ -169,18 +178,19 @@ const Register: React.FC<RegisterProps> = ({ currentTheme, isMobile }) => {
         <meta name="robots" content="index, follow" />
         <link rel="canonical" href="https://dailydoer.space/register" />
       </Helmet>
-      
+
       <div className="main_register_container">
         <div className="register_container">
 
           {/* Logo Component */}
-          <div className="logo-wrapper"> {/* <-- Add this wrapper */}
+          <div className="logo-wrapper" onClick={handleLogoClick} style={{ cursor: 'pointer' }}>
             <svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 517.14 758.16"
               width="60"
               height="60"
             >
               <g >
                 <polygon
+                  className="logo-polygon  animate-down-up"
                   style={{
                     fill: currentTheme['--main-text-coloure'],
                     stroke: currentTheme['--main-text-coloure'],
@@ -189,7 +199,7 @@ const Register: React.FC<RegisterProps> = ({ currentTheme, isMobile }) => {
                   points="0 0 73 0 73 429.33 36.5 385.33 0 429.33 0 0"
                 />
               </g>
-              <g >
+              <g className="path-element">
                 <path
                   className=""
                   style={{
