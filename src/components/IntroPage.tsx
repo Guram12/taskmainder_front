@@ -25,6 +25,9 @@ import GifSlider from './GifSlider.tsx';
 import { ScrollSmoother } from "gsap/ScrollSmoother";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { motion, useInView } from "framer-motion";
+import notification_image from '../assets/notification_image.png'
+
+
 
 interface IntroPageProps {
   currentTheme: ThemeSpecs;
@@ -274,6 +277,10 @@ const IntroPage: React.FC<IntroPageProps> = ({
   const teamFeatureRef = useRef<HTMLDivElement>(null);
   const team_feature_inView = useInView(teamFeatureRef, { once: true, margin: "-100px" });
 
+  // for notification feature content
+  const notificationFeatureRef = useRef<HTMLDivElement>(null);
+  const notification_feature_inView = useInView(notificationFeatureRef, { once: true, margin: "-100px" });
+
   // for custom theme feature content
   const customThemeFeatureRef = useRef<HTMLDivElement>(null);
   const custom_theme_inView = useInView(customThemeFeatureRef, { once: true, margin: "-100px" });
@@ -429,9 +436,9 @@ const IntroPage: React.FC<IntroPageProps> = ({
                     animate={task_feature_inView ? { opacity: 1, y: 0 } : {}}
                     transition={{ duration: 0.7, ease: "easeOut" }}
                   >
-                    <h3> Task Management</h3>
+                    <h3>Task Management</h3>
                     <div className='feature_line' style={{ borderColor: currentTheme['--border-color'] }}  ></div>
-                    <p>Create, prioritize, and track tasks with intuitive boards.</p>
+                    <p>Easily create, prioritize, and track your tasks using intuitive boards.</p>
                   </motion.div>
                 </div>
                 <img src={task_managment_image} alt="Task Management image" className='feature_image' />
@@ -448,12 +455,13 @@ const IntroPage: React.FC<IntroPageProps> = ({
                     animate={diagram_feature_inView ? { opacity: 1, y: 0 } : {}}
                     transition={{ duration: 0.7, ease: "easeOut" }}
                   >
-                    <h3> Visualize Tasks as a Flow Diagram</h3>
+                    <h3>Visualize Tasks as a Flow Diagram</h3>
                     <div className='feature_line' style={{ borderColor: currentTheme['--border-color'] }}  ></div>
                     <p>
-                      Switch from board to flow mode effortlessly.
-                      Plan, connect, and brainstorm your tasks visually using
-                      our diagram view by single click.</p>
+                      Seamlessly switch from board view to flow mode.
+                      Plan, connect, and brainstorm your tasks visually
+                      with just a single click using our intuitive diagram view.
+                    </p>
                   </motion.div>
                 </div>
                 <img src={diagram_image} alt="Diagram image" className='feature_image' />
@@ -472,7 +480,7 @@ const IntroPage: React.FC<IntroPageProps> = ({
                   >
                     <h3>Calendar View</h3>
                     <div className='feature_line' style={{ borderColor: currentTheme['--border-color'] }}  ></div>
-                    <p>Visualize tasks in a calendar and never miss deadlines.</p>
+                    <p>Stay on top of your schedule by visualizing tasks in a calendar. Never miss a deadline again.</p>
                   </motion.div>
                 </div>
                 <img src={calendar_image} alt="Calendar image" className='feature_image' />
@@ -491,11 +499,38 @@ const IntroPage: React.FC<IntroPageProps> = ({
                   >
                     <h3>Team Collaboration</h3>
                     <div className='feature_line' style={{ borderColor: currentTheme['--border-color'] }}  ></div>
-                    <p>Invite team members, assign tasks, and work together in real time.</p>
+                    <p>Invite team members, assign tasks, and collaborate in real time to get things done faster.</p>
                   </motion.div>
                 </div>
                 <img src={team_image} alt="Team image" className='feature_image' />
               </div>
+
+
+
+              <div className="feature_card">
+                <div className='feature_text_cont' >
+                  <SvgBackground path_variant={2} currentTheme={currentTheme} />
+                  <motion.div
+                    className='feature_all_text_container'
+                    ref={notificationFeatureRef}
+                    initial={{ opacity: 0, y: 40 }}
+                    animate={notification_feature_inView ? { opacity: 1, y: 0 } : {}}
+                    transition={{ duration: 0.7, ease: "easeOut" }}
+                  >
+                    <h3>Smart Due Date Notifications</h3>
+                    <div className='feature_line' style={{ borderColor: currentTheme['--border-color'] }}  ></div>
+                    <p>
+                      Set due dates when assigning tasks and get notified right on time.
+                      Choose to receive notifications via email, Discord, or both - Customizable in settings.
+                    </p>
+
+                  </motion.div>
+                </div>
+                <img src={notification_image} alt="notification image" className='feature_image' />
+              </div>
+
+
+
 
               <div className="feature_card">
                 <div className='feature_text_cont' >
@@ -509,7 +544,11 @@ const IntroPage: React.FC<IntroPageProps> = ({
                   >
                     <h3>Custom Themes</h3>
                     <div className='feature_line' style={{ borderColor: currentTheme['--border-color'] }}  ></div>
-                    <p>Personalize your workspace with beautiful themes.</p>
+                    <p>
+                      Personalize your workspace by choosing from beautiful
+                      pre-made themes or create your own by customizing
+                      colors—like text, task, background, and more—in the settings.
+                    </p>
                   </motion.div>
                 </div>
                 <img src={customtheme_image} alt="Custom Theme image" className='feature_image' />
@@ -547,7 +586,7 @@ const IntroPage: React.FC<IntroPageProps> = ({
                   transition={{ duration: 0.5, ease: "easeOut", delay: 0.5 }}
                 >
                   <button
-                    onClick={() => navigate('/register')}
+                    onClick={() => navigate('/login')}
                     className="register_cta_btn"
                     style={{
                       backgroundColor: currentTheme['--list-background-color'],

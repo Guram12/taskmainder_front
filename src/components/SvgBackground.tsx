@@ -55,6 +55,7 @@ const SvgBackground: React.FC<SvgBackgroundProps> = ({ path_variant, currentThem
       case 2: return "550 130 300 300";
       case 3: return "520 140 350 300";
       case 4: return "500 110 400 300";
+      case 5: return "550 120 300 300";
       default: return "550 150 300 300";
     }
   };
