@@ -124,6 +124,33 @@ const IntroPage: React.FC<IntroPageProps> = ({
     i18n.changeLanguage(selectedLanguage);
   };
 
+  // ===================================== welcome text animation ================================================
+  const chooseDailyDoerRef = useRef<HTMLHeadingElement>(null);
+
+  useEffect(() => {
+
+    gsap.registerPlugin(SplitText);
+
+    if (chooseDailyDoerRef.current) {
+      let split: any = undefined;
+
+      split = SplitText.create(chooseDailyDoerRef.current);
+
+      // Animate on mount (refresh)
+      if (split && split.chars) {
+        gsap.from(split.chars, {
+          x: 150,
+          opacity: 0,
+          duration: 1,
+          ease: "power4",
+          stagger: 0.04,
+          delay: 0.5
+        });
+      }
+    }
+
+
+  }, []);
 
   // ===================================================   logo animations =========================================
   const polygonRef = useRef<SVGPolygonElement>(null);
@@ -348,7 +375,7 @@ const IntroPage: React.FC<IntroPageProps> = ({
             <svg className="svg_wave_bg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320">
               <path fill={currentTheme['--task-background-color']} d="M0,160L80,165.3C160,171,320,181,480,165.3C640,149,800,107,960,112C1120,117,1280,171,1360,197.3L1440,224L1440,0L1360,0C1280,0,1120,0,960,0C800,0,640,0,480,0C320,0,160,0,80,0L0,0Z"></path>
             </svg>
-            <h2 className="features_title"  >Why Choose DailyDoer?</h2>
+            <h2 className="features_title" ref={chooseDailyDoerRef} >Why Choose DailyDoer?</h2>
 
 
 
