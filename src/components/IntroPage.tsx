@@ -24,7 +24,7 @@ import SvgBackground from './SvgBackground';
 import GifSlider from './GifSlider.tsx';
 import { ScrollSmoother } from "gsap/ScrollSmoother";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { delay, motion, useInView } from "framer-motion";
+import { motion, useInView } from "framer-motion";
 
 interface IntroPageProps {
   currentTheme: ThemeSpecs;
