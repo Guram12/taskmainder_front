@@ -57,10 +57,7 @@ const GoogleSignIn: React.FC<GoogleSignInProps> = ({ setIsAuthenticated }) => {
   }
 
   // Log the redirect URI
-  console.log("Redirect URI:", `${window.location.origin}/finish_profile`);
-
-  console.log('Google Client ID:', google_client_id);
-  console.log('GoogleSignIn component rendered');
+  // console.log("Redirect URI:", `${window.location.origin}/finish_profile`);
 
   return (
     <GoogleOAuthProvider
