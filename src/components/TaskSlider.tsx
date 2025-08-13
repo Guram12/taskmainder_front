@@ -4,17 +4,18 @@ import React from 'react';
 import { useState } from 'react';
 import { ThemeSpecs } from '../utils/theme';
 import { MdRadioButtonChecked } from "react-icons/md";
+import { useTranslation } from 'react-i18next';
 
 
 
 
 const slides = [
-  { title: "📋 Plan it. Prioritize it. Finish it.", due: "Today", priority: "" },
-  { title: "Call designer", due: "Tomorrow", priority: "Medium" },
-  { title: "📊 Visualize your workflow like never before.", due: "This Week", priority: "" },
-  { title: "⏱️ Built for people who don’t have time to waste.", due: "Next Week", priority: "" },
-  { title: "📦 Turn chaos into checklists.", due: "Monday", priority: "" },
-  { title: "🚀 Make everyday productivity effortless.", due: "Anytime", priority: "" },
+  { titleKey: "slider_plan_prioritize_finish", dueKey: "slider_due_today", priority: "" },
+  { titleKey: "slider_call_designer", dueKey: "slider_due_tomorrow", priority: "Medium" },
+  { titleKey: "slider_visualize_workflow", dueKey: "slider_due_this_week", priority: "" },
+  { titleKey: "slider_built_for_busy", dueKey: "slider_due_next_week", priority: "" },
+  { titleKey: "slider_turn_chaos", dueKey: "slider_due_monday", priority: "" },
+  { titleKey: "slider_make_productivity_effortless", dueKey: "slider_due_anytime", priority: "" },
 ];
 
 
@@ -25,6 +26,8 @@ interface TaskSliderProps {
 
 const TaskSlider: React.FC<TaskSliderProps> = ({ currentTheme }) => {
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
+
+  const { t } = useTranslation();
 
   return (
     <div className="slider-wrapper">
@@ -61,10 +64,12 @@ const TaskSlider: React.FC<TaskSliderProps> = ({ currentTheme }) => {
               <p className="task_title"
                 style={{
                   maxWidth: '300px'
-                }}>{task.title}</p>
+                }}>{t(task.titleKey)}</p>
             </div>
             <div className="task_description_and_due_date_container">
-              <p className="due_Date_p" style={{ color: currentTheme['--due-date-color'] }} >Due: {task.due}</p>
+              <p className="due_Date_p" style={{ color: currentTheme['--due-date-color'] }} >
+                {t('due_date')} {t(task.dueKey)}
+              </p>
             </div>
           </div>
         ))}

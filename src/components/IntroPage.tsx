@@ -108,7 +108,7 @@ const IntroPage: React.FC<IntroPageProps> = ({
       gsap.to(sloganRef.current, {
         duration: 2,
         scrambleText: {
-          text: "Organize Tasks. Visualize Plans. Get Things Done.",
+          text: t('slogan'),
           chars: " ",
           revealDelay: 0.5,
           speed: 0.1,
@@ -118,7 +118,7 @@ const IntroPage: React.FC<IntroPageProps> = ({
     }
 
 
-  }, [])
+  }, [language])
 
 
   const handleLanguageChange = (selectedLanguage: 'en' | 'ka') => {
@@ -402,11 +402,10 @@ const IntroPage: React.FC<IntroPageProps> = ({
 
           </div>
 
-          <h1 className='intro_header' ref={headerRef} >Welcome to DailyDoer</h1>
+          <h1 className='intro_header' ref={headerRef} >{t('welcome_to_dailydoer')}</h1>
 
           <div className='slogan_container'>
             <h2 className="slogan_h2" ref={sloganRef}></h2>
-
           </div>
 
           <TaskSlider
@@ -418,14 +417,12 @@ const IntroPage: React.FC<IntroPageProps> = ({
             <svg className="svg_wave_bg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320">
               <path fill={currentTheme['--task-background-color']} d="M0,160L80,165.3C160,171,320,181,480,165.3C640,149,800,107,960,112C1120,117,1280,171,1360,197.3L1440,224L1440,0L1360,0C1280,0,1120,0,960,0C800,0,640,0,480,0C320,0,160,0,80,0L0,0Z"></path>
             </svg>
-            <h2 className="features_title" ref={chooseDailyDoerRef} >Why Choose DailyDoer?</h2>
+            <h2 className="features_title" ref={chooseDailyDoerRef} >{t('why_choose_dailydoer')}</h2>
 
 
 
             {/* features containers  */}
             <div className="features_all_card_container">
-
-
               <div className="feature_card">
                 <div className='feature_text_cont' >
                   <SvgBackground path_variant={1} currentTheme={currentTheme} />
@@ -436,15 +433,13 @@ const IntroPage: React.FC<IntroPageProps> = ({
                     animate={task_feature_inView ? { opacity: 1, y: 0 } : {}}
                     transition={{ duration: 0.7, ease: "easeOut" }}
                   >
-                    <h3>Task Management</h3>
+                    <h3>{t('feature_task_management_title')}</h3>
                     <div className='feature_line' style={{ borderColor: currentTheme['--border-color'] }}  ></div>
-                    <p>Easily create, prioritize, and track your tasks using intuitive boards.</p>
+                    <p>{t('feature_task_management_desc')}</p>
                   </motion.div>
                 </div>
                 <img src={task_managment_image} alt="Task Management image" className='feature_image' />
               </div>
-
-
               <div className="feature_card">
                 <div className='feature_text_cont' >
                   <SvgBackground path_variant={2} currentTheme={currentTheme} />
@@ -455,19 +450,13 @@ const IntroPage: React.FC<IntroPageProps> = ({
                     animate={diagram_feature_inView ? { opacity: 1, y: 0 } : {}}
                     transition={{ duration: 0.7, ease: "easeOut" }}
                   >
-                    <h3>Visualize Tasks as a Flow Diagram</h3>
+                    <h3>{t('feature_diagram_title')}</h3>
                     <div className='feature_line' style={{ borderColor: currentTheme['--border-color'] }}  ></div>
-                    <p>
-                      Seamlessly switch from board view to flow mode.
-                      Plan, connect, and brainstorm your tasks visually
-                      with just a single click using our intuitive diagram view.
-                    </p>
+                    <p>{t('feature_diagram_desc')}</p>
                   </motion.div>
                 </div>
                 <img src={diagram_image} alt="Diagram image" className='feature_image' />
               </div>
-
-
               <div className="feature_card">
                 <div className='feature_text_cont' >
                   <SvgBackground path_variant={3} currentTheme={currentTheme} />
@@ -478,15 +467,13 @@ const IntroPage: React.FC<IntroPageProps> = ({
                     animate={calendar_feature_inView ? { opacity: 1, y: 0 } : {}}
                     transition={{ duration: 0.7, ease: "easeOut" }}
                   >
-                    <h3>Calendar View</h3>
+                    <h3>{t('feature_calendar_title')}</h3>
                     <div className='feature_line' style={{ borderColor: currentTheme['--border-color'] }}  ></div>
-                    <p>Stay on top of your schedule by visualizing tasks in a calendar. Never miss a deadline again.</p>
+                    <p>{t('feature_calendar_desc')}</p>
                   </motion.div>
                 </div>
                 <img src={calendar_image} alt="Calendar image" className='feature_image' />
               </div>
-
-
               <div className="feature_card">
                 <div className='feature_text_cont' >
                   <SvgBackground path_variant={4} currentTheme={currentTheme} />
@@ -497,16 +484,13 @@ const IntroPage: React.FC<IntroPageProps> = ({
                     animate={team_feature_inView ? { opacity: 1, y: 0 } : {}}
                     transition={{ duration: 0.7, ease: "easeOut" }}
                   >
-                    <h3>Team Collaboration</h3>
+                    <h3>{t('feature_team_title')}</h3>
                     <div className='feature_line' style={{ borderColor: currentTheme['--border-color'] }}  ></div>
-                    <p>Invite team members, assign tasks, and collaborate in real time to get things done faster.</p>
+                    <p>{t('feature_team_desc')}</p>
                   </motion.div>
                 </div>
                 <img src={team_image} alt="Team image" className='feature_image' />
               </div>
-
-
-
               <div className="feature_card">
                 <div className='feature_text_cont' >
                   <SvgBackground path_variant={2} currentTheme={currentTheme} />
@@ -517,21 +501,13 @@ const IntroPage: React.FC<IntroPageProps> = ({
                     animate={notification_feature_inView ? { opacity: 1, y: 0 } : {}}
                     transition={{ duration: 0.7, ease: "easeOut" }}
                   >
-                    <h3>Smart Due Date Notifications</h3>
+                    <h3>{t('feature_notification_title')}</h3>
                     <div className='feature_line' style={{ borderColor: currentTheme['--border-color'] }}  ></div>
-                    <p>
-                      Set due dates when assigning tasks and get notified right on time.
-                      Choose to receive notifications via email, Discord, or both - Customizable in settings.
-                    </p>
-
+                    <p>{t('feature_notification_desc')}</p>
                   </motion.div>
                 </div>
                 <img src={notification_image} alt="notification image" className='feature_image' />
               </div>
-
-
-
-
               <div className="feature_card">
                 <div className='feature_text_cont' >
                   <SvgBackground path_variant={5} currentTheme={currentTheme} />
@@ -542,20 +518,14 @@ const IntroPage: React.FC<IntroPageProps> = ({
                     animate={custom_theme_inView ? { opacity: 1, y: 0 } : {}}
                     transition={{ duration: 0.7, ease: "easeOut" }}
                   >
-                    <h3>Custom Themes</h3>
+                    <h3>{t('feature_custom_theme_title')}</h3>
                     <div className='feature_line' style={{ borderColor: currentTheme['--border-color'] }}  ></div>
-                    <p>
-                      Personalize your workspace by choosing from beautiful
-                      pre-made themes or create your own by customizing
-                      colors—like text, task, background, and more—in the settings.
-                    </p>
+                    <p>{t('feature_custom_theme_desc')}</p>
                   </motion.div>
                 </div>
                 <img src={customtheme_image} alt="Custom Theme image" className='feature_image' />
               </div>
-
               <GifSlider />
-
               <div className="cta_section">
                 <motion.h2
                   ref={readyToBoostRef}
@@ -563,7 +533,7 @@ const IntroPage: React.FC<IntroPageProps> = ({
                   animate={ready_to_boost_inView ? { opacity: 1, y: 0 } : {}}
                   transition={{ duration: 0.7, ease: "easeOut" }}
                 >
-                  Ready to boost your productivity?
+                  {t('ready_to_boost')}
                 </motion.h2>
                 <motion.p
                   ref={readyToBoostPRef}
@@ -571,7 +541,7 @@ const IntroPage: React.FC<IntroPageProps> = ({
                   animate={ready_to_boost_p_inView ? { opacity: 1, y: 0 } : {}}
                   transition={{ duration: 0.7, ease: "easeOut", delay: 0.3 }}
                 >
-                  Join us for organizing your work with DailyDoer.
+                  {t('join_us_for_organizing')}
                 </motion.p>
                 <motion.div
                   style={{
@@ -594,7 +564,7 @@ const IntroPage: React.FC<IntroPageProps> = ({
                       minHeight: '40px',
                     }}
                   >
-                    Get Started – It's Free!
+                    {t('get_started_free')}
                   </button>
                 </motion.div>
               </div>
@@ -627,8 +597,6 @@ const IntroPage: React.FC<IntroPageProps> = ({
 
 
 export default IntroPage;
-
-
 
 
 
