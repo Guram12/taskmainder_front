@@ -264,9 +264,39 @@ const resources = {
       'click_new_webhook_and_copy_the_url.': 'Click "New Webhook" and copy the URL.',
       'back': 'Back',
 
+      // intro page component
+      "welcome_to_dailydoer": "Welcome to DailyDoer",
+      "slogan": "Organize Tasks. Visualize Plans. Get Things Done.",
+      "why_choose_dailydoer": "Why Choose DailyDoer?",
+      "feature_task_management_title": "Task Management",
+      "feature_task_management_desc": "Easily create, prioritize, and track your tasks using intuitive boards.",
+      "feature_diagram_title": "Visualize Tasks as a Flow Diagram",
+      "feature_diagram_desc": "Seamlessly switch from board view to flow mode. Plan, connect, and brainstorm your tasks visually with just a single click using our intuitive diagram view.",
+      "feature_calendar_title": "Calendar View",
+      "feature_calendar_desc": "Stay on top of your schedule by visualizing tasks in a calendar. Never miss a deadline again.",
+      "feature_team_title": "Team Collaboration",
+      "feature_team_desc": "Invite team members, assign tasks, and collaborate in real time to get things done faster.",
+      "feature_notification_title": "Smart Due Date Notifications",
+      "feature_notification_desc": "Set due dates when assigning tasks and get notified right on time. Choose to receive notifications via email, Discord, or both – customizable in settings.",
+      "feature_custom_theme_title": "Custom Themes",
+      "feature_custom_theme_desc": "Personalize your workspace by choosing from beautiful pre-made themes or create your own by customizing colors—like text, task, background, and more—in the settings.",
+      "ready_to_boost": "Ready to boost your productivity?",
+      "join_us_for_organizing": "Join us for organizing your work with DailyDoer.",
+      "get_started_free": "Get Started – It's Free!",
 
-
-
+      // task slider component 
+      "slider_plan_prioritize_finish": "📋 Plan it. Prioritize it. Finish it.",
+      "slider_call_designer": "Call designer",
+      "slider_visualize_workflow": "📊 Visualize your workflow like never before.",
+      "slider_built_for_busy": "⏱️ Built for people who don’t have time to waste.",
+      "slider_turn_chaos": "📦 Turn chaos into checklists.",
+      "slider_make_productivity_effortless": "🚀 Make everyday productivity effortless.",
+      "slider_due_today": "Today",
+      "slider_due_tomorrow": "Tomorrow",
+      "slider_due_this_week": "This Week",
+      "slider_due_next_week": "Next Week",
+      "slider_due_monday": "Monday",
+      "slider_due_anytime": "Anytime",
 
 
 
@@ -534,6 +564,41 @@ const resources = {
       'navigate_to_integrations_webhooks.': 'გადადით მენიუში: ინტეგრაციები > Webhooks.',
       'click_new_webhook_and_copy_the_url.': 'დააწკაპუნეთ "ახალი Webhook"-ზე და დააკოპირეთ URL.',
       'back': 'უკან',
+
+      // intro page component
+      "welcome_to_dailydoer": "მოგესალმებით DailyDoer-ში",
+      "slogan": "დალაგე დავალებები. დაალაგე გეგმები. გააკეთე საქმე.",
+      "why_choose_dailydoer": "რატომ DailyDoer?",
+      "feature_task_management_title": "დავალებების მართვა",
+      "feature_task_management_desc": "შექმენით, დაალაგეთ პრიორიტეტებით და აკონტროლეთ დავალებები მარტივად და ინტუიციური დაფებით.",
+      "feature_diagram_title": "დავალებების დიაგრამის ხედით ვიზუალიზაცია",
+      "feature_diagram_desc": "გადაერთეთ დაფის ხედიდან დიაგრამის რეჟიმზე ერთი კლიკით. დაგეგმეთ, დააკავშირეთ და განავითარეთ იდეები ვიზუალურად.",
+      "feature_calendar_title": "კალენდარული ხედვა",
+      "feature_calendar_desc": "დაიგემე დრო სწორად – ნახე დავალებები კალენდარში და არასდროს გამოტოვო ვადა.",
+      "feature_team_title": "გუნდური კოლაბორაცია",
+      "feature_team_desc": "მოიწვიე გუნდის წევრები, დაავალე დავალებები და იმუშავე რეალურ დროში — უფრო სწრაფი შედეგისთვის.",
+      "feature_notification_title": "ჭკვიანი შეტყობინებები ვადებზე",
+      "feature_notification_desc": "მიუთითე ვადა დავალების შექმნისას და მიიღე შეტყობინება დროულად. აირჩიე მიღება ელფოსტით, Discord-ზე ან ორივეგან – მორგებადია პარამეტრებში.",
+      "feature_custom_theme_title": "პერსონალური თემები",
+      "feature_custom_theme_desc": "მოირგე სამუშაო სივრცე მზა თემებით ან შექმენი საკუთარი – შეცვალე ფერები, ტექსტი, დავალებები, ფონები და სხვა პარამეტრებში.",
+      "ready_to_boost": "მზად ხარ პროდუქტიულობის გასაზრდელად?",
+      "join_us_for_organizing": "შემოგვიერთდი და დალაგე სამუშაო დღე DailyDoer-თან ერთად.",
+      "get_started_free": "დაიწყე — უფასოა!",
+
+
+      // task slider component 
+      "slider_plan_prioritize_finish": "📋 დაგეგმე. დაალაგე. დაასრულე.",
+      "slider_call_designer": "დაუკავშირდი დიზაინერს",
+      "slider_visualize_workflow": "📊 იმუშავე ვიზუალურად — სულ სხვანაირად.",
+      "slider_built_for_busy": "⏱️ შენთვის — ვისაც დრო არ აქვს დასაკარგი.",
+      "slider_turn_chaos": "📦 ქაოსი გადააქცე ჩეკლისტად.",
+      "slider_make_productivity_effortless": "🚀 გახადე პროდუქტიულობა მარტივი.",
+      "slider_due_today": "დღეს",
+      "slider_due_tomorrow": "ხვალ",
+      "slider_due_this_week": "ამ კვირაში",
+      "slider_due_next_week": "მომდევნო კვირაში",
+      "slider_due_monday": "ორშაბათი",
+      "slider_due_anytime": "ნებისმიერ დროს",
 
 
 
