@@ -428,7 +428,7 @@ const IntroPage: React.FC<IntroPageProps> = ({
             <div className="features_all_card_container">
               <div className="feature_card">
                 <div className='feature_text_cont' >
-                  <SvgBackground path_variant={1} currentTheme={currentTheme} />
+                  <SvgBackground isMobile={isMobile} path_variant={1} currentTheme={currentTheme} />
                   <motion.div
                     className='feature_all_text_container'
                     ref={taskFeatureRef}
@@ -445,7 +445,7 @@ const IntroPage: React.FC<IntroPageProps> = ({
               </div>
               <div className="feature_card">
                 <div className='feature_text_cont' >
-                  <SvgBackground path_variant={2} currentTheme={currentTheme} />
+                  <SvgBackground isMobile={isMobile} path_variant={2} currentTheme={currentTheme} />
                   <motion.div
                     className='feature_all_text_container'
                     ref={diagramFeatureRef}
@@ -462,7 +462,7 @@ const IntroPage: React.FC<IntroPageProps> = ({
               </div>
               <div className="feature_card">
                 <div className='feature_text_cont' >
-                  <SvgBackground path_variant={3} currentTheme={currentTheme} />
+                  <SvgBackground isMobile={isMobile} path_variant={3} currentTheme={currentTheme} />
                   <motion.div
                     className='feature_all_text_container'
                     ref={calendarFeatureRef}
@@ -479,7 +479,7 @@ const IntroPage: React.FC<IntroPageProps> = ({
               </div>
               <div className="feature_card">
                 <div className='feature_text_cont' >
-                  <SvgBackground path_variant={4} currentTheme={currentTheme} />
+                  <SvgBackground isMobile={isMobile} path_variant={4} currentTheme={currentTheme} />
                   <motion.div
                     className='feature_all_text_container'
                     ref={teamFeatureRef}
@@ -496,7 +496,7 @@ const IntroPage: React.FC<IntroPageProps> = ({
               </div>
               <div className="feature_card">
                 <div className='feature_text_cont' >
-                  <SvgBackground path_variant={2} currentTheme={currentTheme} />
+                  <SvgBackground isMobile={isMobile} path_variant={2} currentTheme={currentTheme} />
                   <motion.div
                     className='feature_all_text_container'
                     ref={notificationFeatureRef}
@@ -513,7 +513,7 @@ const IntroPage: React.FC<IntroPageProps> = ({
               </div>
               <div className="feature_card">
                 <div className='feature_text_cont' >
-                  <SvgBackground path_variant={5} currentTheme={currentTheme} />
+                  <SvgBackground isMobile={isMobile} path_variant={5} currentTheme={currentTheme} />
                   <motion.div
                     className='feature_all_text_container'
                     ref={customThemeFeatureRef}
