@@ -528,7 +528,11 @@ const IntroPage: React.FC<IntroPageProps> = ({
                 </div>
                 <img src={customtheme_image} alt="Custom Theme image" className='feature_image' />
               </div>
-              <GifSlider />
+
+              <GifSlider 
+                isMobile={isMobile}
+              />
+
               <div className="cta_section">
                 <motion.h2
                   ref={readyToBoostRef}
@@ -576,6 +580,7 @@ const IntroPage: React.FC<IntroPageProps> = ({
               <svg className="svg_wave_bg_bottom" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320">
                 <path fill={currentTheme['--task-background-color']} d="M0,96L80,112C160,128,320,160,480,160C640,160,800,128,960,101.3C1120,75,1280,53,1360,42.7L1440,32L1440,320L1360,320C1280,320,1120,320,960,320C800,320,640,320,480,320C320,320,160,320,80,320L0,320Z"></path>
               </svg>
+              
               <p style={{
                 position: 'absolute',
                 bottom: '-12px',

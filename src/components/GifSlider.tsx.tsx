@@ -2,9 +2,11 @@ import '../styles/GifSlider.css';
 import React, { useState } from 'react';
 
 
+interface GifSliderProps {
+  isMobile: boolean;
+}
 
-
-const GifSlider: React.FC = () => {
+const GifSlider: React.FC<GifSliderProps> = ({ isMobile }) => {
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
 
 
@@ -28,7 +30,7 @@ const GifSlider: React.FC = () => {
             className={`each_task_gif${hoveredIndex === index ? ' hovered' : ''}`}
             key={index}
             style={{
-              minWidth: 300,
+              minWidth: isMobile ? 300 : 100,
               margin: '0 15px',
               borderRadius: 10,
               boxShadow: '0 2px 10px rgba(0,0,0,0.1)',
@@ -41,7 +43,15 @@ const GifSlider: React.FC = () => {
             onMouseEnter={() => setHoveredIndex(index)}
             onMouseLeave={() => setHoveredIndex(null)}
           >
-            <img src={gif} alt={`gif-${index}`} style={{ maxWidth: '100%', maxHeight: '380px', borderRadius: 8 }} />
+            <img
+              src={gif}
+              alt={`gif-${index}`}
+              style={{
+                maxWidth: isMobile ? '500px' : '100%',
+                maxHeight: '380px',
+                borderRadius: 8
+              }}
+            />
           </div>
         ))}
       </div>

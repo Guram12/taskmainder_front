@@ -5,7 +5,7 @@
   justify-content: flex-start;
   align-items: center;
   height: auto;
-  overflow-x: hidden;
+  overflow-x: hidden !important;
   position: relative;
 }
 
@@ -87,7 +87,7 @@
   overflow: hidden !important;
   min-height: 150px;
   background-image: url('../assets/test_1.jpg');
-
+  overflow: hidden !important;
 }
 
 .slogan_h2 {
@@ -206,6 +206,13 @@
 }
 
 @media screen and (max-width: 768px) {
+
+
+  .mainpage_child_main_cont {
+    width: 100%;
+    overflow-x: hidden;
+  }
+
   .intro_header {
     font-size: 20px;
     font-weight: bold;
@@ -213,6 +220,7 @@
 
   .slogan_h2 {
     font-size: 18px;
+    overflow: hidden;
   }
 
   .login_button {
