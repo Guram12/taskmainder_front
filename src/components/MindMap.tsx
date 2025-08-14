@@ -25,7 +25,6 @@ import { ThemeSpecs } from '../utils/theme';
 import { useEffect } from 'react';
 import { board, lists, tasks, ProfileData } from '../utils/interface';
 import axiosInstance from '../utils/axiosinstance';
-import { environment_urls } from '../utils/URLS';
 import TaskUpdateModal from './Boards/TaskUpdateModal';
 import HashLoader from 'react-spinners/HashLoader';
 // import { use } from 'i18next';
@@ -79,8 +78,12 @@ interface MindMapProps {
   setBoards: (boards: board[]) => void;
   allCurrentBoardUsers: ProfileData[];
   setSelectedBoard: (board: board | null) => void;
+  selectedBoard: board | null;
   setSelectedComponent: (component: string) => void;
   setActiveSidebarBoardId: (boardId: number | null) => void;
+  socketRef: React.MutableRefObject<WebSocket | null>;
+  boardData: board;
+  setBoardData: (boardData: board) => void;
 }
 
 
@@ -91,8 +94,12 @@ const MindMap: React.FC<MindMapProps> = ({
   allCurrentBoardUsers,
   setBoards,
   setSelectedBoard,
+  setBoardData,
   setSelectedComponent,
   setActiveSidebarBoardId,
+  socketRef,
+  boardData,
+  selectedBoard,
 }) => {
 
 
@@ -140,7 +147,7 @@ const MindMap: React.FC<MindMapProps> = ({
     if (prev_mindmap_selected_board) {
       const selectedBoard = boards.find(board => board.id === parseInt(prev_mindmap_selected_board));
       if (selectedBoard) {
-        setMaindmap_selected_board_data(selectedBoard);
+        setBoardData(selectedBoard);
         setViewMode('board');
         setDiagram_loading(true);
         fetchBoardData(selectedBoard.id.toString());
@@ -150,20 +157,6 @@ const MindMap: React.FC<MindMapProps> = ({
     }
   }, []);
   // --------------------------------------------------------------------------------------------------
-  const [maindmap_selected_board_data, setMaindmap_selected_board_data] = useState<board>({
-    id: 0,
-    name: '',
-    created_at: '',
-    lists: [],
-    owner: '',
-    owner_email: '',
-    members: [],
-    board_users: [],
-    background_image: null,
-    creation_date: '',
-  });
-
-  const mindMapSocketRef = useRef<WebSocket | null>(null);
   const saveTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   const reactFlowInstanceRef = useRef<ReactFlowInstance | null>(null);
@@ -192,7 +185,7 @@ const MindMap: React.FC<MindMapProps> = ({
     if (boardId && boards.length > 0) {
       const foundBoard = boards.find(b => String(b.id) === boardId);
       if (foundBoard) {
-        setMaindmap_selected_board_data(foundBoard); // <-- Select board for MindMap
+        setBoardData(foundBoard); // <-- Select board for MindMap
         setSelectedBoard(foundBoard);
         setViewMode('board');
         setActiveSidebarBoardId(null);
@@ -245,7 +238,7 @@ const MindMap: React.FC<MindMapProps> = ({
       change.type === 'position' && change.position
     );
 
-    if (hasPositionChange && viewMode === 'board' && maindmap_selected_board_data?.id) {
+    if (hasPositionChange && viewMode === 'board' && boardData?.id) {
       // Get current positions after the change
       setTimeout(() => {
         setNodes((currentNodes) => {
@@ -257,188 +250,193 @@ const MindMap: React.FC<MindMapProps> = ({
             };
           });
 
-          savePositionsToStorage(maindmap_selected_board_data.id, positions);
+          savePositionsToStorage(boardData.id, positions);
           return currentNodes;
         });
       }, 0);
     }
-  }, [onNodesChange, viewMode, maindmap_selected_board_data?.id, savePositionsToStorage, setNodes]);
+  }, [onNodesChange, viewMode, boardData?.id, savePositionsToStorage, setNodes]);
 
   // =============================== websocket playload useefect for boarddata update   ========================================
 
+  // useEffect(() => {
+  //   if (!maindmap_selected_board_data?.id) return;
+
+  //   // Clean up previous socket connection
+  //   if (socketRef.current) {
+  //     // Only close if OPEN or CONNECTING
+  //     if (
+  //       socketRef.current.readyState === WebSocket.OPEN ||
+  //       socketRef.current.readyState === WebSocket.CONNECTING
+  //     ) {
+  //       socketRef.current.close();
+  //     }
+  //   }
+  //   const token = localStorage.getItem('access_token');
+  //   if (!token) {
+  //     console.error('No access token found');
+  //     return;
+  //   }
+
+  //   const wsUrl = `${environment_urls.URLS.websockersURL}${maindmap_selected_board_data.id}/?token=${token}`;
+
+  //   const newSocket = new WebSocket(wsUrl);
+  //   socketRef.current = newSocket;
+
+  //   newSocket.onopen = () => {
+  //     console.log('WebSocket connection established for board:', maindmap_selected_board_data.id);
+  //   };
+
+  //   newSocket.onmessage = (event) => {
+  //     try {
+  //       const data = JSON.parse(event.data);
+  //       const { action, payload } = data;
+  //       console.log('Received WebSocket message:', { action, payload });
+
+  //       switch (action) {
+  //         case 'update_task':
+  //           console.log('Processing update_task:', payload);
+
+  //           setMaindmap_selected_board_data((prevData: board) => {
+  //             const updatedLists = prevData.lists.map((list) => ({
+  //               ...list,
+  //               tasks: list.tasks.map((task) =>
+  //                 task.id === payload.id ? {
+  //                   ...task,
+  //                   title: payload.title,
+  //                   description: payload.description,
+  //                   due_date: payload.due_date,
+  //                   completed: payload.completed,
+  //                   priority: payload.priority,
+  //                   task_associated_users_id: payload.task_associated_users_id,
+  //                 } : task
+  //               ),
+  //             }));
+  //             return { ...prevData, lists: updatedLists };
+  //           });
+  //           break;
+
+
+  //         case 'move_task':
+  //           const { task_id, source_list_id, target_list_id } = payload;
+  //           setMaindmap_selected_board_data((prevData: board) => {
+  //             const newBoardData = { ...prevData };
+  //             const sourceListIndex = newBoardData.lists.findIndex(list => list.id === source_list_id);
+  //             const targetListIndex = newBoardData.lists.findIndex(list => list.id === target_list_id);
+
+  //             if (sourceListIndex === -1 || targetListIndex === -1) return newBoardData;
+
+  //             const taskIndex = newBoardData.lists[sourceListIndex].tasks.findIndex(task => task.id === task_id);
+  //             if (taskIndex === -1) return newBoardData;
+
+  //             const [movedTask] = newBoardData.lists[sourceListIndex].tasks.splice(taskIndex, 1);
+  //             movedTask.list = target_list_id;
+  //             newBoardData.lists[targetListIndex].tasks.push(movedTask);
+
+  //             return newBoardData;
+  //           });
+  //           break;
+
+  //         case 'add_task':
+  //           console.log('Received add_task:', payload);
+  //           setMaindmap_selected_board_data((prevData: board) => {
+  //             const updatedLists = prevData.lists.map((list) => {
+  //               if (list.id === payload.list) {
+  //                 return { ...list, tasks: [...list.tasks, payload] };
+  //               }
+  //               return list;
+  //             });
+
+  //             return { ...prevData, lists: updatedLists };
+  //           });
+  //           break;
+  //         case 'delete_task':
+  //           console.log('Received delete_task:', payload);
+  //           setMaindmap_selected_board_data((prevData: board) => {
+  //             const updatedLists = prevData.lists.map((list) => {
+  //               if (list.id === payload.list_id) {
+  //                 return { ...list, tasks: list.tasks.filter((task) => task.id !== payload.task_id) };
+  //               }
+  //               return list;
+  //             });
+  //             return { ...prevData, lists: updatedLists };
+  //           });
+  //           break;
+  //         // ================================= list cases ===================================================
+  //         case 'delete_list':
+  //           setMaindmap_selected_board_data((prevData: board) => ({
+  //             ...prevData,
+  //             lists: prevData.lists.filter((list) => list.id !== payload.list_id),
+  //           }));
+  //           break;
+
+  //         case 'add_list':
+  //           setMaindmap_selected_board_data((prevData: board) => ({
+  //             ...prevData,
+  //             lists: [...prevData.lists, payload],
+  //           }));
+
+  //           break;
+  //         case 'edit_list_name':
+  //           console.log('Received edit_list_name:', payload);
+  //           setMaindmap_selected_board_data((prevData: board) => {
+  //             const updatedLists = prevData.lists.map((list) =>
+  //               list.id === payload.list_id ? { ...list, name: payload.new_name } : list
+  //             );
+  //             return { ...prevData, lists: updatedLists };
+  //           });
+  //           break;
+
+  //         // ================================= board cases ===================================================
+  //         case 'update_board_name':
+  //           console.log('Received update_board_name:', payload);
+  //           // Update boardData
+  //           setMaindmap_selected_board_data((prevData: board) => ({
+  //             ...prevData,
+  //             name: payload.new_name,
+  //           }));
+
+  //           if (typeof payload.new_name === 'string') {
+  //             const updatedBoard: board = {
+  //               ...maindmap_selected_board_data,
+  //               name: payload.new_name,
+  //             };
+  //             setMaindmap_selected_board_data(updatedBoard);
+  //           } else {
+  //             console.error('Invalid board name:', payload.new_name);
+  //           }
+  //           break;
+  //       }
+  //     } catch (error) {
+  //       console.error('Error parsing WebSocket message:', error);
+  //     }
+  //   };
+
+  //   newSocket.onerror = (error) => {
+  //     console.error('WebSocket error:', error);
+  //   };
+
+  //   newSocket.onclose = (event) => {
+  //     console.log('WebSocket connection closed:', event.code, event.reason);
+  //     if (event.code !== 1000) { // Not a normal closure
+  //       console.log('WebSocket closed unexpectedly, attempting to reconnect...');
+  //       // Optionally implement reconnection logic here
+  //     }
+  //   };
+
+  //   return () => {
+  //     if (newSocket && newSocket.readyState === WebSocket.OPEN) {
+  //       newSocket.close(1000, 'Component unmounting');
+  //     }
+  //   };
+  // }, [maindmap_selected_board_data]);
+
   useEffect(() => {
-    if (!maindmap_selected_board_data?.id) return;
-
-    // Clean up previous socket connection
-    if (mindMapSocketRef.current) {
-      // Only close if OPEN or CONNECTING
-      if (
-        mindMapSocketRef.current.readyState === WebSocket.OPEN ||
-        mindMapSocketRef.current.readyState === WebSocket.CONNECTING
-      ) {
-        mindMapSocketRef.current.close();
-      }
+    if (boardData?.id && boardData.id !== 0) {
+      setBoardData(boardData);
+      setSelectedBoard(boardData);
     }
-    const token = localStorage.getItem('access_token');
-    if (!token) {
-      console.error('No access token found');
-      return;
-    }
-
-    const wsUrl = `${environment_urls.URLS.websockersURL}${maindmap_selected_board_data.id}/?token=${token}`;
-
-    const newSocket = new WebSocket(wsUrl);
-    mindMapSocketRef.current = newSocket;
-
-    newSocket.onopen = () => {
-      console.log('WebSocket connection established for board:', maindmap_selected_board_data.id);
-    };
-
-    newSocket.onmessage = (event) => {
-      try {
-        const data = JSON.parse(event.data);
-        const { action, payload } = data;
-        console.log('Received WebSocket message:', { action, payload });
-
-        switch (action) {
-          case 'update_task':
-            console.log('Processing update_task:', payload);
-
-            setMaindmap_selected_board_data((prevData: board) => {
-              const updatedLists = prevData.lists.map((list) => ({
-                ...list,
-                tasks: list.tasks.map((task) =>
-                  task.id === payload.id ? {
-                    ...task,
-                    title: payload.title,
-                    description: payload.description,
-                    due_date: payload.due_date,
-                    completed: payload.completed,
-                    priority: payload.priority,
-                    task_associated_users_id: payload.task_associated_users_id,
-                  } : task
-                ),
-              }));
-              return { ...prevData, lists: updatedLists };
-            });
-            break;
-
-
-          case 'move_task':
-            const { task_id, source_list_id, target_list_id } = payload;
-            setMaindmap_selected_board_data((prevData: board) => {
-              const newBoardData = { ...prevData };
-              const sourceListIndex = newBoardData.lists.findIndex(list => list.id === source_list_id);
-              const targetListIndex = newBoardData.lists.findIndex(list => list.id === target_list_id);
-
-              if (sourceListIndex === -1 || targetListIndex === -1) return newBoardData;
-
-              const taskIndex = newBoardData.lists[sourceListIndex].tasks.findIndex(task => task.id === task_id);
-              if (taskIndex === -1) return newBoardData;
-
-              const [movedTask] = newBoardData.lists[sourceListIndex].tasks.splice(taskIndex, 1);
-              movedTask.list = target_list_id;
-              newBoardData.lists[targetListIndex].tasks.push(movedTask);
-
-              return newBoardData;
-            });
-            break;
-
-          case 'add_task':
-            console.log('Received add_task:', payload);
-            setMaindmap_selected_board_data((prevData: board) => {
-              const updatedLists = prevData.lists.map((list) => {
-                if (list.id === payload.list) {
-                  return { ...list, tasks: [...list.tasks, payload] };
-                }
-                return list;
-              });
-
-              return { ...prevData, lists: updatedLists };
-            });
-            break;
-          case 'delete_task':
-            console.log('Received delete_task:', payload);
-            setMaindmap_selected_board_data((prevData: board) => {
-              const updatedLists = prevData.lists.map((list) => {
-                if (list.id === payload.list_id) {
-                  return { ...list, tasks: list.tasks.filter((task) => task.id !== payload.task_id) };
-                }
-                return list;
-              });
-              return { ...prevData, lists: updatedLists };
-            });
-            break;
-          // ================================= list cases ===================================================
-          case 'delete_list':
-            setMaindmap_selected_board_data((prevData: board) => ({
-              ...prevData,
-              lists: prevData.lists.filter((list) => list.id !== payload.list_id),
-            }));
-            break;
-
-          case 'add_list':
-            setMaindmap_selected_board_data((prevData: board) => ({
-              ...prevData,
-              lists: [...prevData.lists, payload],
-            }));
-
-            break;
-          case 'edit_list_name':
-            console.log('Received edit_list_name:', payload);
-            setMaindmap_selected_board_data((prevData: board) => {
-              const updatedLists = prevData.lists.map((list) =>
-                list.id === payload.list_id ? { ...list, name: payload.new_name } : list
-              );
-              return { ...prevData, lists: updatedLists };
-            });
-            break;
-
-          // ================================= board cases ===================================================
-          case 'update_board_name':
-            console.log('Received update_board_name:', payload);
-            // Update boardData
-            setMaindmap_selected_board_data((prevData: board) => ({
-              ...prevData,
-              name: payload.new_name,
-            }));
-
-            if (typeof payload.new_name === 'string') {
-              const updatedBoard: board = {
-                ...maindmap_selected_board_data,
-                name: payload.new_name,
-              };
-              setMaindmap_selected_board_data(updatedBoard);
-            } else {
-              console.error('Invalid board name:', payload.new_name);
-            }
-            break;
-        }
-      } catch (error) {
-        console.error('Error parsing WebSocket message:', error);
-      }
-    };
-
-    newSocket.onerror = (error) => {
-      console.error('WebSocket error:', error);
-    };
-
-    newSocket.onclose = (event) => {
-      console.log('WebSocket connection closed:', event.code, event.reason);
-      if (event.code !== 1000) { // Not a normal closure
-        console.log('WebSocket closed unexpectedly, attempting to reconnect...');
-        // Optionally implement reconnection logic here
-      }
-    };
-
-    return () => {
-      if (newSocket && newSocket.readyState === WebSocket.OPEN) {
-        newSocket.close(1000, 'Component unmounting');
-      }
-    };
-  }, [maindmap_selected_board_data]);
-
-
+  }, [boardData, setBoardData, setSelectedBoard]);
   // ================================  Helper function to check if two nodes overlap   =============================================
   const checkNodeOverlap = (pos1: { x: number; y: number }, pos2: { x: number; y: number }, minDistance: number = 150) => {
     const distance = Math.sqrt(Math.pow(pos1.x - pos2.x, 2) + Math.pow(pos1.y - pos2.y, 2));
@@ -634,7 +632,7 @@ const MindMap: React.FC<MindMapProps> = ({
       // Fix: Use selectedBoard.id instead of mindMapSelectedBoard.id
       const response = await axiosInstance.get(`/api/boards/${selectedBoardId}/`);
       const boardData = response.data;
-      setMaindmap_selected_board_data(boardData);
+      setBoardData(boardData);
       setViewMode('board');
     } catch (error) {
       console.error('Error fetching board data:', error);
@@ -651,7 +649,7 @@ const MindMap: React.FC<MindMapProps> = ({
 
     const board = boards.find(b => b.id === parseInt(boardId));
     if (board) {
-      setMaindmap_selected_board_data(board);
+      setBoardData(board);
       setViewMode('board');
       const { nodes: boardNodes, edges: boardEdges } = convertBoardToMindMap(board);
       setNodes(boardNodes);
@@ -674,26 +672,23 @@ const MindMap: React.FC<MindMapProps> = ({
 
   // Send WebSocket message for creating new task
   const sendCreateTask = useCallback((listId: number, taskName: string) => {
-    if (mindMapSocketRef.current && mindMapSocketRef.current.readyState === WebSocket.OPEN) {
+    if (socketRef.current && socketRef.current.readyState === WebSocket.OPEN) {
       const message = {
         action: 'add_task',
         payload: {
           list: listId,
           title: taskName,
-
         }
       };
 
       try {
-        mindMapSocketRef.current.send(JSON.stringify(message));
+        socketRef.current.send(JSON.stringify(message));
         console.log('Successfully sent create task:', message);
       } catch (error) {
         console.error('Error sending create task message:', error);
       }
-    } else {
-      console.error('WebSocket is not connected for creating task');
     }
-  }, []);
+  }, [socketRef]);
 
   // ============================== BOARD name update  ==========================================
 
@@ -707,7 +702,7 @@ const MindMap: React.FC<MindMapProps> = ({
 
     setBoards(set_new_boards);
 
-    if (mindMapSocketRef.current && mindMapSocketRef.current.readyState === WebSocket.OPEN) {
+    if (socketRef.current && socketRef.current.readyState === WebSocket.OPEN) {
       const message = {
         action: 'edit_board_name',
         payload: {
@@ -717,7 +712,7 @@ const MindMap: React.FC<MindMapProps> = ({
       };
 
       try {
-        mindMapSocketRef.current.send(JSON.stringify(message));
+        socketRef.current.send(JSON.stringify(message));
         console.log('Successfully sent board name update:', message);
       } catch (error) {
         console.error('Error sending board name update message:', error);
@@ -734,7 +729,7 @@ const MindMap: React.FC<MindMapProps> = ({
     setEditingBoard(null);
     setBoardNameInput('');
 
-    if (mindMapSocketRef.current && mindMapSocketRef.current.readyState === WebSocket.OPEN) {
+    if (socketRef.current && socketRef.current.readyState === WebSocket.OPEN) {
       const message = {
         action: 'update_board_name',
         payload: {
@@ -744,7 +739,7 @@ const MindMap: React.FC<MindMapProps> = ({
       };
 
       try {
-        mindMapSocketRef.current.send(JSON.stringify(message));
+        socketRef.current.send(JSON.stringify(message));
         console.log('Successfully sent board name update:', message);
       } catch (error) {
         console.error('Error sending board name update message:', error);
@@ -761,7 +756,7 @@ const MindMap: React.FC<MindMapProps> = ({
   // ============================== Send WebSocket message for creating new LIST ==========================================
 
   const sendCreateList = useCallback((boardId: number, listName: string) => {
-    if (mindMapSocketRef.current && mindMapSocketRef.current.readyState === WebSocket.OPEN) {
+    if (socketRef.current && socketRef.current.readyState === WebSocket.OPEN) {
       const message = {
         action: 'add_list',
         payload: {
@@ -771,7 +766,7 @@ const MindMap: React.FC<MindMapProps> = ({
       };
 
       try {
-        mindMapSocketRef.current.send(JSON.stringify(message));
+        socketRef.current.send(JSON.stringify(message));
         console.log('Successfully sent create list:', message);
       } catch (error) {
         console.error('Error sending create list message:', error);
@@ -785,7 +780,7 @@ const MindMap: React.FC<MindMapProps> = ({
   // =========================================== list name update =========================================================
 
   const sendListNameUpdate = useCallback((listId: number, newName: string) => {
-    if (mindMapSocketRef.current && mindMapSocketRef.current.readyState === WebSocket.OPEN) {
+    if (socketRef.current && socketRef.current.readyState === WebSocket.OPEN) {
       const message = {
         action: 'edit_list_name',
         payload: {
@@ -795,7 +790,7 @@ const MindMap: React.FC<MindMapProps> = ({
       };
 
       try {
-        mindMapSocketRef.current.send(JSON.stringify(message));
+        socketRef.current.send(JSON.stringify(message));
         console.log('Successfully sent list name update:', message);
       } catch (error) {
         console.error('Error sending list name update message:', error);
@@ -825,7 +820,33 @@ const MindMap: React.FC<MindMapProps> = ({
 
 
   const sendMoveTask = useCallback((taskId: number, sourceListId: number, targetListId: number) => {
-    if (mindMapSocketRef.current && mindMapSocketRef.current.readyState === WebSocket.OPEN) {
+    // First update local state immediately
+    const sourceList = boardData.lists.find(list => list.id === sourceListId);
+    const taskToMove = sourceList?.tasks.find(task => task.id === taskId);
+
+    if (!taskToMove) return;
+
+    const updatedLists = boardData.lists.map((list) => {
+      if (list.id === sourceListId) {
+        return {
+          ...list,
+          tasks: list.tasks.filter(task => task.id !== taskId),
+        };
+      } else if (list.id === targetListId) {
+        return {
+          ...list,
+          tasks: [...list.tasks, { ...taskToMove, list: targetListId }],
+        };
+      }
+      return list;
+    });
+
+    const updatedBoardData = { ...boardData, lists: updatedLists };
+    setBoardData(updatedBoardData);
+    setSelectedBoard(updatedBoardData);
+
+    // Then send WebSocket message
+    if (socketRef.current && socketRef.current.readyState === WebSocket.OPEN) {
       const message = {
         action: 'move_task',
         payload: {
@@ -834,16 +855,27 @@ const MindMap: React.FC<MindMapProps> = ({
           target_list_id: targetListId,
         }
       };
+
       try {
-        mindMapSocketRef.current.send(JSON.stringify(message));
+        socketRef.current.send(JSON.stringify(message));
         console.log('Successfully sent move_task:', message);
       } catch (error) {
         console.error('Error sending move_task message:', error);
       }
-    } else {
-      console.error('WebSocket is not connected for moving task');
     }
-  }, []);
+  }, [socketRef, boardData, setBoardData, setSelectedBoard]);
+
+
+
+  useEffect(() => {
+    if (boardData?.id && boardData.id !== 0) {
+      // Only update selectedBoard if it's different
+      if (selectedBoard?.id !== boardData.id ||
+        JSON.stringify(selectedBoard) !== JSON.stringify(boardData)) {
+        setSelectedBoard(boardData);
+      }
+    }
+  }, [boardData, selectedBoard, setSelectedBoard]);
 
   // ========================================================================================================================
   // ========================================================================================================================
@@ -909,7 +941,7 @@ const MindMap: React.FC<MindMapProps> = ({
             taskId = parseInt(params.source!.replace('task-', ''));
             targetListId = parseInt(params.target!.replace('list-', ''));
             // Find the source list by searching which list contains this task
-            for (const list of maindmap_selected_board_data.lists) {
+            for (const list of boardData.lists) {
               if (list.tasks.some(task => task.id === taskId)) {
                 sourceListId = list.id;
                 break;
@@ -919,7 +951,7 @@ const MindMap: React.FC<MindMapProps> = ({
             taskId = parseInt(params.target!.replace('task-', ''));
             targetListId = parseInt(params.source!.replace('list-', ''));
             // Find the source list by searching which list contains this task
-            for (const list of maindmap_selected_board_data.lists) {
+            for (const list of boardData.lists) {
               if (list.tasks.some(task => task.id === taskId)) {
                 sourceListId = list.id;
                 break;
@@ -990,7 +1022,7 @@ const MindMap: React.FC<MindMapProps> = ({
         console.log('Connection already exists between these nodes');
       }
     },
-    [setEdges, edgeExists, viewMode, nodes, maindmap_selected_board_data, sendMoveTask]
+    [setEdges, edgeExists, viewMode, nodes, boardData, sendMoveTask]
   );
 
 
@@ -1094,11 +1126,12 @@ const MindMap: React.FC<MindMapProps> = ({
 
 
   // Send WebSocket message for task update
+  // In sendTaskUpdate callback, after sending WebSocket message:
   const sendTaskUpdate = useCallback((taskData: any) => {
     console.log('Attempting to send task update:', taskData);
-    console.log('WebSocket state:', mindMapSocketRef.current?.readyState);
+    console.log('WebSocket state:', socketRef.current?.readyState);
 
-    if (mindMapSocketRef.current && mindMapSocketRef.current.readyState === WebSocket.OPEN) {
+    if (socketRef.current && socketRef.current.readyState === WebSocket.OPEN) {
       const message = {
         action: 'update_task',
         payload: {
@@ -1114,21 +1147,34 @@ const MindMap: React.FC<MindMapProps> = ({
       };
 
       try {
-        mindMapSocketRef.current.send(JSON.stringify(message));
+        socketRef.current.send(JSON.stringify(message));
         console.log('Successfully sent task update:', message);
+
+        // Immediately update both states locally for instant feedback
+        const updatedLists = boardData.lists.map((list) => ({
+          ...list,
+          tasks: list.tasks.map((task) =>
+            task.id === taskData.id ? {
+              ...task,
+              title: taskData.title,
+              description: taskData.description,
+              priority: taskData.priority,
+              due_date: taskData.due_date,
+              completed: taskData.completed,
+              task_associated_users_id: taskData.task_associated_users_id,
+            } : task
+          ),
+        }));
+
+        const updatedBoardData = { ...boardData, lists: updatedLists };
+        setBoardData(updatedBoardData);
+        setSelectedBoard(updatedBoardData);
+
       } catch (error) {
         console.error('Error sending WebSocket message:', error);
       }
-    } else {
-      console.error('WebSocket is not connected. Current state:',
-        mindMapSocketRef.current?.readyState === WebSocket.CONNECTING ? 'CONNECTING' :
-          mindMapSocketRef.current?.readyState === WebSocket.CLOSING ? 'CLOSING' :
-            mindMapSocketRef.current?.readyState === WebSocket.CLOSED ? 'CLOSED' : 'UNKNOWN'
-      );
     }
-  }, []);
-
-
+  }, [socketRef, boardData, setBoardData, setSelectedBoard]);
   // ====================================================== move task ===================================================
 
 
@@ -1144,7 +1190,27 @@ const MindMap: React.FC<MindMapProps> = ({
     task_associated_users_id: number[],
     priority: 'green' | 'orange' | 'red' | null
   ) => {
+    // First update local state immediately for instant UI feedback
+    const updatedLists = boardData.lists.map((list) => ({
+      ...list,
+      tasks: list.tasks.map((task) =>
+        task.id === taskId ? {
+          ...task,
+          title: updatedTitle,
+          description: description,
+          priority: priority,
+          due_date: due_date,
+          completed: completed,
+          task_associated_users_id: task_associated_users_id,
+        } : task
+      ),
+    }));
 
+    const updatedBoardData = { ...boardData, lists: updatedLists };
+    setBoardData(updatedBoardData);
+    setSelectedBoard(updatedBoardData);
+
+    // Then send WebSocket update
     const updatedTaskData = {
       id: taskId,
       title: updatedTitle,
@@ -1156,17 +1222,16 @@ const MindMap: React.FC<MindMapProps> = ({
     };
     sendTaskUpdate(updatedTaskData);
 
-    // Reset updating task ID
-  }, [sendTaskUpdate]);
+  }, [boardData, setBoardData, setSelectedBoard, sendTaskUpdate]);
 
-  // Handle task deletion (if needed)
+
+  //  ========================    task delete funtionality ==========================================
+
   const handleTaskDelete = useCallback((taskId: number, listId: number) => {
-    // You can implement task deletion via WebSocket if needed
-    console.log('Delete task:', taskId, 'from list:', listId);
-    // For now, just close the modal
     setIsEditModalOpen(false);
     setEditingTask(null);
-    if (mindMapSocketRef.current && mindMapSocketRef.current.readyState === WebSocket.OPEN) {
+
+    if (socketRef.current && socketRef.current.readyState === WebSocket.OPEN) {
       const message = {
         action: 'delete_task',
         payload: {
@@ -1176,20 +1241,17 @@ const MindMap: React.FC<MindMapProps> = ({
       };
 
       try {
-        mindMapSocketRef.current.send(JSON.stringify(message));
+        socketRef.current.send(JSON.stringify(message));
         console.log('Successfully sent delete task:', message);
       } catch (error) {
         console.error('Error sending delete task message:', error);
       }
-    } else {
-      console.error('WebSocket is not connected for deleting task');
     }
-  }, []);
+  }, [socketRef]);
+
 
   // ========================================================================================================================
-  // ========================================================================================================================
   // ====================================== Handle TASK node click for editing ==============================================
-  // ========================================================================================================================
   // ========================================================================================================================
 
   const onNodeClick = useCallback((event: React.MouseEvent, node: Node) => {
@@ -1203,7 +1265,7 @@ const MindMap: React.FC<MindMapProps> = ({
 
         // Find the task in the current board data
         let foundTask: tasks | null = null;
-        for (const list of maindmap_selected_board_data.lists) {
+        for (const list of boardData.lists) {
           foundTask = list.tasks.find(task => task.id === taskId) || null;
           if (foundTask) break;
         }
@@ -1218,7 +1280,7 @@ const MindMap: React.FC<MindMapProps> = ({
         const listId = parseInt(node.id.replace('list-', ''));
 
         // Find the list in the current board data
-        const foundList = maindmap_selected_board_data.lists.find(list => list.id === listId);
+        const foundList = boardData.lists.find(list => list.id === listId);
 
         if (foundList) {
           setEditingList(foundList);
@@ -1231,14 +1293,14 @@ const MindMap: React.FC<MindMapProps> = ({
         const boardId = parseInt(node.id.replace('board-', ''));
 
         // Use the main board object for editing
-        if (maindmap_selected_board_data.id === boardId) {
-          setEditingBoard(maindmap_selected_board_data);
-          setBoardNameInput(maindmap_selected_board_data.name);
+        if (boardData.id === boardId) {
+          setEditingBoard(boardData);
+          setBoardNameInput(boardData.name);
           setIsBoardEditModalOpen(true);
         }
       }
     }
-  }, [viewMode, maindmap_selected_board_data]);
+  }, [viewMode, boardData]);
 
   // ============================ Get associated users for the current task============================
   const getAssociatedUsers = useCallback((task: tasks): ProfileData[] => {
@@ -1254,13 +1316,13 @@ const MindMap: React.FC<MindMapProps> = ({
   // ============== Update the convertBoardToMindMap function to regenerate nodes when board data changes ==============
 
   useEffect(() => {
-    if (viewMode === 'board' && maindmap_selected_board_data?.id) {
-      const { nodes: boardNodes, edges: boardEdges } = convertBoardToMindMap(maindmap_selected_board_data);
+    if (viewMode === 'board' && boardData?.id) {
+      const { nodes: boardNodes, edges: boardEdges } = convertBoardToMindMap(boardData);
       setNodes(boardNodes);
       setEdges(boardEdges);
 
     }
-  }, [maindmap_selected_board_data, viewMode, convertBoardToMindMap, setNodes, setEdges]);
+  }, [boardData, viewMode, convertBoardToMindMap, setNodes, setEdges]);
 
 
 
@@ -1326,17 +1388,17 @@ const MindMap: React.FC<MindMapProps> = ({
   // ================================= reset positions to default =========================================
 
   const handleResetPositions = useCallback(() => {
-    if (!maindmap_selected_board_data?.id) return;
+    if (!boardData?.id) return;
     // Remove saved positions from localStorage
-    const key = getPositionStorageKey(maindmap_selected_board_data.id);
+    const key = getPositionStorageKey(boardData.id);
     localStorage.removeItem(key);
 
     // Regenerate nodes/edges with default positions
-    const { nodes: boardNodes, edges: boardEdges } = convertBoardToMindMap(maindmap_selected_board_data);
+    const { nodes: boardNodes, edges: boardEdges } = convertBoardToMindMap(boardData);
     setNodes(boardNodes);
     setEdges(boardEdges);
   }, [
-    maindmap_selected_board_data,
+    boardData,
     getPositionStorageKey,
     convertBoardToMindMap,
     setNodes,
@@ -1346,10 +1408,10 @@ const MindMap: React.FC<MindMapProps> = ({
   // =============================================== return to boards ================================================
 
   const returnToBoards = () => {
-    if (maindmap_selected_board_data.id !== 0 && maindmap_selected_board_data.id !== null) {
-      setSelectedBoard(maindmap_selected_board_data)
+    if (boardData.id !== 0 && boardData.id !== null) {
+      setSelectedBoard(boardData)
       setSelectedComponent("Boards"); // Switch to the Boards view
-      navigate(`/mainpage/boards/${maindmap_selected_board_data.id}`);
+      navigate(`/mainpage/boards/${boardData.id}`);
 
     } else {
       return;
@@ -1522,7 +1584,7 @@ const MindMap: React.FC<MindMapProps> = ({
             }}
           >
 
-            {maindmap_selected_board_data.id !== 0 && (
+            {boardData.id !== 0 && (
               <div
                 className='mindmap_board_return_container'
                 style={{ background: currentTheme['--task-background-color'] }}
@@ -1532,14 +1594,14 @@ const MindMap: React.FC<MindMapProps> = ({
                   style={{ color: currentTheme['--main-text-coloure'] }}
                 />
                 <p className='return_board_p'
-                  onClick={() => setActiveSidebarBoardId(maindmap_selected_board_data.id)}
+                  onClick={() => setActiveSidebarBoardId(boardData.id)}
                 > {t('boards_mode')}</p>
               </div>
             )}
 
 
             <Select
-              value={boardOptions.find(opt => opt.value === maindmap_selected_board_data?.id)}
+              value={boardOptions.find(opt => opt.value === boardData?.id)}
               onChange={option => handleBoardChange(String(option?.value))}
               options={boardOptions}
               styles={customStyles}
@@ -1547,7 +1609,7 @@ const MindMap: React.FC<MindMapProps> = ({
               isSearchable
             />
 
-            {maindmap_selected_board_data.id !== 0 && (
+            {boardData.id !== 0 && (
               <>
                 {isTempNodeCreated && tempNodeId ? (
                   <button
@@ -1580,7 +1642,7 @@ const MindMap: React.FC<MindMapProps> = ({
               </>
             )}
 
-            {viewMode === 'board' && maindmap_selected_board_data && (
+            {viewMode === 'board' && boardData && (
               <button
                 onClick={handleResetPositions}
                 style={{

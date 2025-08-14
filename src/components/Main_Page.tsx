@@ -684,6 +684,10 @@ const MainPage: React.FC<MainPageProps> = ({
                 setSelectedBoard={setSelectedBoard}
                 setSelectedComponent={setSelectedComponent}
                 setActiveSidebarBoardId={setActiveSidebarBoardId}
+                socketRef={socketRef}        // Add shared WebSocket
+                boardData={boardData}
+                setBoardData={setBoardData}
+                selectedBoard={selectedBoard}
               />
             </ReactFlowProvider>
           } />
