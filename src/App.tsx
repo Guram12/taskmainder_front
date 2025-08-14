@@ -511,6 +511,8 @@ const App: React.FC = () => {
                 setCurrentTheme={setCurrentTheme}
                 currentThemeKey={currentThemeKey}
                 setCurrentThemeKey={setCurrentThemeKey}
+                isMobile={isMobile}
+
               />}
           />
           <Route path="/login"
