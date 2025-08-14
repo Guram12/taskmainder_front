@@ -8,6 +8,7 @@ gsap.registerPlugin(MorphSVGPlugin);
 interface SvgBackgroundProps {
   path_variant: number;
   currentTheme: ThemeSpecs;
+  isMobile: boolean;
 }
 
 // Subtle bubble-like variations of the same base shape
@@ -18,7 +19,7 @@ const paths = [
   "M720,400 C765,388 795,368 810,338 C830,298 825,248 805,208 C785,168 745,148 705,158 C665,168 625,188 607,228 C585,268 585,318 605,358 C625,398 685,412 720,400 Z",
 ];
 
-const SvgBackground: React.FC<SvgBackgroundProps> = ({ path_variant, currentTheme }) => {
+const SvgBackground: React.FC<SvgBackgroundProps> = ({ path_variant, currentTheme , isMobile }) => {
   const pathRef = useRef<SVGPathElement>(null);
 
   useEffect(() => {
@@ -72,6 +73,9 @@ const SvgBackground: React.FC<SvgBackgroundProps> = ({ path_variant, currentThem
         height="187"
         preserveAspectRatio="none"
         viewBox={String(define_viewport(Number(path_variant)))}
+        style={{
+          maxWidth: isMobile ? '100%' : ''
+        }}
       >
         <path
           ref={pathRef}

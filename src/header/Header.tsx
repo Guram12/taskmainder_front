@@ -76,6 +76,7 @@ const Header: React.FC<HeaderProps> = ({
   useEffect(() => {
     if (
       location.pathname === "/" ||
+      location.pathname === "/login" ||
       location.pathname === "/register" ||
       location.pathname === '/error' ||
       location.pathname === '/password-reset' ||
