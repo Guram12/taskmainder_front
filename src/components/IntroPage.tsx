@@ -1,5 +1,5 @@
-import React, { useEffect, useRef } from 'react';
 import '../styles/IntroPage.css';
+import React, { useEffect, useRef } from 'react';
 import { Helmet } from "react-helmet-async";
 import { ThemeSpecs } from '../utils/theme';
 import gsap from 'gsap';
@@ -37,6 +37,7 @@ interface IntroPageProps {
   setCurrentTheme: (theme: ThemeSpecs) => void;
   currentThemeKey: string;
   setCurrentThemeKey: (key: string) => void;
+  isMobile: boolean;
 }
 
 const IntroPage: React.FC<IntroPageProps> = ({
@@ -46,7 +47,8 @@ const IntroPage: React.FC<IntroPageProps> = ({
   // setIsAuthenticated,
   setCurrentTheme,
   currentThemeKey,
-  setCurrentThemeKey
+  setCurrentThemeKey,
+  isMobile
 
 }) => {
 
@@ -319,8 +321,8 @@ const IntroPage: React.FC<IntroPageProps> = ({
             {/* Logo Component */}
             <div className="landing_logo_container" onClick={handleLogoClick} >
               <svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 517.14 758.16"
-                width="50"
-                height="50"
+                width={isMobile ? '40' : '50'}
+                height={isMobile ? '40' : '50'}
               >
                 <g >
                   <polygon
@@ -410,6 +412,7 @@ const IntroPage: React.FC<IntroPageProps> = ({
 
           <TaskSlider
             currentTheme={currentTheme}
+            isMobile={isMobile}
           />
 
 

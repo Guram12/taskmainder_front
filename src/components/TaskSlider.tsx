@@ -21,13 +21,17 @@ const slides = [
 
 interface TaskSliderProps {
   currentTheme: ThemeSpecs;
+  isMobile: boolean;
 }
 
 
-const TaskSlider: React.FC<TaskSliderProps> = ({ currentTheme }) => {
+const TaskSlider: React.FC<TaskSliderProps> = ({ currentTheme, isMobile }) => {
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
 
   const { t } = useTranslation();
+
+
+
 
   return (
     <div className="slider-wrapper">
@@ -41,7 +45,8 @@ const TaskSlider: React.FC<TaskSliderProps> = ({ currentTheme }) => {
             style={{
               backgroundColor: currentTheme['--task-background-color'],
               color: currentTheme['--main-text-coloure'],
-              minWidth: 300,
+              minWidth: isMobile ? 100 : 300,
+              maxWidth: isMobile ? 200 : '',
               margin: '0 15px',
               borderRadius: 10,
               boxShadow: '0 2px 10px rgba(0,0,0,0.1)',
