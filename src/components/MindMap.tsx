@@ -135,8 +135,6 @@ const MindMap: React.FC<MindMapProps> = ({
   const prev_mindmap_selected_board = localStorage.getItem('prev_mindmap_selected_board_id');
 
 
-
-
   //-------------  when page opens automatically select boar from localstorage prev selected ---------
   useEffect(() => {
     if (prev_mindmap_selected_board) {
@@ -267,6 +265,7 @@ const MindMap: React.FC<MindMapProps> = ({
   }, [onNodesChange, viewMode, maindmap_selected_board_data?.id, savePositionsToStorage, setNodes]);
 
   // =============================== websocket playload useefect for boarddata update   ========================================
+
   useEffect(() => {
     if (!maindmap_selected_board_data?.id) return;
 
@@ -440,7 +439,7 @@ const MindMap: React.FC<MindMapProps> = ({
   }, [maindmap_selected_board_data]);
 
 
-  // Helper function to check if two nodes overlap
+  // ================================  Helper function to check if two nodes overlap   =============================================
   const checkNodeOverlap = (pos1: { x: number; y: number }, pos2: { x: number; y: number }, minDistance: number = 150) => {
     const distance = Math.sqrt(Math.pow(pos1.x - pos2.x, 2) + Math.pow(pos1.y - pos2.y, 2));
     return distance < minDistance;
