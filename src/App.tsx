@@ -97,10 +97,15 @@ const App: React.FC = () => {
     notification_preference: 'email',
   });
 
-  const default_is_custom_theme_selected = localStorage.getItem('isCustomThemeSelected') === null ? false : localStorage.getItem('isCustomThemeSelected') === 'true';
+  const default_is_custom_theme_selected = JSON.parse(localStorage.getItem('isCustomThemeSelected') || 'false');
 
   const [isCustomThemeSelected, setIsCustomThemeSelected] = useState<boolean>(default_is_custom_theme_selected);
 
+  // --------------  sync customtheme selected state with localStorage ----------------
+  useEffect(() => {
+    setIsCustomThemeSelected(default_is_custom_theme_selected);
+  }, [default_is_custom_theme_selected])
+  // ----------------------------------------------------------------------------------
 
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
 

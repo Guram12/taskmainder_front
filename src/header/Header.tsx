@@ -246,37 +246,39 @@ const Header: React.FC<HeaderProps> = ({
         key: 'custom',
         label: (
 
-            <div
-              className='custom_theme_container_in_header'
-              style={{
-                backgroundColor: isCustomThemeSelected ? saved_custom_theme['--background-color'] : 'seagreen',
-                borderColor: saved_custom_theme['--border-color'],
-                color: saved_custom_theme['--main-text-coloure'],
-              }}
-              onClick={handle_return_to_custom_theme}
-            >
-              <p style={{
-                color: saved_custom_theme['--main-text-coloure'],
-              }}
-                className="custom_theme_text_in_header">
-                {t('customTheme')}
-              </p>
+          <div
+            className='custom_theme_container_in_header'
+            style={{
+              backgroundColor: isCustomThemeSelected ? saved_custom_theme['--background-color'] : 'seagreen',
+              borderColor: saved_custom_theme['--border-color'],
+              color: saved_custom_theme['--main-text-coloure'],
+            }}
+            onClick={handle_return_to_custom_theme}
+          >
+            <p style={{
+              color: saved_custom_theme['--main-text-coloure'],
+            }}
+              className="custom_theme_text_in_header">
+              {t('customTheme')}
+            </p>
 
-              <div className="customtheme_backg_color" style={{ backgroundColor: saved_custom_theme['--background-color'] }}></div>
-              <div className="customtheme_backg_color" style={{ backgroundColor: saved_custom_theme['--list-background-color'] }}></div>
-              <div className="customtheme_backg_color" style={{ backgroundColor: saved_custom_theme['--border-color'] }}></div>
-              <div className="customtheme_backg_color" style={{ backgroundColor: saved_custom_theme['--task-background-color'] }}></div>
-              <div className="customtheme_backg_color" style={{ backgroundColor: saved_custom_theme['--hover-color'] }}></div>
-              <div className="customtheme_backg_color" style={{ backgroundColor: saved_custom_theme['--due-date-color'] }}></div>
-              <div className="customtheme_backg_color" style={{ backgroundColor: saved_custom_theme['--scrollbar-thumb-color'] }}></div>
+            <div className="customtheme_backg_color" style={{ backgroundColor: saved_custom_theme['--background-color'] }}></div>
+            <div className="customtheme_backg_color" style={{ backgroundColor: saved_custom_theme['--list-background-color'] }}></div>
+            <div className="customtheme_backg_color" style={{ backgroundColor: saved_custom_theme['--border-color'] }}></div>
+            <div className="customtheme_backg_color" style={{ backgroundColor: saved_custom_theme['--task-background-color'] }}></div>
+            <div className="customtheme_backg_color" style={{ backgroundColor: saved_custom_theme['--hover-color'] }}></div>
+            <div className="customtheme_backg_color" style={{ backgroundColor: saved_custom_theme['--due-date-color'] }}></div>
+            <div className="customtheme_backg_color" style={{ backgroundColor: saved_custom_theme['--scrollbar-thumb-color'] }}></div>
 
-            </div>
+          </div>
         ),
       },
     ],
   };
 
-
+  useEffect(() => {
+    console.log('=>', isCustomThemeSelected)
+  }, [isCustomThemeSelected]);
 
   // Language dropdown menu
   const languageMenu: MenuProps = {
@@ -431,8 +433,8 @@ const Header: React.FC<HeaderProps> = ({
             <div
               className='custom_theme_container_in_header'
               style={{
-                backgroundColor: isCustomThemeSelected ? saved_custom_theme['--background-color'] : 'seagreen',
-                borderColor: saved_custom_theme['--border-color'],
+                backgroundColor: saved_custom_theme['--background-color'],
+                borderColor: !isCustomThemeSelected ? saved_custom_theme['--border-color'] : 'seagreen',
                 color: saved_custom_theme['--main-text-coloure'],
               }}
               onClick={handle_return_to_custom_theme}
