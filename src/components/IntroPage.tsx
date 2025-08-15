@@ -529,7 +529,7 @@ const IntroPage: React.FC<IntroPageProps> = ({
                 <img src={customtheme_image} alt="Custom Theme image" className='feature_image' />
               </div>
 
-              <GifSlider 
+              <GifSlider
                 isMobile={isMobile}
               />
 
@@ -595,7 +595,12 @@ const IntroPage: React.FC<IntroPageProps> = ({
 
 
         </div>
-        <GoogleSignIn setIsAuthenticated={setIsAuthenticated} />
+        <div style={{
+          display: 'none'
+        }} >
+
+          <GoogleSignIn setIsAuthenticated={setIsAuthenticated} />
+        </div>
       </div>
     </>
   );
