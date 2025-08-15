@@ -64,7 +64,6 @@ const Profile_Info_update: React.FC<Profile_Info_updateProps> = ({ profileData, 
       });
 
       if (response.status === 200) {
-        console.log("Profile updated successfully");
         await FetchProfileData(); // Fetch updated profile data from the backend
         setIsEditing({ username: false, phone: false, timezone: false }); // Exit editing mode
       } else {
@@ -96,11 +95,6 @@ const Profile_Info_update: React.FC<Profile_Info_updateProps> = ({ profileData, 
     value: entry.timezone,
   }));
 
-
-  useEffect(() => {
-    console.log('timezone:===>>>', profileData.phone_number);
-
-  }, [profileData]);
 
 
   return (

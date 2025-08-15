@@ -208,7 +208,6 @@ const MindMap: React.FC<MindMapProps> = ({
       try {
         const key = getPositionStorageKey(boardId);
         localStorage.setItem(key, JSON.stringify(positions));
-        console.log('Saved positions for board:', boardId);
       } catch (error) {
         console.error('Error saving positions to localStorage:', error);
       }
@@ -683,7 +682,6 @@ const MindMap: React.FC<MindMapProps> = ({
 
       try {
         socketRef.current.send(JSON.stringify(message));
-        console.log('Successfully sent create task:', message);
       } catch (error) {
         console.error('Error sending create task message:', error);
       }
@@ -713,7 +711,6 @@ const MindMap: React.FC<MindMapProps> = ({
 
       try {
         socketRef.current.send(JSON.stringify(message));
-        console.log('Successfully sent board name update:', message);
       } catch (error) {
         console.error('Error sending board name update message:', error);
       }
@@ -740,7 +737,6 @@ const MindMap: React.FC<MindMapProps> = ({
 
       try {
         socketRef.current.send(JSON.stringify(message));
-        console.log('Successfully sent board name update:', message);
       } catch (error) {
         console.error('Error sending board name update message:', error);
       }
@@ -767,7 +763,6 @@ const MindMap: React.FC<MindMapProps> = ({
 
       try {
         socketRef.current.send(JSON.stringify(message));
-        console.log('Successfully sent create list:', message);
       } catch (error) {
         console.error('Error sending create list message:', error);
       }
@@ -791,7 +786,6 @@ const MindMap: React.FC<MindMapProps> = ({
 
       try {
         socketRef.current.send(JSON.stringify(message));
-        console.log('Successfully sent list name update:', message);
       } catch (error) {
         console.error('Error sending list name update message:', error);
       }
@@ -858,7 +852,6 @@ const MindMap: React.FC<MindMapProps> = ({
 
       try {
         socketRef.current.send(JSON.stringify(message));
-        console.log('Successfully sent move_task:', message);
       } catch (error) {
         console.error('Error sending move_task message:', error);
       }
@@ -885,7 +878,6 @@ const MindMap: React.FC<MindMapProps> = ({
 
   const onConnect: OnConnect = useCallback(
     (params: Connection) => {
-      console.log('Connection created:', params);
 
       if (viewMode === 'board' && params.source && params.target) {
         const sourceNode = nodes.find(n => n.id === params.source);
@@ -1019,7 +1011,6 @@ const MindMap: React.FC<MindMapProps> = ({
           style: { stroke: '#6366f1', strokeWidth: 2 },
         }, eds));
       } else {
-        console.log('Connection already exists between these nodes');
       }
     },
     [setEdges, edgeExists, viewMode, nodes, boardData, sendMoveTask]
@@ -1128,8 +1119,6 @@ const MindMap: React.FC<MindMapProps> = ({
   // Send WebSocket message for task update
   // In sendTaskUpdate callback, after sending WebSocket message:
   const sendTaskUpdate = useCallback((taskData: any) => {
-    console.log('Attempting to send task update:', taskData);
-    console.log('WebSocket state:', socketRef.current?.readyState);
 
     if (socketRef.current && socketRef.current.readyState === WebSocket.OPEN) {
       const message = {
@@ -1148,7 +1137,6 @@ const MindMap: React.FC<MindMapProps> = ({
 
       try {
         socketRef.current.send(JSON.stringify(message));
-        console.log('Successfully sent task update:', message);
 
         // Immediately update both states locally for instant feedback
         const updatedLists = boardData.lists.map((list) => ({
@@ -1242,7 +1230,6 @@ const MindMap: React.FC<MindMapProps> = ({
 
       try {
         socketRef.current.send(JSON.stringify(message));
-        console.log('Successfully sent delete task:', message);
       } catch (error) {
         console.error('Error sending delete task message:', error);
       }
@@ -1254,9 +1241,8 @@ const MindMap: React.FC<MindMapProps> = ({
   // ====================================== Handle TASK node click for editing ==============================================
   // ========================================================================================================================
 
-  const onNodeClick = useCallback((event: React.MouseEvent, node: Node) => {
-    console.log('Node clicked:', node);
-    console.log('Mouse event:', event);
+  const onNodeClick = useCallback((_: React.MouseEvent, node: Node) => {
+
 
     if (viewMode === 'board') {
       // Handle task node clicks

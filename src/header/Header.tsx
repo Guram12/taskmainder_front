@@ -304,14 +304,12 @@ const Header: React.FC<HeaderProps> = ({
     const prev_selected_board_id = localStorage.getItem('prev_selected_board_id');
     navigate(`/mainpage/boards/${prev_selected_board_id}`);
     if (prev_selected_board_id === null) {
-      console.log("No previous board selected, setting selected board to null.");
       return;
     }
     const board_to_be_selected = boards.find(board => board.id === JSON.parse(prev_selected_board_id));
     setActiveSidebarBoardId(board_to_be_selected?.id ?? null);
     if (board_to_be_selected) {
       setSelectedBoard(board_to_be_selected);
-      console.log("Previous board selected:", board_to_be_selected);
     }
   }
 

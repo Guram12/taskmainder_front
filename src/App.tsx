@@ -249,7 +249,6 @@ const App: React.FC = () => {
   // ------------------------------------- update board users after notification received ---------------------------------------
 
   const update_board_users = async (boardId: string) => {
-    console.log('Updating board users for board ID:---', boardId);
     try {
       const response = await axiosInstance.get(`/api/boards/${boardId}/users/`, {
         headers: {
@@ -257,7 +256,6 @@ const App: React.FC = () => {
         }
       });
       if (response.status === 200) {
-        console.log('Board users fetched successfully');
         setCurrent_board_users(response.data);
         setIs_cur_Board_users_fetched(true);
         setSelectedBoard(prev => prev ? { ...prev, board_users: response.data } : prev);
@@ -285,15 +283,15 @@ const App: React.FC = () => {
 
           switch (type) {
             case 'TASK_DUE_REMINDER':
-              console.log(
-                `TASK_DUE_REMINDER type ==>> Task Name: ${payload.taskName}, Due Date: ${payload.dueDate}, Priority: ${payload.priority}`
-              );
+              // console.log(
+              //   `TASK_DUE_REMINDER type ==>> Task Name: ${payload.taskName}, Due Date: ${payload.dueDate}, Priority: ${payload.priority}`
+              // );
 
               break;
 
 
             case 'USER_REMOVED_FROM_BOARD':
-              console.log(`USER_REMOVED_FROM_BOARD type ==>> Board Name: ${payload.boardName}, Removed User Email: ${payload.removedUserEmail}`);
+              // console.log(`USER_REMOVED_FROM_BOARD type ==>> Board Name: ${payload.boardName}, Removed User Email: ${payload.removedUserEmail}`);
               // setNotificationData(event.data);
 
               // Update the boards list to remove the board
@@ -320,19 +318,19 @@ const App: React.FC = () => {
                 String(payload.boardName).toLowerCase() ===
                 String(selectedBoardRef.current?.name).toLowerCase()
               ) {
-                console.log('Updating board users for the selected board:', selectedBoardRef.current?.name, 'payload:', payload.boardName);
+                // console.log('Updating board users for the selected board:', selectedBoardRef.current?.name, 'payload:', payload.boardName);
                 update_board_users(String(selectedBoardRef.current?.id));
               }
               break;
 
             case 'USER_LEFT_BOARD':
-              console.log(`USER_LEFT_BOARD type ==>> Board Name: ${payload.boardName}, Left User Email: ${payload.leftUserEmail}, Left User Name: ${payload.leftUserName}`);
+              // console.log(`USER_LEFT_BOARD type ==>> Board Name: ${payload.boardName}, Left User Email: ${payload.leftUserEmail}, Left User Name: ${payload.leftUserName}`);
               fetchBoards();
 
 
 
               if (payload.boardName === selectedBoardRef.current?.name) {
-                console.log('Updating board users for the selected board:', selectedBoardRef.current?.name, 'payload:', payload.boardName);
+                // console.log('Updating board users for the selected board:', selectedBoardRef.current?.name, 'payload:', payload.boardName);
                 update_board_users(String(selectedBoardRef.current?.id));
               }
 
@@ -360,7 +358,6 @@ const App: React.FC = () => {
           Authorization: `Bearer ${localStorage.getItem('access_token')}`
         }
       });
-      console.log('boards fetched successfully!!!!!!;');
       setBoards(response.data);
       setIsBoardsLoaded(true);
     } catch (error) {
@@ -436,7 +433,6 @@ const App: React.FC = () => {
         const response = await axiosInstance.post(`/acc/token/refresh/`, {
           refresh: refreshToken,
         });
-        console.log("Refresh token is valid", response);
         localStorage.setItem('access_token', response.data.access);
         return true;
       } catch (error) {

@@ -69,7 +69,6 @@ const Settings: React.FC<SettingsProps> = ({
       });
 
       if (response.status === 200) {
-        console.log('Image deleted successfully');
 
         // Update the boards state immutably
         const updatedBoards = boards.map(board => {
@@ -190,21 +189,6 @@ const Settings: React.FC<SettingsProps> = ({
 };
 
 export default Settings;
-
-
-// new functionality for settings  ==>>>
-
-// profile picture update         +
-// Update Profile Information     +
-// Custom Avatars                 +
-// Change Password                +
-// report bug or feedback  ???    
-// Theme Customization            +   
-// Notification                   +
-// Account Deletion               +
-// Language Preferences
-// Keyboard Shortcuts  ???
-// Logout from All Devices  ???
 
 
 

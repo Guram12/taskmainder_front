@@ -47,9 +47,6 @@ const ChangeNotification: React.FC<ChangeNotificationProps> = ({ profileData, Fe
     }
   }, [profileData.discord_webhook_url]);
 
-  useEffect(() => {
-    console.log('is_tutorial_open', is_tutorial_open)
-  }, [profileData.discord_webhook_url]);
 
   useEffect(() => {
     if (profileData.discord_webhook_url === null || profileData.discord_webhook_url === 'email') {
@@ -115,7 +112,6 @@ const ChangeNotification: React.FC<ChangeNotificationProps> = ({ profileData, Fe
         setSelected_notification_preferences('email');
         setIs_url_updatable(false);
 
-        console.log('Webhook URL deleted successfully.');
       } else {
         console.error('Failed to delete webhook URL.');
       }
@@ -158,9 +154,6 @@ const ChangeNotification: React.FC<ChangeNotificationProps> = ({ profileData, Fe
 
 
   // =======================================================================================================
-  // useEffect(() => {
-  //   console.log("profile data ->>", profileData);
-  // }, [profileData]);
 
   const handle_tutorial_open = () => {
     setIs_tutorial_open(true);

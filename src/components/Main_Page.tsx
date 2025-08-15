@@ -206,9 +206,9 @@ const MainPage: React.FC<MainPageProps> = ({
     socketRef.current = newSocket;
 
 
-    newSocket.onopen = () => {
-      console.log('WebSocket connection established');
-    };
+    // newSocket.onopen = () => {
+    //    console.log('WebSocket connection established');
+    // };
 
     newSocket.onerror = (error) => console.log('WebSocket error:', error);
 
@@ -238,7 +238,6 @@ const MainPage: React.FC<MainPageProps> = ({
           break;
 
         case 'set_status':
-          console.log('Received set_status:', payload);
           setBoardData((prevData: board) => {
             const newBoardData = { ...prevData };
             const userIndex = newBoardData.board_users.findIndex(user => user.id === payload.user_id);
@@ -273,7 +272,6 @@ const MainPage: React.FC<MainPageProps> = ({
           break;
 
         case 'edit_list_name':
-          console.log('Received edit_list_name:', payload);
           setBoardData((prevData: board) => {
             const updatedLists = prevData.lists.map((list) =>
               list.id === payload.list_id ? { ...list, name: payload.new_name } : list
@@ -284,7 +282,6 @@ const MainPage: React.FC<MainPageProps> = ({
           break;
 
         case 'reorder_lists':
-          console.log('Received reorder_lists:', payload);
           setBoardData((prevData: board) => {
             const reorderedLists = payload.list_order.map((listId: number) =>
               prevData.lists.find((list) => list.id === listId)
@@ -308,7 +305,6 @@ const MainPage: React.FC<MainPageProps> = ({
           break;
 
         case 'add_task':
-          console.log('Received add_task:', payload);
           setBoardData((prevData: board) => {
             const updatedLists = prevData.lists.map((list) => {
               if (list.id === payload.list) {
@@ -324,7 +320,6 @@ const MainPage: React.FC<MainPageProps> = ({
           break;
 
         case 'delete_task':
-          console.log('Received delete_task:', payload);
           setBoardData((prevData: board) => {
             const updatedLists = prevData.lists.map((list) => {
               if (list.id === payload.list_id) {
@@ -337,7 +332,6 @@ const MainPage: React.FC<MainPageProps> = ({
           break;
 
         case 'update_task':
-          console.log('Received update_task:', payload);
           setBoardData((prevData: board) => {
             const updatedLists = prevData.lists.map((list) => ({
               ...list,
@@ -361,7 +355,6 @@ const MainPage: React.FC<MainPageProps> = ({
 
 
         case 'reorder_task':
-          console.log('Received reorder_task:', payload);
           setBoardData((prevData: board) => {
             const updatedLists = prevData.lists.map((list) => {
               if (list.id === payload.list_id) {
@@ -378,7 +371,6 @@ const MainPage: React.FC<MainPageProps> = ({
 
 
         case 'update_board_name':
-          console.log('Received update_board_name:', payload);
           // Update boardData
           setBoardData((prevData: board) => ({
             ...prevData,
@@ -405,7 +397,6 @@ const MainPage: React.FC<MainPageProps> = ({
 
 
         case 'delete_board':
-          console.log('Received delete_board:', payload);
           // Handle board deletion
           setBoardData((prevData: board) => ({ ...prevData, lists: [] }));
           setSelectedBoard({
@@ -438,9 +429,9 @@ const MainPage: React.FC<MainPageProps> = ({
       console.error('WebSocket error:', error);
     };
 
-    newSocket.onclose = (event) => {
-      console.log('WebSocket connection closed:', event);
-    };
+    // newSocket.onclose = (event) => {
+    //   console.log('WebSocket connection closed:', event);
+    // };
 
     return () => {
       if (newSocket) {
@@ -494,7 +485,6 @@ const MainPage: React.FC<MainPageProps> = ({
     if (boardIdFromUrl && boards.length > 0) {
       const foundBoard = boards.find(b => String(b.id) === boardIdFromUrl);
       if (foundBoard && location.pathname.startsWith("/mainpage/boards")) {
-        console.log({ 'foundBoard': foundBoard, 'pathname': !location.pathname.startsWith("/mainpage/boards") });
         setSelectedBoard(foundBoard);
         setActiveSidebarBoardId(foundBoard.id);
       }

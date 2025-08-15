@@ -60,10 +60,6 @@ const Register: React.FC<RegisterProps> = ({ currentTheme, isMobile }) => {
   const navigate = useNavigate();
 
 
-  useEffect(() => {
-    console.log('selected timezone: ', selectedTimeZone);
-  }, [selectedTimeZone]);
-
   // ===================================== validate password ============================
 
   useEffect(() => {
@@ -102,7 +98,6 @@ const Register: React.FC<RegisterProps> = ({ currentTheme, isMobile }) => {
 
     if (selectedTimeZone !== undefined) {
       if (selectedTimeZone === 'Europe/Tbilisi') {
-        console.log('Selected timezone is Europe/Tbilisi');
         formData.append('timezone', 'Asia/Tbilisi');
       } else {
         formData.append('timezone', selectedTimeZone);
