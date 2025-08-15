@@ -103,7 +103,8 @@ DailyDoer is a modern, collaborative task management web application built with 
 ## Sitemap
 
 ### Public Routes (Unauthenticated)
-- **`/`** - Login page with email/password and Google OAuth
+- **`/`** - Intro / Landing page (showcase, marketing, language selection, Google sign-in)
+- **`/login`** - Login page with email/password and Google OAuth
 - **`/register`** - User registration with email verification
 - **`/password-reset`** - Password reset request form
 - **`/password-reset-confirm/:uid/:token`** - Password reset confirmation

@@ -62,7 +62,11 @@ const Header: React.FC<HeaderProps> = ({
   setActiveSidebarBoardId,
 }) => {
 
-  const [showColorContainer, setShowColorContainer] = useState<boolean>(true);
+
+
+  const prev_theme_bar_open = localStorage.getItem('is_theme_bar_open') === 'true' ? true : localStorage.getItem('is_theme_bar_open') === 'false' ? false : true; // Default to true if not set
+
+  const [showColorContainer, setShowColorContainer] = useState<boolean>(prev_theme_bar_open);
   const [show_theme_open_icon, setShow_theme_open_icon] = useState<boolean>(false);
 
   const [confirmation_for_logout, setConfirmation_for_logout] = useState<boolean>(false);
@@ -313,6 +317,7 @@ const Header: React.FC<HeaderProps> = ({
 
   // =====================================================================================================================
   const handle_open_theme_container = () => {
+    localStorage.setItem('is_theme_bar_open', 'false');
     setShowColorContainer(false);
     setTimeout(() => {
       setShow_theme_open_icon(true);
@@ -320,10 +325,18 @@ const Header: React.FC<HeaderProps> = ({
   };
 
   const handle_close_theme_container = () => {
+    localStorage.setItem('is_theme_bar_open', 'true');
     setShowColorContainer(true);
     setShow_theme_open_icon(false);
   };
 
+  // Update `show_theme_open_icon` based on `is_theme_bar_open` on mount
+  useEffect(() => {
+    const isThemeBarOpen = localStorage.getItem('is_theme_bar_open') === 'true';
+    setShow_theme_open_icon(!isThemeBarOpen);
+  }, []);
+
+  // =====================================================================================================================
   return (
     <div className={`main_Header_container ${!isAuthenticated ? "hide_container" : ''}  ${!showHeader ? 'hide_header' : ""} `}
       style={{
