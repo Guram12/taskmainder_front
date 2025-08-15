@@ -31,7 +31,18 @@ const DeleteAccount: React.FC<DeleteAccountProps> = ({ currentTheme }) => {
         },
       });
 
-      console.log(response.data);
+      if (response.status === 204) {
+        // Account deleted successfully
+        localStorage.removeItem('access_token');
+        localStorage.removeItem('refresh_token');
+        localStorage.removeItem('first_time_signup');
+      } else {
+        // Handle unexpected response
+        console.error('Unexpected response:', response);
+      }
+
+
+
       navigate('/');
     } catch (error) {
       if (axios.isAxiosError(error)) { // Use axios.isAxiosError

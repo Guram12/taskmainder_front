@@ -104,7 +104,11 @@ const ProfilePictureUpdate: React.FC<ProfilePictureUpdateProps> = ({ profileData
         },
       });
 
-      console.log("Image uploaded successfully:", response.data);
+      // if response has error , log error 
+      if (response.data.error) {
+        console.error("Error uploading image:", response.data.error);
+        return;
+      }
 
       await FetchProfileData();
       setCurrentProfileImage(previewImage || (newProfileImage ? URL.createObjectURL(newProfileImage) : null));
@@ -143,7 +147,6 @@ const ProfilePictureUpdate: React.FC<ProfilePictureUpdateProps> = ({ profileData
         }
       );
 
-      console.log('Profile picture deleted successfully:', response.data);
       await FetchProfileData();
       setCurrentProfileImage(null);
       setIsDeletingWindow(false);

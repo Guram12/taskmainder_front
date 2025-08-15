@@ -23,7 +23,6 @@ const GoogleSignIn: React.FC<GoogleSignInProps> = ({ setIsAuthenticated }) => {
           'Content-Type': 'application/json',
         }
       });
-      console.log('google respoonse ', res.data);
       if (res.data.access && res.data.refresh) {
         localStorage.setItem('access_token', res.data.access);
         localStorage.setItem('refresh_token', res.data.refresh);
@@ -35,7 +34,6 @@ const GoogleSignIn: React.FC<GoogleSignInProps> = ({ setIsAuthenticated }) => {
         });
         const profileData: ProfileData = profile_info.data;
         if (profileData.phone_number === null) {
-          console.log('profileData', profileData);
           navigate('/finish-profile');
         } else {
           setIsAuthenticated(true);

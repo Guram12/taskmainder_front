@@ -303,7 +303,6 @@ const Boards: React.FC<BoardsProps> = ({
     task_associated_users_id: number[],
     priority: 'green' | 'orange' | 'red' | null,
   ) => {
-    console.log('Updating task:', { taskId, updatedTitle, due_date, completed, task_associated_users_id, priority });
 
     // Create the updated board data object directly
     const updatedLists = boardData.lists.map((list) => ({
@@ -480,7 +479,6 @@ const Boards: React.FC<BoardsProps> = ({
   // ============================================  Delete Board    ===============================================
 
   const deleteBoard = () => {
-    console.log('Deleting board:', selectedBoard?.id);
 
     // Start loading
     setIsLoading(true);

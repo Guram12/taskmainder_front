@@ -147,7 +147,6 @@ const TaskUpdateModal: React.FC<TaskUpdateModalProps> = ({
   const handleCancelDescriptionUpdate = () => {
     setIsDescriptionUpdating(false);
     setUpdatedDescription(task.description || '');
-    console.log("cancel description update");
   };
 
   // =====================   Custom slotProps for MUI pickers to apply theme styles =============================

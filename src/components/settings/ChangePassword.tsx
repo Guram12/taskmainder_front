@@ -107,7 +107,6 @@ const ChangePassword: React.FC<ChangePasswordProps> = ({ currentTheme, profileDa
       });
       if (response.status === 200) {
         setIsOldPasswordCorrect(response.data.is_correct);
-        console.log("Old password is correct.", response.data);
       } else {
         setIsOldPasswordCorrect(false);
       }

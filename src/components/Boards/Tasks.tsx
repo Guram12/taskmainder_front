@@ -69,7 +69,6 @@ const Task: React.FC<TaskProps> = ({ task,
 
   const handleTaskClick = () => {
     setShowUpdateModal(true);
-    console.log("clicked");
   };
 
   const handle_update_modal_close = () => {

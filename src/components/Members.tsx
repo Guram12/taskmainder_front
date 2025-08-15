@@ -99,7 +99,6 @@ const Members: React.FC<MembersProps> = ({
 
   // ============================================  set new statuses for users ============================================
   const handleStatusChange = (userId: number, newStatus: string) => {
-    console.log(`Changing status for user ${userId} to ${newStatus}`);
 
     const updatedUsers: Board_Users[] = current_board_users.map((user) =>
       user.id === userId ? { ...user, user_status: newStatus } : user
@@ -136,7 +135,6 @@ const Members: React.FC<MembersProps> = ({
   }, [searchInput]);
 
   const fetchSuggestedUsers = async (value: string) => {
-    console.log('value', value);
     try {
       if (!value.trim()) {
         setSuggestedUsers([]);
@@ -187,7 +185,6 @@ const Members: React.FC<MembersProps> = ({
 
   const handleAddUsers = async () => {
     setInvitation_loading(true);
-    console.log('Sending invitations to:', selected_emails);
     try {
       const response = await axiosInstance.post(
         `/api/boards/${selectedBoard?.id}/send-invitation/`, // Add trailing slash here
@@ -200,7 +197,6 @@ const Members: React.FC<MembersProps> = ({
       );
 
       if (response.status === 200) {
-        console.log("Invitation sent successfully:", response.data);
         setSelected_emails([]); // Clear selected emails after sending invitations
         setIs_board_invitation_sent(true);
         setInvitation_loading(false);
@@ -243,13 +239,11 @@ const Members: React.FC<MembersProps> = ({
   }
   // ========================================== delete user from members ==================================================
   const handleDeleteUser = async (userId: number) => {
-    console.log('Deleting user:', userId);
     const response = await axiosInstance.delete(`/api/boards/${selectedBoard?.id}/users/${userId}/delete/`, {
       headers: {
         Authorization: `Bearer ${localStorage.getItem('access_token')}`
       }
     })
-    console.log("response", response)
     if (response.status === 200) {
       fetch_current_board_users();
       setIsDeletingSelectedUser(false);
@@ -293,7 +287,6 @@ const Members: React.FC<MembersProps> = ({
       setIs_board_newname_empty(true);
       return;
     }
-    console.log('Updating board name:', newBoardName);
 
     // Create the updated boards array
     const updatedBoards = boards.map((board: board) =>
@@ -335,7 +328,6 @@ const Members: React.FC<MembersProps> = ({
   }
 
   const delete_board = () => {
-    console.log('Deleting board:', selectedBoard?.id);
     deleteBoard();
     setIsBoardDeleting(false);
   }
@@ -364,7 +356,6 @@ const Members: React.FC<MembersProps> = ({
         }
       })
       if (response.status === 200) {
-        console.log("Successfully left the board:", response.data);
         // Optionally, you can update the UI or redirect the user
         // For example, you might want to remove the board from the list of boards
         const updatedBoards = boards.filter(board => board.id !== selectedBoard?.id);

@@ -57,7 +57,6 @@ const Calendar: React.FC<CalendarProps> = ({ boards, currentTheme, fetchBoards }
       await fetchBoards();
     };
     fetchData();
-    console.log('Fetched boards data');
   }, []);
 
   // Extract due dates from boards and organize them by month
