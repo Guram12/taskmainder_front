@@ -97,19 +97,15 @@ const App: React.FC = () => {
     notification_preference: 'email',
   });
 
-  const default_is_custom_theme_selected = localStorage.getItem('isCustomThemeSelected') === null ? false : localStorage.getItem('isCustomThemeSelected') === 'true';
+  const default_is_custom_theme_selected = JSON.parse(localStorage.getItem('isCustomThemeSelected') || 'false');
 
   const [isCustomThemeSelected, setIsCustomThemeSelected] = useState<boolean>(default_is_custom_theme_selected);
 
-
-  const background_color = localStorage.getItem('background_color') || '#202B38';
-  const border_color = localStorage.getItem('border_color') || '#E3ECF7';
-  const main_text_coloure = localStorage.getItem('main_text_coloure') || '#31475E';
-  const scrollbar_thumb_color = localStorage.getItem('scrollbar_thumb_color') || '#46627F';
-  const list_background_color = localStorage.getItem('list_background_color') || '#263445';
-  const task_background_color = localStorage.getItem('task_background_color') || '#2F4258';
-  const hover_color = localStorage.getItem('hover_color') || '#263445';
-  const due_date_color = localStorage.getItem('due_date_color') || '#7FA6C9';
+  // --------------  sync customtheme selected state with localStorage ----------------
+  useEffect(() => {
+    setIsCustomThemeSelected(default_is_custom_theme_selected);
+  }, [default_is_custom_theme_selected])
+  // ----------------------------------------------------------------------------------
 
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
 
@@ -121,16 +117,32 @@ const App: React.FC = () => {
   }, []);
 
 
-  const [saved_custom_theme, setSaved_custom_theme] = useState({
-    '--background-color': background_color,
-    '--border-color': border_color,
-    '--main-text-coloure': main_text_coloure,
-    '--scrollbar-thumb-color': scrollbar_thumb_color,
-    '--list-background-color': list_background_color,
-    '--task-background-color': task_background_color,
-    '--hover-color': hover_color,
-    '--due-date-color': due_date_color,
-  });
+  const getInitialTheme = (): ThemeSpecs => {
+    const savedTheme = localStorage.getItem('custom_theme_colors');
+    if (savedTheme) {
+      try {
+        return JSON.parse(savedTheme);
+      } catch (error) {
+        console.error('Error parsing saved theme:', error);
+      }
+    }
+
+    // Fallback to default blue_steel theme
+    return {
+      '--background-color': '#2E3440',
+      '--main-text-coloure': '#ECEFF4',
+      '--border-color': '#434C5E',
+      '--scrollbar-thumb-color': '#4C566A',
+      '--list-background-color': '#3B4252',
+      '--task-background-color': '#4C566A',
+      '--hover-color': '#5E81AC',
+      '--due-date-color': '#88C0D0'
+    };
+  };
+
+
+  const [saved_custom_theme, setSaved_custom_theme] = useState<ThemeSpecs>(getInitialTheme());
+
 
   const [currentTheme, setCurrentTheme] = useState<ThemeSpecs>({
     '--background-color': '#202B38',
@@ -143,7 +155,8 @@ const App: React.FC = () => {
     '--due-date-color': '#7FA6C9'
   });
 
-  const [change_current_theme, setChange_current_theme] = useState(false);
+
+  const [change_current_theme, setChange_current_theme] = useState<boolean>(false);
   const [boards, setBoards] = useState<board[]>([]);
 
 
@@ -486,6 +499,7 @@ const App: React.FC = () => {
           change_current_theme={change_current_theme}
           currentTheme={currentTheme}
           isCustomThemeSelected={isCustomThemeSelected}
+          setIsCustomThemeSelected={setIsCustomThemeSelected}
           saved_custom_theme={saved_custom_theme}
           setCurrentTheme={setCurrentTheme}
           isMobile={isMobile}

@@ -114,7 +114,7 @@ const resources = {
       "save_image": "Save Image",
       'cancel_image_save': 'Cancel',
       'select_colors': 'Select Colors',
-      'save_theme': 'Save Theme',
+      'save_theme': 'Save In Custom Theme',
       'customtheme_tooltip_text': "Your selected colors will be saved as a custom theme. To apply your custom theme, select it from the header.You can update these colors at any time.",
 
 
@@ -414,9 +414,8 @@ const resources = {
       "save_image": "შენახვა",
       'cancel_image_save': 'გაუქმება',
       'select_colors': 'აირჩიე ფერები',
-      'save_theme': 'თემის შენახვა',
+      'save_theme': 'პერსონალურ თემაში შენახვა',
       'customtheme_tooltip_text': "არჩეული ფერები შეინახება როგორც პერსონალური თემა. თემის გამოსაყენებლად აირჩიეთ იგი ზედა მენიუდან. ფერების შეცვლა ნებისმიერ დროს შეგიძლიათ.",
-
 
 
 

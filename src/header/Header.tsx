@@ -31,6 +31,7 @@ interface HeaderProps {
   currentTheme: ThemeSpecs;
   setCurrentTheme: (currentTheme: ThemeSpecs) => void;
   isCustomThemeSelected: boolean;
+  setIsCustomThemeSelected: (isCustomThemeSelected: boolean) => void;
   saved_custom_theme: ThemeSpecs;
   isMobile: boolean; // Optional prop for mobile view
   setLanguage: (language: 'en' | 'ka') => void;
@@ -51,7 +52,8 @@ const Header: React.FC<HeaderProps> = ({
   change_current_theme,
   currentTheme,
   setCurrentTheme,
-  // isCustomThemeSelected,
+  isCustomThemeSelected,
+  setIsCustomThemeSelected,
   saved_custom_theme,
   isMobile,
   setLanguage,
@@ -111,6 +113,7 @@ const Header: React.FC<HeaderProps> = ({
   useEffect(() => {
     // On mount, set theme from localStorage if available
     const storedTheme = localStorage.getItem('theme') as string | null;
+
     if (storedTheme) {
       const themeObj = JSON.parse(storedTheme);
       // Find the theme key that matches the stored theme
@@ -148,6 +151,7 @@ const Header: React.FC<HeaderProps> = ({
       document.documentElement.style.setProperty(key, value)
     }
     localStorage.setItem('theme', JSON.stringify(themeSpecs));
+    localStorage.setItem('isCustomThemeSelected', 'false'); // Clear custom theme flag
     document.body.style.backgroundColor = themeSpecs['--background-color'];
     document.body.style.color = themeSpecs['--main-text-coloure'];
     setChange_current_theme(!change_current_theme);
@@ -169,14 +173,38 @@ const Header: React.FC<HeaderProps> = ({
   // ==============================================================================================
 
   const handle_return_to_custom_theme = () => {
-    for (const [key, value] of Object.entries(saved_custom_theme)) {
+    console.log('Returning to custom theme');
+    // Ensure we have a valid custom theme with fallbacks
+    const validCustomTheme = {
+      '--background-color': saved_custom_theme['--background-color'],
+      '--main-text-coloure': saved_custom_theme['--main-text-coloure'],
+      '--border-color': saved_custom_theme['--border-color'],
+      '--scrollbar-thumb-color': saved_custom_theme['--scrollbar-thumb-color'],
+      '--list-background-color': saved_custom_theme['--list-background-color'],
+      '--task-background-color': saved_custom_theme['--task-background-color'],
+      '--hover-color': saved_custom_theme['--hover-color'],
+      '--due-date-color': saved_custom_theme['--due-date-color'],
+    };
+
+    for (const [key, value] of Object.entries(validCustomTheme)) {
       document.documentElement.style.setProperty(key, value);
     }
-    document.body.style.backgroundColor = saved_custom_theme['--background-color'];
-    document.body.style.color = saved_custom_theme['--main-text-coloure'];
-    setCurrentTheme(saved_custom_theme);
-    // Optionally, update the localStorage to reflect the custom theme selection
+
+    document.body.style.backgroundColor = validCustomTheme['--background-color'];
+    document.body.style.color = validCustomTheme['--main-text-coloure'];
+
+    // Save to both localStorage keys
+    localStorage.setItem('theme', JSON.stringify(validCustomTheme));
+    localStorage.setItem('custom_theme_colors', JSON.stringify(validCustomTheme));
+
+    setCurrentTheme(validCustomTheme);
     localStorage.setItem('isCustomThemeSelected', 'true');
+    setIsCustomThemeSelected(true);
+    // Clear the header selected theme since we're using custom theme
+    setHeader_selected_theme('');
+
+    // Trigger theme change
+    setChange_current_theme(!change_current_theme);
   };
 
 
@@ -222,24 +250,40 @@ const Header: React.FC<HeaderProps> = ({
       {
         key: 'custom',
         label: (
+
           <div
             className='custom_theme_container_in_header'
             style={{
-              backgroundColor: saved_custom_theme['--background-color'],
+              backgroundColor: isCustomThemeSelected ? saved_custom_theme['--background-color'] : 'seagreen',
               borderColor: saved_custom_theme['--border-color'],
               color: saved_custom_theme['--main-text-coloure'],
             }}
             onClick={handle_return_to_custom_theme}
           >
+            <p style={{
+              color: saved_custom_theme['--main-text-coloure'],
+            }}
+              className="custom_theme_text_in_header">
+              {t('customTheme')}
+            </p>
 
-            {t('customTheme')}
+            <div className="customtheme_backg_color" style={{ backgroundColor: saved_custom_theme['--background-color'] }}></div>
+            <div className="customtheme_backg_color" style={{ backgroundColor: saved_custom_theme['--list-background-color'] }}></div>
+            <div className="customtheme_backg_color" style={{ backgroundColor: saved_custom_theme['--border-color'] }}></div>
+            <div className="customtheme_backg_color" style={{ backgroundColor: saved_custom_theme['--task-background-color'] }}></div>
+            <div className="customtheme_backg_color" style={{ backgroundColor: saved_custom_theme['--hover-color'] }}></div>
+            <div className="customtheme_backg_color" style={{ backgroundColor: saved_custom_theme['--due-date-color'] }}></div>
+            <div className="customtheme_backg_color" style={{ backgroundColor: saved_custom_theme['--scrollbar-thumb-color'] }}></div>
+
           </div>
         ),
       },
     ],
   };
 
-
+  useEffect(() => {
+    console.log('=>', isCustomThemeSelected)
+  }, [isCustomThemeSelected]);
 
   // Language dropdown menu
   const languageMenu: MenuProps = {
@@ -391,14 +435,30 @@ const Header: React.FC<HeaderProps> = ({
 
 
 
-            <div className='custom_theme_container_in_header'
+            <div
+              className='custom_theme_container_in_header'
               style={{
-                backgroundColor: currentTheme['--background-color'],
-                borderColor: currentTheme['--border-color'],
+                backgroundColor: saved_custom_theme['--background-color'],
+                borderColor: !isCustomThemeSelected ? saved_custom_theme['--border-color'] : 'seagreen',
+                color: saved_custom_theme['--main-text-coloure'],
               }}
               onClick={handle_return_to_custom_theme}
             >
-              {t('customTheme')}
+              <p style={{
+                color: saved_custom_theme['--main-text-coloure'],
+              }}
+                className="custom_theme_text_in_header">
+                {t('customTheme')}
+              </p>
+
+              <div className="customtheme_backg_color" style={{ backgroundColor: saved_custom_theme['--background-color'] }}></div>
+              <div className="customtheme_backg_color" style={{ backgroundColor: saved_custom_theme['--list-background-color'] }}></div>
+              <div className="customtheme_backg_color" style={{ backgroundColor: saved_custom_theme['--border-color'] }}></div>
+              <div className="customtheme_backg_color" style={{ backgroundColor: saved_custom_theme['--task-background-color'] }}></div>
+              <div className="customtheme_backg_color" style={{ backgroundColor: saved_custom_theme['--hover-color'] }}></div>
+              <div className="customtheme_backg_color" style={{ backgroundColor: saved_custom_theme['--due-date-color'] }}></div>
+              <div className="customtheme_backg_color" style={{ backgroundColor: saved_custom_theme['--scrollbar-thumb-color'] }}></div>
+
             </div>
 
             <IoIosArrowDropleftCircle

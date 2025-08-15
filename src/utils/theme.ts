@@ -23,14 +23,14 @@ const themes: Record<string, ThemeSpecs> = {
   },
 
   forest_night: {
-    '--background-color': '#232B24',           // Deeper forest green
-    '--main-text-coloure': '#F3F6E8',          // Pale moss for contrast
-    '--border-color': '#4B5E4A',               // Muted woodland border
-    '--scrollbar-thumb-color': '#6A7F6A',      // Mossy green for scrollbars
-    '--list-background-color': '#2E3B2F',      // Slightly lighter forest shade
-    '--task-background-color': '#3B4D3A',      // Rich green for cards/tasks
-    '--hover-color': '#344034',                // Subtle green-gray for hover
-    '--due-date-color': '#A3C17B'              // Soft leaf green for due dates
+    '--background-color': '#1C2520',            /* Deep forest green */
+    '--main-text-coloure': '#E8F1E4',           /* Misty sage white */
+    '--border-color': '#3A4A3F',                /* Soft pine */
+    '--scrollbar-thumb-color': '#556B58',       /* Moss green */
+    '--list-background-color': '#27332C',       /* Dark leaf green */
+    '--task-background-color': '#334139',       /* Forest canopy tone */
+    '--hover-color': '#6A9F7D',                 /* Fresh fern green */
+    '--due-date-color': '#A6D7B0'             // Soft leaf green for due dates
   },
   neon_void: {
     '--background-color': '#0A0A12',            // Deep midnight blue-black

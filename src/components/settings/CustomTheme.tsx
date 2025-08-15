@@ -77,6 +77,11 @@ const CustomTheme: React.FC<CustomThemeProps> = ({
     setScrollbarThumbColor(currentTheme['--scrollbar-thumb-color']);
     setListBackgroundColor(currentTheme['--list-background-color']);
     setTaskBackgroundColor(currentTheme['--task-background-color']);
+    setHoverColor(currentTheme['--hover-color']);
+    setDueDateColor(currentTheme['--due-date-color']);
+
+    // Reset the updated flag when theme changes from outside
+    setIs_customtheme_specs_updated(false);
   }, [currentTheme]);
 
 
@@ -225,48 +230,66 @@ const CustomTheme: React.FC<CustomThemeProps> = ({
   };
   // ===========================================  save the colors  ==========================================================
 
+
+  const [is_customtheme_specs_updated, setIs_customtheme_specs_updated] = useState<boolean>(false);
+
+
+  useEffect(() => {
+    if (
+      backgroundColor !== currentTheme['--background-color'] ||
+      borderColor !== currentTheme['--border-color'] ||
+      mainTextColor !== currentTheme['--main-text-coloure'] ||
+      scrollbarThumbColor !== currentTheme['--scrollbar-thumb-color'] ||
+      listBackgroundColor !== currentTheme['--list-background-color'] ||
+      taskBackgroundColor !== currentTheme['--task-background-color'] ||
+      hoverColor !== currentTheme['--hover-color'] ||
+      dueDateColor !== currentTheme['--due-date-color']
+    ) {
+      setIs_customtheme_specs_updated(true);
+    } else {
+      setIs_customtheme_specs_updated(false);
+    }
+  }, [currentTheme, backgroundColor, borderColor, mainTextColor, scrollbarThumbColor, listBackgroundColor, taskBackgroundColor, hoverColor, dueDateColor]);
+
+
+
+
+
+
   const handleColoresSavce = async () => {
+    const newCustomTheme = {
+      '--background-color': backgroundColor,
+      '--border-color': borderColor,
+      '--main-text-coloure': mainTextColor,
+      '--scrollbar-thumb-color': scrollbarThumbColor,
+      '--list-background-color': listBackgroundColor,
+      '--task-background-color': taskBackgroundColor,
+      '--hover-color': hoverColor,
+      '--due-date-color': dueDateColor,
+    };
+
     localStorage.setItem('isCustomThemeSelected', 'true');
     setIsCustomThemeSelected(true);
 
-    setSaved_custom_theme({
-      '--background-color': backgroundColor,
-      '--border-color': borderColor,
-      '--main-text-coloure': mainTextColor,
-      '--scrollbar-thumb-color': scrollbarThumbColor,
-      '--list-background-color': listBackgroundColor,
-      '--task-background-color': taskBackgroundColor,
-      '--hover-color': hoverColor,
-      '--due-date-color': dueDateColor,
+    // Update the parent state
+    setSaved_custom_theme(newCustomTheme);
 
-    });
+    // Save to localStorage (both keys for consistency)
+    localStorage.setItem('theme', JSON.stringify(newCustomTheme));
+    localStorage.setItem('custom_theme_colors', JSON.stringify(newCustomTheme));
 
-    localStorage.setItem('theme', JSON.stringify({
-      '--background-color': backgroundColor,
-      '--border-color': borderColor,
-      '--main-text-coloure': mainTextColor,
-      '--scrollbar-thumb-color': scrollbarThumbColor,
-      '--list-background-color': listBackgroundColor,
-      '--task-background-color': taskBackgroundColor,
-      '--hover-color': hoverColor,
-      '--due-date-color': dueDateColor,
-    }));
+    // Apply theme immediately
+    for (const [key, value] of Object.entries(newCustomTheme)) {
+      document.documentElement.style.setProperty(key, value);
+    }
 
     document.body.style.backgroundColor = backgroundColor;
     document.body.style.color = mainTextColor;
 
-    setCurrentTheme({
-      '--background-color': backgroundColor,
-      '--border-color': borderColor,
-      '--main-text-coloure': mainTextColor,
-      '--scrollbar-thumb-color': scrollbarThumbColor,
-      '--list-background-color': listBackgroundColor,
-      '--task-background-color': taskBackgroundColor,
-      '--hover-color': hoverColor,
-      '--due-date-color': dueDateColor,
-    });
-    console.log("Theme colors saved to localStorage.");
+    setCurrentTheme(newCustomTheme);
+    setIs_customtheme_specs_updated(false);
   };
+
 
   // =======================================================================================================
   return (
@@ -672,7 +695,19 @@ const CustomTheme: React.FC<CustomThemeProps> = ({
       </div>
 
       <div className='save_coolore_btn_container' >
-        <button onClick={handleColoresSavce} className='save_colour_btn'>{t('save_theme')}</button>
+        {is_customtheme_specs_updated && (
+
+          <button
+            style={{
+              backgroundColor: currentTheme['--list-background-color'],
+              color: currentTheme['--main-text-coloure'],
+              borderColor: currentTheme['--border-color'],
+            }}
+            onClick={handleColoresSavce}
+            className='save_colour_btn'>
+            {t('save_theme')}
+          </button>
+        )}
       </div>
 
     </div>
