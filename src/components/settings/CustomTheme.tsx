@@ -226,45 +226,35 @@ const CustomTheme: React.FC<CustomThemeProps> = ({
   // ===========================================  save the colors  ==========================================================
 
   const handleColoresSavce = async () => {
+    const newCustomTheme = {
+      '--background-color': backgroundColor,
+      '--border-color': borderColor,
+      '--main-text-coloure': mainTextColor,
+      '--scrollbar-thumb-color': scrollbarThumbColor,
+      '--list-background-color': listBackgroundColor,
+      '--task-background-color': taskBackgroundColor,
+      '--hover-color': hoverColor,
+      '--due-date-color': dueDateColor,
+    };
+
     localStorage.setItem('isCustomThemeSelected', 'true');
     setIsCustomThemeSelected(true);
 
-    setSaved_custom_theme({
-      '--background-color': backgroundColor,
-      '--border-color': borderColor,
-      '--main-text-coloure': mainTextColor,
-      '--scrollbar-thumb-color': scrollbarThumbColor,
-      '--list-background-color': listBackgroundColor,
-      '--task-background-color': taskBackgroundColor,
-      '--hover-color': hoverColor,
-      '--due-date-color': dueDateColor,
+    // Update the parent state
+    setSaved_custom_theme(newCustomTheme);
 
-    });
+    // Save to localStorage
+    localStorage.setItem('theme', JSON.stringify(newCustomTheme));
 
-    localStorage.setItem('theme', JSON.stringify({
-      '--background-color': backgroundColor,
-      '--border-color': borderColor,
-      '--main-text-coloure': mainTextColor,
-      '--scrollbar-thumb-color': scrollbarThumbColor,
-      '--list-background-color': listBackgroundColor,
-      '--task-background-color': taskBackgroundColor,
-      '--hover-color': hoverColor,
-      '--due-date-color': dueDateColor,
-    }));
+    // Apply theme immediately
+    for (const [key, value] of Object.entries(newCustomTheme)) {
+      document.documentElement.style.setProperty(key, value);
+    }
 
     document.body.style.backgroundColor = backgroundColor;
     document.body.style.color = mainTextColor;
 
-    setCurrentTheme({
-      '--background-color': backgroundColor,
-      '--border-color': borderColor,
-      '--main-text-coloure': mainTextColor,
-      '--scrollbar-thumb-color': scrollbarThumbColor,
-      '--list-background-color': listBackgroundColor,
-      '--task-background-color': taskBackgroundColor,
-      '--hover-color': hoverColor,
-      '--due-date-color': dueDateColor,
-    });
+    setCurrentTheme(newCustomTheme);
     console.log("Theme colors saved to localStorage.");
   };
 

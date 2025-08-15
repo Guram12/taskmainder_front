@@ -102,15 +102,6 @@ const App: React.FC = () => {
   const [isCustomThemeSelected, setIsCustomThemeSelected] = useState<boolean>(default_is_custom_theme_selected);
 
 
-  const background_color = localStorage.getItem('background_color') || '#202B38';
-  const border_color = localStorage.getItem('border_color') || '#E3ECF7';
-  const main_text_coloure = localStorage.getItem('main_text_coloure') || '#31475E';
-  const scrollbar_thumb_color = localStorage.getItem('scrollbar_thumb_color') || '#46627F';
-  const list_background_color = localStorage.getItem('list_background_color') || '#263445';
-  const task_background_color = localStorage.getItem('task_background_color') || '#2F4258';
-  const hover_color = localStorage.getItem('hover_color') || '#263445';
-  const due_date_color = localStorage.getItem('due_date_color') || '#7FA6C9';
-
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
 
 
@@ -121,29 +112,37 @@ const App: React.FC = () => {
   }, []);
 
 
-  const [saved_custom_theme, setSaved_custom_theme] = useState({
-    '--background-color': background_color,
-    '--border-color': border_color,
-    '--main-text-coloure': main_text_coloure,
-    '--scrollbar-thumb-color': scrollbar_thumb_color,
-    '--list-background-color': list_background_color,
-    '--task-background-color': task_background_color,
-    '--hover-color': hover_color,
-    '--due-date-color': due_date_color,
-  });
+  const getInitialTheme = (): ThemeSpecs => {
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme) {
+      try {
+        return JSON.parse(savedTheme);
+      } catch (error) {
+        console.error('Error parsing saved theme:', error);
+      }
+    }
 
-  const [currentTheme, setCurrentTheme] = useState<ThemeSpecs>({
-    '--background-color': '#202B38',
-    '--main-text-coloure': '#E3ECF7',
-    '--border-color': '#31475E',
-    '--scrollbar-thumb-color': '#46627F',
-    '--list-background-color': '#263445',
-    '--task-background-color': '#2F4258',
-    '--hover-color': '#263445',
-    '--due-date-color': '#7FA6C9'
-  });
+    // Fallback to default blue_steel theme
+    return {
+      '--background-color': '#202B38',
+      '--main-text-coloure': '#E3ECF7',
+      '--border-color': '#31475E',
+      '--scrollbar-thumb-color': '#46627F',
+      '--list-background-color': '#263445',
+      '--task-background-color': '#2F4258',
+      '--hover-color': '#263445',
+      '--due-date-color': '#7FA6C9'
+    };
+  };
 
-  const [change_current_theme, setChange_current_theme] = useState(false);
+
+  const [saved_custom_theme, setSaved_custom_theme] = useState<ThemeSpecs>(getInitialTheme());
+
+
+  const [currentTheme, setCurrentTheme] = useState<ThemeSpecs>(getInitialTheme());
+
+
+  const [change_current_theme, setChange_current_theme] = useState<boolean>(false);
   const [boards, setBoards] = useState<board[]>([]);
 
 
@@ -486,6 +485,7 @@ const App: React.FC = () => {
           change_current_theme={change_current_theme}
           currentTheme={currentTheme}
           isCustomThemeSelected={isCustomThemeSelected}
+          setIsCustomThemeSelected={setIsCustomThemeSelected}
           saved_custom_theme={saved_custom_theme}
           setCurrentTheme={setCurrentTheme}
           isMobile={isMobile}
