@@ -61,8 +61,10 @@
 }
 
 .ant-tooltip-inner {
-  color: var(--main-text-coloure); /* Or use your theme variable */
+  color: var(--main-text-coloure);
+  /* Or use your theme variable */
 }
+
 .boards_and_background_images_container {
   display: flex;
   flex-direction: row;
@@ -284,7 +286,7 @@
   width: 100%;
   height: auto;
   display: flex;
-  justify-content: center;
+  justify-content: flex-start;
   align-items: center;
 }
 
@@ -293,13 +295,16 @@
   height: 30px;
   font-weight: bold;
   font-size: 15px;
-  background-color: seagreen;
   border: 0px;
   border-radius: 5px;
+  margin-left: 5px;
+  transition: all 0.3s ease;
 }
 
 .save_colour_btn:hover {
-  background-color: #4caf50;
+  background-color: seagreen !important;
+  cursor: pointer;
+
 }
 
 /* ============================ antd color opicker styles ============================ */
@@ -351,6 +356,10 @@
     width: 100%;
   }
 
+  .save_coolore_btn_container {
+    justify-content: center;
+  }
+
   .no_boards_container_customtheme {
     display: flex;
     flex-direction: column;
@@ -366,12 +375,12 @@
     width: 260px;
   }
 
-.background_image_set_h1 {
-  font-size: 17px;
-  font-weight: bold;
-  margin: 0px;
+  .background_image_set_h1 {
+    font-size: 17px;
+    font-weight: bold;
+    margin: 0px;
 
-}
+  }
 
   .customtheme_p {
     top: 0px;

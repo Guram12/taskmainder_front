@@ -113,6 +113,7 @@ const Header: React.FC<HeaderProps> = ({
   useEffect(() => {
     // On mount, set theme from localStorage if available
     const storedTheme = localStorage.getItem('theme') as string | null;
+
     if (storedTheme) {
       const themeObj = JSON.parse(storedTheme);
       // Find the theme key that matches the stored theme
@@ -184,14 +185,17 @@ const Header: React.FC<HeaderProps> = ({
       '--hover-color': saved_custom_theme['--hover-color'],
       '--due-date-color': saved_custom_theme['--due-date-color'],
     };
-    console.log('===', validCustomTheme['--main-text-coloure'])
+
     for (const [key, value] of Object.entries(validCustomTheme)) {
       document.documentElement.style.setProperty(key, value);
     }
 
     document.body.style.backgroundColor = validCustomTheme['--background-color'];
     document.body.style.color = validCustomTheme['--main-text-coloure'];
+
+    // Save to both localStorage keys
     localStorage.setItem('theme', JSON.stringify(validCustomTheme));
+    localStorage.setItem('custom_theme_colors', JSON.stringify(validCustomTheme));
 
     setCurrentTheme(validCustomTheme);
     localStorage.setItem('isCustomThemeSelected', 'true');
@@ -202,6 +206,7 @@ const Header: React.FC<HeaderProps> = ({
     // Trigger theme change
     setChange_current_theme(!change_current_theme);
   };
+
 
   // ===========================================  dropdown styles   ================================================
   const themeKeys = [

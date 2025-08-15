@@ -118,7 +118,7 @@ const App: React.FC = () => {
 
 
   const getInitialTheme = (): ThemeSpecs => {
-    const savedTheme = localStorage.getItem('theme');
+    const savedTheme = localStorage.getItem('custom_theme_colors');
     if (savedTheme) {
       try {
         return JSON.parse(savedTheme);
@@ -129,14 +129,14 @@ const App: React.FC = () => {
 
     // Fallback to default blue_steel theme
     return {
-      '--background-color': '#202B38',
-      '--main-text-coloure': '#E3ECF7',
-      '--border-color': '#31475E',
-      '--scrollbar-thumb-color': '#46627F',
-      '--list-background-color': '#263445',
-      '--task-background-color': '#2F4258',
-      '--hover-color': '#263445',
-      '--due-date-color': '#7FA6C9'
+      '--background-color': '#2E3440',
+      '--main-text-coloure': '#ECEFF4',
+      '--border-color': '#434C5E',
+      '--scrollbar-thumb-color': '#4C566A',
+      '--list-background-color': '#3B4252',
+      '--task-background-color': '#4C566A',
+      '--hover-color': '#5E81AC',
+      '--due-date-color': '#88C0D0'
     };
   };
 
@@ -144,7 +144,16 @@ const App: React.FC = () => {
   const [saved_custom_theme, setSaved_custom_theme] = useState<ThemeSpecs>(getInitialTheme());
 
 
-  const [currentTheme, setCurrentTheme] = useState<ThemeSpecs>(getInitialTheme());
+  const [currentTheme, setCurrentTheme] = useState<ThemeSpecs>({
+    '--background-color': '#202B38',
+    '--main-text-coloure': '#E3ECF7',
+    '--border-color': '#31475E',
+    '--scrollbar-thumb-color': '#46627F',
+    '--list-background-color': '#263445',
+    '--task-background-color': '#2F4258',
+    '--hover-color': '#263445',
+    '--due-date-color': '#7FA6C9'
+  });
 
 
   const [change_current_theme, setChange_current_theme] = useState<boolean>(false);
