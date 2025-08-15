@@ -109,7 +109,7 @@ const App: React.FC = () => {
   const list_background_color = localStorage.getItem('list_background_color') || '#263445';
   const task_background_color = localStorage.getItem('task_background_color') || '#2F4258';
   const hover_color = localStorage.getItem('hover_color') || '#263445';
-  const due_date_color = localStorage.getItem('due_date_color') || '#7FA6C9'; 1
+  const due_date_color = localStorage.getItem('due_date_color') || '#7FA6C9';
 
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
 
