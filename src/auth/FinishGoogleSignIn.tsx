@@ -95,7 +95,7 @@ const FinishGoogleSignIn: React.FC<FinishGoogleSignInProps> = ({ setIsAuthentica
         <meta name="robots" content="noindex, nofollow" />
         <link rel="canonical" href="https://dailydoer.space/finish-profile" />
       </Helmet>
-      
+
       <div
         className="main_finish_profile_container"
       >

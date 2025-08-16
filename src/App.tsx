@@ -21,7 +21,6 @@ import { HelmetProvider } from "react-helmet-async";
 import IntroPage from './components/IntroPage';
 import themes from './utils/theme';
 import GitHubCallback from './auth/GitHubCallback';
-import GitHubLoading from './auth/GitHubLoading';
 
 const App: React.FC = () => {
   // ========================================== google gtag function ==============================================
@@ -525,11 +524,7 @@ const App: React.FC = () => {
 
               />}
           />
-          <Route path="/auth/github/loading" element={
-            <GitHubLoading
-              currentTheme={currentTheme}
-            />
-          } />
+
           <Route path="/auth/github/callback" element={
             <GitHubCallback
               setIsAuthenticated={setIsAuthenticated}
@@ -588,6 +583,7 @@ const App: React.FC = () => {
               selectedComponent={selectedComponent}
               setActiveSidebarBoardId={setActiveSidebarBoardId}
               activeSidebarBoardId={activeSidebarBoardId}
+
             />} />
 
         </Routes>
