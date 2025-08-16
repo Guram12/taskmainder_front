@@ -12,11 +12,16 @@ const GifSlider: React.FC<GifSliderProps> = ({ isMobile }) => {
 
 
   const gifUrls = [
-    'https://res.cloudinary.com/dnnyjuc9u/image/upload/v1754494912/chrome-capture-2025-08-06_4_z9sbzi.gif',
-    'https://res.cloudinary.com/dnnyjuc9u/image/upload/v1754494394/chrome-capture-2025-08-06_3_w46nts.gif',
-    'https://res.cloudinary.com/dnnyjuc9u/image/upload/v1754494256/chrome-capture-2025-08-06_2_rqj4s1.gif',
-    'https://res.cloudinary.com/dnnyjuc9u/image/upload/v1754494111/chrome-capture-2025-08-06_gj3igb.gif',
-    'https://res.cloudinary.com/dnnyjuc9u/image/upload/v1754494106/chrome-capture-2025-08-06_1_f35och.gif',
+    'https://res.cloudinary.com/dnnyjuc9u/image/upload/v1755265914/chrome-capture-2025-08-15_usgquj.gif',
+    'https://res.cloudinary.com/dnnyjuc9u/image/upload/v1755265912/chrome-capture-2025-08-15_7_yhmnpw.gif',
+    'https://res.cloudinary.com/dnnyjuc9u/image/upload/v1755265911/chrome-capture-2025-08-15_2_facexa.gif',
+    'https://res.cloudinary.com/dnnyjuc9u/image/upload/v1755265909/chrome-capture-2025-08-15_3_y1zh2r.gif',
+    'https://res.cloudinary.com/dnnyjuc9u/image/upload/v1755265911/chrome-capture-2025-08-15_9_cfvfyu.gif',
+    'https://res.cloudinary.com/dnnyjuc9u/image/upload/v1755265910/chrome-capture-2025-08-15_1_jvt0rj.gif',
+    'https://res.cloudinary.com/dnnyjuc9u/image/upload/v1755265910/chrome-capture-2025-08-15_6_cy1zkd.gif',
+    'https://res.cloudinary.com/dnnyjuc9u/image/upload/v1755265910/chrome-capture-2025-08-15_8_smwkgz.gif',
+    'https://res.cloudinary.com/dnnyjuc9u/image/upload/v1755265910/chrome-capture-2025-08-15_4_spswjd.gif',
+    'https://res.cloudinary.com/dnnyjuc9u/image/upload/v1755265909/chrome-capture-2025-08-15_5_mh4zgn.gif',
 
   ];
 

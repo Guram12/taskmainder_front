@@ -204,7 +204,7 @@ const ChangeNotification: React.FC<ChangeNotificationProps> = ({ profileData, Fe
   }
 
 
-  const truncateUrl = (url: string, maxLength = isMobile ? 30 : 50) => {
+  const truncateUrl = (url: string, maxLength = isMobile ? 30 : 45) => {
     if (!url) return '';
     return url.length > maxLength ? url.slice(0, maxLength) + '...' : url;
   };
@@ -228,7 +228,7 @@ const ChangeNotification: React.FC<ChangeNotificationProps> = ({ profileData, Fe
       </div>
 
 
-      <div>
+      <div className='notification_preferences_container' >
         {profileData.discord_webhook_url === null && (
 
           <h2 className='no_discord_webhook_p' >
@@ -363,7 +363,14 @@ const ChangeNotification: React.FC<ChangeNotificationProps> = ({ profileData, Fe
           )}
         </div>
 
+        <div style={{
+          width: '100%',
+          height: '2px',
+          borderBottom: `1px dashed ${currentTheme['--border-color']}`,
+          marginTop: '20px',
+        }} >
 
+        </div>
         {is_tutorial_open && (
           <>
             <div className="discord-webhook-tutorial-overlay"></div>

@@ -29,6 +29,7 @@ import { useNavigate } from "react-router-dom";
 
 interface MembersProps {
   selectedBoard: board | null;
+  setSelectedBoard: (board: board | null) => void;
   socketRef: React.MutableRefObject<WebSocket | null>;
   current_user_email: string;
   currentTheme: ThemeSpecs;
@@ -50,6 +51,7 @@ interface MembersProps {
 
 const Members: React.FC<MembersProps> = ({
   selectedBoard,
+  setSelectedBoard,
   socketRef,
   current_user_email,
   currentTheme,
@@ -356,15 +358,43 @@ const Members: React.FC<MembersProps> = ({
         }
       })
       if (response.status === 200) {
-        // Optionally, you can update the UI or redirect the user
-        // For example, you might want to remove the board from the list of boards
+        // Close the members modal
+        setIsUsersWindowOpen(false);
+
+        // Remove the current board from the boards list
         const updatedBoards = boards.filter(board => board.id !== selectedBoard?.id);
         setBoards(updatedBoards);
+
+        // Select another board if available, otherwise set to null
+        if (updatedBoards.length > 0) {
+          const newSelectedBoard = updatedBoards[0]; // Select the first available board
+          setSelectedBoard(newSelectedBoard);
+          setActiveSidebarBoardId(newSelectedBoard.id);
+
+          // Navigate to the new board
+          navigate(`/mainpage/boards/${newSelectedBoard.id}`);
+        } else {
+          // No boards left, reset to default state
+          setSelectedBoard({
+            id: 0,
+            name: '',
+            created_at: '',
+            lists: [],
+            owner: '',
+            owner_email: '',
+            members: [],
+            board_users: [],
+            background_image: null,
+            creation_date: '',
+          });
+          setActiveSidebarBoardId(null);
+          navigate('/mainpage/boards');
+        }
+
         setIsLoading(false);
-
-
       } else {
         console.error("Failed to leave the board:", response.data);
+        setIsLoading(false);
       }
     } catch (error) {
       console.error("Error leaving the board:", error);
@@ -378,7 +408,7 @@ const Members: React.FC<MembersProps> = ({
   const handle_diagram_click = (board_id: string) => {
     localStorage.setItem('prev_mindmap_selected_board_id', board_id);
     // setSelectedBoard(null)
-    setActiveSidebarBoardId(null); 
+    setActiveSidebarBoardId(null);
     setSelectedComponent('MindMap');
     navigate(`/mainpage/mindmap/${board_id}`)
   }

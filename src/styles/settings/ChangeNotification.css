@@ -41,6 +41,11 @@
   font-weight: bold;
 }
 
+.notification_preferences_container {
+  width: 100%;
+}
+
+
 .no_discord_webhook_p {
   font-size: 16px;
   font-weight: bold;
@@ -67,6 +72,7 @@
   flex-direction: row;
   justify-content: flex-start;
   align-items: center;
+  flex-wrap: wrap;
   gap: 20px;
   width: 100%;
   margin-top: 10px;
@@ -149,7 +155,7 @@
 .update_webhook_url_button {
   border: 1px solid;
   min-width: 70px;
-  height: 33px;
+  height: auto;
   padding: 5px 10px;
   border-radius: 5px;
   font-size: 14px;
@@ -184,7 +190,7 @@
 }
 
 .select_pref_h1 {
-  font-size: 20px;
+  font-size: 16px;
   font-weight: bold;
   margin: 0px;
 }
@@ -237,7 +243,7 @@
 }
 
 .select_pref_item_text {
-  font-size: 16px;
+  font-size: 14px;
   font-weight: bold;
   margin: 00px;
 }
@@ -342,6 +348,27 @@
 
 
 @media screen and (max-width: 768px) {
+
+
+  .noti_update_cont {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    width: max-content;
+    top: 0px;
+    margin-top: -16px;
+    padding-left: 10px;
+    padding-right: 10px;
+    transition: background-color 0.3s ease;
+    border-radius: 40px;
+    border: 1px dashed;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+
+
   .noti_update_p {
     font-size: 15px;
   }
