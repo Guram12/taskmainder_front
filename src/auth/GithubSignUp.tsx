@@ -20,6 +20,7 @@ const GitHubSignIn: React.FC<GitHubSignInProps> = ({ }) => {
     const scope = 'user:email';
     const state = Math.random().toString(36).substring(2, 15);
 
+    
     // Store state for verification
     localStorage.setItem('github_oauth_state', state);
     localStorage.setItem('github_redirect_uri', redirectUri);
