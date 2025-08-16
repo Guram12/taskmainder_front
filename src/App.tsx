@@ -20,8 +20,8 @@ import { useTranslation } from 'react-i18next';
 import { HelmetProvider } from "react-helmet-async";
 import IntroPage from './components/IntroPage';
 import themes from './utils/theme';
-
-
+import GitHubCallback from './auth/GitHubCallback';
+import GitHubLoading from './auth/GitHubLoading';
 
 const App: React.FC = () => {
   // ========================================== google gtag function ==============================================
@@ -208,7 +208,7 @@ const App: React.FC = () => {
 
 
   const [is_new_notification_received, setIs_new_notification_received] = useState<boolean>(false);
-
+  // =================================================================================================
 
 
   // =================================================================================================
@@ -525,6 +525,17 @@ const App: React.FC = () => {
 
               />}
           />
+          <Route path="/auth/github/loading" element={
+            <GitHubLoading
+              currentTheme={currentTheme}
+            />
+          } />
+          <Route path="/auth/github/callback" element={
+            <GitHubCallback
+              setIsAuthenticated={setIsAuthenticated}
+              currentTheme={currentTheme}
+            />
+          } />
           <Route path="/login"
             element={<Login
               setIsAuthenticated={setIsAuthenticated}

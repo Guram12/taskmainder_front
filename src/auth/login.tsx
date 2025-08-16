@@ -14,7 +14,7 @@ import { Dropdown } from 'antd';
 import { useTranslation } from 'react-i18next';
 import { GlobalOutlined } from '@ant-design/icons';
 import { Helmet } from "react-helmet-async";
-
+import GitHubSignIn from './GithubSignUp';
 
 interface loginProps {
   setIsAuthenticated: (value: boolean) => void;
@@ -266,6 +266,8 @@ const Login: React.FC<loginProps> = ({ setIsAuthenticated, currentTheme, languag
         </form>
         <div className="google-signin-container">
           <GoogleSignIn setIsAuthenticated={setIsAuthenticated} />
+          <GitHubSignIn />
+
         </div>
         <button
           className="register-button"
