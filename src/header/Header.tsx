@@ -334,7 +334,7 @@ const Header: React.FC<HeaderProps> = ({
         icon: <LogoutOutlined />,
         label: (
           <span className="profile-dropdown-item" onClick={handle_logout_icon_click}>
-            {t('logout')}
+            {t('log_out')}  
           </span>
         ),
       },
@@ -502,7 +502,7 @@ const Header: React.FC<HeaderProps> = ({
         {/* Language Dropdown */}
         <div className="mobile_language_dropdown_wrapper">
           <Dropdown
-            menu={languageMenu}
+            menu={languageMenu}  
             placement="bottomLeft"
             arrow
             overlayClassName="custom-centered-dropdown"
@@ -532,7 +532,7 @@ const Header: React.FC<HeaderProps> = ({
           }}
         >
           <Dropdown
-            menu={profileMenu}
+            menu={profileMenu}  
             placement="bottomRight"
             arrow
             overlayClassName="custom-centered-dropdown"
