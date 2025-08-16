@@ -281,11 +281,8 @@ const Header: React.FC<HeaderProps> = ({
     ],
   };
 
-  useEffect(() => {
-    console.log('=>', isCustomThemeSelected)
-  }, [isCustomThemeSelected]);
 
-  // Language dropdown menu
+  // ==========================================  Language dropdown menu =================================================
   const languageMenu: MenuProps = {
     items: [
       {
@@ -334,7 +331,7 @@ const Header: React.FC<HeaderProps> = ({
         icon: <LogoutOutlined />,
         label: (
           <span className="profile-dropdown-item" onClick={handle_logout_icon_click}>
-            {t('logout')}
+            {t('log_out')}
           </span>
         ),
       },

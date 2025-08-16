@@ -710,6 +710,7 @@ const Boards: React.FC<BoardsProps> = ({
             <div>
               <Members
                 selectedBoard={selectedBoard}
+                setSelectedBoard={setSelectedBoard}
                 socketRef={socketRef}
                 current_user_email={current_user_email}
                 currentTheme={currentTheme}

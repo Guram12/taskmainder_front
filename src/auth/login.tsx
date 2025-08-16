@@ -14,6 +14,7 @@ import { Dropdown } from 'antd';
 import { useTranslation } from 'react-i18next';
 import { GlobalOutlined } from '@ant-design/icons';
 import { Helmet } from "react-helmet-async";
+import GitHubSignIn from './GithubSignUp';
 
 
 interface loginProps {
@@ -29,6 +30,9 @@ const Login: React.FC<loginProps> = ({ setIsAuthenticated, currentTheme, languag
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const [error, setError] = useState<string>('');
   const [login_loading, setLogin_loading] = useState<boolean>(false);
+
+
+
 
   const { t, i18n } = useTranslation();
   const navigate = useNavigate();
@@ -106,7 +110,6 @@ const Login: React.FC<loginProps> = ({ setIsAuthenticated, currentTheme, languag
   const handleLogoClick = () => {
     navigate('/');
   };
-
 
 
   return (
@@ -266,6 +269,8 @@ const Login: React.FC<loginProps> = ({ setIsAuthenticated, currentTheme, languag
         </form>
         <div className="google-signin-container">
           <GoogleSignIn setIsAuthenticated={setIsAuthenticated} />
+          <GitHubSignIn />
+
         </div>
         <button
           className="register-button"

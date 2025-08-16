@@ -86,7 +86,7 @@ const MainPage: React.FC<MainPageProps> = ({
   setSelectedComponent,
   selectedComponent,
   setActiveSidebarBoardId,
-  activeSidebarBoardId
+  activeSidebarBoardId,
 }) => {
 
   const navigate = useNavigate();
