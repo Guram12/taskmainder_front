@@ -197,15 +197,6 @@ const App: React.FC = () => {
   const [is_cur_Board_users_fetched, setIs_cur_Board_users_fetched] = useState<boolean>(false);
 
 
-  // const [notificationData, setNotificationData] = useState<NotificationPayload>({
-  //   type: "USER_REMOVED_FROM_BOARD",
-  //   title: '',
-  //   body: '',
-  //   notification_id: 0,
-  //   is_read: false,
-  // });
-
-
   const [is_new_notification_received, setIs_new_notification_received] = useState<boolean>(false);
   // =================================================================================================
 
@@ -416,7 +407,7 @@ const App: React.FC = () => {
             Authorization: `Bearer ${accessToken}`
           }
         });
-        setProfileData({ ...response.data }); // Create a new object
+        setProfileData({ ...response.data });
       } catch (error) {
         console.error("Error while retrieving profile data", error);
       }
@@ -480,8 +471,8 @@ const App: React.FC = () => {
       params.get('isAuthenticated') === 'false' &&
       params.get('invitation') === 'error'
     ) {
-      window.history.replaceState({}, '', '/error'); // Clean up URL
-      window.location.href = '/error'; // Redirect to error page
+      window.history.replaceState({}, '', '/error'); 
+      window.location.href = '/error'; 
     }
   }, []);
   // ========================================================================================================
