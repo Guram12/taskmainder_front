@@ -9,6 +9,7 @@ DailyDoer is a modern, collaborative task management web application built with 
 - **User Authentication**
   - Email/password login & registration
   - Google OAuth sign-in
+  - GitHub OAuth sign-in
   - Password reset and confirmation
 - **Boards, Lists, and Tasks**
   - Create multiple boards, each with customizable lists and tasks
@@ -51,6 +52,7 @@ DailyDoer is a modern, collaborative task management web application built with 
 - **State & Routing:** React Hooks, React Router
 - **Drag & Drop:** DND-Kit, SortableJS
 - **Networking:** Axios, WebSockets
+- **Authentication:** Google OAuth, GitHub OAuth
 - **Other:** Service Workers for push notifications
 
 ---
@@ -80,10 +82,11 @@ DailyDoer is a modern, collaborative task management web application built with 
    ```
 
 3. **Environment Variables:**
-   - Copy `.env.example` to `.env` and set your API base URL and Google OAuth client ID.
+   - Copy `.env.example` to `.env` and set your API base URL, Google OAuth client ID, and GitHub OAuth client ID.
 
   ```
   VITE_GOOGLE_CLIENT_ID=<Your google client id>
+  VITE_GITHUB_CLIENT_ID=<Your github client id>
   ```
 
 4. **Start the development server:**
@@ -103,8 +106,8 @@ DailyDoer is a modern, collaborative task management web application built with 
 ## Sitemap
 
 ### Public Routes (Unauthenticated)
-- **`/`** - Intro / Landing page (showcase, marketing, language selection, Google sign-in)
-- **`/login`** - Login page with email/password and Google OAuth
+- **`/`** - Intro / Landing page (showcase, marketing, language selection, Google/GitHub sign-in)
+- **`/login`** - Login page with email/password, Google OAuth, and GitHub OAuth
 - **`/register`** - User registration with email verification
 - **`/password-reset`** - Password reset request form
 - **`/password-reset-confirm/:uid/:token`** - Password reset confirmation
@@ -147,35 +150,6 @@ DailyDoer is a modern, collaborative task management web application built with 
   - Account deletion
   - Language preferences (English/Georgian)
 
-### Component Hierarchy
-```
-App.tsx
-├── Header.tsx (Global navigation and user menu)
-├── MainPage.tsx (Main dashboard container)
-│   ├── SideBar.tsx (Navigation sidebar)
-│   ├── Boards/ (Board management components)
-│   │   ├── Boards.tsx
-│   │   ├── Lists.tsx
-│   │   ├── Tasks.tsx
-│   │   ├── TaskUpdateModal.tsx
-│   │   ├── ConfirmationDialog.tsx
-│   │   └── Skeleton components for loading states
-│   ├── Calendar.tsx
-│   ├── Templates.tsx
-│   ├── Notification.tsx
-│   ├── Settings.tsx
-│   │   ├── ProfilePictureUpdate.tsx
-│   │   ├── Profile_Info_update.tsx
-│   │   ├── ChangePassword.tsx
-│   │   ├── CustomTheme.tsx
-│   │   ├── DeleteAccount.tsx
-│   │   └── ChangeNotification.tsx
-│   ├── Members.tsx
-│   ├── NoBoards.tsx (Empty state)
-│   └── ErrorPage.tsx
-└── Auth Components (Login, Register, etc.)
-```
-
 ---
 
 ## Project Structure
@@ -187,6 +161,8 @@ src/
 ├── auth/                      # Authentication components
 │   ├── FinishGoogleSignIn.tsx
 │   ├── GoogleSignIn.tsx
+│   ├── GitHubCallback.tsx
+│   ├── GithubSignUp.tsx
 │   ├── login.tsx
 │   ├── PasswordResetConfirm.tsx
 │   ├── PasswordReset.tsx
@@ -266,6 +242,6 @@ src/
 
 - Board voew with background
 
-![Board View](./src/assets/screen_text.png)
+![Board View](./src/assets/example_screenshut.png)
 
 ---

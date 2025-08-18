@@ -471,8 +471,8 @@ const App: React.FC = () => {
       params.get('isAuthenticated') === 'false' &&
       params.get('invitation') === 'error'
     ) {
-      window.history.replaceState({}, '', '/error'); 
-      window.location.href = '/error'; 
+      window.history.replaceState({}, '', '/error');
+      window.location.href = '/error';
     }
   }, []);
   // ========================================================================================================
